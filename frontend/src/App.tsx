@@ -1,35 +1,93 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react'
+import { Route, Routes } from 'react-router-dom'
+import Home from './pages/portalPages/home'
+import PurchasePlan from './pages/portalPages/purchasePlan'
+import Login from './pages/authenticationPages/Login'
+import { ForgotPassword, ResetPassword } from './pages/authenticationPages/forgotPassword'
+import UnProtectedRoute from './pages/authenticationPages/unProtectedRoute'
+import ProtectedRoute from './pages/authenticationPages/protectedRoute'
+import MainloginPage from './pages/authenticationPages/MainloginPage'
+import Layout from './pages/agencyPages/Layout'
+import AgencyDashboard from './pages/agencyPages/Dashboard'
+import AgencyAnalytics from './pages/agencyPages/Analytics'
+import CreateClient from './components/agencyComponents/createClient'
+import AgencyLeads from './pages/agencyPages/Leads'
+import AdminDashboard from './pages/adminPages/DashBoard'
+import Plans from './pages/adminPages/Plans'
+import AdminClients from './pages/adminPages/Clients'
+import Clients from './pages/agencyPages/Clients'
 
-function App() {
-  const [count, setCount] = useState(0)
 
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Routes>
+      <Route path='/*' element={<PortalRoutes />} />
+      <Route path='/admin/*' element={<AdminRoutes />} />
+      <Route path='/agency/*' element={<AgencyRoutes />} />
+      <Route path='/company/*' element={<CompanyRoutes />} />
+    </Routes>
   )
 }
 
 export default App
+
+function PortalRoutes() {
+  return (
+    <Routes>
+      <Route path='/' element={<Home />} />
+      <Route path='/login' element={<MainloginPage />} />
+      <Route path='/purchase/:platform/:id' element={<PurchasePlan />} />
+    </Routes>
+  )
+}
+
+function AdminRoutes() {
+  return (
+    <Routes>
+      <Route path='/' element={<ProtectedRoute role={"Admin"} ><Layout /></ProtectedRoute>} >
+        <Route index element={<AdminDashboard />} />
+        <Route path='plans' element={<Plans />} />
+        <Route path='analytics' element={<AgencyAnalytics />} />
+        <Route path='clients' element={<AdminClients />} />
+        <Route path='leads' element={<AgencyLeads />} />
+      </Route>
+
+      <Route path='/login' element={<UnProtectedRoute role={"Admin"}><Login role={"Admin"} /></UnProtectedRoute>} />
+      <Route path='/forgot-password' element={<ForgotPassword role={"Admin"} />} />
+      <Route path='/reset-password/:token' element={<ResetPassword role={"Admin"} />} />
+    </Routes>
+  )
+}
+
+
+function AgencyRoutes() {
+  return (
+    <Routes>
+      <Route path='/' element={<ProtectedRoute role={"Agency"} ><Layout /></ProtectedRoute>} >
+        <Route index element={<AgencyDashboard />} />
+        <Route path='analytics' element={<AgencyAnalytics />} />
+        <Route path='clients' element={<Clients />} />
+        <Route path='create-client' element={<CreateClient />} />
+        <Route path='leads' element={<AgencyLeads />} />
+      </Route>
+
+      <Route path='/login' element={<UnProtectedRoute role={"Agency"}><Login role={"Agency"} /></UnProtectedRoute>} />
+      <Route path='/forgot-password' element={<ForgotPassword role={"Agency"} />} />
+      <Route path='/reset-password/:token' element={<ResetPassword role={"Agency"} />} />
+    </Routes>
+  )
+}
+
+function CompanyRoutes() {
+  return (
+    <Routes>
+      <Route path='/login' element={<UnProtectedRoute role={"Company"} ><Login role={"Company"} /></UnProtectedRoute>} />
+      <Route path='/forgot-password' element={<ForgotPassword role={"Company"} />} />
+      <Route path='/reset-password/:token' element={<ResetPassword role={"Company"} />} />
+    </Routes>
+  )
+}
+
+
+
+

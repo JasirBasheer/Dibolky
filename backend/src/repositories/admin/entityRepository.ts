@@ -1,23 +1,21 @@
 import { connectTenantDB } from "../../config/db";
-import Agency from "../../models/agency/agencyOwnerModel";
-import Company from "../../models/company/companyOwnerModel";
-import {agencySchema} from "../../models/agency/agencyModel";
-import {companySchema} from "../../models/company/companyModel";
+import Agency, { ownerDetailsSchema } from "../../models/agency/agencyModel";
+import Company from "../../models/company/companyModel";
 
 class EntityRepository{
     async createAgency(newAgency: any): Promise<any> {
-        const { orgId, agencyName, ownerName, email, address, websiteUrl,
-            industry, password, contactNumber, platformEmail, logo } = newAgency
+        const { orgId, organizationName, name, email, address, websiteUrl,
+            industry, password, contactNumber,planId,validity, logo ,planPurchasedRate} = newAgency
         try {
             const agency = new Agency({
-                orgId, agencyName,
-                ownerName, email,
-                platformEmail, address,
+                orgId, organizationName,
+                name, email, address,
                 websiteUrl, industry, password,
-                contactNumber, logo
+                contactNumber, logo,planId,validity,
+                planPurchasedRate
             })
-            await agency.save()
-            return agency.platformEmail
+            const newAgency =  await agency.save()
+            return newAgency
         } catch (error) {
             console.error('Error creating agency', error)
             return null
@@ -26,68 +24,54 @@ class EntityRepository{
 
 
 
-    async createAgencyDb(newAgencyDb: any): Promise<any> {
-        try {
-            const { orgId, agencyName, ownerName, email, address, websiteUrl,
-                industry, contactNumber, platformEmail, logo } = newAgencyDb
-
-            const AgencyDbConnection =await connectTenantDB(newAgencyDb.orgId)
-
-            const AgencyModel = AgencyDbConnection.model('owner', agencySchema);
-
-            const agencyData = new AgencyModel({
-                orgId, agencyName,
-                ownerName, email,
-                platformEmail, address,
-                websiteUrl, industry,
-                contactNumber, logo
-            });
-    
-            const savedData = await agencyData.save();
-            return savedData;
-
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
-
     async createCompany(newCompany:any):Promise<any>{
-        const {orgId,companyName,ownerName,email,address, websiteUrl,
-            industry, contactNumber, platformEmail, logo,password} = newCompany
+        const {orgId,organizationName,name,email,address, websiteUrl,
+            industry, contactNumber, logo,password} = newCompany
             const company = new Company({
-                orgId,companyName,ownerName,email,address, websiteUrl,
-                industry, contactNumber, platformEmail, logo ,password
+                orgId,organizationName,name,email,address, websiteUrl,
+                industry, contactNumber, logo ,password
             })
             const companyDetails = await company.save()
             return companyDetails
     }
 
-    async createCompanyDb(newCompanyDb: any): Promise<any> {
 
+    async isAgencyMailExists(email:string):Promise<any>{
         try {
-            const { orgId, companyName, ownerName, email, address, websiteUrl,
-                industry, contactNumber, platformEmail, logo ,password} = newCompanyDb
-
-            const companyDbConnection =await connectTenantDB(newCompanyDb.orgId)
-
-            const CompanyModel = companyDbConnection.model('owner', companySchema);
-
-            const companyData = new CompanyModel({
-                orgId, companyName,
-                ownerName, email,
-                platformEmail, address,
-                websiteUrl, industry,
-                contactNumber, logo,password
-            });
-    
-            const savedData = await companyData.save();
-            return savedData;
-
+            return await Agency.findOne({email:email}) 
         } catch (error) {
-            console.error(error)
+            console.log(error);
+            return null
+            
         }
     }
+
+
+    async isCompanyMailExists(email:string):Promise<any>{
+        try {
+            return await Company.findOne({email:email}) 
+        } catch (error) {
+            console.log(error);
+            return null
+            
+        }
+    }
+
+    async saveDetailsInAgencyDb(id:string,orgId:string):Promise<any>{
+        try {
+            const db = await connectTenantDB(orgId)
+            const AgencyModel = db.model('OwnerDetail',ownerDetailsSchema)
+            const agency = new AgencyModel({
+                ownerId:id,
+                orgId:orgId
+            })
+            await agency.save()
+        } catch (error) {
+            // next(error)
+        }
+    }
+
+
 
 }
 

@@ -1,29 +1,69 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface IPlan extends Document {
-    planName: string;
-    price: string;
-    features: string;
-    validity: string;
+export interface ISubItem {
+    label: string;
+    icon: string;
+    path: string[];
 }
 
-const planSchema: Schema<IPlan> = new mongoose.Schema({
-    planName: {
+export interface IMenuItem {
+    label: string;
+    icon: string;
+    subItems: ISubItem[];
+}
+
+export interface IPlan extends Document {
+    id: number;
+    title: string;
+    price: number;
+    features: string[];
+    validity: string;
+    menu?: {
+        smm?: IMenuItem;
+        crm?: IMenuItem;
+        accounting?: IMenuItem;
+    };
+}
+
+const subItemSchema = new Schema<ISubItem>({
+    label: { type: String, required: true },
+    icon: { type: String, required: true },
+    path: { type: [String], required: true },
+});
+
+const menuItemSchema = new Schema<IMenuItem>({
+    label: { type: String, required: true },
+    icon: { type: String, required: true },
+    subItems: { type: [subItemSchema], required: true },
+});
+
+const planSchema: Schema<IPlan> = new Schema({
+    id: {
+        type: Number,
+        required: true,
+    },
+    title: {
         type: String,
-        required: true
+        required: true,
     },
     price: {
-        type: String,
-        required: true
+        type: Number,
+        required: true,
     },
     features: {
-        type: String,
-        required: true
+        type: [String],
+        required: true,
     },
     validity: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
+    menu: {
+        smm: menuItemSchema,
+        crm: menuItemSchema,
+        accounting: menuItemSchema,
+    },
 });
 
-export default mongoose.model<IPlan>('Plan', planSchema);
+export const AgencyPlan = mongoose.model<IPlan>('agencyPlans', planSchema);
+export const CompanyPlan = mongoose.model<IPlan>('companyPlans', planSchema);

@@ -11,6 +11,8 @@ export const connectTenantDB = async (tenantId:string) =>{
     connectCompanyDB.on('connected', () => {
         console.log(`Connected to tenant database (${tenantId}) successfully.`);
     });
+
+    
     return connectCompanyDB         
 }
 

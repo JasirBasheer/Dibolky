@@ -1,36 +1,34 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 interface addressType {
-    place: string;
-    street: string;
-    pinCode: string;
+    city: string;
+    country: string;
 }
 
 
 export interface ICompany extends Document {
-    orgId: string;
-    companyName: string;
-    ownerName: string;
+    orgId:string;
+    organizationName: string;
+    name: string;
     email: string;
     address: addressType;
     websiteUrl: string;
     industry: string;
     password: string;
     contactNumber: number;
-    platformEmail: string;
     logo: string;
 }
 
-export const companySchema: Schema<ICompany> = new mongoose.Schema({
-    orgId: {
+ const companySchema: Schema<ICompany> = new mongoose.Schema({
+    orgId:{
+        type:String,
+        required:true
+    },
+    organizationName: {
         type: String,
         required: true
     },
-    companyName: {
-        type: String,
-        required: true
-    },
-    ownerName: {
+    name: {
         type: String,
         required: true
     },
@@ -39,13 +37,10 @@ export const companySchema: Schema<ICompany> = new mongoose.Schema({
         required: true
     },
     address: {
-        place: {
+        city: {
             type: String
         },
-        street: {
-            type: String
-        },
-        pinCode: {
+        country: {
             type: String
         }
     },
@@ -55,16 +50,17 @@ export const companySchema: Schema<ICompany> = new mongoose.Schema({
     industry: {
         type: String
     },
+    password: {
+        type: String
+    },
     contactNumber: {
         type: Number
     },
-    platformEmail: {
-        type: String
-    },
+
     logo: {
-        type: String
-    },
-     password: {
         type: String
     }
 });
+
+
+export default mongoose.model<ICompany>('Company', companySchema);

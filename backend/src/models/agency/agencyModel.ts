@@ -1,36 +1,50 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-interface addressType {
-    place: string;
-    street: string;
-    pinCode: string;
-}
 
+interface addressType {
+    city: string;
+    country: string;
+}
 
 export interface IAgency extends Document {
-    orgId:string;
-    agencyName: string;
-    ownerName: string;
+    orgId: string;
+    organizationName: string;
+    name: string;
     email: string;
-    address:addressType;
+    address: addressType;
     websiteUrl: string;
     industry: string;
-    password: string;
+    password?: string;
     contactNumber: number;
-    platformEmail: string;
+    planId: string;
+    validity: string;
     logo: string;
+    remainingClients?: number;
+    remainingProjects?: number;
+    isBlocked: boolean;
+    planPurchasedRate: number;
 }
 
-export const agencySchema: Schema<IAgency> = new mongoose.Schema({
-    orgId:{
-        type:String,
-        required:true
-    },
-    agencyName: {
+
+
+const agencySchema: Schema<IAgency> = new mongoose.Schema({
+    orgId: {
         type: String,
         required: true
     },
-    ownerName: {
+    planId: {
+        type: String,
+        required: true
+    },
+    validity: {
+        type: String,
+        required: true
+    },
+    organizationName: {
+        type: String,
+        required: true
+    },
+    name: {
         type: String,
         required: true
     },
@@ -39,13 +53,10 @@ export const agencySchema: Schema<IAgency> = new mongoose.Schema({
         required: true
     },
     address: {
-        place: {
+        city: {
             type: String
         },
-        street: {
-            type: String
-        },
-        pinCode: {
+        country: {
             type: String
         }
     },
@@ -58,10 +69,141 @@ export const agencySchema: Schema<IAgency> = new mongoose.Schema({
     contactNumber: {
         type: Number
     },
-    platformEmail: {
-        type: String
-    },
     logo: {
         type: String
+    },
+    password: {
+        type: String
+    },
+    remainingProjects: {
+        type: Number,
+        default: 5
+    },
+    remainingClients: {
+        type: Number,
+        default: 5
+    },
+    isBlocked: {
+        type: Boolean,
+        default: false
+    },
+    planPurchasedRate: {
+        type: Number
     }
+
 });
+
+export default mongoose.model<IAgency>('Agency', agencySchema);
+
+
+export interface IOwnerDetailsSchema {
+    ownerId?: string; 
+    orgId?: string; 
+    paymentCredentials?: {
+        razorpay?: {
+            key_id?: string;
+            key_secret?: string;
+        };
+        stripe?: {
+            key_id?: string;
+            key_secret?: string;
+        };
+    };
+    socialMedias?: {
+        instagram?: {
+            accessToken?: string;
+            apiKey?: string;
+        };
+        facebook?: {
+            accessToken?: string;
+            apiKey?: string;
+        };
+        x?: {
+            accessToken?: string;
+            apiKey?: string;
+        };
+        tiktok?: {
+            accessToken?: string;
+            apiKey?: string;
+        };
+    };
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+
+
+
+
+
+export const ownerDetailsSchema = new Schema<IOwnerDetailsSchema>({
+    ownerId: {
+        type: String,
+        required: false,
+    },
+    orgId: {
+        type: String,
+        required: false,
+    },
+    paymentCredentials: {
+        razorpay: {
+            key_id: {
+                type: String,
+                required: false,
+            },
+            key_secret: {
+                type: String,
+                required: false,
+            }
+        },
+        stripe: {
+            key_id: {
+                type: String,
+                required: false,
+            },
+            key_secret: {
+                type: String,
+                required: false,
+            }
+        }
+    },
+    socialMedias: {
+        instagram: {
+            accessToken: {
+                type: String,
+                required: false,
+            },
+            apiKey: {
+                type: String,
+                select: false,
+            }
+        },
+        facebook: {
+            accessToken: {
+                type: String,
+                required: false,
+            },
+            apiKey: {
+                type: String,
+            }
+        },
+        x: {
+            accessToken: {
+                type: String,
+                required: false,
+            },
+            apiKey: {
+                type: String,
+            },
+        },
+        tiktok: {
+            accessToken: {
+                type: String,
+                required: false,
+            },
+            apiKey: {
+                type: String,
+            },
+        },
+    },
+}, { timestamps: true, });

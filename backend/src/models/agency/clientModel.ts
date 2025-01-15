@@ -4,6 +4,7 @@ export interface IClient extends Document {
     orgId: string;
     name: string;
     email: string;
+    industry:string;
     password: string;
     socialMedia_credentials?:credentials
 }
@@ -26,6 +27,9 @@ export const clientSchema: Schema<IClient> = new mongoose.Schema({
     email: {
         type: String,
         required: true
+    },
+    industry:{
+        type:String,
     },
     socialMedia_credentials:{
         facebook:{

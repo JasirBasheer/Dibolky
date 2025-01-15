@@ -1,9 +1,9 @@
 import { connectTenantDB } from '../../config/db'
-import Client,{ clientSchema } from '../../models/agency/clientModel'
+import Client, { clientSchema } from '../../models/agency/clientModel'
 import { departmentSchema } from '../../models/agency/departmentModel'
 import Employee from '../../models/agency/employeeModel'
-import {MainDbEmployeeSchema} from '../../models/agency/employeeModel' 
-import Agency from "../../models/agency/agencyOwnerModel";
+import { MainDbEmployeeSchema } from '../../models/agency/employeeModel'
+import Agency from "../../models/agency/agencyModel";
 
 
 class AgencyEntityRepository {
@@ -11,16 +11,24 @@ class AgencyEntityRepository {
         return Employee.findOne({ email })
     }
 
+   async findAgencyOwner(email: string): Promise<any> {
+        try {
+            return await Agency.findOne({ email:email });
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async createEmployee(details: any): Promise<any> {
         try {
-            const { orgId, employeeName,department,email, password } = details
+            const { orgId, employeeName, department, email, password } = details
             const DB = await connectTenantDB(orgId)
-            const EmployeeModel = DB.model('Employee',MainDbEmployeeSchema)
+            const EmployeeModel = DB.model('Employee', MainDbEmployeeSchema)
             const employee = new EmployeeModel({
                 orgId,
                 employeeName,
                 department,
-                email,password
+                email, password
             })
             const createdEmployee = await employee.save()
             return createdEmployee
@@ -32,11 +40,11 @@ class AgencyEntityRepository {
 
     async createEmployeeMainDB(details: any): Promise<any> {
         try {
-            const { orgId, employeeName,department, email, password } = details
+            const { orgId, employeeName, department, email, password } = details
             const employee = new Employee({
                 orgId,
-                employeeName,department,
-                email,password
+                employeeName, department,
+                email, password
             })
             const createdEmployee = await employee.save()
             return createdEmployee
@@ -46,11 +54,11 @@ class AgencyEntityRepository {
         }
     }
 
-    async createDepartment(details:any):Promise<any>{
+    async createDepartment(details: any): Promise<any> {
         try {
-            const {department,permissions} = details
+            const { department, permissions } = details
             const DB = await connectTenantDB('vicigrow333986')
-            const departmentModel = DB.model('department',departmentSchema) 
+            const departmentModel = DB.model('department', departmentSchema)
             const newDepartment = new departmentModel({
                 department,
                 permissions
@@ -62,51 +70,67 @@ class AgencyEntityRepository {
         }
     }
 
-    async findAgency(orgId:string):Promise<any>{
+    async findAgency(orgId: string): Promise<any> {
         try {
-            return await Agency.findOne({orgId:orgId})
+            return await Agency.findOne({ orgId: orgId })
         } catch (error) {
             console.error(error)
             return null
         }
     }
-
-    async createClient(details:any):Promise<any>{
+    async isClientExists(email:string):Promise<any>{
         try {
-            const {orgId,name,email,socialMedia_credentials,password} = details
-            const DB = await connectTenantDB(orgId)
-            const ClientModel = DB.model('client',clientSchema)
-            const newClient = new ClientModel({
+            const client = await Client.findOne({email:email}) 
+            return client
+        } catch (error) {
+            return null
+            
+        }
+    }
+
+    async createClient(clientModel:any,details: any): Promise<any> {
+        try {
+            const { orgId, name, email, socialMedia_credentials, password } = details
+            const newClient = new clientModel({
                 orgId,
-                name,email,
+                name, email,
                 socialMedia_credentials,
                 password
             })
-            
+
             const createdClient = await newClient.save()
             return createdClient
- 
+
         } catch (error) {
             console.error(error)
             return null
         }
     }
 
-    async saveClientToMainDB(details:any):Promise<any>{
-        try {            
-        const {orgId,name,email,socialMedia_credentials,password} = details
-        const newClient = new Client({
-            orgId,
-            name,email,
-            password
-        })
+    async saveClientToMainDB(details: any): Promise<any> {
+        try {
+            const { orgId, name, email, socialMedia_credentials, password } = details
+            const newClient = new Client({
+                orgId,
+                name, email,
+                password
+            })
 
-        const createdClient = await newClient.save()
-        return createdClient
-        
+            const createdClient = await newClient.save()
+            return createdClient
+
         } catch (error) {
             console.error(error)
             return null
+        }
+    }
+
+
+    async changePassword(id: string, password: string) {
+        try {
+            return await Agency.findOneAndUpdate({ _id: id },{ $set: { password: password } },{ new: true })
+        } catch (error) {
+            throw error
         }
     }
 }

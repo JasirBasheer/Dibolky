@@ -1,6 +1,10 @@
 import AgencyEntityRepository from "../../repositories/agency/entityRepository";
-import { sendMail } from "../../utils/nodeMailer";
-import {  createPassword, hashPassword } from "../../utils/passwordUtils";
+import { CustomError } from "../../utils/CustomError";
+import { generateResetToken, verifyResetToken } from "../../utils/jwtUtils";
+import { createClientMailData, createForgotPasswordData, sendMail } from "../../utils/nodeMailer";
+import { createPassword, hashPassword } from "../../utils/passwordUtils";
+import bcrypt from 'bcrypt'
+import Jwt from 'jsonwebtoken'
 
 
 class AgencyEntityService {
@@ -9,6 +13,34 @@ class AgencyEntityService {
     constructor() {
         this.agencyEntityRepository = new AgencyEntityRepository()
     }
+
+    async agencyLogin(email: string, password: string): Promise<any> {
+        const ownerDetails = await this.agencyEntityRepository.findAgencyOwner(email);
+        if (!ownerDetails) {
+            throw new CustomError('User not found',404);
+        }
+        if (ownerDetails.isBlocked) {
+            throw new CustomError('Account is blocked',403);
+        }
+
+        const isValid = await bcrypt.compare(password, ownerDetails.password);
+        if (!isValid) {
+            throw new CustomError('Invalid credentials',401);
+        }
+
+
+        return ownerDetails;
+    }
+
+
+
+
+    async verifyOwner(email: string): Promise<any> {
+        console.log(email,"Emial")
+        return await this.agencyEntityRepository.findAgencyOwner(email)
+    }
+
+
 
     async createDepartment(department: string, permissions: string[]): Promise<any> {
         try {
@@ -49,30 +81,34 @@ class AgencyEntityService {
         }
     }
 
-    async createClient(orgId: string, name: string, email: string, socialMedia_credentials: any): Promise<any> {
+    async createClient(clientModel:any,orgId: string, name: string, email: string, industry: string, socialMedia_credentials: any): Promise<any> {
         try {
+            console.log(orgId,name,email,industry);
+            
             //check the client already exists in the db with the same email --later
-            const isAgencyExists = await this.agencyEntityRepository.findAgency(orgId)
-            console.log(isAgencyExists)
 
-            if(!isAgencyExists){
-                return null
-            }
+            const client = await this.agencyEntityRepository.isClientExists(email)
+            if (client && client.orgId == orgId) throw new CustomError('Client already exists with this email',409)
+            const Agency = await this.agencyEntityRepository.findAgency(orgId)
+            if (!Agency) throw new CustomError("Agency not found , Please try again",404)
+            if (Agency.remainingClients == 0) throw new CustomError("Client creation limit reached ,Please upgrade for more clients",402)
+
             let password = await createPassword(name)
+            
             const HashedPassword = await hashPassword(password)
             const newClient = {
                 orgId, name, email,
-                socialMedia_credentials,
+                industry, socialMedia_credentials,
                 password: HashedPassword
             }
 
-            const createdClient = await this.agencyEntityRepository.createClient(newClient)
+            const createdClient = await this.agencyEntityRepository.createClient(clientModel,newClient)
             if (createdClient) await this.agencyEntityRepository.saveClientToMainDB(newClient)
-                sendMail(email,name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(),password)
+            const data = createClientMailData(email, name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(), password)
+            sendMail(email, `Welcome to ${Agency.organizationName}! Excited to Partner with You`, data)
             return createdClient
         } catch (error) {
-            console.error(error)
-            return null
+            throw error
         }
     }
 

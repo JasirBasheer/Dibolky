@@ -60,11 +60,15 @@ const handlePaymentSuccess = async (response: any,formData:FormData,plan:any,pla
         industry: formData.industry,
         planId:plan._id,
         validity:formData.validity,
-        planPurchasedRate:plan?.price * formData.validity
+        planPurchasedRate:plan?.price * formData.validity,
+        paymentGateway:"razorpay",
+        description:plan.title + " "+"Purchased"
     }
 
     if (platform == "Agency") {
-        const res = await axios.post('/api/admin/create-agency', details, response)
+        console.log(response);
+        
+        const res = await axios.post('/api/entities/create-agency', {details, response})
         if (res.status == 201) {
             setTimeout(() => {
                 message.success('Agnecy successfully created')
@@ -78,7 +82,7 @@ const handlePaymentSuccess = async (response: any,formData:FormData,plan:any,pla
             navigate('/agency/login')
         }
     } else {
-        const res = await axios.post('/api/admin/create-company', details, response)
+        const res = await axios.post('/api/entities/create-company', details, response)
         if (res.status == 201) {
             setTimeout(() => {
                 message.success('Company have been successfully')

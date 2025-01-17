@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from '../../utils/axios'
 import { message } from 'antd'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
 
 const AdminDashboard = () => {
   const [recentClients, setRecentClients] = useState<any>([])
@@ -62,11 +65,16 @@ const AdminDashboard = () => {
           <div className="w-[37rem] min-h-[11rem] rounded-xl border-2 border-gray-200 bg-white p-5 hover:shadow-md  transition-all duration-300 mt">
             <h1 className='text-md cantarell font-cantarell pb-4 font-semibold'>Recent Clients</h1>
             <div className="w-full  border-t-2 border-gray-200  gap-5  ">
-              {recentClients.map((item: any, index: number) => {
-                return (
-                  <div key={index} className="w-full min-h-12 flex items-center text-sm">{item.name || ""}</div>
-                )
-              })}
+              {recentClients.length>0
+                ? recentClients.map((item: any, index: number) => (
+                  <div
+                    key={index}
+                    className="w-full min-h-12 flex items-center text-sm"
+                  >
+                    {item.name || ""}
+                  </div>
+                ))
+                : <Skeleton className='mt-2' width={300} height={31} />}
 
             </div>
           </div>

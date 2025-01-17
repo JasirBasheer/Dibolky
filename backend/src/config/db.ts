@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Connection } from 'mongoose';
 
 export default async () =>{
     mongoose.connect('mongodb+srv://jasirbinbasheerpp:YgPIPzfYiPG3cqr1@cluster0.uuyi8.mongodb.net/MainDB?retryWrites=true&w=majority')
@@ -6,13 +6,11 @@ export default async () =>{
     .catch((err) => console.log(err))
 }
 
-export const connectTenantDB = async (tenantId:string) =>{
+export const connectTenantDB = async (tenantId:string):Promise<Connection>  =>{
     const connectCompanyDB = mongoose.createConnection(`mongodb+srv://jasirbinbasheerpp:YgPIPzfYiPG3cqr1@cluster0.uuyi8.mongodb.net/${tenantId}?retryWrites=true&w=majority`)
     connectCompanyDB.on('connected', () => {
         console.log(`Connected to tenant database (${tenantId}) successfully.`);
     });
-
-    
     return connectCompanyDB         
 }
 

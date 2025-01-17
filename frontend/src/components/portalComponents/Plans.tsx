@@ -11,7 +11,7 @@ const Plans = () => {
 
     const getPlans = async () => {
         try {
-            const response = await axios.get('/api/plan/get-all-plans');
+            const response = await axios.get('/api/entities/get-all-plans');
             setPlans(response.data.data);
         } catch (error) {
             console.error('Error fetching plans:', error);

@@ -1,15 +1,14 @@
 import { Request, Response, NextFunction } from "express";
-import JwtService from "../services/authentication/jwtService";
-import CompanyEntityService from "../services/company/companyService";
-import AgencyEntityService from "../services/agency/entityService";
-import { CustomError } from "../utils/CustomError";
-import AdminService from "../services/admin/adminService";
+import { CustomError } from "../shared/utils/CustomError";
+import { decodeAccessToken, generateAccesstoken, verifyRefreshToken } from "../shared/utils/jwtUtils";
+import { container } from "tsyringe";
+import { ICompanyService } from "../services/Interface/ICompanyService";
+import { IAgencyService } from "../services/Interface/IAgencyService";
+import { IAdminService } from "../services/Interface/IAdminService";
 
-const jwtService = new JwtService();
-const companyEntityService = new CompanyEntityService();
-const agencyEntityService = new AgencyEntityService();
-const adminService = new AdminService()
-
+const companyService = container.resolve("ICompanyService") as ICompanyService;
+const agencyService = container.resolve("IAgencyService") as IAgencyService;
+const adminService = container.resolve("IAdminService") as IAdminService;
 
 declare global {
     namespace Express {
@@ -30,9 +29,9 @@ export const TokenMiddleWare = async (req: Request, res: Response, next: NextFun
 
 
         if (!token && refreshToken) {
-            let isValidRefresh = await jwtService.verifyRefreshToken(refreshToken)
+            let isValidRefresh = await verifyRefreshToken(refreshToken)
 
-            let newAccessToken = await jwtService.generateAccesstokenWithRefreshToken(isValidRefresh.email, isValidRefresh.role)
+            let newAccessToken = await generateAccesstoken(isValidRefresh.email, isValidRefresh.role)
             token = newAccessToken
 
             res.cookie('accessToken', newAccessToken, {
@@ -42,14 +41,14 @@ export const TokenMiddleWare = async (req: Request, res: Response, next: NextFun
             });
         }
 
-        const tokenDetails = await jwtService.decodeAccessToken(token ?? '')
+        const tokenDetails = await decodeAccessToken(token ?? '')
         let ownerDetails
           if (tokenDetails.role == 'Agency') {
-            ownerDetails = await agencyEntityService.verifyOwner(tokenDetails.email)
+            ownerDetails = await agencyService.verifyOwner(tokenDetails.email)
         } else if (tokenDetails.role == 'Company') {
-            ownerDetails = await companyEntityService.verifyOwner(tokenDetails.email)
+            ownerDetails = await companyService.verifyOwner(tokenDetails.email)
         }else if(tokenDetails.role == 'Admin'){
-            ownerDetails = await adminService.getAdmin(tokenDetails.email)
+            ownerDetails = await adminService.verifyAdmin(tokenDetails.email)
         }
 
         if (ownerDetails?.isBlocked) throw new CustomError('Account is Blocked', 400)

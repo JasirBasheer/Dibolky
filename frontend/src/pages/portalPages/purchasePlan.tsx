@@ -31,8 +31,9 @@ const PurchasePlan: React.FC = () => {
         return
     }
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
-        let isnext = validate()
+        const isnext = validate()
         setNext(isnext)
     }, [formData, currentStep])
 
@@ -42,21 +43,21 @@ const PurchasePlan: React.FC = () => {
         const set2 = { organizationName: '', city: '', industry: '', country: '' }
         const currentSet = currentStep === 1 ? set1 : set2;
 
-        for (let key in currentSet) {
+        for (const key in currentSet) {
             if (errors[key] === '') ctr++;
         }
         return ctr === Object.keys(currentSet).length
     }
 
     const validateMail = async (Mail: string): Promise<boolean> => {
-        const response = await axios.post('/api/plan/check-mail', { Mail, platform })
+        const response = await axios.post('/api/entities/check-mail', { Mail, platform })
         return response.data.isExists
     }
 
     const handleNext = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         if (next) {
-            let isExists = await validateMail(formData.email)
+            const isExists = await validateMail(formData.email)
             if (isExists && currentStep == 1) {
                 message.error('Email alredy exists')
             } else {
@@ -65,9 +66,10 @@ const PurchasePlan: React.FC = () => {
         }
     }
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         setLoading(true);
-        axios.post(`/api/plan/get-plan`, { id, platform })
+        axios.post(`/api/entities/get-plan`, { id, platform })
             .then((response) => setPlan(response.data.plan))
             .catch((err) => console.error("Error fetching plan:", err))
             .finally(() => setLoading(false))
@@ -294,6 +296,7 @@ const PurchasePlan: React.FC = () => {
                                 <>
                                     <h2 className="text-3xl font-bold mb-2 text-center text-gray-800">Complete Your Purchase</h2>
                                     <p className="text-center text-gray-600 mb-8">Please fill in your details to continue</p>
+                                    {renderStepIndicator()}
 
                                     <form onSubmit={handleSubmit} className="space-y-6">
                                         {renderStep()}

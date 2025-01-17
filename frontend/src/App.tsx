@@ -16,6 +16,7 @@ import AdminDashboard from './pages/adminPages/DashBoard'
 import Plans from './pages/adminPages/Plans'
 import AdminClients from './pages/adminPages/Clients'
 import Clients from './pages/agencyPages/Clients'
+import AdminClientDetails from './pages/adminPages/ClientsDetails'
 
 
 const App = () => {

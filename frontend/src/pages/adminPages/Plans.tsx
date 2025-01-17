@@ -9,7 +9,7 @@ const Plans = () => {
 
   const fetchPlans = async() =>{
     try {
-      const response = await axios.get('/api/plan/get-all-plans');
+      const response = await axios.get('/api/entities/get-all-plans');
       setPlans(response.data.data)     
       console.log(response.data.data);
       

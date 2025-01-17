@@ -49,7 +49,7 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
 
   const fetchMenus = async () => {
     try {
-      const response = await axios.get(`/api/plan/${userDetails.role}/${userDetails.planId}`);      
+      const response = await axios.get(`/api/entities/${userDetails.role}/${userDetails.planId}`);      
 
       if (response && response?.data.success) {
         setMenu(response.data.menu);

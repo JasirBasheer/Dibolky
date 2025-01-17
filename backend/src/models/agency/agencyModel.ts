@@ -1,29 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { IAgency, IOwnerDetailsSchema } from '../../shared/types/agencyTypes';
 
 
-interface addressType {
-    city: string;
-    country: string;
-}
-
-export interface IAgency extends Document {
-    orgId: string;
-    organizationName: string;
-    name: string;
-    email: string;
-    address: addressType;
-    websiteUrl: string;
-    industry: string;
-    password?: string;
-    contactNumber: number;
-    planId: string;
-    validity: string;
-    logo: string;
-    remainingClients?: number;
-    remainingProjects?: number;
-    isBlocked: boolean;
-    planPurchasedRate: number;
-}
 
 
 
@@ -94,43 +72,6 @@ const agencySchema: Schema<IAgency> = new mongoose.Schema({
 });
 
 export default mongoose.model<IAgency>('Agency', agencySchema);
-
-
-export interface IOwnerDetailsSchema {
-    ownerId?: string; 
-    orgId?: string; 
-    paymentCredentials?: {
-        razorpay?: {
-            key_id?: string;
-            key_secret?: string;
-        };
-        stripe?: {
-            key_id?: string;
-            key_secret?: string;
-        };
-    };
-    socialMedias?: {
-        instagram?: {
-            accessToken?: string;
-            apiKey?: string;
-        };
-        facebook?: {
-            accessToken?: string;
-            apiKey?: string;
-        };
-        x?: {
-            accessToken?: string;
-            apiKey?: string;
-        };
-        tiktok?: {
-            accessToken?: string;
-            apiKey?: string;
-        };
-    };
-    createdAt?: Date;
-    updatedAt?: Date;
-}
-
 
 
 

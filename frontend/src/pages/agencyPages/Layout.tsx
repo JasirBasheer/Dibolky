@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import Navbar from '../../components/agencyComponents/Navbar'
 import SideBar from '../../components/sidebarComponents/Sidebar'
 import { Outlet } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { setUser } from '../../redux/slices/userSlice'
+
 
 const Layout = () => {
   const [isOpen, setIsOpen] = useState(false)

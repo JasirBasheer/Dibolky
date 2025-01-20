@@ -1,9 +1,9 @@
-import express, { NextFunction } from 'express';
+import express from 'express';
 const router = express.Router()
 import { IEntityController } from '../../controllers/Interface/IEntityController';
 import { container } from 'tsyringe';
 
-const entityController = container.resolve<IEntityController>('IEntityController')
+const entityController = container.resolve<IEntityController>('EntityController')
 
 router.get('/get-all-plans', (req, res, next) => entityController.getAllPlans(req, res, next))
 router.get('/:role/:planId', (req, res, next) => entityController.getMenu(req, res, next));

@@ -1,15 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
-import { CustomError } from '../../shared/utils/CustomError';
 import { IAdminController } from '../Interface/IAdminController';
 import { inject, injectable } from 'tsyringe';
 import { IAdminService } from '../../services/Interface/IAdminService';
+import { HTTPStatusCodes, NotFoundError, ResponseMessage, SendResponse } from 'mern.common';
 
 @injectable()
 export default  class AdminController implements IAdminController {
     private adminService: IAdminService;
 
     constructor(
-        @inject('IAdminService') adminService : IAdminService
+        @inject('AdminService') adminService : IAdminService
     ) {
         this.adminService = adminService
     }
@@ -18,8 +18,10 @@ export default  class AdminController implements IAdminController {
 
     async verifyAdmin(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
+            console.log('reached here');
+            
             const details = await this.adminService.verifyAdmin(req.details.email)
-            res.status(200).json({ success: true, details, role: "Admin" })
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.VERIFIED,{ details, role: "Admin" })
         } catch (error: any) {
             next(error)
         }
@@ -29,7 +31,7 @@ export default  class AdminController implements IAdminController {
     async recentClients(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const clients = await this.adminService.getRecentClients()
-            res.status(200).json({ success: true, clients })
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{clients})
         } catch (error) {
             next(error)
         }
@@ -39,8 +41,9 @@ export default  class AdminController implements IAdminController {
         try {
             const { id, role } = req.params
             const details = await this.adminService.getClient(id,role)
-            if(!details)throw new CustomError('Client Not found',404)
-            res.status(200).json({success:true,details})
+            if(!details)throw new NotFoundError("Client Not found")
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{details})
+        
         } catch (error) {
             next(error)
         }
@@ -49,8 +52,9 @@ export default  class AdminController implements IAdminController {
     async getAllClients(req:Request,res:Response, next: NextFunction):Promise<void> {
         try {
             const details = await this.adminService.getAllClients()
-            if(!details)throw new CustomError('Client Not found',404)
-            res.status(200).json({success:true,details})
+            if(!details)throw new NotFoundError("Client Not found")
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{details})
+
         } catch (error) {
             next(error)
         }

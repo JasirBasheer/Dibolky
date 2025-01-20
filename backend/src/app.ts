@@ -6,10 +6,8 @@ import dotenv from 'dotenv';
 import morgan from 'morgan'
 import compression from 'compression';
 import cookieParser from 'cookie-parser'
-import connectDB from './config/db'
 import router from './routes/route';
-import limiter from './shared/utils/rateLimiter';
-import { errorHandler } from './middlewares/errorHandler';
+import { connectToMongoDB, errorHandler, limiter } from 'mern.common';
 dotenv.config();
 
 const app = express()
@@ -17,6 +15,7 @@ const app = express()
 app.use(limiter)
 app.use(cors({
     origin:'http://localhost:5173',
+    methods:['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
     credentials:true
 }))
 app.use(compression());
@@ -31,7 +30,7 @@ app.get('/', (req, res) => {
     res.send("Backend is running!");
 });
 
-connectDB()
+connectToMongoDB(process.env.DB_URI || "mongodb://localhost:27017/dibolky")
 app.use(errorHandler);
 
 

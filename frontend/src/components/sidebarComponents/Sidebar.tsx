@@ -51,7 +51,7 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
     try {
       const response = await axios.get(`/api/entities/${userDetails.role}/${userDetails.planId}`);      
 
-      if (response && response?.data.success) {
+      if (response && response?.status == 200) {
         setMenu(response.data.menu);
       }
     } catch (error) {

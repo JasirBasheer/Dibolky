@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import {container} from 'tsyringe';
+import { container } from "tsyringe";
 import {IAuthenticationController} from '../controllers/Interface/IAuthenticationController'
 import AuthenticationController from '../controllers/Implementation/authenticationController'
 import AdminRepository from '../repositories/Implementation/adminRepository';
@@ -40,29 +40,30 @@ import { IPaymentController } from '../controllers/Interface/IPaymentController'
 import PaymentController from '../controllers/Implementation/paymentController';
 
 //Repo Registeration
-container.register<IAdminRepository>('IAdminRepository',{useClass:AdminRepository})
-container.register<IAgencyRepository>('IAgencyRepository',{useClass:AgencyRepository})
-container.register<ICompanyRepository>('ICompanyRepository',{useClass:CompanyRepository})
-container.register<IEmployeeRepository>('IEmployeeRepository',{useClass:EmployeeRepository})
-container.register<IEntityRepository>('IEntityRepository',{useClass:EntityRepository})
-container.register<IPlanRepository>('IPlanRepository',{useClass:PlanRepository})
+container.register<IAdminRepository>('AdminRepository', { useClass: AdminRepository });
+container.register<IAgencyRepository>('AgencyRepository', { useClass: AgencyRepository });
+container.register<ICompanyRepository>('CompanyRepository', { useClass: CompanyRepository });
+container.register<IEmployeeRepository>('EmployeeRepository', { useClass: EmployeeRepository });
+container.register<IEntityRepository>('EntityRepository', { useClass: EntityRepository });
+container.register<IPlanRepository>('PlanRepository', { useClass: PlanRepository });
+
 
 
 //Service Registeration
-container.register<IAuthenticationService>('IAuthenticationService',{useClass:AuthenticationService})
-container.register<IAdminService>('IAdminService',{useClass:AdminService})
-container.register<IAgencyService>('IAgencyService',{useClass:AgencyService})
-container.register<ICompanyService>('ICompanyService',{useClass:CompanyService})
-container.register<IEmployeeService>('IEmployeeService',{useClass:EmployeeService})
-container.register<IEntityService>('IEntityService',{useClass:EntityService})
-container.register<IPaymentService>('IPaymentService',{useClass:PaymentService})
+container.register<IAuthenticationService>('AuthenticationService', { useClass: AuthenticationService });
+container.register<IAdminService>('AdminService', { useClass: AdminService });
+container.register<IAgencyService>('AgencyService', { useClass: AgencyService });
+container.register<ICompanyService>('CompanyService', { useClass: CompanyService });
+container.register<IEmployeeService>('EmployeeService', { useClass: EmployeeService });
+container.register<IEntityService>('EntityService', { useClass: EntityService });
+container.register<IPaymentService>('PaymentService', { useClass: PaymentService });
 
 
 
 //Controller Registeration
-container.register<IAuthenticationController>('IAuthenticationController',{useClass:AuthenticationController})
-container.register<IAdminController>('IAdminController',{useClass:AdminController})
-container.register<IAgencyController>('IAgnecyController',{useClass:AgencyController})
-container.register<IEmployeeController>('IEmployeeController',{useClass:EmployeeController})
-container.register<IEntityController>('IEntityController',{useClass:EntityController})
-container.register<IPaymentController>('IPaymentController',{useClass:PaymentController})
+container.register<IAuthenticationController>('AuthenticationController', { useClass: AuthenticationController });
+container.register<IAdminController>('AdminController', { useClass: AdminController });
+container.register<IAgencyController>('AgencyController', { useClass: AgencyController });
+container.register<IEmployeeController>('EmployeeController', { useClass: EmployeeController });
+container.register<IEntityController>('EntityController', { useClass: EntityController });
+container.register<IPaymentController>('PaymentController', { useClass: PaymentController });

@@ -4,7 +4,7 @@ import { TenantMiddleWare } from '../../../middlewares/tenantMiddleware';
 import { IAgencyController } from '../../../controllers/Interface/IAgencyController';
 import { container } from 'tsyringe';
 
-const agencyController = container.resolve<IAgencyController>('IAgencyController')
+const agencyController = container.resolve<IAgencyController>('AgencyController')
 
 router.use(TenantMiddleWare)
 router.get('/', (req, res, next) =>agencyController.getAgency(req,res,next))

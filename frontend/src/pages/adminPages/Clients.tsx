@@ -12,10 +12,10 @@ const AdminClients = () => {
     try {
       const response = await axios.get('/api/admin/recent-clients')
       console.log(response)
-      if (response && response.data.success) setClients(response.data.clients)
+      if (response && response.status == 200) setClients(response.data.clients)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      message.error(error.response && error.response.message)
+      message.error(error.response.data.error || '')
     }
   }
   useEffect(() => {
@@ -33,7 +33,7 @@ const AdminClients = () => {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      message.error(error.response && error.response.message)
+      message.error(error.response.data.error || "")
     }finally {
       setIsLoading(false);
     }

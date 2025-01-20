@@ -5,7 +5,7 @@ import 'reflect-metadata';
 
 
 const router = express.Router()
-const authenticationController = container.resolve<IAuthenticationController>('IAuthenticationController')
+const authenticationController = container.resolve<IAuthenticationController>('AuthenticationController')
 
 router.post('/login',(req,res,next) => authenticationController.login(req,res,next))
 router.post('/forgot-password',(req,res,next) => authenticationController.forgotPassword(req,res,next))

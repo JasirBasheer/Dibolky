@@ -1,14 +1,13 @@
 import { Request, Response, NextFunction } from "express";
-import { CustomError } from "../shared/utils/CustomError";
-import { decodeAccessToken, generateAccesstoken, verifyRefreshToken } from "../shared/utils/jwtUtils";
+import { generateToken, UnauthorizedError, verifyToken } from "mern.common";
 import { container } from "tsyringe";
 import { ICompanyService } from "../services/Interface/ICompanyService";
 import { IAgencyService } from "../services/Interface/IAgencyService";
 import { IAdminService } from "../services/Interface/IAdminService";
 
-const companyService = container.resolve("ICompanyService") as ICompanyService;
-const agencyService = container.resolve("IAgencyService") as IAgencyService;
-const adminService = container.resolve("IAdminService") as IAdminService;
+const companyService = container.resolve<ICompanyService>("CompanyService");
+const agencyService = container.resolve<IAgencyService>("AgencyService");
+const adminService = container.resolve<IAdminService>("AdminService");
 
 declare global {
     namespace Express {
@@ -18,20 +17,42 @@ declare global {
     }
 }
 
+interface GeoData {
+    country: string;
+    currency: string;
+    city: string;
+    timezone: string;
+    countryCode: string;
+}
+
+// Extend Express Request type to include geoData
+declare global {
+    namespace Express {
+        interface Request {
+            geoData?: GeoData;
+        }
+    }
+}
+
 
 export const TokenMiddleWare = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
         let token = req.cookies.accessToken ?? null
         let refreshToken = req.cookies.refreshToken ?? null
+
+       
+        
+        let refreshTokenSecret = process.env.JWT_REFRESH_SECRET || 'defaultRefreshSecret';
+        let accessTokenSecret = process.env.JWT_ACCESS_SECRET || 'defaultAccessSecret';
         
 
         if (!token && !refreshToken) return res.status(400).json({ success: false })
 
 
         if (!token && refreshToken) {
-            let isValidRefresh = await verifyRefreshToken(refreshToken)
+            let isValidRefresh = await verifyToken(refreshTokenSecret,refreshToken)
 
-            let newAccessToken = await generateAccesstoken(isValidRefresh.email, isValidRefresh.role)
+            let newAccessToken = await generateToken(accessTokenSecret,{email:isValidRefresh.email, role:isValidRefresh.role})
             token = newAccessToken
 
             res.cookie('accessToken', newAccessToken, {
@@ -41,17 +62,17 @@ export const TokenMiddleWare = async (req: Request, res: Response, next: NextFun
             });
         }
 
-        const tokenDetails = await decodeAccessToken(token ?? '')
+        const tokenDetails = await verifyToken(accessTokenSecret,token ?? '')
         let ownerDetails
-          if (tokenDetails.role == 'Agency') {
+        if (tokenDetails.role == 'Agency') {
             ownerDetails = await agencyService.verifyOwner(tokenDetails.email)
         } else if (tokenDetails.role == 'Company') {
             ownerDetails = await companyService.verifyOwner(tokenDetails.email)
-        }else if(tokenDetails.role == 'Admin'){
+        } else if (tokenDetails.role == 'Admin') {
             ownerDetails = await adminService.verifyAdmin(tokenDetails.email)
         }
 
-        if (ownerDetails?.isBlocked) throw new CustomError('Account is Blocked', 400)
+        if (ownerDetails?.isBlocked) throw new UnauthorizedError('Account is Blocked')
 
         req.details = ownerDetails
 

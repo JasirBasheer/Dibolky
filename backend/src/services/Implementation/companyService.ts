@@ -1,17 +1,17 @@
 import CompanyRepository from "../../repositories/Implementation/companyRepository";
 import bcrypt from 'bcrypt'
-import { CustomError } from "../../shared/utils/CustomError";
 import { ICompanyOwner } from "../../shared/types/companyTypes";
 import { ICompanyService } from "../Interface/ICompanyService";
 import { inject, injectable } from "tsyringe";
 import { ICompanyRepository } from "../../repositories/Interface/ICompanyRepository";
+import { NotFoundError, UnauthorizedError } from "mern.common";
 
 @injectable()
 export default class CompanyService implements ICompanyService {
   private companyRepository: CompanyRepository;
 
   constructor(
-    @inject('ICompanyRepository') companyRepository : ICompanyRepository
+    @inject('CompanyRepository') companyRepository : ICompanyRepository
   ) {
     this.companyRepository = companyRepository
   }
@@ -26,11 +26,11 @@ export default class CompanyService implements ICompanyService {
 
   async companyLoginHandler(email: string, password: string): Promise<ICompanyOwner | null> {
     const ownerDetails = await this.companyRepository.findCompanyWithMail(email);
-    if (!ownerDetails) throw new CustomError('User not found', 404);
-    if (ownerDetails.isBlocked) throw new CustomError('Account is blocked', 403);
+    if (!ownerDetails) throw new NotFoundError('User not found');
+    if (ownerDetails.isBlocked) throw new UnauthorizedError('Account is blocked');
 
     const isValid = await bcrypt.compare(password, ownerDetails.password);
-    if (!isValid) throw new CustomError('Invalid credentials', 401);
+    if (!isValid) throw new UnauthorizedError('Invalid credentials');
 
     return ownerDetails;
   }

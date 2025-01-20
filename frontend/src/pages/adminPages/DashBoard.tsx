@@ -14,11 +14,11 @@ const AdminDashboard = () => {
       const response = await axios.get('/api/admin/recent-clients')
       console.log(response)
 
-      if (response && response.data.success) {
+      if (response && response.status == 200) {
         setRecentClients([...response.data.clients.Agency, ...response.data.clients.Company])
       }
     } catch (error: any) {
-      message.error(error.response && error.response.message)
+      message.error(error.response.data.error || "")
     }
   }
   useEffect(() => {

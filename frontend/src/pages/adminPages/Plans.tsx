@@ -10,11 +10,10 @@ const Plans = () => {
   const fetchPlans = async() =>{
     try {
       const response = await axios.get('/api/entities/get-all-plans');
-      setPlans(response.data.data)     
-      console.log(response.data.data);
-      
+      setPlans(response.data.plans)     
+     
     } catch (error:any) {
-      message.error(error.response.message)
+      message.error(error.response.data.error || "")
     }
   }
   useEffect(()=>{

@@ -43,12 +43,8 @@ export const ForgotPassword = ({ role }: { role: string }) => {
         navigate(`/${role.toLowerCase()}/login`)
       }, 5000);
     } catch (error: any) {
-      if (error.response.data?.message) {
-        const errMessage = error.response.data?.message;
-        message.error(errMessage);
-      } else {
-        message.error('An unexpected error occurred');
-      }
+       message.error(error.response.data.error || "An unexpected error occurred");
+   
     } finally {
       setIsLoading(false);
     }
@@ -131,8 +127,8 @@ export const ResetPassword = ({ role }: { role: string }) => {
         navigate(`/${role.toLowerCase()}/login`)
       }, 200)
     } catch (error: any) {
-      message.error(error.response?.data?.message || 'An unexpected error occurred');
-      if (error.response?.data?.message == "Token expired Please Try Again") {
+      message.error(error.response.data.error || 'An unexpected error occurred');
+      if (error.response?.data.error == "Token expired Please Try Again") {
         setTimeout(() => {
           navigate(`/${role.toLowerCase()}/forgot-password`)
         }, 2000)

@@ -6,3 +6,4 @@ const razorpayInstance = new Razorpay({
 });
 
 export default razorpayInstance;
+

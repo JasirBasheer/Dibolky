@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux';
 import { message } from "antd";
 import { validateEmail, validatePassword } from '../../validation/agencyValidation';
 import { SpinnerCircular } from 'spinners-react';
-import Cookies from 'js-cookie';
 interface LoginProps {
   role: string;
 }
@@ -55,8 +54,8 @@ const Login = ({ role }: LoginProps) => {
       }
 
     } catch (error: any) {
-      setIsLoading(false)
-        message.error(error.response.data.message)
+      setIsLoading(false)     
+        message.error(error.response.data.error)
       
     }
   };

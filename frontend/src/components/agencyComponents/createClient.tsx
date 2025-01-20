@@ -27,7 +27,8 @@ const CreateClient = () => {
 
     } catch (error: any) {
       setIsLoading(false)
-      message.error(error.response.data.message)
+      console.log(error)
+      message.error(error.response.data.error)
 
     }
   }

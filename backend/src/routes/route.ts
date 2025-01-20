@@ -12,13 +12,13 @@ import { TokenMiddleWare } from '../middlewares/tokenMiddleware';
 
 const router = express.Router();
 
-router.use('/api/auth',authRoutes)
-router.use('/api/entities',entityRoutes)
-router.use('/api/admin',adminRoutes)
-router.use('/api/agency',TokenMiddleWare,agencyRoutes)
-router.use('/api/payment',paymentRoutes)
-router.use('/api/client',clientRoutes)
-router.use('/api/employee',employeeRoutes)
-router.use('/api/company',companyRoutes)
+router.use('/auth',authRoutes)
+router.use('/entities',entityRoutes)
+router.use('/admin',TokenMiddleWare,adminRoutes)
+router.use('/agency',TokenMiddleWare,agencyRoutes)
+router.use('/payment',paymentRoutes)
+router.use('/client',clientRoutes)
+router.use('/employee',employeeRoutes)
+router.use('/company',companyRoutes)
 
 export default router;

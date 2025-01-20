@@ -1,10 +1,9 @@
-import { hashPassword } from '../../shared/utils/passwordUtils';
 import { addMonthsToDate } from '../../shared/utils/utils';
-import { CustomError } from '../../shared/utils/CustomError';
 import { IEntityService } from '../Interface/IEntityService';
 import { IEntityRepository } from '../../repositories/Interface/IEntityRepository';
 import { IPlanRepository } from '../../repositories/Interface/IPlanRepository';
 import { inject, injectable } from 'tsyringe';
+import { hashPassword } from 'mern.common';
 
 @injectable()
 export default class EntityService implements IEntityService {
@@ -12,8 +11,8 @@ export default class EntityService implements IEntityService {
     private planRepository: IPlanRepository;
 
     constructor(
-        @inject('IEntityRepository') entityRepository : IEntityRepository,
-        @inject('IPlanRepository') planRepository : IPlanRepository
+        @inject('EntityRepository') entityRepository : IEntityRepository,
+        @inject('PlanRepository') planRepository : IPlanRepository
 
     ) {
         this.entityRepository = entityRepository

@@ -21,6 +21,7 @@ const UnProtectedRoute = ({ children,role }: { children: any,role:string}) => {
   const verifyToken = async (): Promise<void> => {
     try {
       const response = await axios.get(`/api/${role.toLowerCase()}/`);
+      
       console.log(response);
   
       if (response.status == 200) {

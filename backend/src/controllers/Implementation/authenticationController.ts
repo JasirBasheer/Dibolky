@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { createTokens } from '../../shared/utils/jwtUtils';
 import { IAuthenticationController } from '../Interface/IAuthenticationController';
 import { inject, injectable } from 'tsyringe';
 import { IAdminService } from '../../services/Interface/IAdminService';
@@ -7,6 +6,7 @@ import { IAgencyService } from '../../services/Interface/IAgencyService';
 import { ICompanyService } from '../../services/Interface/ICompanyService';
 import { IEmployeeService } from '../../services/Interface/IEmployeeService';
 import { IAuthenticationService } from '../../services/Interface/IAuthenticationService';
+import { createTokens, HTTPStatusCodes, ResponseMessage, SendResponse } from 'mern.common';
 
 @injectable()
 export default class AuthenticationController implements IAuthenticationController {
@@ -19,11 +19,11 @@ export default class AuthenticationController implements IAuthenticationControll
 
 
     constructor(
-        @inject('IAdminService') adminService :IAdminService,
-        @inject('IAgencyService') agencyService :IAgencyService,
-        @inject('ICompanyService') companyService :ICompanyService,
-        @inject('IEmployeeService') employeeService :IEmployeeService,
-        @inject('IAuthenticationService') authenticationService :IAuthenticationService,
+        @inject('AdminService') adminService :IAdminService,
+        @inject('AgencyService') agencyService :IAgencyService,
+        @inject('CompanyService') companyService :ICompanyService,
+        @inject('EmployeeService') employeeService :IEmployeeService,
+        @inject('AuthenticationService') authenticationService :IAuthenticationService,
         ){
             this.adminService = adminService;
             this.agencyService = agencyService;
@@ -49,11 +49,13 @@ export default class AuthenticationController implements IAuthenticationControll
             } else if (role == "Admin") {
                 await this.adminService.adminLoginHandler(email, password)
             }
+            let accessTokenSecret = process.env.JWT_ACCESS_SECRET || 'defaultAccessSecret';
+            let refreshTokenSecret = process.env.JWT_REFRESH_SECRET || 'defaultRefreshSecret';
 
-            let tokens = await createTokens(email, role)
+            let tokens = await createTokens(accessTokenSecret,refreshTokenSecret,{email, role})
             res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, secure: false, maxAge: 7 * 24 * 60 * 60 * 1000 })
             res.cookie('accessToken', tokens.accessToken, { httpOnly: false, secure: false, maxAge: 2 * 60 * 1000 });
-            res.status(200).json({ success: true })
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS)
 
         } catch (error: any) {
             next(error);
@@ -67,7 +69,8 @@ export default class AuthenticationController implements IAuthenticationControll
             const { email, role } = req.body
             let response = await this.authenticationService.resetPassword(email, role)
             if (!response) return res.status(400).json({ success: false, message: "Account not found" })
-            return res.status(200).json({ success: true })
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS)
+
 
         } catch (error: any) {
             next(error);
@@ -81,7 +84,7 @@ export default class AuthenticationController implements IAuthenticationControll
             const { newPassword } = req.body;
             console.log("reached here")
             await this.authenticationService.changePassword(token, newPassword)
-            return res.status(200).json({ success: true })
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS)
         } catch (error: any) {
             next(error);
         }

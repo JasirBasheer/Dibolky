@@ -1,12 +1,10 @@
-import { CustomError } from "../../shared/utils/CustomError";
-import { generateResetToken, verifyResetToken } from "../../shared/utils/jwtUtils";
-import { createForgotPasswordData, sendMail } from "../../shared/utils/nodeMailer";
-import { hashPassword } from "../../shared/utils/passwordUtils";
+import { createForgotPasswordData } from "../../shared/utils/mail.datas";
 import { IAuthenticationService } from "../Interface/IAuthenticationService";
 import { inject, injectable } from "tsyringe";
 import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepository";
 import { ICompanyRepository } from "../../repositories/Interface/ICompanyRepository";
 import { IAdminRepository } from "../../repositories/Interface/IAdminRepository";
+import { generateToken, hashPassword, NotFoundError, sendMail, verifyToken } from "mern.common";
 
 @injectable()
 export default class AuthenticationService implements IAuthenticationService {
@@ -15,9 +13,9 @@ export default class AuthenticationService implements IAuthenticationService {
     private adminRepository: IAdminRepository;
 
     constructor(
-        @inject('IAgencyRepository') agencyRepository : IAgencyRepository,
-        @inject('ICompanyRepository') companyRepository : ICompanyRepository,
-        @inject('IAdminRepository') adminRepository : IAdminRepository
+        @inject('AgencyRepository') agencyRepository : IAgencyRepository,
+        @inject('CompanyRepository') companyRepository : ICompanyRepository,
+        @inject('AdminRepository') adminRepository : IAdminRepository
 
     ) {
         this.agencyRepository = agencyRepository
@@ -34,18 +32,26 @@ export default class AuthenticationService implements IAuthenticationService {
         } else if (role == "Admin") {
             details = await this.adminRepository.findAdminWithMail(email)
         }
-
-        if (!details) throw new CustomError('Account not found', 404);
-        let resetToken = await generateResetToken(details._id?.toString() || '', role)
+        let jwtSecret = process.env.JWT_RESET_PASSWORD_SECRET || 'defaultsecretkey'
+        if (!details) throw new NotFoundError('Account not found');
+        let resetToken = await generateToken(jwtSecret,{id:details._id?.toString() || '', role:role})
         let data = createForgotPasswordData(details.name, email, `http://localhost:5173/${role.toLowerCase()}/reset-password/${resetToken}`)
-        sendMail(email, "Forgot Password", data)
+        sendMail(email, "Forgot Password", data,
+            (err:any,info:any)=>{
+                if(err){
+                    console.log("Error sending mail to user")
+                }else{
+                    console.log("Mail sended succeessfully")
+                }
+            })
         return true
     }
 
 
 
     async changePassword(token: string, password: string): Promise<any> {
-        const isValid = await verifyResetToken(token)
+        let jwtSecret = process.env.JWT_RESET_PASSWORD_SECRET || 'defaultsecretkey'
+        const isValid = await verifyToken(jwtSecret,token)
         console.log(isValid)
         let hashedPassword = await hashPassword(password) || 'password'
         if (isValid.role == "Agency") {

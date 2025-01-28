@@ -8,15 +8,17 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser'
 import router from './routes/route';
 import { connectToMongoDB, errorHandler, limiter } from 'mern.common';
+import { DB_URI, PORT } from "./config/env";
 dotenv.config();
 
 const app = express()
 
-app.use(limiter)
+// app.use(limiter)
 app.use(cors({
-    origin:'http://localhost:5173',
-    methods:['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
-    credentials:true
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
 }))
 app.use(compression());
 app.use(morgan('dev'))
@@ -24,16 +26,16 @@ app.use(cookieParser())
 app.use(express.json())
 
 
-app.use('/api/',router)
+app.use('/api/', router)
 
 app.get('/', (req, res) => {
     res.send("Backend is running!");
 });
 
-connectToMongoDB(process.env.DB_URI || "mongodb://localhost:27017/dibolky")
+connectToMongoDB(DB_URI || "mongodb://localhost:27017/dibolky")
 app.use(errorHandler);
 
 
-app.listen(process.env.PORT || 5000,()=>{
-    console.log(`http://localhost:${process.env.PORT || 5000}`);
+app.listen(PORT || 5000, () => {
+    console.log(`http://localhost:${PORT || 5000}`);
 })

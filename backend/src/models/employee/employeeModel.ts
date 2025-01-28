@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 
 export interface IEmployee {
+    _id?:any;
     orgId: string;
     organizationName: string;
     name: string;

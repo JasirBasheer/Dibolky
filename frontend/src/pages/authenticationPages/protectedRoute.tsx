@@ -45,7 +45,6 @@ const ProtectedRoute = ({ children,role }: { children: any,role:string }) => {
           "Employee": '/employee/',
           "Admin": '/admin/'
         };
-        console.log(response.data.role ,"Rol");
         
         dispatch(setUser({role:response.data.role,planId:response.data.details.planId}))           
         

@@ -8,17 +8,17 @@ import entityRoutes from './entity/entityRoutes'
 import clientRoutes from './organizations/client/clientRoutes'
 import employeeRoutes from './organizations/employee/employeeRoutes'
 import companyRoutes from './organizations/company/companyRoutes'
-import { TokenMiddleWare } from '../middlewares/tokenMiddleware';
+import { TokenMiddleWare } from '../middlewares/token.middleware';
 
 const router = express.Router();
 
 router.use('/auth',authRoutes)
 router.use('/entities',entityRoutes)
+router.use('/payment',paymentRoutes)
 router.use('/admin',TokenMiddleWare,adminRoutes)
 router.use('/agency',TokenMiddleWare,agencyRoutes)
-router.use('/payment',paymentRoutes)
-router.use('/client',clientRoutes)
-router.use('/employee',employeeRoutes)
-router.use('/company',companyRoutes)
+router.use('/client',TokenMiddleWare,clientRoutes)
+router.use('/employee',TokenMiddleWare,employeeRoutes)
+router.use('/company',TokenMiddleWare,companyRoutes)
 
 export default router;

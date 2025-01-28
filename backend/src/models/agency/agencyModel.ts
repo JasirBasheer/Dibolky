@@ -108,43 +108,42 @@ export const ownerDetailsSchema = new Schema<IOwnerDetailsSchema>({
             }
         }
     },
-    socialMedias: {
+    socialMedia_credentials: {
         instagram: {
             accessToken: {
                 type: String,
                 required: false,
-            },
-            apiKey: {
-                type: String,
-                select: false,
             }
         },
         facebook: {
             accessToken: {
                 type: String,
                 required: false,
-            },
-            apiKey: {
-                type: String,
             }
         },
         x: {
             accessToken: {
                 type: String,
                 required: false,
-            },
-            apiKey: {
-                type: String,
-            },
+            }
         },
         tiktok: {
             accessToken: {
                 type: String,
                 required: false,
-            },
-            apiKey: {
-                type: String,
-            },
-        },
+            }
+        }
     },
 }, { timestamps: true, });
+
+
+
+ownerDetailsSchema.methods.setSocialMediaToken = async function(provider: string,token: string): Promise<void> {
+    if (this.socialMedia_credentials.hasOwnProperty(provider)) {
+      this.socialMedia_credentials[provider].accessToken = token;
+      await this.save();
+    } else {
+      throw new Error(`Unsupported social media provider: ${provider}`);
+    }
+};
+  

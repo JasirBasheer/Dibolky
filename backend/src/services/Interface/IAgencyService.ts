@@ -1,8 +1,14 @@
 import { IClient } from "../../models/agency/clientModel";
-import { IAgencyOwner } from "../../shared/types/agencyTypes";
 
 export interface IAgencyService {
-    agencyLoginHandler(email: string, password: string): Promise<IAgencyOwner | null>;
-    verifyOwner(email: string): Promise<IAgencyOwner | null>;
-    createClient(clientModel: any, orgId: string, name: string, email: string, industry: string, socialMedia_credentials: any): Promise<IClient | void>;
+    agencyLoginHandler(email: string, password: string): Promise<any>;
+    verifyOwner(id: string): Promise<any>;
+    createClient(db:any,orgId: string, name: string, email: string, industry: string, socialMedia_credentials: any,services:any,menu:string[]): Promise<IClient | void>;
+    saveAgencySocialMediaTokens(orgId:string,Provider:string,token:string,tenantDb:any):Promise<any>;
+    getAllClients(orgId:string):Promise<any>
+    getClient(db:any,id:string):Promise<any>
+    saveContentToDb(id:string,orgId:string,tenantDb:any,url:string,platform:string,contentType:string,caption:string,isScheduled:string,scheduledDate:string):Promise<any>
+    getReviewBucket(clientId:string,tenantDb:any):Promise<any>
+    getContent(tenantDb:any,contentId:any):Promise<any>
+    changeContentStatus(tenantDb:any,contentId:any,status:string):Promise<any>
 }

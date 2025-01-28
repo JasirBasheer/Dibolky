@@ -4,11 +4,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface IUser {
     role?: string;
     planId?:string;
+    Id?:string;
+    orgId?:string
 }
 
 const initialState: IUser = {
     role: "",
     planId:"",
+    Id:"",
+    orgId:"",
 };
 
 
@@ -18,10 +22,10 @@ const UserReducer = createSlice({
     reducers: {
         setUser: (state, action: PayloadAction<IUser>) => {
             return {
-                ...state,
-                ...action.payload
-            }
-        }
+              ...state,
+              ...action.payload,
+            };
+          }          
     }
   }) 
 

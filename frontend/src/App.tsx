@@ -16,7 +16,10 @@ import AdminDashboard from './pages/adminPages/DashBoard'
 import Plans from './pages/adminPages/Plans'
 import AdminClients from './pages/adminPages/Clients'
 import Clients from './pages/agencyPages/Clients'
-import AdminClientDetails from './pages/adminPages/ClientsDetails'
+import ClientLayout from './pages/clientsPages/ClientLayout'
+import AdminLayout from './pages/adminPages/Layout '
+import AgencyClientContent from './components/agencyComponents/clientContent'
+import AgencyContent from './pages/agencyPages/Content'
 
 
 const App = () => {
@@ -26,6 +29,7 @@ const App = () => {
       <Route path='/admin/*' element={<AdminRoutes />} />
       <Route path='/agency/*' element={<AgencyRoutes />} />
       <Route path='/company/*' element={<CompanyRoutes />} />
+      <Route path='/client/*' element={<ClientRoutes />} />
     </Routes>
   )
 }
@@ -45,7 +49,7 @@ function PortalRoutes() {
 function AdminRoutes() {
   return (
     <Routes>
-      <Route path='/' element={<ProtectedRoute role={"Admin"} ><Layout /></ProtectedRoute>} >
+      <Route path='/' element={<ProtectedRoute role={"Admin"} ><AdminLayout /></ProtectedRoute>} >
         <Route index element={<AdminDashboard />} />
         <Route path='plans' element={<Plans />} />
         <Route path='analytics' element={<AgencyAnalytics />} />
@@ -69,6 +73,7 @@ function AgencyRoutes() {
         <Route path='analytics' element={<AgencyAnalytics />} />
         <Route path='clients' element={<Clients />} />
         <Route path='create-client' element={<CreateClient />} />
+        <Route path='contents' element={<AgencyContent />} />
         <Route path='leads' element={<AgencyLeads />} />
       </Route>
 
@@ -90,5 +95,18 @@ function CompanyRoutes() {
 }
 
 
+function ClientRoutes() {
+  return (
+    <Routes>
+      <Route path='/' element={<ProtectedRoute role={"Client"} ><ClientLayout /></ProtectedRoute>} >
+        {/* <Route index element={<AgencyDashboard />} /> */}
+      </Route>
+
+      <Route path='/login' element={<UnProtectedRoute role={"Client"} ><Login role={"Client"} /></UnProtectedRoute>} />
+      <Route path='/forgot-password' element={<ForgotPassword role={"Client"} />} />
+      <Route path='/reset-password/:token' element={<ResetPassword role={"Client"} />} />
+    </Routes>
+  )
+}
 
 

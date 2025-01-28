@@ -9,11 +9,12 @@ interface IRedirectionUrls {
   Company: string;
   Employee: string;
   Admin: string;
+  Client: string;
 }
 
 
 
-const UnProtectedRoute = ({ children,role }: { children: any,role:string}) => {
+const UnProtectedRoute = ({ children, role }: { children: any, role: string }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
@@ -21,30 +22,32 @@ const UnProtectedRoute = ({ children,role }: { children: any,role:string}) => {
   const verifyToken = async (): Promise<void> => {
     try {
       const response = await axios.get(`/api/${role.toLowerCase()}/`);
-      
+
       console.log(response);
-  
+
       if (response.status == 200) {
         setIsAuthenticated(true);
 
         if (response) {
-         
-        const roleRedirects: IRedirectionUrls = {
-          "Agency": '/agency/',
-          "Company": '/company/',
-          "Employee": '/employee/',
-          "Admin": '/admin/'
-        };
 
-        const redirectPath = roleRedirects[response.data?.role as keyof typeof roleRedirects];
-        navigate(redirectPath)
+          const roleRedirects: IRedirectionUrls = {
+            "Agency": '/agency/',
+            "Company": '/company/',
+            "Employee": '/employee/',
+            "Admin": '/admin/',
+            "Client": "/client/",
+
+          };
+
+          const redirectPath = roleRedirects[response.data?.role as keyof typeof roleRedirects];
+          navigate(redirectPath)
         }
       } else {
         setIsAuthenticated(false);
       }
     } catch (error: any) {
-      console.log("error",error);
-      
+      console.log("error", error);
+
       setIsAuthenticated(false);
     } finally {
       setIsLoading(false);

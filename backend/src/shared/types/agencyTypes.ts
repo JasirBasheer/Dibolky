@@ -38,7 +38,7 @@ export interface IOwnerDetailsSchema {
             key_secret?: string;
         };
     };
-    socialMedias?: {
+    socialMedia_credentials?: {
         instagram?: {
             accessToken?: string;
             apiKey?: string;

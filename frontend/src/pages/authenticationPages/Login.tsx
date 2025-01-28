@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react';
 import axios from '../../utils/axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { message } from "antd";
 import { validateEmail, validatePassword } from '../../validation/agencyValidation';
 import { SpinnerCircular } from 'spinners-react';
@@ -13,6 +12,7 @@ interface IRedirectionUrls {
   Company: string;
   Employee: string;
   Admin: string;
+  Client: string;
 }
 
 const Login = ({ role }: LoginProps) => {
@@ -23,17 +23,19 @@ const Login = ({ role }: LoginProps) => {
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
 
-  const handleSubmit = async (e: React.FormEvent): Promise<any> => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
 
     if (!validateEmail(email)) {
       emailRef.current?.focus()
-      return message.error('Please enter a valid email address')
+      message.error('Please enter a valid email address')
+      return
     }
 
     if (!validatePassword(password)) {
       passwordRef.current?.focus()
-      return message.error('Please enter a valid Password')
+      message.error('Please enter a valid Password')
+      return
     }
 
     try {
@@ -43,20 +45,23 @@ const Login = ({ role }: LoginProps) => {
 
       if (response && response.status == 200) {
         message.success('Successfully Logged in')
-        let roleRedirects: IRedirectionUrls = {
+        const roleRedirects: IRedirectionUrls = {
           "Agency": "/agency/",
           "Company": "/company/",
           "Employee": "/employee/",
-          "Admin": "/admin/"
+          "Admin": "/admin/",
+          "Client": "/client/",
         }
-        let url = roleRedirects[role as keyof typeof roleRedirects]
+        const url = roleRedirects[role as keyof typeof roleRedirects]
         navigate(url)
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      setIsLoading(false)     
-        message.error(error.response.data.error)
-      
+      setIsLoading(false)
+      console.log(error)
+      message.error(error.response.data.error)
+
     }
   };
   return (

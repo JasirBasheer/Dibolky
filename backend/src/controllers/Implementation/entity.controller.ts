@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { IEntityController } from '../Interface/IEntityController';
 import { IEntityService } from '../../services/Interface/IEntityService';
 import { inject, injectable } from 'tsyringe';
-import { HTTPStatusCodes, ResponseMessage, SendResponse } from 'mern.common';
+import { findCountryByIp, HTTPStatusCodes, ResponseMessage, SendResponse } from 'mern.common';
+import { getPriceConversionFunc } from '../../shared/utils/currency-conversion.util';
 
 @injectable()
 export default class EntityController implements IEntityController {
@@ -28,7 +29,7 @@ export default class EntityController implements IEntityController {
             const { Mail, platform } = req.body
             const isExists = await this.entityService.IsMailExists(Mail, platform)
 
-            if (isExists != null) return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.BAD_REQUEST,  {isExists:isExists} )
+            if (isExists != null) return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.BAD_REQUEST, { isExists: isExists })
             SendResponse(res, HTTPStatusCodes.BAD_REQUEST, ResponseMessage.NOT_FOUND)
 
         } catch (error) {
@@ -46,8 +47,30 @@ export default class EntityController implements IEntityController {
 
     async getAllPlans(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const plans = await this.entityService.getAllPlans()
-            if (plans) return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS,  {plans} )
+            let ipAddressWithProxy = req.get('x-forwarded-for') || req.socket.remoteAddress;
+            ipAddressWithProxy = ipAddressWithProxy == "::1" ? "49.36.231.0" : ipAddressWithProxy;
+            const locationData = findCountryByIp(ipAddressWithProxy as string)
+            let userCountry = req.cookies?.userCountry
+            if(!userCountry){
+                userCountry = !locationData?.country ? 'INR' : locationData.country
+                res.cookie('userCountry', userCountry, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: false, secure: false, sameSite: 'strict', path: '/' });
+            }
+
+            let plans = await this.entityService.getAllPlans()
+            let PriceConverisonFunc = getPriceConversionFunc(userCountry)
+
+            const convertedPlans = {
+                Agency: plans.Agency.map((item: any) => ({
+                    ...item.toObject(), 
+                    price: PriceConverisonFunc(item.price as number)
+                })),
+                Company: plans.Company.map((item: any) => ({
+                    ...item.toObject(), 
+                    price: PriceConverisonFunc(item.price as number)
+                }))
+            };
+    
+            if (plans) return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plans : convertedPlans})
             SendResponse(res, HTTPStatusCodes.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR)
         } catch (error) {
             next(error);
@@ -65,10 +88,18 @@ export default class EntityController implements IEntityController {
     async getPlan(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { id, platform } = req.body
+            const userCountry = req.cookies.userCountry
             const plans = await this.entityService.getAllPlans()
             const plan = await this.entityService.getPlan(plans, id, platform)
             if (!plan) return SendResponse(res, HTTPStatusCodes.BAD_REQUEST, ResponseMessage.BAD_REQUEST, { message: "Platform or Plan not found please try again" })
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {plan})
+            let PriceConverisonFunc = getPriceConversionFunc(userCountry)
+            console.log(userCountry);
+            const convertedPlanPrice = PriceConverisonFunc(plan.price)
+            console.log(convertedPlanPrice);
+            
+            plan.price = convertedPlanPrice
+            console.log(convertedPlanPrice)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plan })
         } catch (error) {
             next(error);
         }
@@ -85,12 +116,13 @@ export default class EntityController implements IEntityController {
 
     async registerAgency(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, paymentGateway, description } = req.body.details
+            const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, paymentGateway, description,currency } = req.body.details
             const { razorpay_payment_id } = req.body.response
+            console.log(req.body.response)
 
-            const createdAgency = await this.entityService.registerAgency(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, razorpay_payment_id, paymentGateway, description)
-            if (!createdAgency) return SendResponse(res,HTTPStatusCodes.UNAUTHORIZED,ResponseMessage.BAD_REQUEST)
-             SendResponse(res,HTTPStatusCodes.CREATED,ResponseMessage.CREATED)
+            const createdAgency = await this.entityService.registerAgency(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, razorpay_payment_id, paymentGateway, description,currency)
+            if (!createdAgency) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.BAD_REQUEST)
+            SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
         } catch (error) {
             next(error);
         }
@@ -110,9 +142,9 @@ export default class EntityController implements IEntityController {
         try {
             const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password } = req.body
             const createdCompany = await this.entityService.registerCompany(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password)
-            if (!createdCompany) return SendResponse(res,HTTPStatusCodes.UNAUTHORIZED,ResponseMessage.UNAUTHORIZED)
+            if (!createdCompany) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.UNAUTHORIZED)
             console.log('company created successfully');
-            SendResponse(res,HTTPStatusCodes.CREATED,ResponseMessage.CREATED)
+            SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
         } catch (error) {
             next(error);
         }
@@ -155,9 +187,9 @@ export default class EntityController implements IEntityController {
                     }
                 }
             } else {
-              return SendResponse(res,HTTPStatusCodes.BAD_REQUEST,"Invalid role provided")
+                return SendResponse(res, HTTPStatusCodes.BAD_REQUEST, "Invalid role provided")
             }
-            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{menu})
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { menu })
         } catch (error: any) {
             next(error)
         }

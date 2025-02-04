@@ -1,66 +1,87 @@
-import { checkReelProcess, checkReelUploadStatus, initializeReelUpload, publishReel, uploadHostedReel } from "../provider.strategies/facebook.strategy";
-import { checkIGContainerStatus, fetchIGBusinessAccountId, publishInstagramReel, uploadIGReelContent } from "../provider.strategies/instagram.strategy";
+import { checkReelUploadStatus, initializeReelUpload, publishReel, uploadHostedReel } from "../provider.strategies/facebook.strategy";
+import { checkIGContainerStatus, fetchIGAccountId, publishInstagramContent, uploadIGReelContent } from "../provider.strategies/instagram.strategy";
+import { FACEBOOK, INSTAGRAM } from "../shared/utils/constants";
 import { getPages } from "./shared.service";
 
 
+// Instagram -- reel
 
-
-// Instagram
-
-
-
-
-export async function uploadIGReel(content: any, access_token: string): Promise<any> {
+export async function uploadIGReel(content: any, access_token: string, client: any): Promise<any> {
     try {
-        const pages = await getPages(access_token)
-        const pageId = pages?.data[0].id
-        console.log(pages,pageId)
-        const businessId = await fetchIGBusinessAccountId(pageId, access_token)
-        const creationId = await uploadIGReelContent(access_token, businessId, content.url, content.caption)
-        console.log(businessId,creationId);
-        
-        const status = await checkIGContainerStatus(access_token, creationId.id)
-        if (!status) throw new Error('Error uploading content to instagram')
-        return await publishInstagramReel(access_token, businessId, creationId.id)
-    } catch (error:any) {
-        throw error;
-    }
 
+        const pages = await getPages(access_token);
+        let pageId;
+
+        if (!Array.isArray(pages.data)) {
+            console.error("Error: pages is not an array", pages);
+        } else if (!client?.socialMedia_credentials?.facebook?.userName) {
+            console.error("Error: Facebook username is missing", client?.socialMedia_credentials?.facebook);
+        } else {
+            pageId = pages.data.find((item: any) => item.name === client.socialMedia_credentials.facebook.userName)?.id;
+
+        }
+
+        const instagramAccountId = await fetchIGAccountId(pageId, access_token);
+        const containerData = await uploadIGReelContent(access_token, instagramAccountId.id, content.url[0], content.caption)
+        if (containerData.error) throw new Error(`Container creation failed: ${JSON.stringify(containerData.error)}`);
+
+        await checkIGContainerStatus(access_token, containerData.id);
+        const result = await publishInstagramContent(access_token, instagramAccountId.id, containerData.id);
+        if (result) {
+            return {
+                name: INSTAGRAM,
+                status: 'success',
+                id: content._id
+            }
+        }
+
+    } catch (error: any) {
+        console.error('Reel upload error:', error);
+        throw new Error(`Failed to upload reel: ${error.message}`);
+    }
 }
 
 
-
-// Facebook
+// Facebook -- reel
 
 export async function uploadFacebookReel(
     accessToken: string,
     content: any,
-    caption: string
+    caption: string,
+    client: any
 ): Promise<any> {
     try {
-        console.log('facebook enter');
-        
+
         const pages = await getPages(accessToken);
+        let page;
 
-        if (!pages?.data?.[1]?.id || !pages?.data?.[1]?.access_token) throw new Error('Failed to get page details');
-        
-        const pageId = pages.data[1].id;
-        const pageAccessToken = pages.data[1].access_token;
+        if (!Array.isArray(pages.data)) {
+            console.error("Error: pages is not an array", pages);
+        } else if (!client?.socialMedia_credentials?.facebook?.userName) {
+            console.error("Error: Facebook username is missing", client?.socialMedia_credentials?.facebook);
+        } else {
+            page = pages.data.find((item: any) => item.name == client.socialMedia_credentials.facebook.userName)
+        }
 
-        
-        
+        const pageId = page.id
+        const pageAccessToken = page.access_token;
+
+
+
         const initResponse = await initializeReelUpload(pageId, pageAccessToken)
-       
-        await uploadHostedReel(initResponse.video_id, content.url, pageAccessToken)
-        console.log('entered status check ');        
-        await checkReelUploadStatus(initResponse.video_id, pageAccessToken)
-        console.log('checkouted from status check ');        
-        const publishRespone = await publishReel(pageId, initResponse.video_id, pageAccessToken, caption)
-        // await checkReelProcess(initResponse.video_id, pageAccessToken)
 
+        await uploadHostedReel(initResponse.video_id, content.url[0], pageAccessToken)
+        console.log('entered status check ');
+        await checkReelUploadStatus(initResponse.video_id, pageAccessToken)
+        console.log('checkouted from status check ');
+        const publishRespone = await publishReel(pageId, initResponse.video_id, pageAccessToken, caption)
 
         console.log('published from response', publishRespone)
-        return publishRespone;
+        return {
+            name: FACEBOOK,
+            status: 'success',
+            id: content._id
+        };;
     } catch (error: any) {
         throw error;
     }

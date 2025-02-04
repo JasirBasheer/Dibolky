@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import SideBar from '../../components/adminComponents/sidebarComponents/Sidebar'
+import SideBar from '../../components/admin.components/sidebar.components/sidebar'
 import { Outlet } from 'react-router-dom'
-import Navbar from '@/components/adminComponents/Navbar'
+import Navbar from '@/components/admin.components/Navbar'
 
 
 const AdminLayout = () => {

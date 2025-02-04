@@ -1,4 +1,5 @@
 export interface IProviderService {
-    handleSocialMediaUploads(tenantDb:any,contentId:string,clientId:string):Promise<any>;
-    updateContentStatus(tenantDb:any,contentId:string,status:string):Promise<any>;
+    handleSocialMediaUploads(tenantDb:any,contentId:string,clientId:string,isCron:boolean):Promise<any>;
+    updateContentStatus(tenantDb:any,content: any,status:string):Promise<any>;
+    getContentById(contentId:any, db:any):Promise<any>;
 }

@@ -1,0 +1,72 @@
+[2025-02-04T05:42:40.647Z] plans.map is not a function
+ 
+[2025-02-04T05:42:40.850Z] plans.map is not a function
+ 
+[2025-02-04T05:43:43.691Z] plans.map is not a function
+ 
+[2025-02-04T05:43:43.877Z] plans.map is not a function
+ 
+[2025-02-04T05:44:20.769Z] plans.map is not a function
+ 
+[2025-02-04T05:44:20.947Z] plans.map is not a function
+ 
+[2025-02-04T05:44:58.382Z] Cannot read properties of undefined (reading 'price')
+ 
+[2025-02-04T05:44:58.547Z] Cannot read properties of undefined (reading 'price')
+ 
+[2025-02-04T05:45:40.699Z] plans.map is not a function
+ 
+[2025-02-04T05:45:40.939Z] plans.map is not a function
+ 
+[2025-02-04T05:48:03.655Z] plans.map is not a function
+ 
+[2025-02-04T05:48:04.147Z] plans.map is not a function
+ 
+[2025-02-04T05:48:37.333Z] plans.map is not a function
+ 
+[2025-02-04T05:48:37.511Z] plans.map is not a function
+ 
+[2025-02-04T06:16:39.738Z] Account Not found
+ 
+[2025-02-04T06:16:39.863Z] Account Not found
+ 
+[2025-02-04T06:16:41.268Z] Invalid credentials
+ 
+[2025-02-04T06:17:51.757Z] Account Not found
+ 
+[2025-02-04T06:17:51.905Z] Account Not found
+ 
+[2025-02-04T06:22:12.477Z] Account Not found
+ 
+[2025-02-04T06:22:12.647Z] Account Not found
+ 
+[2025-02-04T06:56:24.099Z] Account Not found
+ 
+[2025-02-04T06:56:24.256Z] Account Not found
+ 
+[2025-02-04T07:07:12.123Z] Agency validation failed: currency: Cast to Number failed for value "NaN" (type number) at path "currency"
+ 
+[2025-02-04T07:09:38.424Z] Agency validation failed: currency: Cast to Number failed for value "NaN" (type number) at path "currency"
+ 
+[2025-02-04T07:11:55.788Z] Account Not found
+ 
+[2025-02-04T07:11:56.016Z] Account Not found
+ 
+[2025-02-04T08:32:18.417Z] read ECONNRESET
+ 
+[2025-02-04T08:32:21.042Z] read ECONNRESET
+ 
+[2025-02-04T09:13:09.036Z] connection <monitor> to 13.235.205.242:27017 timed out
+ 
+[2025-02-04T09:13:09.041Z] connection <monitor> to 13.235.205.242:27017 timed out
+ 
+[2025-02-04T10:29:52.667Z] read ECONNRESET
+ 
+[2025-02-04T10:29:52.672Z] read ECONNRESET
+ 
+[2025-02-04T11:15:10.268Z] [object Object]
+ 
+[2025-02-04T11:15:11.099Z] [object Object]
+ 
+[2025-02-04T11:15:28.621Z] [object Object]
+ 

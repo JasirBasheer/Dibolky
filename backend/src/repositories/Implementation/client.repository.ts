@@ -13,12 +13,27 @@ export default class ClientRepository implements IClientRepository {
         const details = await db.findOne({ _id: id })
         return await details.setSocialMediaToken(provider, token);
     }
+    async setSocialMediaUserNames(id: string, provider: string, username: string, db: any): Promise<any> {
+        const details = await db.findOne({ _id: id })
+        return await details.setSocialMediaUserName(provider, username);
+    }
+
     async getContentById(contentId: string, db: any): Promise<any> {
         return await db.findOne({ _id: contentId })
     }
     async changeContentStatusById(contentId: string, db: any, status: string): Promise<any> {
         return await db.findByIdAndUpdate(contentId, { status: status })   
     }
+    async getReviewBucketById(clientId:string,db:any):Promise<any>{
+        return await db.find({id:clientId})
+    }
+
+    async getClientDetailsByMail(tenantDb:any,email:string):Promise<any>{
+        return await tenantDb.findOne({email:email})
+    }
+
+
+    
 
 
 

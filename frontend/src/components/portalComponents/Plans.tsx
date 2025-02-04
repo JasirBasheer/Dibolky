@@ -2,17 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { FcCheckmark } from "react-icons/fc";
 import { useNavigate } from 'react-router-dom';
 import axios from '../../utils/axios';
+import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
 
 const Plans = () => {
     const [plans, setPlans] = useState<any>(null); 
     const [isAgency, setIsAgency] = useState(true); 
     const [sortedPlans, setSortedPlans] = useState<any[]>([]); 
+    const currency = useSelector((state:any)=>state.portal)
     const navigate = useNavigate();
 
     const getPlans = async () => {
         try {
-            const response = await axios.get('/api/entities/get-all-plans');           
+            const response = await axios.get('/api/entities/get-all-plans');  
+            console.log(response.data);         
             setPlans(response.data.plans);
+            const country = localStorage.getItem('country')
+            console.log('countyr',country)
+            if(response.data.country!=='' && !country ){
+                localStorage.setItem('country',response.data.country)
+            }
+
         } catch (error) {
             console.error('Error fetching plans:', error);
         }
@@ -20,7 +30,9 @@ const Plans = () => {
 
     useEffect(() => {
         getPlans();
-    }, []);
+    }, [currency]);
+
+
 
     useEffect(() => {
         if (plans) {
@@ -29,7 +41,7 @@ const Plans = () => {
     }, [isAgency, plans]); 
 
     const handlePurchasePlan = (planId: any) => {
-        let platform = isAgency ? "Agency" : "Company";
+        const platform = isAgency ? "Agency" : "Company";
         navigate(`/purchase/${platform}/${planId}`);
     };
 
@@ -85,7 +97,7 @@ const Plans = () => {
                                     <h2 className="text-2xl font-bold">{plan.title}</h2>
                                     <p className="text-gray-500 mt-2">{plan.description}</p>
                                     <div className="flex items-baseline mt-4">
-                                        <span className="text-3xl font-bold">${plan.price}</span>
+                                        <span className="text-3xl font-bold">{currency.currencySymbol}{plan.price.toLocaleString()}</span>
                                         <span className="text-gray-500 ml-2">/{plan.validity}</span>
                                     </div>
                                     <div className="space-y-4 mt-6">

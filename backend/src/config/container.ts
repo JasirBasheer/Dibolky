@@ -51,7 +51,7 @@ import ProviderService from "../services/Implementation/provider.service";
 
 
 
-//Repo Registeration
+//* Repo Registeration
 container.register<IAdminRepository>('AdminRepository', { useClass: AdminRepository });
 container.register<IAgencyRepository>('AgencyRepository', { useClass: AgencyRepository });
 container.register<ICompanyRepository>('CompanyRepository', { useClass: CompanyRepository });
@@ -62,7 +62,7 @@ container.register<IClientRepository>('ClientRepository', { useClass: ClientRepo
 
 
 
-//Service Registeration
+//* Service Registeration
 container.register<IAuthenticationService>('AuthenticationService', { useClass: AuthenticationService });
 container.register<IAdminService>('AdminService', { useClass: AdminService });
 container.register<IAgencyService>('AgencyService', { useClass: AgencyService });
@@ -76,7 +76,7 @@ container.register<IProviderService>('ProviderService', { useClass: ProviderServ
 
 
 
-//Controller Registeration
+//* Controller Registeration
 container.register<IAuthenticationController>('AuthenticationController', { useClass: AuthenticationController });
 container.register<IAdminController>('AdminController', { useClass: AdminController });
 container.register<IAgencyController>('AgencyController', { useClass: AgencyController });

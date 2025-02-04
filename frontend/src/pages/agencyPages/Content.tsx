@@ -1,4 +1,4 @@
-import AgencyClientContent from '@/components/agencyComponents/clientContent';
+import AgencyClientContent from '@/components/agency.components/clientside.components/clientContent';
 import { setUser } from '@/redux/slices/userSlice';
 import  { useEffect,useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';

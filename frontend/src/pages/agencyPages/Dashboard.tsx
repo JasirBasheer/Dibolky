@@ -1,8 +1,8 @@
 import { setUser } from '@/redux/slices/userSlice';
 import  { useEffect,useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import AgencyDashboard from '../../components/agencyComponents/agencyDashoard';
-import AgencyClientDashboard from '@/components/agencyComponents/clientDashboard';
+import AgencyDashboard from '../../components/agency.components/agencyside.components/agencyDashoard';
+import AgencyClientDashboard from '@/components/agency.components/clientside.components/clientDashboard';
 
 const Dashboard = () => {
   const [isAgencyDashboard,setIsAgencyDashboard] = useState(false)

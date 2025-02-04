@@ -4,7 +4,7 @@ import { UnauthorizedError } from "mern.common";
 export const permissionGate = (requiredRole: string) => {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      if (req.details.role !== requiredRole) {
+      if (req.details.role !== requiredRole && !(req.details.role == "Agency" && requiredRole == "Client")) {
         throw new UnauthorizedError('Unauthorized access');
       }
       next();

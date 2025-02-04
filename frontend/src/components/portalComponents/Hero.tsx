@@ -11,7 +11,7 @@ const Hero = () => {
     })
   })
   return (
-    <div className='bg-[#EFF4FF] sm:min-h-[31rem] min-h-[34rem] px-4 sm:px-6 py-16 sm:py-20'>
+    <div className='bg-[#EFF4FF] sm:min-h-[31rem] min-h-[34rem] px-4 sm:px-6 py-16 sm:py-20 '>
       <div className='max-w-7xl mx-auto grid grid-cols-12 gap-4'>
         <div className="slideUp col-span-12 lg:col-span-10 lg:col-start-2 flex flex-col items-center text-center space-y-6">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl  font-bold text-[#2563EB] leading-tight">

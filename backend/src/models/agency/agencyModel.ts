@@ -67,6 +67,9 @@ const agencySchema: Schema<IAgency> = new mongoose.Schema({
     },
     planPurchasedRate: {
         type: Number
+    },
+    currency:{
+        type:String
     }
 
 });

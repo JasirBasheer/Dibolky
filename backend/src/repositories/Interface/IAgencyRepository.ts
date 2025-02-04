@@ -13,7 +13,6 @@ export interface IAgencyRepository {
     getAllClients(db:any): Promise<any>;
     getClientById(db:any,id:string): Promise<any>;
     saveContentToDb(ReviewBucket:any,details:any): Promise<any>;
-    getClientReviewBucket(clientId:string,db:any):Promise<any>;
     getContentById(clientId:string,db:any):Promise<any>;
     changeContentStatusById(contentId:string,db:any,status:string):Promise<any>;
   }

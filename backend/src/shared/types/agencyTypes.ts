@@ -22,6 +22,7 @@ export interface IAgency extends Document {
     remainingProjects?: number;
     isBlocked: boolean;
     planPurchasedRate: number;
+    currency?:string;
 }
 
 

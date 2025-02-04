@@ -7,8 +7,12 @@ import morgan from 'morgan'
 import compression from 'compression';
 import cookieParser from 'cookie-parser'
 import router from './routes/route';
-import { connectToMongoDB, errorHandler, limiter } from 'mern.common';
+import { connectToMongoDB, limiter } from 'mern.common';
 import { DB_URI, PORT } from "./config/env";
+import { startScheduledPostsProcessor } from "./media.service/scheduled-posts.service";
+import { clearErrorLogsJob } from "./shared/utils/logger";
+import { errorHandler } from "./middlewares/errorHandler.middleware";
+
 dotenv.config();
 
 const app = express()
@@ -34,6 +38,10 @@ app.get('/', (req, res) => {
 
 connectToMongoDB(DB_URI || "mongodb://localhost:27017/dibolky")
 app.use(errorHandler);
+
+// Cron Jobs
+clearErrorLogsJob()
+startScheduledPostsProcessor()
 
 
 app.listen(PORT || 5000, () => {

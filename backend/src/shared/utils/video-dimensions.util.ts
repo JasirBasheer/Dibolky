@@ -1,5 +1,11 @@
 // import { ffprobe, FfprobeData, FfprobeStream } from 'fluent-ffmpeg';
 
+export const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
+export const VIDEO_EXTENSIONS = ['.mp4', '.mov', '.avi', '.webm', '.mkv'];
+
+
+
+
 // interface VideoDimensions {
 //     width: number;
 //     height: number;

@@ -6,6 +6,7 @@ import { ScaleLoader } from 'react-spinners';
 import { useDispatch } from 'react-redux';
 import { setAgency } from '../../redux/slices/agencySlice';
 import { setUser } from '../../redux/slices/userSlice';
+import { setClient } from '@/redux/slices/clientSlice';
 
 
 interface IRedirectionUrls {
@@ -26,17 +27,29 @@ const ProtectedRoute = ({ children,role }: { children: any,role:string }) => {
       const response = await axios.get(`/api/${role.toLowerCase()}/`);
       
       if (response.data) {
-        dispatch(setAgency({
-          id: response.data.details._id,
-          orgId: response.data.details.orgId,
-          organizationName: response.data.details.organizationName,
-          ownerName: response.data.details.name,
-          email: response.data.details.email,
-          industry: response.data.details.industry,
-          logo: response.data.details.logo,
-          remainingProjects: response.data.details.remainingProjects,
-          remainingClients: response.data.details.remainingClients
-        }));
+        if(role == "Agency"){
+          dispatch(setAgency({
+            id: response.data.details._id,
+            orgId: response.data.details.orgId,
+            organizationName: response.data.details.organizationName,
+            ownerName: response.data.details.name,
+            email: response.data.details.email,
+            industry: response.data.details.industry,
+            logo: response.data.details.logo,
+            remainingProjects: response.data.details.remainingProjects,
+            remainingClients: response.data.details.remainingClients
+          }));
+        }else if (role == "Client"&& response?.data.details.orgId && response?.data.details.email){
+        const res = await axios.get(`/api/client/get-client-details`);
+          dispatch(setClient({
+            id: res.data.client._id,
+            orgId: res.data.client.orgId,
+            name: res.data.client.name,
+            email: res.data.client.email,
+          }));
+
+        }
+   
         
 
         const roleRedirects: IRedirectionUrls = {
@@ -54,7 +67,9 @@ const ProtectedRoute = ({ children,role }: { children: any,role:string }) => {
         }
         
       }
-    } catch (error: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
+      console.log(error)
       Cookies.remove('accessToken');
       Cookies.remove('refreshToken');
       navigate('/login');

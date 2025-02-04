@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ChevronDown, X } from 'lucide-react';
 import { RiMenu2Fill } from "react-icons/ri";
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { motion, AnimatePresence } from 'framer-motion';
+import Cookies from 'js-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrency } from '@/redux/slices/portal.slice';
 
 interface NavbarProps {
   animation: boolean;
@@ -10,6 +14,11 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ animation }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isCurrecyBarOpen, setIsCurrecyBarOpen] = useState(false);
+  const currency = useSelector((state:any)=>state.portal)
+  const dispatch = useDispatch()
+
+  console.log(currency)
 
   const navItems = [
     { label: 'Features', href: '/features' },
@@ -30,8 +39,35 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
     })
   })
 
+
+  const currencies = [
+    { code: 'USD', symbol: '$', name: 'US Dollar' },
+    { code: 'INR', symbol: '₹', name: 'Rupees' },
+    { code: 'AED', symbol: 'د.', name: 'Dirham' },
+  ];
+  const symbols:any = {
+    INR:"₹",
+    USD:"$",
+    AED:"د."
+  }
+
+  const handleSelect = (currency: string,symbol:string) => {
+    Cookies.set('userCountry',currency)
+    dispatch(setCurrency({selectedCurrency:currency,currencySymbol:symbol}))
+    setIsCurrecyBarOpen(false);
+  };
+
+  useEffect(()=>{
+    const country = Cookies.get('userCountry')
+      if(country){
+      dispatch(setCurrency({selectedCurrency:country,currencySymbol:symbols[country]}))
+      }else{
+      dispatch(setCurrency({selectedCurrency:"USD",currencySymbol:"$"}))
+      }
+  },[])
+
   return (
-    <div className="relative">
+    <div className="relative z-50">
       <nav className="w-full px-6 py-5 bg-white shadow-sm">
         <div className=" max-w-7xl mx-auto grid grid-cols-12 items-center gap-4">
           <div className={`${animation ? "sligeRight" : ""} col-span-6 md:col-span-8 flex items-center`}>
@@ -53,6 +89,43 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
           </div>
 
           <div className={`${animation ? "slideLeft" : ""} hidden md:flex col-span-4 items-center justify-end space-x-4`}>
+            <div className="relative">
+              <button
+                onClick={() => setIsCurrecyBarOpen(!isCurrecyBarOpen)}
+                className="flex items-center gap-1 px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors rounded-md"
+              >
+                <span className="font-medium">{currency.selectedCurrency}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${isCurrecyBarOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+
+              {isCurrecyBarOpen && (
+                <AnimatePresence >
+                  <motion.div
+                    initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="absolute right-0 mt-2 w-48   z-10  bg-white rounded-md shadow-lg border border-gray-200  overflow-y-auto p-4 text-sm"
+                  >
+                      <ul className="py-1">
+                        {currencies.map((currency) => (
+                          <li key={currency.code}>
+                            <button
+                              onClick={() => handleSelect(currency.code,currency.symbol)}
+                              className="w-full px-4 py-2 text-left hover:bg-blue-50 text-gray-700 hover:text-blue-600 flex items-center justify-between"
+                            >
+                              <span>{currency.name}</span>
+                              <span className="text-gray-500">{currency.symbol}</span>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                  </motion.div>
+                </AnimatePresence>
+              )}
+            </div>
+
             <a
               href="/login"
               className="text-gray-600 hover:text-gray-800 transition-colors duration-200"

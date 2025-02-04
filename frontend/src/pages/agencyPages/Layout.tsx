@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import Navbar from '../../components/agencyComponents/Navbar'
-import SideBar from '../../components/agencyComponents/sidebarComponents/Sidebar'
+import Navbar from '../../components/agency.components/Navbar'
+import SideBar from '../../components/agency.components/sidebar.components/sidebar'
 import { Outlet } from 'react-router-dom'
 
 

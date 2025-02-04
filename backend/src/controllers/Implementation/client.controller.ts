@@ -14,7 +14,7 @@ export default class ClientController implements IClientController {
         this.clientService = clientService
     }
 
-   async getClient(req:Request,res:Response,next:NextFunction):Promise<any>{
+   async getClient(req:Request,res:Response,next:NextFunction):Promise<void>{
         try {
             const details = await this.clientService.verifyClient(req.details._id)
             if(!details)throw new NotFoundError("Account Not found")
@@ -23,6 +23,18 @@ export default class ClientController implements IClientController {
           next(error)
         } 
     }
+
+    async getClientDetails(req: Request, res: Response, next: NextFunction): Promise<void>{
+        try {
+            const details = await this.clientService.getClientDetails(req.tenantDb,req.details.email)
+            if(!details)throw new NotFoundError("Account Not found")
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{client:details})
+                
+        } catch (error:any) {
+            next(error)
+        }
+    }
+
 
    
 }

@@ -64,9 +64,7 @@ export default class AgencyRepository implements IAgencyRepository {
         return await newReviewBucket.save()
 
     }
-    async getClientReviewBucket(clientId:string,db:any):Promise<any>{
-        return await db.find({id:clientId})
-    }
+
 
     async getContentById(contentId:string,db:any):Promise<any>{
         return await db.findOne({_id:contentId})

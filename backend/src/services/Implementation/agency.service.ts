@@ -10,6 +10,8 @@ import { ownerDetailsSchema } from "../../models/agency/agencyModel";
 import { createNewMenuForClient } from "../../shared/utils/menu.utils";
 import { connectTenantDB } from "../../config/db";
 import { ReviewBucketSchema } from "../../models/agency/reviewBucketModel";
+import { uploadToS3 } from "../../shared/utils/aws";
+import { AWS_S3_BUCKET_NAME } from "../../config/env";
 
 @injectable()
 export default class AgencyService implements IAgencyService {
@@ -102,16 +104,20 @@ export default class AgencyService implements IAgencyService {
         return await this.agencyRepository.getClientById(db, id)
 
     }
-    async saveContentToDb(id: string, orgId: string, tenantDb: any, url: string, platform: string, contentType: string, caption: string, isScheduled: string, scheduledDate: string): Promise<any> {
+    async saveContentToDb(id: string, orgId: string, tenantDb: any, files: any, platforms: any, contentType: string, caption: string): Promise<any> {
+        let contentUrls = [];
+        for (let file of files) {
+            const fileObject = new File([file.buffer], file.originalname.toLowerCase(), { type: file.mimetype });
+            const contentUrl = await uploadToS3(fileObject, `test/${file.originalname.toLowerCase()}`, AWS_S3_BUCKET_NAME);
+            contentUrls.push(contentUrl);
+        }
+
         const db = await tenantDb.model('reviewBucket', ReviewBucketSchema)
-        const details = { url: url, platform, contentType, id, orgId, caption, isScheduled: isScheduled == "true" ? true : false, scheduledDate }
+        const details = { url: contentUrls, platforms, contentType, id, orgId, caption }
         return await this.agencyRepository.saveContentToDb(db, details)
     }
 
-    async getReviewBucket(clientId: string, tenantDb: any): Promise<any> {
-        const db = await tenantDb.model('reviewBucket', ReviewBucketSchema)
-        return await this.agencyRepository.getClientReviewBucket(clientId, db)
-    }
+
     async getContent(tenantDb: any, contentId: any): Promise<any> {
         const db = await tenantDb.model('reviewBucket', ReviewBucketSchema)
         return await this.agencyRepository.getContentById(contentId, db)

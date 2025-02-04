@@ -1,62 +1,86 @@
 import cron from 'node-cron';
-import mongoose from 'mongoose';
+import { color } from 'console-log-colors';
+import Agencies from '../models/agency/agencyModel';
+import { connectTenantDB } from '../config/db';
+import { ReviewBucketSchema } from '../models/agency/reviewBucketModel';
+import ProviderService from '../services/Implementation/provider.service';
+import { container } from 'tsyringe';
+import { Types } from 'mongoose';
 
+const providerService = container.resolve(ProviderService);
 
-async function processScheduledPosts() {
+async function processAgencyScheduledPosts() {
     try {
         const now = new Date();
-        const endTime = new Date(now.getTime() + 2 * 60 * 1000); 
+        const endTime = new Date(now.getTime() + 5 * 60 * 1000);
 
-        const scheduledPosts = await mongoose.model('Post').find({
-            isScheduled: true,
-            status: 'pending',
-            scheduledDate: {
-                $gte: now,
-                $lt: endTime
-            }
-        });
- 
-        for (const post of scheduledPosts) {
-            try {
-                // Get the organization's access token from your token storage
-                const orgAccessToken = await getOrgAccessToken(post.orgId); // You'll need to implement this
+        let agencies = await Agencies.find()
 
-                if (post.platform.includes('instagram')) {
-                    await publishToInstagram(post, orgAccessToken);
+        for (let agency of agencies) {
+            let db = await connectTenantDB(agency.orgId)
+            const reviewBucket = db.model('reviewBucket', ReviewBucketSchema)
+            const scheduledContents = await reviewBucket.find({
+                status: "Approved",
+                isPublished: false
+            })
+   
+
+            const filteredContents = scheduledContents.filter((content) => {
+                const validPlatforms = content.platforms.filter((platform) => {
+                    return !platform.isPublished && platform.scheduledDate !== '' && new Date(platform.scheduledDate).getTime() >= now.getTime() && new Date(platform.scheduledDate).getTime() <= endTime.getTime(); 
+                })
+                return validPlatforms.length > 0;
+            })
+
+
+             const filteredScheduledContents :any = filteredContents.map((content) => {
+                const validPlatforms = content.platforms.filter((platform) => {
+                    return !platform.isPublished && platform.scheduledDate !== '' && new Date(platform.scheduledDate).getTime() >= now.getTime() && new Date(platform.scheduledDate).getTime() <= endTime.getTime(); 
+                });
+
+                return {
+                    ...content.toObject(),
+                    platforms: validPlatforms
+                };
+            });
+
+
+            for (let content of filteredScheduledContents) {
+                if (content.platforms.length > 0) {
+                db = await connectTenantDB(agency.orgId)
+                const result :any = await providerService.handleSocialMediaUploads(db,content,content.id,true)
+                    console.log("result",result)
+                if(result){
+                    for(let platform of result){
+                        
+                        const reviewBucket = db.model('reviewBucket', ReviewBucketSchema)
+                        let content = await reviewBucket.findOne({_id:new Types.ObjectId(platform.id)})
+                        if(content){       
+                            await content.changePlatformPublishStatus(String(platform.name), true);
+                        }
+
+                    }
                 }
-
-                // Update post status to published
-                await mongoose.model('Post').updateOne(
-                    { _id: post._id },
-                    { 
-                        $set: { 
-                            status: 'published',
-                            publishedDate: new Date()
-                        }
-                    }
-                );
-            } catch (error) {
-                // Update post status to failed
-                await mongoose.model('Post').updateOne(
-                    { _id: post._id },
-                    { 
-                        $set: { 
-                            status: 'failed',
-                            errorMessage: error.message
-                        }
-                    }
-                );
-                console.error(`Failed to publish post ${post._id}:`, error);
+                
+                }
             }
+
         }
+
     } catch (error) {
         console.error('Error processing scheduled posts:', error);
     }
 }
 
-// Start the cron job to run every minute
+
 export function startScheduledPostsProcessor() {
-    cron.schedule('* * * * *', async () => {
-        await processScheduledPosts();
+    cron.schedule('*/2 * * * *', async () => {
+        console.log(color.blue('✅ Cron job restarted for scheduled contents...'));
+        await processAgencyScheduledPosts();
     });
 }
+
+
+
+
+

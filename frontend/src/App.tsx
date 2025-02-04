@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import Home from './pages/portalPages/home'
-import PurchasePlan from './pages/portalPages/purchasePlan'
+import Home from './pages/portal.pages/home'
+import PurchasePlan from './pages/portal.pages/purchasePlan'
 import Login from './pages/authenticationPages/Login'
 import { ForgotPassword, ResetPassword } from './pages/authenticationPages/forgotPassword'
 import UnProtectedRoute from './pages/authenticationPages/unProtectedRoute'
@@ -10,16 +10,19 @@ import MainloginPage from './pages/authenticationPages/MainloginPage'
 import Layout from './pages/agencyPages/Layout'
 import AgencyDashboard from './pages/agencyPages/Dashboard'
 import AgencyAnalytics from './pages/agencyPages/Analytics'
-import CreateClient from './components/agencyComponents/createClient'
+import CreateClient from './components/agency.components/agencyside.components/createClient'
 import AgencyLeads from './pages/agencyPages/Leads'
 import AdminDashboard from './pages/adminPages/DashBoard'
 import Plans from './pages/adminPages/Plans'
 import AdminClients from './pages/adminPages/Clients'
 import Clients from './pages/agencyPages/Clients'
-import ClientLayout from './pages/clientsPages/ClientLayout'
+import ClientLayout from './pages/client.pages/client.layout'
 import AdminLayout from './pages/adminPages/Layout '
-import AgencyClientContent from './components/agencyComponents/clientContent'
+import AgencyClientContent from './components/agency.components/clientside.components/clientContent'
 import AgencyContent from './pages/agencyPages/Content'
+import ClientDashboard from './pages/client.pages/client.dashboard'
+import ClientContent from './pages/client.pages/client.content'
+import ClientProjects from './pages/client.pages/client.projects'
 
 
 const App = () => {
@@ -99,7 +102,9 @@ function ClientRoutes() {
   return (
     <Routes>
       <Route path='/' element={<ProtectedRoute role={"Client"} ><ClientLayout /></ProtectedRoute>} >
-        {/* <Route index element={<AgencyDashboard />} /> */}
+        <Route index element={<ClientDashboard />} />
+        <Route path='contents' element={<ClientContent />} />
+        <Route path='projects' element={<ClientProjects />} />
       </Route>
 
       <Route path='/login' element={<UnProtectedRoute role={"Client"} ><Login role={"Client"} /></UnProtectedRoute>} />

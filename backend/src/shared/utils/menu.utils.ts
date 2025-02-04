@@ -6,32 +6,32 @@ const smm = {
             {
                 label: "Projects",
                 icon: "FileText",
-                path: ["/agency/projects"]
+                path: ["/projects"]
             },
             {
                 label: "Content",
                 icon: "Pen",
-                path: ["/agency/contents"]
+                path: ["/contents"]
             },
             {
                 label: "Media",
                 icon: "GalleryVertical",
-                path: ["/agency/media"]
+                path: ["/media"]
             },
             {
                 label: "Calendar",
                 icon: "CalendarDays",
-                path: ["/agency/calendar"]
+                path: ["/calendar"]
             },
             {
                 label: "Inbox",
                 icon: "Send",
-                path: ["/agency/inbox"]
+                path: ["/inbox"]
             },
             {
                 label: "Analytics",
                 icon: "ChartNoAxesCombined",
-                path: ["/agency/smm/analytics"]
+                path: ["/smm/analytics"]
             }
         ]
     }
@@ -45,22 +45,22 @@ const marketing = {
             {
                 label: "SEO",
                 icon: "FileText",
-                path: ["/agency/seo"]
+                path: ["/seo"]
             },
             {
                 label: "GOOGLE ADS",
                 icon: "Pen",
-                path: ["/agency/contents"]
+                path: ["/contents"]
             },
             {
                 label: "META ADS",
                 icon: "GalleryVertical",
-                path: ["/agency/media"]
+                path: ["/media"]
             },
             {
                 label: "Analytics",
                 icon: "ChartNoAxesCombined",
-                path: ["/agency/marketing/analytics"]
+                path: ["/marketing/analytics"]
             }
         ]
     }

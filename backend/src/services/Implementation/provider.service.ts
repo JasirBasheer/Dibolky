@@ -23,56 +23,52 @@ export default class ProviderService implements IProviderService {
 
 
 
-    async handleSocialMediaUploads(tenantDb: any, contentId: string, clientId: string): Promise<any> {
-
-        const db = await tenantDb.model('reviewBucket', ReviewBucketSchema)
-        const content = await this.clientRepository.getContentById(contentId, db)
-
-        if (!content) throw new Error('content does not exists')
+    async handleSocialMediaUploads(tenantDb: any, content: any, clientId: string,isCron:boolean): Promise<any> {
 
         const client = await this.agencyRepository.getClientById(tenantDb, clientId)
         if (!client) throw new Error('client does not exists')
+       
+        const uploadPromises = content.platforms.map(async (platform: any) => {
+            console.log(platform.scheduledDate)
+            if(platform.scheduledDate != "" && !isCron)    return null;
 
-        if (content.isScheduled) return "Approve content"
+                let access_token;
+                let response;
 
-
-        const uploadPromises = content.platform.map(async (platform: string) => {
-            let access_token;
-            let response;
-            
-            try {
-                switch (platform) {
-                    case INSTAGRAM:
-                        access_token = client.socialMedia_credentials.instagram.accessToken;
-                        response = await handleInstagramUpload(content, access_token);
-                        return {
-                            platform: INSTAGRAM,
-                            status: 'success',
-                            response
-                        };
-                        
-                    case FACEBOOK:
-                        access_token = client.socialMedia_credentials.facebook.accessToken;
-                        response = await handleFacebookUpload(content, access_token);
-                        return {
-                            platform: FACEBOOK,
-                            status: 'success',
-                            response
-                        };
-                        
-                    default:
-                        throw new Error(`Unsupported platform: ${platform}`);
+                
+                try {
+                    switch (platform.platform) {
+                        case INSTAGRAM:
+                            access_token = client.socialMedia_credentials.instagram.accessToken;
+                            return response = await handleInstagramUpload(content, access_token, client);
+                                                        
+                        case FACEBOOK:
+                            access_token = client.socialMedia_credentials.facebook.accessToken;
+                            return response = await handleFacebookUpload(content, access_token, client);
+                             
+                        default:
+                            throw new Error(`Unsupported platform: ${platform}`);
+                    }
+                } catch (error:any) {
+                    return {
+                        platform,
+                        status: 'error',
+                        error: error.message || 'Unknown error occurred'
+                    };
                 }
-            } catch (error:any) {
-                return {
-                    platform,
-                    status: 'error',
-                    error: error.message || 'Unknown error occurred'
-                };
-            }
+            
+          
         });
+       
 
         const results = await Promise.all(uploadPromises);
+        const validResults : any = results.filter(result => result !== null);
+
+        if(validResults.length==0){
+            return results
+
+        }
+
         
         console.log('Upload Results:', results);
         
@@ -82,23 +78,20 @@ export default class ProviderService implements IProviderService {
                 results.map(r => `${r.platform}: ${r.error}`).join(', '));
         }
 
-        return {
-            successful: successfulUploads,
-            failed: results.filter(result => result.status == 'error'),
-            totalAttempted: results.length,
-            totalSuccessful: successfulUploads.length
-        };
+        return results
         
     }
-
-
-
 
 
 
     async updateContentStatus(tenantDb: any, contentId: string, status: string): Promise<any> {
         const db = await tenantDb.model('reviewBucket', ReviewBucketSchema)
        return await this.clientRepository.changeContentStatusById(contentId, db, status)
+    }
+
+
+    async getContentById(contentId:any, db:any):Promise<any>{
+        return await this.clientRepository.getContentById(contentId,db)
     }
 
 }

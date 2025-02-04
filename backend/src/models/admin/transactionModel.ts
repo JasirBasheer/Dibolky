@@ -8,7 +8,8 @@ export interface ITransaction {
     paymentGateway:string;
     amount:number;
     description:string;
-    userId:string
+    userId:string;
+    currency:string;
 }
 
 const planSchema: Schema<ITransaction> = new Schema({
@@ -36,6 +37,10 @@ const planSchema: Schema<ITransaction> = new Schema({
         required:true
     },
     description:{
+        type:String,
+        required:true
+    },
+    currency:{
         type:String,
         required:true
     }

@@ -1,19 +1,31 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-export interface IReviewBucket extends Document {
+
+interface IPlatforms {
+    platform: string;
+    scheduledDate: string;
+    isPublished?: boolean;
+    isRescheduled?: boolean;
+}
+
+
+export interface IReviewBucket {
     id: string;
     orgId: string;
-    url: string;
+    url: string[];
     status: string;
-    platform: string[];
+    platforms: IPlatforms[];
     contentType: string;
-    title:string;
-    caption:string;
-    tags:string[];
-    isScheduled:boolean;
-    scheduledDate:string;
+    title: string;
+    caption: string;
+    tags: string[];
+    isPublished?: boolean;
+    feedBack: string;
+    changePlatformPublishStatus(platform: string, value: boolean): Promise<void>;
 
 }
+
+
 
 export const ReviewBucketSchema: Schema<IReviewBucket> = new mongoose.Schema({
     id: {
@@ -25,34 +37,66 @@ export const ReviewBucketSchema: Schema<IReviewBucket> = new mongoose.Schema({
         required: true
     },
     url: {
-        type: String,
+        type: [String],
         required: true
     },
     status: {
         type: String,
-        default :"Pending"
+        default: "Pending"  
     },
-    platform: {
-        type: [String],
-        required: true
-    },
+    platforms: [
+        {
+            platform: {
+                type: String,
+            },
+            scheduledDate: {
+                type: String
+            },
+            isPublished: {
+                type: Boolean,
+                default: false
+            },
+            isRescheduled: {
+                type: Boolean,
+                default: false
+            }
+        },
+    ],
     contentType: {
         type: String,
         required: true
     },
-    title:{
-        type:String
+    title: {
+        type: String
     },
-    caption:{
-        type:String
+    caption: {
+        type: String
     },
-    tags:{
-        type:[String]
+    tags: {
+        type: [String]
     },
-    isScheduled:{
-        type:Boolean
+    isPublished: {
+        type: Boolean,
+        default: false
     },
-    scheduledDate:{
-        type:String
+    feedBack: {
+        type: String
     }
 });
+
+
+
+
+ReviewBucketSchema.methods.changePlatformPublishStatus = async function(
+    platform: string,
+    value: boolean
+): Promise<void> {
+    const platformEntry = this.platforms.find((p: any) => p.platform === platform);
+
+    if (platformEntry) {
+        platformEntry.isPublished = value;
+        await this.save();
+    } else {
+        throw new Error(`Error while updating scheduled posts: ${platform}`);
+    }
+};

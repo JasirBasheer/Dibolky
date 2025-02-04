@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { message } from "antd";
 import { validateEmail, validatePassword } from '../../validation/agencyValidation';
 import { SpinnerCircular } from 'spinners-react';
+import toast from 'react-hot-toast';
+
 interface LoginProps {
   role: string;
 }
@@ -54,6 +56,7 @@ const Login = ({ role }: LoginProps) => {
         }
         const url = roleRedirects[role as keyof typeof roleRedirects]
         navigate(url)
+   
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

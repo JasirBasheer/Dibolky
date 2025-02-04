@@ -53,7 +53,7 @@ export default class EntityService implements IEntityService {
 
     async registerAgency(organizationName: string, name: string, email: string, address: any, websiteUrl: string, industry: string,
         contactNumber: number, logo: string, password: string, planId: string, validity: number, planPurchasedRate: number,
-        transactionId: string, paymentGateway: string, description: string): Promise<any> {
+        transactionId: string, paymentGateway: string, description: string,currency:string): Promise<any> {
 
             const hashedPassword = await hashPassword(password)
             let orgId = organizationName.replace(/\s+/g, "") + Math.floor(Math.random() * 1000000);
@@ -62,14 +62,16 @@ export default class EntityService implements IEntityService {
             const newAgency = {
                 orgId, planId, validity: validityInDate, organizationName, name,
                 email, address, websiteUrl, industry, contactNumber, logo, password: hashedPassword,
-                planPurchasedRate: planPurchasedRate
+                planPurchasedRate: planPurchasedRate,currency
             };
             const ownerDetails = await this.entityRepository.createAgency(newAgency);
+            
 
             const newTransaction = {
                 orgId, email, userId: ownerDetails._id,
                 planId, paymentGateway, transactionId,
-                amount: planPurchasedRate, description
+                amount: planPurchasedRate, description,
+                currency
             }
 
             await this.entityRepository.createTransaction(newTransaction)

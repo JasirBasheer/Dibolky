@@ -26,10 +26,10 @@ export async function createFacebookOAuthURL(redirectUri: string): Promise<strin
 
 
 
-export async function handleFacebookUpload(content: any, access_token: string): Promise<any> {
+export async function handleFacebookUpload(content: any, access_token: string, client:any): Promise<any> {
     switch (content.contentType) {
         case CONTENT_TYPE.REEL:
-            return await uploadFacebookReel(access_token, content, content.caption)
+            return await uploadFacebookReel(access_token, content, content.caption, client)
         case CONTENT_TYPE.VIDEO:
     }
 }
@@ -150,68 +150,6 @@ export async function checkReelUploadStatus(videoId: string, pageAccessToken: st
     });
 }
 
-
-
-
-export async function checkReelProcess(videoId: string, pageAccessToken: string): Promise<any> {
-    
-    const statusCheckUrl = `https://graph.facebook.com/v22.0/${videoId}?fields=status&access_token=${pageAccessToken}`;
-    const interval = 30_000; 
-    const maxAttempts = 15;
-    
-    return new Promise((resolve, reject) => {
-        let attempts = 0;
-        
-        const checkStatus = async () => {
-            try {
-                
-                const response = await fetch(statusCheckUrl, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
-                
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    clearInterval(intervalId);
-                    reject(new Error(`API Error: ${data.error?.message || 'Unknown error'}`));
-                    return;
-                }
-                console.log('video stats',data);
-                
-                console.log("Video Statusssssssssssssssssssssssssssssssss:", data?.status.processing_phase);
-                
-                // if (data.status?.copyright_check_status?.status == 'complete') {
-                //     clearInterval(intervalId);
-                //     resolve(data);
-                //     return;
-                // }
-                
-                if (data.status?.state === "error") {
-                    clearInterval(intervalId);
-                    reject(new Error(`Upload failed: ${data.status?.description || 'Unknown error'}`));
-                    return;
-                }
-                
-                attempts += 1;
-                if (attempts >= maxAttempts) {
-                    clearInterval(intervalId);
-                    reject(new Error(`Timeout: Status check exceeded ${maxAttempts} attempts`));
-                }
-            } catch (error) {
-                clearInterval(intervalId);
-                console.log(error)
-                reject(error);
-            }
-        };
-        
-        checkStatus();
-        
-        const intervalId = setInterval(checkStatus, interval);
-    });
-}
 
 
 

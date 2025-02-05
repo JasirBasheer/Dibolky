@@ -24,7 +24,7 @@ interface platform {
 
 
 //Model for Main DB
-export const clientMainDbSchema: Schema<IClient> = new mongoose.Schema({
+export const Client: Schema<IClient> = new mongoose.Schema({
   orgId: {
     type: String,
     required: true
@@ -44,7 +44,7 @@ export const clientMainDbSchema: Schema<IClient> = new mongoose.Schema({
 });
 
 
-export default mongoose.model<IClient>('Client', clientMainDbSchema);
+export default mongoose.model<IClient>('Client', Client);
 
 
 

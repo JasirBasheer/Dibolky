@@ -54,4 +54,9 @@ export default class ClientService implements IClientService {
     return await this.clientRepository.getReviewBucketById(clientId, db)
   }
 
+  async getClientInMainDb(email:string):Promise<any>{
+    const client = await this.clientRepository.getClientInMainDb(email)
+    return client
+  }
+
 }

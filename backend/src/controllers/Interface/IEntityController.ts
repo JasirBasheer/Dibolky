@@ -7,5 +7,5 @@ export interface IEntityController {
     registerAgency(req: Request, res: Response, next: NextFunction): Promise<any>
     registerCompany(req: Request, res: Response, next: NextFunction): Promise<any>
     getMenu(req: Request, res: Response, next: NextFunction): Promise<any>
-
+    getCountry(req: Request, res: Response, next: NextFunction): Promise<any>
 }

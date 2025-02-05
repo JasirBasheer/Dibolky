@@ -5,4 +5,5 @@ export interface IClientService {
     saveClientSocialMediaTokens(id:string,provider:string,token:string,db?:any):Promise<any>;
     setSocialMediaUserNames(id: string, provider: string, username: string, db?: any): Promise<any>;
     getReviewBucket(clientId: string, tenantDb: any): Promise<any>
+    getClientInMainDb(email:string):Promise<any>;
 }

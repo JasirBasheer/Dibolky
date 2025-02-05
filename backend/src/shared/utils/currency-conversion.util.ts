@@ -1,3 +1,8 @@
+export const CountryToCurrency : any = {
+    IN: "INR",
+    US: "USD",
+}
+
 export const convertUSDtoINR = (usdPrice: number): number => {
     const exchangeRate = 87.11;
     return Math.round(usdPrice * exchangeRate);
@@ -16,6 +21,6 @@ export const getPriceConversionFunc = (region: string) => {
         case 'AED':
             return convertUSDtoAED;
         default:
-            return (price: number) => price; 
+            return (price: number) => price;
     }
 }

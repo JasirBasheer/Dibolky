@@ -1,10 +1,10 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from '../../utils/axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { message } from "antd";
 import { validateEmail, validatePassword } from '../../validation/agencyValidation';
 import { SpinnerCircular } from 'spinners-react';
-import toast from 'react-hot-toast';
+import { useSearchParams } from 'react-router-dom';
 
 interface LoginProps {
   role: string;
@@ -24,6 +24,17 @@ const Login = ({ role }: LoginProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isNewlyCreatedAccount = searchParams.get('new')
+
+
+  useEffect(()=>{
+    if(isNewlyCreatedAccount){
+      message.success("Account successfully created")
+      message.success("Login to continue")
+     }
+  },[])
+
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -64,8 +75,9 @@ const Login = ({ role }: LoginProps) => {
       setIsLoading(false)
       console.log(error)
       message.error(error.response.data.error)
-
     }
+
+
   };
   return (
     <div className="flex justify-center items-center h-screen bg-gray-50">

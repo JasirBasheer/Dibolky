@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { FcCheckmark } from "react-icons/fc";
 import { useNavigate } from 'react-router-dom';
 import axios from '../../utils/axios';
-import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
 
 const Plans = () => {
@@ -15,23 +14,15 @@ const Plans = () => {
     const getPlans = async () => {
         try {
             const response = await axios.get('/api/entities/get-all-plans');  
-            console.log(response.data);         
-            setPlans(response.data.plans);
-            const country = localStorage.getItem('country')
-            console.log('countyr',country)
-            if(response.data.country!=='' && !country ){
-                localStorage.setItem('country',response.data.country)
-            }
-
+            setPlans(response.data.plans);           
         } catch (error) {
             console.error('Error fetching plans:', error);
         }
-    };
+    }; 
 
     useEffect(() => {
         getPlans();
     }, [currency]);
-
 
 
     useEffect(() => {
@@ -44,8 +35,6 @@ const Plans = () => {
         const platform = isAgency ? "Agency" : "Company";
         navigate(`/purchase/${platform}/${planId}`);
     };
-
-
 
     return (
         <div className="grid grid-cols-12 bg-[#f9fafb] w-full min-h-screen py-8 gap-5">

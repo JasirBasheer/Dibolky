@@ -12,6 +12,9 @@ import { TokenMiddleWare } from '../middlewares/token.middleware';
 
 const router = express.Router();
 
+router.use("/payment/webhooks", express.raw({ type: "application/json" }), paymentRoutes);
+router.use(express.json())
+
 router.use('/auth',authRoutes)
 router.use('/entities',entityRoutes)
 router.use('/payment',paymentRoutes)

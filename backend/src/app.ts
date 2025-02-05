@@ -27,8 +27,6 @@ app.use(cors({
 app.use(compression());
 app.use(morgan('dev'))
 app.use(cookieParser())
-app.use(express.json())
-
 
 app.use('/api/', router)
 

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { IAgencyController } from "../Interface/IAgencyController";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
 import { inject, injectable } from "tsyringe";
-import { HTTPStatusCodes, NotFoundError, ResponseMessage, SendResponse } from "mern.common";
+import { ConflictError, HTTPStatusCodes, NotFoundError, ResponseMessage, SendResponse } from "mern.common";
 import { createInstagramOAuthURL } from "../../provider.strategies/instagram.strategy";
 import { IClientService } from "../../services/Interface/IClientService";
 import { uploadToS3 } from "../../shared/utils/aws";
@@ -52,7 +52,9 @@ export default class AgencyController implements IAgencyController {
     async createClient(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { orgId, name, email, industry, socialMedia_credentials, services, menu } = req.body
-            //validate the client datas --later
+            const isClientExists = await this.clientService.getClientInMainDb(email)
+            console.log(isClientExists,"clientDetails");
+            if(isClientExists)throw new ConflictError("Client with this email is already exists in the main database")
             await this.agencyService.createClient(req.tenantDb, orgId, name, email, industry, socialMedia_credentials, services, menu)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
         } catch (error: any) {
@@ -61,6 +63,7 @@ export default class AgencyController implements IAgencyController {
     }
 
    
+    
 
 
     async getAllClients(req: Request, res: Response, next: NextFunction): Promise<void> {

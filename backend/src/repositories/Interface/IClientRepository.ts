@@ -7,5 +7,6 @@ export interface IClientRepository {
   changeContentStatusById(contentId:string,db:any,status:string):Promise<any>;
   getReviewBucketById(clientId:string,db:any):Promise<any>;
   setSocialMediaUserNames(id: string, provider: string, username: string, db: any): Promise<any>;
+  getClientInMainDb(email:string):Promise<any>
   }
   

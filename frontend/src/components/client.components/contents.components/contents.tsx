@@ -23,7 +23,6 @@ const ClientContentComponent = () => {
         setBucketItems(Array.isArray(res.data.reviewBucket) ? res.data.reviewBucket : [])
         const filteredOnReviewContents = res.data.reviewBucket.filter((item: any) => item.status != "Approved" && item.status !="Rejected");
         setOnReview(filteredOnReviewContents)
-        console.log(filteredOnReviewContents.length)
       }
 
     } catch (error) {

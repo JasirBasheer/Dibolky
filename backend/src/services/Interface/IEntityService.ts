@@ -8,6 +8,6 @@ export interface IEntityService {
         transactionId: string, paymentGateway: string, description: string,currency:string): Promise<any> ;
     registerCompany(organizationName: string, name: string, email: string, address: any, websiteUrl: string,
         industry: string, contactNumber: number, logo: string, password: string): Promise<any>;
-        getAgencyMenu(planId: string):Promise<any>;
-        getCompanyMenu(planId:string):Promise<any>;
+    getAgencyMenu(planId: string):Promise<any>;
+    getCompanyMenu(planId:string):Promise<any>;
 }

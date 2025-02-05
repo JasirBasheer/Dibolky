@@ -60,13 +60,11 @@ const ClientNavBar: React.FC<ClientNavBarProps> = ({ isOpen, setIsOpen }) => {
     }
   }
 
-  console.log(client)
 
 
   useEffect(() => {
     const hash = window.location.hash;
     const provider = searchParams.get('provider');
-    console.log(hash, provider)
     if (hash && provider) {
       const token = new URLSearchParams(hash.substring(1)).get('access_token');
 

@@ -10,6 +10,7 @@ import { FormData, Plan, ValidationError } from '../../types/portalTypes';
 import { renderInputField } from '../../components/portalComponents/Input';
 import { handleRazorpayPayment } from '../../helpers/portal.helpers/razporpay';
 import { useSelector } from 'react-redux';
+import { handleStripePayment } from '@/helpers/portal.helpers/stripe';
 
 
 const PurchasePlan: React.FC = () => {
@@ -102,7 +103,9 @@ const PurchasePlan: React.FC = () => {
         if (paymentMethod == 'razorpay') {
             await handleRazorpayPayment(formData, plan, platform, navigate, currency.selectedCurrency);
         } else if (paymentMethod == 'stripe') {
-            alert('Stripe is currently unavailable ,We are working on progress')
+           const response = await handleStripePayment(formData,plan,platform,currency.selectedCurrency)
+           console.log(response)
+           if(response.url)window.location.href = response.url
         }
     };
 

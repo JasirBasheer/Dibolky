@@ -10,4 +10,9 @@ export interface IAdminController {
     recentClients(req: Request, res: Response, next:NextFunction): Promise<void>
     getClient(req: Request, res: Response, next:NextFunction): Promise<void>
     getAllClients(req: Request, res: Response, next:NextFunction): Promise<void>
+    
+    // plan-management
+    createPlan(req: Request, res: Response, next:NextFunction): Promise<void>
+    editPlan(req: Request, res: Response, next:NextFunction): Promise<void>
+    // editPlan(req: Request, res: Response, next:NextFunction): Promise<void>
 }

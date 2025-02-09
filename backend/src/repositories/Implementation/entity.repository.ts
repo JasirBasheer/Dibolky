@@ -4,6 +4,7 @@ import Transaction from "../../models/admin/transaction.model";
 import Company from "../../models/company/company.model";
 import { departmentSchema } from "../../models/agency/department.model";
 import { IEntityRepository } from "../Interface/IEntityRepository";
+import { planDetails } from "../../shared/types/admin.types";
 
 export default class EntityRepository implements IEntityRepository {
     async createAgency(newAgency: any): Promise<any> {
@@ -67,10 +68,11 @@ export default class EntityRepository implements IEntityRepository {
         return await Agency.find().limit(10)
     }
 
-
     async getTransactionsWithOrgId(id: string):Promise<any> {
         return await Transaction.find({ orgId: id })
     }
+
+
 
 }
 

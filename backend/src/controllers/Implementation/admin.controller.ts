@@ -2,12 +2,13 @@ import { NextFunction, Request, Response } from 'express';
 import { IAdminController } from '../Interface/IAdminController';
 import { inject, injectable } from 'tsyringe';
 import { IAdminService } from '../../services/Interface/IAdminService';
-import { 
-    HTTPStatusCodes, 
-    NotFoundError, 
-    ResponseMessage, 
-    SendResponse 
+import {
+    HTTPStatusCodes,
+    NotFoundError,
+    ResponseMessage,
+    SendResponse
 } from 'mern.common';
+import { planDetails } from '../../shared/types/admin.types';
 
 @injectable()
 /** Implementation of AdminController Controller */
@@ -116,6 +117,39 @@ export default class AdminController implements IAdminController {
             next(error)
         }
     }
+
+
+    async createPlan(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            const { entity, details }: { entity: string, details: planDetails } = req.body
+            await this.adminService.createPlan(entity, details)
+
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async editPlan(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            const { entity, details }: { entity: string, details: planDetails } = req.body
+            await this.adminService.editPlan(entity,details)
+            
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
 }
 
 

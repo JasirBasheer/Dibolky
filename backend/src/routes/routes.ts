@@ -18,7 +18,7 @@ router.use(express.json())
 router.use('/auth',authRoutes)
 router.use('/entities',entityRoutes)
 router.use('/payment',paymentRoutes)
-router.use('/admin',TokenMiddleWare,adminRoutes)
+router.use('/admin',adminRoutes) //token middleware desabled of postman testing purpose
 router.use('/agency',TokenMiddleWare,agencyRoutes)
 router.use('/client',TokenMiddleWare,clientRoutes)
 router.use('/employee',TokenMiddleWare,employeeRoutes)

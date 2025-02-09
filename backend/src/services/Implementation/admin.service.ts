@@ -6,7 +6,9 @@ import { IAgencyRepository } from '../../repositories/Interface/IAgencyRepositor
 import { inject, injectable } from 'tsyringe';
 import { IAdminService } from '../Interface/IAdminService';
 import { ICompanyRepository } from '../../repositories/Interface/ICompanyRepository';
-import { NotFoundError, UnauthorizedError } from 'mern.common';
+import { CustomError, NotFoundError, UnauthorizedError } from 'mern.common';
+import { planDetails } from '../../shared/types/admin.types';
+import { createNewPlanMenu } from '../../shared/utils/menu.utils';
 
 @injectable()
 export default class AdminService implements IAdminService {
@@ -104,6 +106,37 @@ export default class AdminService implements IAdminService {
             let agencies = await this.entityRepository.getAllAgencyOwners()
             let result = { Agency: agencies, Company: companies }
             return result
+    }
+
+    async createPlan(
+        entity:string,
+        details:planDetails
+    ):Promise<void>{
+        let createdPlan;
+        let menu = createNewPlanMenu(details.menu)
+        details.menu = menu
+        if(entity == "Agency"){
+            createdPlan = await this.planRepository.createAgencyPlan(details)
+        }else{
+            createdPlan = await this.planRepository.createCompanyPlan(details)
+
+        }
+        if(!createdPlan)throw new CustomError("Error While creating Plan",500)
+    }
+
+    async editPlan(
+        entity:string,
+        details:planDetails
+    ):Promise<void>{
+        let editedPlan;
+        let menu = createNewPlanMenu(details.menu)
+        details.menu = menu
+        if(entity == "Agency"){
+            editedPlan = await this.planRepository.editAgencyPlan(details)
+        }else{
+            editedPlan = await this.planRepository.editCompanyPlan(details)
+        }
+        if(!editedPlan)throw new CustomError("Error While editing Plan",500)
     }
 
 

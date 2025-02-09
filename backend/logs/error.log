@@ -90,3 +90,143 @@
  Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-09T13:32:14.950Z"} ms 
  
 
+::1 - - [09/Feb/2025:14:57:26 +0000] "POST /api/admin/create-plan" 400  
+ Error: No error details ms 
+ 
+
+::1 - - [09/Feb/2025:14:58:35 +0000] "POST /api/admin/create-plan" 400  
+ Error: No error details ms 
+ 
+
+::1 - - [09/Feb/2025:14:59:02 +0000] "POST /api/admin/create-plan" 400  
+ Error: No error details ms 
+ 
+
+::1 - - [09/Feb/2025:14:59:22 +0000] "POST /api/admin/create-plan" 400  
+ Error: No error details ms 
+ 
+
+::1 - - [09/Feb/2025:15:00:27 +0000] "POST /api/admin/create-plan" 400  
+ Error: No error details ms 
+ 
+
+::1 - - [09/Feb/2025:15:04:47 +0000] "POST /api/admin/create-plan" 500  
+ Error: {"message":"Cannot read properties of undefined (reading 'role')","stack":"TypeError: Cannot read properties of undefined (reading 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:7:23\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-09T15:04:47.916Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:05:55 +0000] "POST /api/admin/create-plan" 500  
+ Error: {"message":"Cannot read properties of undefined (reading 'menu')","stack":"TypeError: Cannot read properties of undefined (reading 'menu')\n    at AdminService.<anonymous> (/home/jasir/Dibolky/backend/src/services/Implementation/admin.service.ts:116:46)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/services/Implementation/admin.service.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/services/Implementation/admin.service.ts:16:12)\n    at AdminService.createPlan (/home/jasir/Dibolky/backend/src/services/Implementation/admin.service.ts:126:16)\n    at AdminController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:131:37)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:20:71\n    at new Promise (<anonymous>)","timestamp":"2025-02-09T15:05:55.200Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:06:31 +0000] "POST /api/admin/create-plan" 500  
+ Error: {"message":"agencyPlans validation failed: id: Path `id` is required.","stack":"ValidationError: agencyPlans validation failed: id: Path `id` is required.\n    at model.Document.invalidate (/home/jasir/Dibolky/backend/node_modules/mongoose/lib/document.js:3334:32)\n    at /home/jasir/Dibolky/backend/node_modules/mongoose/lib/document.js:3095:17\n    at /home/jasir/Dibolky/backend/node_modules/mongoose/lib/schemaType.js:1407:9\n    at processTicksAndRejections (node:internal/process/task_queues:85:11)","timestamp":"2025-02-09T15:06:31.715Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:08:24 +0000] "POST /api/admin/create-plan" 500  
+ Error: {"message":"agencyPlans validation failed: id: Path `id` is required.","stack":"ValidationError: agencyPlans validation failed: id: Path `id` is required.\n    at model.Document.invalidate (/home/jasir/Dibolky/backend/node_modules/mongoose/lib/document.js:3334:32)\n    at /home/jasir/Dibolky/backend/node_modules/mongoose/lib/document.js:3095:17\n    at /home/jasir/Dibolky/backend/node_modules/mongoose/lib/schemaType.js:1407:9\n    at processTicksAndRejections (node:internal/process/task_queues:85:11)","timestamp":"2025-02-09T15:08:24.171Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:09:20 +0000] "POST /api/admin/create-plan" 500  
+ Error: {"message":"agencyPlans validation failed: id: Path `id` is required.","stack":"ValidationError: agencyPlans validation failed: id: Path `id` is required.\n    at model.Document.invalidate (/home/jasir/Dibolky/backend/node_modules/mongoose/lib/document.js:3334:32)\n    at /home/jasir/Dibolky/backend/node_modules/mongoose/lib/document.js:3095:17\n    at /home/jasir/Dibolky/backend/node_modules/mongoose/lib/schemaType.js:1407:9\n    at processTicksAndRejections (node:internal/process/task_queues:85:11)","timestamp":"2025-02-09T15:09:20.764Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:10:29 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot read properties of undefined (reading '_id')","stack":"TypeError: Cannot read properties of undefined (reading '_id')\n    at AdminController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:42:77)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:16:12)\n    at AdminController.verifyAdmin (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:43:16)\n    at /home/jasir/Dibolky/backend/src/routes/admin.routes.ts:14:53\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-02-09T15:10:29.979Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:10:29 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot read properties of undefined (reading '_id')","stack":"TypeError: Cannot read properties of undefined (reading '_id')\n    at AdminController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:42:77)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:16:12)\n    at AdminController.verifyAdmin (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:43:16)\n    at /home/jasir/Dibolky/backend/src/routes/admin.routes.ts:14:53\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-02-09T15:10:29.993Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:10:36 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot read properties of undefined (reading '_id')","stack":"TypeError: Cannot read properties of undefined (reading '_id')\n    at AdminController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:42:77)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:16:12)\n    at AdminController.verifyAdmin (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:43:16)\n    at /home/jasir/Dibolky/backend/src/routes/admin.routes.ts:14:53\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-02-09T15:10:36.137Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:10:36 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot read properties of undefined (reading '_id')","stack":"TypeError: Cannot read properties of undefined (reading '_id')\n    at AdminController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:42:77)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:16:12)\n    at AdminController.verifyAdmin (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:43:16)\n    at /home/jasir/Dibolky/backend/src/routes/admin.routes.ts:14:53\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-02-09T15:10:36.148Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:10:38 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot read properties of undefined (reading '_id')","stack":"TypeError: Cannot read properties of undefined (reading '_id')\n    at AdminController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:42:77)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:16:12)\n    at AdminController.verifyAdmin (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:43:16)\n    at /home/jasir/Dibolky/backend/src/routes/admin.routes.ts:14:53\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-02-09T15:10:38.695Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:10:38 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot read properties of undefined (reading '_id')","stack":"TypeError: Cannot read properties of undefined (reading '_id')\n    at AdminController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:42:77)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:16:12)\n    at AdminController.verifyAdmin (/home/jasir/Dibolky/backend/src/controllers/Implementation/admin.controller.ts:43:16)\n    at /home/jasir/Dibolky/backend/src/routes/admin.routes.ts:14:53\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-02-09T15:10:38.704Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:12:20 +0000] "GET /api/agency/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at AgencyController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:43:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-09T15:12:20.766Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:12:20 +0000] "GET /api/agency/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at AgencyController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:43:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-09T15:12:20.898Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:12:23 +0000] "POST /api/auth/login" 401  
+ Error: {"message":"Invalid credentials","stack":"Error: Invalid credentials\n    at AgencyService.<anonymous> (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:33:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:17:58)","timestamp":"2025-02-09T15:12:23.123Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:12:23 +0000] "POST /api/auth/login" 401  
+ Error: {"message":"Invalid credentials","stack":"Error: Invalid credentials\n    at AgencyService.<anonymous> (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:33:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:17:58)","timestamp":"2025-02-09T15:12:23.514Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:15:13:17 +0000] "GET /api/agency/client/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [09/Feb/2025:15:13:17 +0000] "GET /api/agency/client/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [09/Feb/2025:15:13:22 +0000] "GET /api/agency/client/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [09/Feb/2025:15:13:22 +0000] "GET /api/agency/client/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [09/Feb/2025:15:13:34 +0000] "GET /api/agency/client/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [09/Feb/2025:15:13:34 +0000] "GET /api/agency/client/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [09/Feb/2025:15:16:39 +0000] "GET /api/agency/client/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [09/Feb/2025:15:16:39 +0000] "GET /api/agency/client/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [09/Feb/2025:16:03:35 +0000] "GET /api/agency/" 500  
+ Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-09T16:03:35.299Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:16:03:36 +0000] "GET /api/agency/" 500  
+ Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-09T16:03:36.518Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:16:20:36 +0000] "POST /api/admin/edit-plan" 500  
+ Error: {"message":"Expected ',' or '}' after property value in JSON at position 93 (line 5 column 9)","stack":"SyntaxError: Expected ',' or '}' after property value in JSON at position 93 (line 5 column 9)\n    at JSON.parse (<anonymous>)\n    at parse (/home/jasir/Dibolky/backend/node_modules/body-parser/lib/types/json.js:92:19)\n    at /home/jasir/Dibolky/backend/node_modules/body-parser/lib/read.js:128:18\n    at AsyncResource.runInAsyncScope (node:async_hooks:211:14)\n    at invokeCallback (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:238:16)\n    at done (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:227:7)\n    at IncomingMessage.onEnd (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:287:7)\n    at IncomingMessage.emit (node:events:524:28)\n    at IncomingMessage.emit (node:domain:489:12)\n    at endReadableNT (node:internal/streams/readable:1698:12)","timestamp":"2025-02-09T16:20:36.573Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:16:21:29 +0000] "POST /api/admin/edit-plan" 500  
+ Error: {"message":"Expected ',' or '}' after property value in JSON at position 93 (line 5 column 9)","stack":"SyntaxError: Expected ',' or '}' after property value in JSON at position 93 (line 5 column 9)\n    at JSON.parse (<anonymous>)\n    at parse (/home/jasir/Dibolky/backend/node_modules/body-parser/lib/types/json.js:92:19)\n    at /home/jasir/Dibolky/backend/node_modules/body-parser/lib/read.js:128:18\n    at AsyncResource.runInAsyncScope (node:async_hooks:211:14)\n    at invokeCallback (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:238:16)\n    at done (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:227:7)\n    at IncomingMessage.onEnd (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:287:7)\n    at IncomingMessage.emit (node:events:524:28)\n    at IncomingMessage.emit (node:domain:489:12)\n    at endReadableNT (node:internal/streams/readable:1698:12)","timestamp":"2025-02-09T16:21:29.698Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:16:22:25 +0000] "POST /api/admin/edit-plan" 500  
+ Error: {"message":"Expected ',' or '}' after property value in JSON at position 93 (line 5 column 9)","stack":"SyntaxError: Expected ',' or '}' after property value in JSON at position 93 (line 5 column 9)\n    at JSON.parse (<anonymous>)\n    at parse (/home/jasir/Dibolky/backend/node_modules/body-parser/lib/types/json.js:92:19)\n    at /home/jasir/Dibolky/backend/node_modules/body-parser/lib/read.js:128:18\n    at AsyncResource.runInAsyncScope (node:async_hooks:211:14)\n    at invokeCallback (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:238:16)\n    at done (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:227:7)\n    at IncomingMessage.onEnd (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:287:7)\n    at IncomingMessage.emit (node:events:524:28)\n    at IncomingMessage.emit (node:domain:489:12)\n    at endReadableNT (node:internal/streams/readable:1698:12)","timestamp":"2025-02-09T16:22:25.249Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:16:23:31 +0000] "POST /api/admin/edit-plan" 500  
+ Error: {"message":"Expected ',' or '}' after property value in JSON at position 93 (line 5 column 9)","stack":"SyntaxError: Expected ',' or '}' after property value in JSON at position 93 (line 5 column 9)\n    at JSON.parse (<anonymous>)\n    at parse (/home/jasir/Dibolky/backend/node_modules/body-parser/lib/types/json.js:92:19)\n    at /home/jasir/Dibolky/backend/node_modules/body-parser/lib/read.js:128:18\n    at AsyncResource.runInAsyncScope (node:async_hooks:211:14)\n    at invokeCallback (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:238:16)\n    at done (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:227:7)\n    at IncomingMessage.onEnd (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:287:7)\n    at IncomingMessage.emit (node:events:524:28)\n    at IncomingMessage.emit (node:domain:489:12)\n    at endReadableNT (node:internal/streams/readable:1698:12)","timestamp":"2025-02-09T16:23:31.729Z"} ms 
+ 
+
+::1 - - [09/Feb/2025:16:24:34 +0000] "POST /api/admin/edit-plan" 500  
+ Error: {"message":"Expected ',' or '}' after property value in JSON at position 93 (line 5 column 9)","stack":"SyntaxError: Expected ',' or '}' after property value in JSON at position 93 (line 5 column 9)\n    at JSON.parse (<anonymous>)\n    at parse (/home/jasir/Dibolky/backend/node_modules/body-parser/lib/types/json.js:92:19)\n    at /home/jasir/Dibolky/backend/node_modules/body-parser/lib/read.js:128:18\n    at AsyncResource.runInAsyncScope (node:async_hooks:211:14)\n    at invokeCallback (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:238:16)\n    at done (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:227:7)\n    at IncomingMessage.onEnd (/home/jasir/Dibolky/backend/node_modules/raw-body/index.js:287:7)\n    at IncomingMessage.emit (node:events:524:28)\n    at IncomingMessage.emit (node:domain:489:12)\n    at endReadableNT (node:internal/streams/readable:1698:12)","timestamp":"2025-02-09T16:24:34.227Z"} ms 
+ 
+

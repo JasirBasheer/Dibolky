@@ -24,7 +24,7 @@ const ClientDashboard = () => {
           ))}
       </div>
       <div className="flex flex-wrap gap-4">
-      <div  className="md:w-[46rem] w-[46rem]  min-h-[32rem] rounded-xl outline-1 outline-double outline-[#45444424] bg-[#ffffff74] p-5 pt-4 hover:shadow-md cursor-pointer transition-all duration-300">
+      <div  className="md:w-[46rem] w-[46rem]  min-h-[32rem] rounded-xl outline-1 outline-double outline-[#45444424] bg-white p-5 pt-4 cursor-pointer transition-all duration-300">
           <div className="">
             <h1 className='font-bold font-cantarell text-[1.2rem]'>Recent Activity</h1>
             <div className="w-full gap-5 mt-2">

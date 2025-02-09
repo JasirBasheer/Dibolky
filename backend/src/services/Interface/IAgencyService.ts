@@ -1,4 +1,4 @@
-import { IClient } from "../../models/agency/clientModel";
+import { IClient } from "../../models/agency/client.model";
 
 export interface IAgencyService {
     agencyLoginHandler(email: string, password: string): Promise<any>;

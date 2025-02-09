@@ -1,24 +1,19 @@
 import express from 'express';
 const router = express.Router();
-import { IAdminController } from '../../controllers/Interface/IAdminController';
+import { IAdminController } from '../controllers/Interface/IAdminController';
 import { container } from 'tsyringe';
-import { permissionGate } from '../../middlewares/permissionGate.middleware';
+import { permissionGate } from '../middlewares/permissionGate.middleware';
 
-//* Controllers
+// Controllers
 const adminController = container.resolve<IAdminController>('AdminController')
 
-//* Middlewares
+// Middlewares
 router.use(permissionGate("Admin"))
 
-//* Get requests
+// Get requests
 router.get('/', (req, res, next) => adminController.verifyAdmin(req, res, next))
 router.get('/clients', (req, res, next) => adminController.recentClients(req, res, next))
 router.get('/recent-clients', (req, res, next) => adminController.recentClients(req, res, next))
 router.get('/get-client/:role/:id', (req, res, next) => adminController.getClient(req, res, next))
-
-//* Post requests
-// router.post('/create-agency-plan', (req, res, next) => adminController.getClient(req, res, next))
-// router.post('/create-company-plan', (req, res, next) => adminController.getClient(req, res, next))
-
 
 export default router;

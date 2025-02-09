@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { ReviewBucketSchema } from "../../models/agency/reviewBucketModel";
+import { ReviewBucketSchema } from "../../models/agency/reviewBucket.model";
 import { IProviderService } from "../Interface/IProviderService";
 import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepository";
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";

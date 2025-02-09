@@ -16,6 +16,8 @@ export default class PaymentService implements IPaymentService {
     }
     async stripe(details: any,success_url:string,cancel_url:string):Promise<any>{        
         try {
+            console.log(details,"details")
+            console.log("details=plan",details.plan)
          const { menu,features,name, ...planWithoutMenu } = details.plan;
          const session = await stripe.checkout.sessions.create({
             payment_method_types :["card"],

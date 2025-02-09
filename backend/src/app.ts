@@ -6,12 +6,12 @@ import dotenv from 'dotenv';
 import morgan from 'morgan'
 import compression from 'compression';
 import cookieParser from 'cookie-parser'
-import router from './routes/route';
-import { connectToMongoDB, limiter } from 'mern.common';
+import router from './routes/routes';
+import { connectToMongoDB, errorHandler, limiter } from 'mern.common';
 import { DB_URI, PORT } from "./config/env";
 import { startScheduledPostsProcessor } from "./media.service/scheduled-posts.service";
-import { clearErrorLogsJob } from "./shared/utils/logger";
-import { errorHandler } from "./middlewares/errorHandler.middleware";
+import { clearErrorLogsJob, errorLogger, logStream } from "./shared/utils/logger";
+import path from "path";
 
 dotenv.config();
 
@@ -27,6 +27,7 @@ app.use(cors({
 app.use(compression());
 app.use(morgan('dev'))
 app.use(cookieParser())
+app.use(errorLogger)
 
 app.use('/api/', router)
 

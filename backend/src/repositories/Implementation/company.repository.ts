@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import Company from "../../models/company/companyModel"
-import { ICompanyOwner } from "../../shared/types/companyTypes";
+import Company from "../../models/company/company.model"
+import { ICompanyOwner } from "../../shared/types/company.types";
 import { ICompanyRepository } from "../Interface/ICompanyRepository";
 
 

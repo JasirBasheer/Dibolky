@@ -2,13 +2,23 @@ import { NextFunction, Request, Response } from 'express';
 import { IEntityController } from '../Interface/IEntityController';
 import { IEntityService } from '../../services/Interface/IEntityService';
 import { inject, injectable } from 'tsyringe';
-import { findCountryByIp, HTTPStatusCodes, ResponseMessage, SendResponse } from 'mern.common';
-import { CountryToCurrency, getPriceConversionFunc } from '../../shared/utils/currency-conversion.util';
+import { CountryToCurrency, getPriceConversionFunc } from '../../shared/utils/currency-conversion.utils';
+import { 
+    findCountryByIp, 
+    HTTPStatusCodes, 
+    ResponseMessage, 
+    SendResponse 
+} from 'mern.common';
 
 @injectable()
+/** Implementation of Entity Controller */
 export default class EntityController implements IEntityController {
     private entityService: IEntityService;
 
+    /**
+    * Initializes the EntityController with required service dependencies.
+    * @param entityService - Service for general entity operations.
+    */
     constructor(
         @inject('EntityService') entityService: IEntityService
     ) {
@@ -23,19 +33,22 @@ export default class EntityController implements IEntityController {
     * @param next - Express next function for error handling.
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
-
-    async checkMail(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async checkMail(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
         try {
             const { Mail, platform } = req.body
             const isExists = await this.entityService.IsMailExists(Mail, platform)
 
             if (isExists != null) return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.BAD_REQUEST, { isExists: isExists })
             SendResponse(res, HTTPStatusCodes.BAD_REQUEST, ResponseMessage.NOT_FOUND)
-
         } catch (error) {
             next(error);
         }
     }
+
 
     /**
     * Handles mail existence check for a given platform.
@@ -44,8 +57,11 @@ export default class EntityController implements IEntityController {
     * @param next - Express next function for error handling.
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
-
-    async getAllPlans(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getAllPlans(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
         try {
             let userCountry = req.cookies?.userCountry
             let plans = await this.entityService.getAllPlans()
@@ -69,6 +85,7 @@ export default class EntityController implements IEntityController {
         }
     }
 
+
     /**
     * Handles mail existence check for a given platform.
     * @param req - Express request object containing `Mail` and `platform` in the body.
@@ -76,8 +93,11 @@ export default class EntityController implements IEntityController {
     * @param next - Express next function for error handling.
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
-
-    async getPlan(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getPlan(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
         try {
             const { id, platform } = req.body
             const userCountry = req.cookies.userCountry
@@ -101,8 +121,11 @@ export default class EntityController implements IEntityController {
     * @param next - Express next function for error handling.
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
-
-    async registerAgency(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async registerAgency(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
         try {
             const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, paymentGateway, description,currency } = req.body.details
             const { transaction_id } = req.body.response
@@ -125,8 +148,11 @@ export default class EntityController implements IEntityController {
     * @param next - Express next function for error handling.
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
-
-    async registerCompany(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async registerCompany(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
         try {
             const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password } = req.body
             const createdCompany = await this.entityService.registerCompany(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password)
@@ -146,8 +172,11 @@ export default class EntityController implements IEntityController {
     * @param next - Express next function for error handling.
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
-
-    async getMenu(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getMenu(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
         try {
             const { role, planId } = req.params;
             let menu;
@@ -183,7 +212,19 @@ export default class EntityController implements IEntityController {
         }
     }
 
-    async getCountry(req: Request, res: Response, next: NextFunction): Promise<void> {
+
+    /**
+     * Retrieves the user's country based on their IP address and sets it in a cookie.
+     * @param req Express Request object
+     * @param res Express Response object
+     * @param next Express NextFunction for error handling
+    * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
+     */
+    async getCountry(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
         try {
             let ipAddressWithProxy = req.get('x-forwarded-for') || req.socket.remoteAddress;
             ipAddressWithProxy = ipAddressWithProxy == "::1" ? "49.36.231.0" : ipAddressWithProxy;
@@ -193,8 +234,7 @@ export default class EntityController implements IEntityController {
                 userCountry = CountryToCurrency[locationData?.country as string]
                 res.cookie('userCountry', userCountry, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: false, secure: false, sameSite: 'strict', path: '/' });
             }
-
-           return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
+           SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
         } catch (error) {
             next(error);
         }

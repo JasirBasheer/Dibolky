@@ -1,6 +1,6 @@
 import CompanyRepository from "../../repositories/Implementation/company.repository";
 import bcrypt from 'bcrypt'
-import { ICompanyOwner } from "../../shared/types/companyTypes";
+import { ICompanyOwner } from "../../shared/types/company.types";
 import { ICompanyService } from "../Interface/ICompanyService";
 import { inject, injectable } from "tsyringe";
 import { ICompanyRepository } from "../../repositories/Interface/ICompanyRepository";

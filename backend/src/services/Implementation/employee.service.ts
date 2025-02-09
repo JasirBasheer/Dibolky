@@ -1,4 +1,3 @@
-import { IEmployee } from '../../models/employee/employeeModel';
 import bcrypt from 'bcrypt'
 import { IEmployeeService } from '../Interface/IEmployeeService';
 import { inject, injectable } from 'tsyringe';

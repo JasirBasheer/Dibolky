@@ -45,7 +45,7 @@ const socialMediaConfigs: Record<string, SocialMediaConfig> = {
 const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
   const [clients, setClients] = useState<Client[]>([])
   const [isProfileOpen, setIsProfileOpen] = useState(false)
-  const [client, setSelectedClient] = useState()
+  const [client, setSelectedClient] = useState({})
   const dispatch = useDispatch()
   const details = useSelector((state: any) => state?.user)
   const [searchParams] = useSearchParams();
@@ -74,11 +74,25 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
     }
   }
 
+  const handleLogout = async() =>{
+    try {
+      const response = await axios.post(`/api/auth/logout`)
+      if(response){
+        navigate('/login')
+      }
+      
+    } catch (error:any) {
+      console.log(error.message);
+      
+    }
+  }
+
 
   const fetchSelectedClient = async () => {
     try {
       const response = await axios.get(`/api/agency/client/${details.Id}`)
-      if(!response.data)return null
+      console.log("res", response)
+      if (!response.data) return null
       console.log(response.data)
       dispatch(setClient({
         facebookAccessToken: response?.data?.client?.socialMedia_credentials?.facebook?.accessToken || "",
@@ -86,9 +100,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
         instagramAccessToken: response?.data?.client?.socialMedia_credentials?.instagram?.accessToken || "",
         instagramUsername: response?.data?.client?.socialMedia_credentials?.instagram?.userName || ""
       }));
-      
-      
-    
+      console.log(response.data.client)
 
       setSelectedClient(response.data.client)
     } catch (error) {
@@ -100,6 +112,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
     dispatch(setUser({ Id: clientId }))
     dispatch(setUser({ role: clientId ? "Agency-Client" : "Agency" }))
     localStorage.setItem('selectedClient', clientId)
+    navigate('/agency')
   }
 
   useEffect(() => {
@@ -110,25 +123,19 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
 
 
   useEffect(() => {
-    console.log('reached here');
-    
     const selectedClient = localStorage.getItem('selectedClient')
-
     const hash = window.location.hash;
     const provider = searchParams.get('provider');
-    console.log(hash, provider)
     if (hash && provider) {
-
       const token = new URLSearchParams(hash.substring(1)).get('access_token');
-
       if (token) {
-        console.log('access token ethitt undh')
         handleCallback(token, provider).then(() => {
           handleSelect(selectedClient || "")
-          fetchSelectedClient()
-          navigate('/agency/')
+          setSelectedClient(prev => ({ ...prev }));
+          console.log("selected client rerendered")
+          window.location.href = "/agency"
 
-        });
+        })
       }
     }
   }, []);
@@ -142,10 +149,10 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
         `/api/client/save-platform-token/${provider}/${selectedClient && selectedClient != "" ? selectedClient : "Agency"}`,
         { token }
       );
-      if(response){
+      if (response) {
         message.success(`${provider} connected successfully`)
-       return response;
-      }else{
+        return response;
+      } else {
         message.error(`faced some issues while connect ${provider} please try again later `)
 
       }
@@ -241,8 +248,8 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
               className="w-10 h-10 rounded-full"
             />
             <div>
-              <p className="font-semibold">{client.name}</p>
-              <p className="text-xs text-gray-500">{client.email}</p>
+              <p className="font-semibold">{client?.name ||""}</p>
+              <p className="text-xs text-gray-500">{client.email ||""}</p>
             </div>
           </div>
 
@@ -265,6 +272,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
                 ))}
             </div>
           </div>
+          <div className="bg-slate-200 w-[4rem] flex items-center justify-center rounded-sm h-7 mt-2 cursor-pointer" onClick={handleLogout}>Logout</div>
         </div>
       )}
 

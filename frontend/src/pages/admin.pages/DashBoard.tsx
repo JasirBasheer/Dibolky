@@ -25,7 +25,7 @@ const AdminDashboard = () => {
     fetchRecentClients()
   }, [])
 
-  let totalRevenue = recentClients.reduce((acc: number, item: any) => {
+  const totalRevenue = recentClients.reduce((acc: number, item: any) => {
     return acc + item.planPurchasedRate
   }, 0)
   return (

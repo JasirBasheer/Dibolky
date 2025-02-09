@@ -1,11 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import { IAdmin } from '../../shared/types/admin.types';
 
-export interface IAdmin {
-    name: string;
-    email: string;
-    password:string
-    
-}
 
 const planSchema: Schema<IAdmin> = new Schema({
     name: {

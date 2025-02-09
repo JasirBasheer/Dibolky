@@ -1,324 +1,92 @@
-[2025-02-04T05:42:40.647Z] plans.map is not a function
+::1 - - [07/Feb/2025:14:32:00 +0000] "GET /api/agency/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at AgencyController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:43:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-07T14:32:00.900Z"} ms 
  
-[2025-02-04T05:42:40.850Z] plans.map is not a function
+
+::1 - - [07/Feb/2025:14:32:01 +0000] "GET /api/agency/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at AgencyController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:43:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-07T14:32:01.020Z"} ms 
  
-[2025-02-04T05:43:43.691Z] plans.map is not a function
+
+::1 - - [07/Feb/2025:14:39:25 +0000] "GET /api/agency/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at AgencyController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:43:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-07T14:39:25.221Z"} ms 
  
-[2025-02-04T05:43:43.877Z] plans.map is not a function
+
+::1 - - [07/Feb/2025:14:39:25 +0000] "GET /api/agency/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at AgencyController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:43:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-07T14:39:25.358Z"} ms 
  
-[2025-02-04T05:44:20.769Z] plans.map is not a function
+
+::1 - - [08/Feb/2025:05:54:31 +0000] "GET /api/agency/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at AgencyController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:43:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-08T05:54:31.161Z"} ms 
  
-[2025-02-04T05:44:20.947Z] plans.map is not a function
+
+::1 - - [08/Feb/2025:05:54:32 +0000] "GET /api/agency/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at AgencyController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:43:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/agency.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-08T05:54:32.462Z"} ms 
  
-[2025-02-04T05:44:58.382Z] Cannot read properties of undefined (reading 'price')
+
+::1 - - [08/Feb/2025:05:54:32 +0000] "POST /api/auth/login" 401  
+ Error: {"message":"Invalid credentials","stack":"Error: Invalid credentials\n    at AgencyService.<anonymous> (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:33:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:17:58)","timestamp":"2025-02-08T05:54:32.936Z"} ms 
  
-[2025-02-04T05:44:58.547Z] Cannot read properties of undefined (reading 'price')
+
+::1 - - [08/Feb/2025:05:56:25 +0000] "GET /api/agency/client/" 404  
+ Error: No error details ms 
  
-[2025-02-04T05:45:40.699Z] plans.map is not a function
+
+::1 - - [08/Feb/2025:05:56:25 +0000] "GET /api/agency/client/" 404  
+ Error: No error details ms 
  
-[2025-02-04T05:45:40.939Z] plans.map is not a function
+
+::1 - - [08/Feb/2025:05:58:13 +0000] "GET /api/client/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:31)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-08T05:58:13.078Z"} ms 
  
-[2025-02-04T05:48:03.655Z] plans.map is not a function
+
+::1 - - [08/Feb/2025:05:58:13 +0000] "GET /api/client/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:31)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-08T05:58:13.206Z"} ms 
  
-[2025-02-04T05:48:04.147Z] plans.map is not a function
+
+::1 - - [09/Feb/2025:11:40:43 +0000] "GET /api/admin/" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-09T11:40:43.752Z"} ms 
  
-[2025-02-04T05:48:37.333Z] plans.map is not a function
+
+::1 - - [09/Feb/2025:11:40:43 +0000] "GET /api/admin/" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-09T11:40:43.828Z"} ms 
  
-[2025-02-04T05:48:37.511Z] plans.map is not a function
+
+::1 - - [09/Feb/2025:11:40:53 +0000] "GET /api/client/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:31)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-09T11:40:53.176Z"} ms 
  
-[2025-02-04T06:16:39.738Z] Account Not found
+
+::1 - - [09/Feb/2025:11:40:53 +0000] "GET /api/client/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:31)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-09T11:40:53.298Z"} ms 
  
-[2025-02-04T06:16:39.863Z] Account Not found
+
+::1 - - [09/Feb/2025:12:25:22 +0000] "GET /api/client/" 500  
+ Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-09T12:25:22.807Z"} ms 
  
-[2025-02-04T06:16:41.268Z] Invalid credentials
+
+::1 - - [09/Feb/2025:12:25:25 +0000] "GET /api/client/" 500  
+ Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-09T12:25:25.172Z"} ms 
  
-[2025-02-04T06:17:51.757Z] Account Not found
+
+::1 - - [09/Feb/2025:13:29:00 +0000] "GET /api/admin/" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-09T13:29:00.603Z"} ms 
  
-[2025-02-04T06:17:51.905Z] Account Not found
+
+::1 - - [09/Feb/2025:13:29:00 +0000] "GET /api/admin/" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-09T13:29:00.667Z"} ms 
  
-[2025-02-04T06:22:12.477Z] Account Not found
+
+::1 - - [09/Feb/2025:13:31:17 +0000] "GET /api/client/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:31)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-09T13:31:17.830Z"} ms 
  
-[2025-02-04T06:22:12.647Z] Account Not found
+
+::1 - - [09/Feb/2025:13:31:17 +0000] "GET /api/client/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:31)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-09T13:31:17.943Z"} ms 
  
-[2025-02-04T06:56:24.099Z] Account Not found
+
+::1 - - [09/Feb/2025:13:32:14 +0000] "GET /api/admin/" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-09T13:32:14.895Z"} ms 
  
-[2025-02-04T06:56:24.256Z] Account Not found
+
+::1 - - [09/Feb/2025:13:32:14 +0000] "GET /api/admin/" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-09T13:32:14.950Z"} ms 
  
-[2025-02-04T07:07:12.123Z] Agency validation failed: currency: Cast to Number failed for value "NaN" (type number) at path "currency"
- 
-[2025-02-04T07:09:38.424Z] Agency validation failed: currency: Cast to Number failed for value "NaN" (type number) at path "currency"
- 
-[2025-02-04T07:11:55.788Z] Account Not found
- 
-[2025-02-04T07:11:56.016Z] Account Not found
- 
-[2025-02-04T08:32:18.417Z] read ECONNRESET
- 
-[2025-02-04T08:32:21.042Z] read ECONNRESET
- 
-[2025-02-04T09:13:09.036Z] connection <monitor> to 13.235.205.242:27017 timed out
- 
-[2025-02-04T09:13:09.041Z] connection <monitor> to 13.235.205.242:27017 timed out
- 
-[2025-02-04T10:29:52.667Z] read ECONNRESET
- 
-[2025-02-04T10:29:52.672Z] read ECONNRESET
- 
-[2025-02-04T11:15:10.268Z] [object Object]
- 
-[2025-02-04T11:15:11.099Z] [object Object]
- 
-[2025-02-04T11:15:28.621Z] [object Object]
- 
-[2025-02-04T14:02:57.329Z] Invalid integer: NaN
- 
-[2025-02-04T14:03:48.127Z] Invalid integer: NaN
- 
-[2025-02-04T14:58:19.332Z] Account Not found
- 
-[2025-02-04T14:58:19.546Z] Account Not found
- 
-[2025-02-04T15:11:00.440Z] Account Not found
- 
-[2025-02-04T15:11:00.581Z] Account Not found
- 
-[2025-02-04T15:11:40.348Z] Metadata values must be strings, but for key `plan` you passed in a value of type `hash`. Invalid value: {:features=>{:"3"=>"Email support", :"4"=>"Basic reporting", :"0"=>"Up to 5 clients", :"1"=>"Basic analytics", :"2"=>"Social media scheduling"}, :description=>"Perfect for new agencies starting their journey", :price=>"7753", :menu=>{:accounting=>{:icon=>"DollarSign", :subItems=>{:"0"=>{:icon=>"FileClock", :path=>{:"0"=>"/history"}, :_id=>"67a22e10484039db775babf5", :label=>"History"}, :"1"=>{:icon=>"FileText", :path=>{:"0"=>"/invoices"}, :_id=>"67a22e10484039db775babf6", :label=>"Invoices"}, :"2"=>{:icon=>"FileChartColumn", :path=>{:"0"=>"/reports"}, :_id=>"67a22e10484039db775babf7", :label=>"Reports"}}, :_id=>"67a22e10484039db775babf8", :label=>"Accounting"}, :crm=>{:subItems=>{:"0"=>{:icon=>"Users", :path=>{:"0"=>"/clients", :"1"=>"/create-client"}, :_id=>"67a22e10484039db775babf1", :label=>"Clients"}, :"1"=>{:path=>{:"0"=>"/leads"}, :icon=>"ChartBarStacked", :_id=>"67a22e10484039db775babf2", :label=>"Leads"}, :"2"=>{:icon=>"MessageSquareText", :path=>{:"0"=>"/messages"}, :_id=>"67a22e10484039db775babf3", :label=>"Messages"}}, :icon=>"Users", :_id=>"67a22e10484039db775babf4", :label=>"CRM"}, :smm=>{:icon=>"BarChart", :subItems=>{:"0"=>{:icon=>"FileText", :path=>{:"0"=>"/projects"}, :_id=>"67a22e10484039db775babea", :label=>"Projects"}, :"3"=>{:icon=>"CalendarDays", :path=>{:"0"=>"/calendar"}, :_id=>"67a22e10484039db775babed", :label=>"Calendar"}, :"4"=>{:icon=>"Send", :path=>{:"0"=>"/inbox"}, :_id=>"67a22e10484039db775babee", :label=>"Inbox"}, :"1"=>{:icon=>"Pen", :path=>{:"0"=>"/contents"}, :_id=>"67a22e10484039db775babeb", :label=>"Content"}, :"5"=>{:icon=>"ChartNoAxesCombined", :path=>{:"0"=>"/analytics"}, :_id=>"67a22e10484039db775babef", :label=>"Analytics"}, :"2"=>{:path=>{:"0"=>"/media"}, :icon=>"GalleryVertical", :_id=>"67a22e10484039db775babec", :label=>"Media"}}, :_id=>"67a22e10484039db775babf0", :label=>"SMM"}}, :title=>"Starter", :_id=>"678278de8df4206a01fad9e0", :validity=>"Month"}
- 
-[2025-02-04T15:11:59.988Z] Metadata values must be strings, but for key `plan` you passed in a value of type `hash`. Invalid value: {:features=>{:"4"=>"Basic reporting", :"0"=>"Up to 5 clients", :"3"=>"Email support", :"1"=>"Basic analytics", :"2"=>"Social media scheduling"}, :description=>"Perfect for new agencies starting their journey", :price=>"89", :menu=>{:accounting=>{:icon=>"DollarSign", :subItems=>{:"0"=>{:icon=>"FileClock", :path=>{:"0"=>"/history"}, :_id=>"67a22e3d484039db775bac26", :label=>"History"}, :"1"=>{:icon=>"FileText", :path=>{:"0"=>"/invoices"}, :_id=>"67a22e3d484039db775bac27", :label=>"Invoices"}, :"2"=>{:icon=>"FileChartColumn", :path=>{:"0"=>"/reports"}, :_id=>"67a22e3d484039db775bac28", :label=>"Reports"}}, :_id=>"67a22e3d484039db775bac29", :label=>"Accounting"}, :crm=>{:icon=>"Users", :subItems=>{:"0"=>{:icon=>"Users", :path=>{:"0"=>"/clients", :"1"=>"/create-client"}, :_id=>"67a22e3d484039db775bac22", :label=>"Clients"}, :"1"=>{:icon=>"ChartBarStacked", :path=>{:"0"=>"/leads"}, :_id=>"67a22e3d484039db775bac23", :label=>"Leads"}, :"2"=>{:path=>{:"0"=>"/messages"}, :icon=>"MessageSquareText", :_id=>"67a22e3d484039db775bac24", :label=>"Messages"}}, :_id=>"67a22e3d484039db775bac25", :label=>"CRM"}, :smm=>{:icon=>"BarChart", :subItems=>{:"0"=>{:icon=>"FileText", :path=>{:"0"=>"/projects"}, :_id=>"67a22e3d484039db775bac1b", :label=>"Projects"}, :"3"=>{:icon=>"CalendarDays", :path=>{:"0"=>"/calendar"}, :_id=>"67a22e3d484039db775bac1e", :label=>"Calendar"}, :"4"=>{:path=>{:"0"=>"/inbox"}, :icon=>"Send", :_id=>"67a22e3d484039db775bac1f", :label=>"Inbox"}, :"1"=>{:icon=>"Pen", :path=>{:"0"=>"/contents"}, :_id=>"67a22e3d484039db775bac1c", :label=>"Content"}, :"5"=>{:icon=>"ChartNoAxesCombined", :path=>{:"0"=>"/analytics"}, :_id=>"67a22e3d484039db775bac20", :label=>"Analytics"}, :"2"=>{:icon=>"GalleryVertical", :path=>{:"0"=>"/media"}, :_id=>"67a22e3d484039db775bac1d", :label=>"Media"}}, :_id=>"67a22e3d484039db775bac21", :label=>"SMM"}}, :title=>"Starter", :_id=>"678278de8df4206a01fad9e0", :validity=>"Month"}
- 
-[2025-02-04T15:12:05.750Z] Metadata values must be strings, but for key `plan` you passed in a value of type `hash`. Invalid value: {:features=>{:"0"=>"Up to 5 clients", :"3"=>"Email support", :"4"=>"Basic reporting", :"1"=>"Basic analytics", :"2"=>"Social media scheduling"}, :description=>"Perfect for new agencies starting their journey", :price=>"89", :menu=>{:accounting=>{:icon=>"DollarSign", :subItems=>{:"0"=>{:icon=>"FileClock", :path=>{:"0"=>"/history"}, :_id=>"67a22e3d484039db775bac26", :label=>"History"}, :"1"=>{:icon=>"FileText", :path=>{:"0"=>"/invoices"}, :_id=>"67a22e3d484039db775bac27", :label=>"Invoices"}, :"2"=>{:icon=>"FileChartColumn", :path=>{:"0"=>"/reports"}, :_id=>"67a22e3d484039db775bac28", :label=>"Reports"}}, :_id=>"67a22e3d484039db775bac29", :label=>"Accounting"}, :crm=>{:icon=>"Users", :subItems=>{:"0"=>{:icon=>"Users", :path=>{:"0"=>"/clients", :"1"=>"/create-client"}, :_id=>"67a22e3d484039db775bac22", :label=>"Clients"}, :"1"=>{:icon=>"ChartBarStacked", :path=>{:"0"=>"/leads"}, :_id=>"67a22e3d484039db775bac23", :label=>"Leads"}, :"2"=>{:icon=>"MessageSquareText", :path=>{:"0"=>"/messages"}, :_id=>"67a22e3d484039db775bac24", :label=>"Messages"}}, :_id=>"67a22e3d484039db775bac25", :label=>"CRM"}, :smm=>{:icon=>"BarChart", :subItems=>{:"3"=>{:icon=>"CalendarDays", :path=>{:"0"=>"/calendar"}, :_id=>"67a22e3d484039db775bac1e", :label=>"Calendar"}, :"4"=>{:icon=>"Send", :path=>{:"0"=>"/inbox"}, :_id=>"67a22e3d484039db775bac1f", :label=>"Inbox"}, :"0"=>{:path=>{:"0"=>"/projects"}, :icon=>"FileText", :_id=>"67a22e3d484039db775bac1b", :label=>"Projects"}, :"1"=>{:icon=>"Pen", :path=>{:"0"=>"/contents"}, :_id=>"67a22e3d484039db775bac1c", :label=>"Content"}, :"5"=>{:icon=>"ChartNoAxesCombined", :path=>{:"0"=>"/analytics"}, :_id=>"67a22e3d484039db775bac20", :label=>"Analytics"}, :"2"=>{:icon=>"GalleryVertical", :path=>{:"0"=>"/media"}, :_id=>"67a22e3d484039db775bac1d", :label=>"Media"}}, :_id=>"67a22e3d484039db775bac21", :label=>"SMM"}}, :title=>"Starter", :_id=>"678278de8df4206a01fad9e0", :validity=>"Month"}
- 
-[2025-02-04T15:13:10.442Z] Metadata values must be strings, but for key `plan` you passed in a value of type `hash`. Invalid value: {:features=>{:"3"=>"Email support", :"4"=>"Basic reporting", :"0"=>"Up to 5 clients", :"1"=>"Basic analytics", :"2"=>"Social media scheduling"}, :description=>"Perfect for new agencies starting their journey", :price=>"89", :menu=>{:accounting=>{:icon=>"DollarSign", :subItems=>{:"0"=>{:icon=>"FileClock", :path=>{:"0"=>"/history"}, :_id=>"67a22e3d484039db775bac26", :label=>"History"}, :"1"=>{:path=>{:"0"=>"/invoices"}, :icon=>"FileText", :_id=>"67a22e3d484039db775bac27", :label=>"Invoices"}, :"2"=>{:icon=>"FileChartColumn", :path=>{:"0"=>"/reports"}, :_id=>"67a22e3d484039db775bac28", :label=>"Reports"}}, :_id=>"67a22e3d484039db775bac29", :label=>"Accounting"}, :crm=>{:icon=>"Users", :subItems=>{:"0"=>{:icon=>"Users", :path=>{:"0"=>"/clients", :"1"=>"/create-client"}, :_id=>"67a22e3d484039db775bac22", :label=>"Clients"}, :"1"=>{:icon=>"ChartBarStacked", :path=>{:"0"=>"/leads"}, :_id=>"67a22e3d484039db775bac23", :label=>"Leads"}, :"2"=>{:icon=>"MessageSquareText", :path=>{:"0"=>"/messages"}, :_id=>"67a22e3d484039db775bac24", :label=>"Messages"}}, :_id=>"67a22e3d484039db775bac25", :label=>"CRM"}, :smm=>{:icon=>"BarChart", :subItems=>{:"0"=>{:icon=>"FileText", :path=>{:"0"=>"/projects"}, :_id=>"67a22e3d484039db775bac1b", :label=>"Projects"}, :"3"=>{:icon=>"CalendarDays", :path=>{:"0"=>"/calendar"}, :_id=>"67a22e3d484039db775bac1e", :label=>"Calendar"}, :"4"=>{:icon=>"Send", :path=>{:"0"=>"/inbox"}, :_id=>"67a22e3d484039db775bac1f", :label=>"Inbox"}, :"1"=>{:path=>{:"0"=>"/contents"}, :icon=>"Pen", :_id=>"67a22e3d484039db775bac1c", :label=>"Content"}, :"5"=>{:icon=>"ChartNoAxesCombined", :path=>{:"0"=>"/analytics"}, :_id=>"67a22e3d484039db775bac20", :label=>"Analytics"}, :"2"=>{:icon=>"GalleryVertical", :path=>{:"0"=>"/media"}, :_id=>"67a22e3d484039db775bac1d", :label=>"Media"}}, :_id=>"67a22e3d484039db775bac21", :label=>"SMM"}}, :title=>"Starter", :_id=>"678278de8df4206a01fad9e0", :validity=>"Month"}
- 
-[2025-02-04T15:13:22.417Z] Metadata values must be strings, but for key `plan` you passed in a value of type `hash`. Invalid value: {:features=>{:"0"=>"Up to 5 clients", :"3"=>"Email support", :"4"=>"Basic reporting", :"1"=>"Basic analytics", :"2"=>"Social media scheduling"}, :description=>"Perfect for new agencies starting their journey", :price=>"89", :menu=>{:accounting=>{:icon=>"DollarSign", :subItems=>{:"0"=>{:icon=>"FileClock", :path=>{:"0"=>"/history"}, :_id=>"67a22e3d484039db775bac26", :label=>"History"}, :"1"=>{:icon=>"FileText", :path=>{:"0"=>"/invoices"}, :_id=>"67a22e3d484039db775bac27", :label=>"Invoices"}, :"2"=>{:icon=>"FileChartColumn", :path=>{:"0"=>"/reports"}, :_id=>"67a22e3d484039db775bac28", :label=>"Reports"}}, :_id=>"67a22e3d484039db775bac29", :label=>"Accounting"}, :crm=>{:icon=>"Users", :subItems=>{:"0"=>{:path=>{:"0"=>"/clients", :"1"=>"/create-client"}, :icon=>"Users", :_id=>"67a22e3d484039db775bac22", :label=>"Clients"}, :"1"=>{:icon=>"ChartBarStacked", :path=>{:"0"=>"/leads"}, :_id=>"67a22e3d484039db775bac23", :label=>"Leads"}, :"2"=>{:icon=>"MessageSquareText", :path=>{:"0"=>"/messages"}, :_id=>"67a22e3d484039db775bac24", :label=>"Messages"}}, :_id=>"67a22e3d484039db775bac25", :label=>"CRM"}, :smm=>{:icon=>"BarChart", :subItems=>{:"3"=>{:icon=>"CalendarDays", :path=>{:"0"=>"/calendar"}, :_id=>"67a22e3d484039db775bac1e", :label=>"Calendar"}, :"4"=>{:icon=>"Send", :path=>{:"0"=>"/inbox"}, :_id=>"67a22e3d484039db775bac1f", :label=>"Inbox"}, :"0"=>{:icon=>"FileText", :path=>{:"0"=>"/projects"}, :_id=>"67a22e3d484039db775bac1b", :label=>"Projects"}, :"1"=>{:icon=>"Pen", :path=>{:"0"=>"/contents"}, :_id=>"67a22e3d484039db775bac1c", :label=>"Content"}, :"5"=>{:icon=>"ChartNoAxesCombined", :path=>{:"0"=>"/analytics"}, :_id=>"67a22e3d484039db775bac20", :label=>"Analytics"}, :"2"=>{:icon=>"GalleryVertical", :path=>{:"0"=>"/media"}, :_id=>"67a22e3d484039db775bac1d", :label=>"Media"}}, :_id=>"67a22e3d484039db775bac21", :label=>"SMM"}}, :title=>"Starter", :_id=>"678278de8df4206a01fad9e0", :validity=>"Month"}
- 
-[2025-02-04T15:14:22.045Z] Metadata values must be strings, but for key `plan` you passed in a value of type `hash`. Invalid value: {:features=>{:"0"=>"Up to 5 clients", :"3"=>"Email support", :"4"=>"Basic reporting", :"1"=>"Basic analytics", :"2"=>"Social media scheduling"}, :description=>"Perfect for new agencies starting their journey", :price=>"89", :menu=>{:accounting=>{:icon=>"DollarSign", :subItems=>{:"0"=>{:icon=>"FileClock", :path=>{:"0"=>"/history"}, :_id=>"67a22e3d484039db775bac26", :label=>"History"}, :"1"=>{:icon=>"FileText", :path=>{:"0"=>"/invoices"}, :_id=>"67a22e3d484039db775bac27", :label=>"Invoices"}, :"2"=>{:icon=>"FileChartColumn", :path=>{:"0"=>"/reports"}, :_id=>"67a22e3d484039db775bac28", :label=>"Reports"}}, :_id=>"67a22e3d484039db775bac29", :label=>"Accounting"}, :crm=>{:icon=>"Users", :subItems=>{:"0"=>{:icon=>"Users", :path=>{:"0"=>"/clients", :"1"=>"/create-client"}, :_id=>"67a22e3d484039db775bac22", :label=>"Clients"}, :"1"=>{:icon=>"ChartBarStacked", :path=>{:"0"=>"/leads"}, :_id=>"67a22e3d484039db775bac23", :label=>"Leads"}, :"2"=>{:icon=>"MessageSquareText", :path=>{:"0"=>"/messages"}, :_id=>"67a22e3d484039db775bac24", :label=>"Messages"}}, :_id=>"67a22e3d484039db775bac25", :label=>"CRM"}, :smm=>{:icon=>"BarChart", :subItems=>{:"4"=>{:path=>{:"0"=>"/inbox"}, :icon=>"Send", :_id=>"67a22e3d484039db775bac1f", :label=>"Inbox"}, :"0"=>{:icon=>"FileText", :path=>{:"0"=>"/projects"}, :_id=>"67a22e3d484039db775bac1b", :label=>"Projects"}, :"3"=>{:icon=>"CalendarDays", :path=>{:"0"=>"/calendar"}, :_id=>"67a22e3d484039db775bac1e", :label=>"Calendar"}, :"1"=>{:icon=>"Pen", :path=>{:"0"=>"/contents"}, :_id=>"67a22e3d484039db775bac1c", :label=>"Content"}, :"5"=>{:icon=>"ChartNoAxesCombined", :path=>{:"0"=>"/analytics"}, :_id=>"67a22e3d484039db775bac20", :label=>"Analytics"}, :"2"=>{:icon=>"GalleryVertical", :path=>{:"0"=>"/media"}, :_id=>"67a22e3d484039db775bac1d", :label=>"Media"}}, :_id=>"67a22e3d484039db775bac21", :label=>"SMM"}}, :title=>"Starter", :_id=>"678278de8df4206a01fad9e0", :validity=>"Month"}
- 
-[2025-02-04T15:16:48.821Z] Metadata values can have up to 500 characters, but you passed in a value that is 1679 characters. Invalid value: {"menu":{"smm":{"label":"SMM","icon":"BarChart","subItems":[{"_id":"67a22e3d484039db775bac1b","label...":["Up to 5 clients","Basic analytics","Social media scheduling","Email support","Basic reporting"]}
- 
-[2025-02-04T15:22:11.995Z] Account Not found
- 
-[2025-02-04T15:22:12.131Z] Account Not found
- 
-[2025-02-04T15:25:32.497Z] Account Not found
- 
-[2025-02-04T15:25:32.625Z] Account Not found
- 
-[2025-02-04T15:28:55.275Z] Account Not found
- 
-[2025-02-04T15:28:55.393Z] Account Not found
- 
-[2025-02-04T15:31:27.269Z] Account Not found
- 
-[2025-02-04T15:31:27.420Z] Account Not found
- 
-[2025-02-04T15:34:14.783Z] Account Not found
- 
-[2025-02-04T15:34:14.908Z] Account Not found
- 
-[2025-02-04T15:36:32.293Z] Account Not found
- 
-[2025-02-04T15:36:32.414Z] Account Not found
- 
-[2025-02-04T16:03:09.418Z] Account Not found
- 
-[2025-02-04T16:03:09.544Z] Account Not found
- 
-[2025-02-04T16:09:54.247Z] Account Not found
- 
-[2025-02-04T16:09:54.362Z] Account Not found
- 
-[2025-02-04T16:19:32.221Z] Account Not found
- 
-[2025-02-04T16:19:32.346Z] Account Not found
- 
-[2025-02-04T16:25:58.160Z] Account Not found
- 
-[2025-02-04T16:25:58.280Z] Account Not found
- 
-[2025-02-04T19:43:33.579Z] Account Not found
- 
-[2025-02-04T19:43:33.709Z] Account Not found
- 
-[2025-02-04T19:45:59.949Z] Account Not found
- 
-[2025-02-04T19:46:00.092Z] Account Not found
- 
-[2025-02-04T19:47:54.908Z] Account Not found
- 
-[2025-02-04T19:47:55.055Z] Account Not found
- 
-[2025-02-04T19:49:49.854Z] Account Not found
- 
-[2025-02-04T19:49:49.993Z] Account Not found
- 
-[2025-02-04T19:50:17.954Z] Account Not found
- 
-[2025-02-04T19:50:18.105Z] Account Not found
- 
-[2025-02-04T19:50:20.058Z] Account Not found
- 
-[2025-02-04T19:50:20.189Z] Account Not found
- 
-[2025-02-04T19:50:31.415Z] Account Not found
- 
-[2025-02-04T19:50:31.571Z] Account Not found
- 
-[2025-02-04T19:50:31.789Z] Account Not found
- 
-[2025-02-04T19:50:31.932Z] Account Not found
- 
-[2025-02-04T19:50:32.456Z] Account Not found
- 
-[2025-02-04T19:50:32.612Z] Account Not found
- 
-[2025-02-04T19:50:33.251Z] Account Not found
- 
-[2025-02-04T19:50:33.382Z] Account Not found
- 
-[2025-02-04T19:50:33.650Z] Account Not found
- 
-[2025-02-04T19:50:33.773Z] Account Not found
- 
-[2025-02-04T19:50:33.898Z] Account Not found
- 
-[2025-02-04T19:50:34.030Z] Account Not found
- 
-[2025-02-04T19:53:14.335Z] Account Not found
- 
-[2025-02-04T19:53:14.535Z] Account Not found
- 
-[2025-02-04T19:53:14.814Z] Account Not found
- 
-[2025-02-04T19:53:14.934Z] Account Not found
- 
-[2025-02-04T19:53:15.153Z] Account Not found
- 
-[2025-02-04T19:53:15.273Z] Account Not found
- 
-[2025-02-04T19:53:16.153Z] Account Not found
- 
-[2025-02-04T19:53:16.290Z] Account Not found
- 
-[2025-02-04T19:53:38.599Z] Account Not found
- 
-[2025-02-04T19:53:38.776Z] Account Not found
- 
-[2025-02-04T19:53:38.946Z] Account Not found
- 
-[2025-02-04T19:53:39.146Z] Account Not found
- 
-[2025-02-04T19:53:39.657Z] Account Not found
- 
-[2025-02-04T19:53:39.835Z] Account Not found
- 
-[2025-02-04T19:53:40.025Z] Account Not found
- 
-[2025-02-04T19:53:40.187Z] Account Not found
- 
-[2025-02-04T19:53:40.344Z] Account Not found
- 
-[2025-02-04T19:53:40.503Z] Account Not found
- 
-[2025-02-04T19:53:40.669Z] Account Not found
- 
-[2025-02-04T19:53:40.827Z] Account Not found
- 
-[2025-02-04T19:53:41.039Z] Account Not found
- 
-[2025-02-04T19:53:41.232Z] Account Not found
- 
-[2025-02-04T19:53:41.416Z] Account Not found
- 
-[2025-02-04T19:53:41.779Z] Account Not found
- 
-[2025-02-04T19:53:41.988Z] Account Not found
- 
-[2025-02-04T19:53:42.147Z] Account Not found
- 
-[2025-02-04T19:53:42.393Z] Account Not found
- 
-[2025-02-04T19:53:42.534Z] Account Not found
- 
-[2025-02-04T19:53:43.146Z] Account Not found
- 
-[2025-02-04T19:53:43.292Z] Account Not found
- 
-[2025-02-04T19:53:46.663Z] Account Not found
- 
-[2025-02-04T19:53:46.811Z] Account Not found
- 
-[2025-02-04T19:53:48.547Z] Account Not found
- 
-[2025-02-04T19:53:48.669Z] Account Not found
- 
-[2025-02-04T19:54:30.988Z] Account Not found
- 
-[2025-02-04T19:54:31.130Z] Account Not found
- 
-[2025-02-04T19:54:42.417Z] Account Not found
- 
-[2025-02-04T19:54:42.600Z] Account Not found
- 
-[2025-02-04T19:55:47.101Z] Account Not found
- 
-[2025-02-04T19:55:47.251Z] Account Not found
- 
-[2025-02-04T19:55:54.664Z] Account Not found
- 
-[2025-02-04T19:55:54.820Z] Account Not found
- 
-[2025-02-04T19:56:03.417Z] Account Not found
- 
-[2025-02-04T19:56:03.580Z] Account Not found
- 
-[2025-02-04T19:56:12.704Z] Account Not found
- 
-[2025-02-04T19:56:12.867Z] Account Not found
- 
-[2025-02-04T19:58:17.580Z] Account Not found
- 
-[2025-02-04T19:58:17.738Z] Account Not found
- 
-[2025-02-04T20:03:29.908Z] Account Not found
- 
-[2025-02-04T20:03:30.071Z] Account Not found
- 
-[2025-02-05T09:05:26.249Z] Account Not found
- 
-[2025-02-05T09:05:26.653Z] Account Not found
- 
-[2025-02-05T09:07:02.833Z] Account Not found
- 
-[2025-02-05T09:07:02.978Z] Account Not found
- 
-[2025-02-05T09:13:11.568Z] Account Not found
- 
-[2025-02-05T09:13:11.984Z] Account Not found
- 
-[2025-02-05T09:13:16.735Z] Account Not found
- 
-[2025-02-05T09:13:16.878Z] Account Not found
- 
-[2025-02-05T09:36:44.512Z] Account Not found
- 
-[2025-02-05T09:36:44.643Z] Account Not found
- 
-[2025-02-05T10:09:37.988Z] Client with this email is already exists in the main db
- 
-[2025-02-05T10:31:31.489Z] Client with this email is already exists in the main database
- 
-[2025-02-05T10:32:25.170Z] Client with this email is already exists in the main database
- 
-[2025-02-05T10:44:13.267Z] Unauthorized access
- 
-[2025-02-05T10:44:27.187Z] Unauthorized access
- 
-[2025-02-05T11:57:21.690Z] Account Not found
- 
-[2025-02-05T11:57:26.903Z] Account Not found
- 
-[2025-02-05T12:37:56.396Z] read ECONNRESET
- 
-[2025-02-05T12:37:56.575Z] read ECONNRESET
- 
+

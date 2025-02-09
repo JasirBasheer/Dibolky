@@ -1,4 +1,4 @@
-import { AgencyPlan, CompanyPlan } from '../../models/admin/planModel'
+import { AgencyPlan, CompanyPlan } from '../../models/admin/plan.model'
 import { IPlanRepository } from '../Interface/IPlanRepository'
 
 export default class PlanRepository implements IPlanRepository {

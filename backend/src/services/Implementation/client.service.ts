@@ -2,9 +2,9 @@ import { inject, injectable } from "tsyringe";
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { IClientService } from "../Interface/IClientService";
 import { NotFoundError, UnauthorizedError, comparePassword } from "mern.common";
-import { clientSchema } from "../../models/agency/clientModel";
+import { clientSchema } from "../../models/agency/client.model";
 import { exchangeForLongLivedToken } from "../../provider.strategies/instagram.strategy";
-import { ReviewBucketSchema } from "../../models/agency/reviewBucketModel";
+import { ReviewBucketSchema } from "../../models/agency/reviewBucket.model";
 
 @injectable()
 export default class ClientService implements IClientService {

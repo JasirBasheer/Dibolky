@@ -1,13 +1,13 @@
 import "reflect-metadata";
 import express from 'express';
-import adminRoutes from './admin/adminRoutes'
-import agencyRoutes from './organizations/agency/agencyRoutes'
-import paymentRoutes from './payment/paymentRoutes'
-import authRoutes from './auth/authenticationRoutes'
-import entityRoutes from './entity/entityRoutes'
-import clientRoutes from './organizations/client/clientRoutes'
-import employeeRoutes from './organizations/employee/employeeRoutes'
-import companyRoutes from './organizations/company/companyRoutes'
+import adminRoutes from './admin.routes'
+import agencyRoutes from './organizations/agency.routes'
+import paymentRoutes from './payment.routes'
+import authRoutes from './authentication.routes'
+import entityRoutes from './entity.routes'
+import clientRoutes from './organizations/client.routes'
+import employeeRoutes from './organizations/employee.routes'
+import companyRoutes from './organizations/company.routes'
 import { TokenMiddleWare } from '../middlewares/token.middleware';
 
 const router = express.Router();

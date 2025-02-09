@@ -24,7 +24,7 @@ const Login = ({ role }: LoginProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const isNewlyCreatedAccount = searchParams.get('new')
 
 
@@ -73,7 +73,6 @@ const Login = ({ role }: LoginProps) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setIsLoading(false)
-      console.log(error)
       message.error(error.response.data.error)
     }
 

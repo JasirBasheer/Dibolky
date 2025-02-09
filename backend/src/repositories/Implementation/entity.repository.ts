@@ -1,8 +1,8 @@
 import { connectTenantDB } from "../../config/db";
-import Agency, { ownerDetailsSchema } from "../../models/agency/agencyModel";
-import Transaction from "../../models/admin/transactionModel";
-import Company from "../../models/company/companyModel";
-import { departmentSchema } from "../../models/agency/departmentModel";
+import Agency, { ownerDetailsSchema } from "../../models/agency/agency.model";
+import Transaction from "../../models/admin/transaction.model";
+import Company from "../../models/company/company.model";
+import { departmentSchema } from "../../models/agency/department.model";
 import { IEntityRepository } from "../Interface/IEntityRepository";
 
 export default class EntityRepository implements IEntityRepository {

@@ -1,8 +1,8 @@
 import cron from 'node-cron';
 import { color } from 'console-log-colors';
-import Agencies from '../models/agency/agencyModel';
+import Agencies from '../models/agency/agency.model';
 import { connectTenantDB } from '../config/db';
-import { ReviewBucketSchema } from '../models/agency/reviewBucketModel';
+import { ReviewBucketSchema } from '../models/agency/reviewBucket.model';
 import ProviderService from '../services/Implementation/provider.service';
 import { container } from 'tsyringe';
 import { Types } from 'mongoose';

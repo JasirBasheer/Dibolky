@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { container } from "tsyringe";
 import {IAuthenticationController} from '../controllers/Interface/IAuthenticationController'
 import AuthenticationController from '../controllers/Implementation/authentication.controller'
-import AdminRepository from '../repositories/Implementation/admin.repository';
+import { AdminRepository } from "../repositories/Implementation/admin.repository";
 import { IAdminRepository } from '../repositories/Interface/IAdminRepository';
 import { IAgencyRepository } from '../repositories/Interface/IAgencyRepository';
 import AgencyRepository from '../repositories/Implementation/agency.repository';
@@ -48,7 +48,11 @@ import { IProviderController } from "../controllers/Interface/IProviderControlle
 import ProviderController from "../controllers/Implementation/provider.controller";
 import { IProviderService } from "../services/Interface/IProviderService";
 import ProviderService from "../services/Implementation/provider.service";
+import Admin from "../models/admin/admin.model";
 
+
+//* Model Registeration
+container.register('AdminModel', {useValue: Admin});
 
 
 //* Repo Registeration

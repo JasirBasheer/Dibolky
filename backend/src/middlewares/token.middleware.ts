@@ -6,6 +6,7 @@ import { IAgencyService } from "../services/Interface/IAgencyService";
 import { IAdminService } from "../services/Interface/IAdminService";
 import { IClientService } from "../services/Interface/IClientService";
 import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../config/env";
+import { isTokenBlacklisted } from "../config/redis";
 
 const companyService = container.resolve<ICompanyService>("CompanyService");
 const agencyService = container.resolve<IAgencyService>("AgencyService");
@@ -16,6 +17,7 @@ declare global {
     namespace Express {
         interface Request {
             details?: any;
+            tokenDetails?: any;
         }
     }
 }
@@ -57,14 +59,20 @@ export const TokenMiddleWare = async (req: Request, res: Response, next: NextFun
             ownerDetails = await companyService.verifyOwner(tokenDetails.id)
         } else if (tokenDetails.role == 'Admin') {
             ownerDetails = await adminService.verifyAdmin(tokenDetails.id)
-        }else if(tokenDetails.role == "Client"){
+        } else if (tokenDetails.role == "Client") {
             ownerDetails = await clientService.verifyClient(tokenDetails.id)
         }
-        
+
         if (ownerDetails?.isBlocked) throw new UnauthorizedError('Account is Blocked')
+        const isTokenBlaclisted = await isTokenBlacklisted(token)
+        if (isTokenBlaclisted) {
+            res.clearCookie('accessToken')
+            throw new UnauthorizedError('Token blacklisted please login to continue')
+        }
         ownerDetails = ownerDetails.toObject();
         ownerDetails.role = tokenDetails.role
         req.details = ownerDetails
+        req.tokenDetails = tokenDetails
 
         next();
     } catch (error) {

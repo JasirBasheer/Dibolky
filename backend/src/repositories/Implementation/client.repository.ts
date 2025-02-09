@@ -1,4 +1,4 @@
-import Client from "../../models/agency/clientModel";
+import Client from "../../models/agency/client.model";
 import { IClientRepository } from "../Interface/IClientRepository";
 
 export default class ClientRepository implements IClientRepository {

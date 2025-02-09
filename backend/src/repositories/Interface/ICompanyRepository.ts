@@ -1,4 +1,4 @@
-import { ICompanyOwner } from "../../shared/types/companyTypes";
+import { ICompanyOwner } from "../../shared/types/company.types";
 
 export interface ICompanyRepository {
     findCompanyWithMail(email: string): Promise<ICompanyOwner | null>

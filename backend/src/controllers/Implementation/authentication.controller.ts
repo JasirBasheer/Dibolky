@@ -6,11 +6,18 @@ import { IAgencyService } from '../../services/Interface/IAgencyService';
 import { ICompanyService } from '../../services/Interface/ICompanyService';
 import { IEmployeeService } from '../../services/Interface/IEmployeeService';
 import { IAuthenticationService } from '../../services/Interface/IAuthenticationService';
-import { createTokens, HTTPStatusCodes, ResponseMessage, SendResponse } from 'mern.common';
 import { IClientService } from '../../services/Interface/IClientService';
 import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from '../../config/env';
+import { blacklistToken } from '../../config/redis';
+import {
+    createTokens,
+    HTTPStatusCodes,
+    ResponseMessage,
+    SendResponse
+} from 'mern.common';
 
 @injectable()
+/** Implementation of Authentication Controller */
 export default class AuthenticationController implements IAuthenticationController {
     private adminService: IAdminService;
     private agencyService: IAgencyService;
@@ -19,7 +26,15 @@ export default class AuthenticationController implements IAuthenticationControll
     private authenticationService: IAuthenticationService;
     private clientService: IClientService;
 
-
+    /**
+    * Initializes the AuthenticationController with required service dependencies.
+    * @param adminService - Service for handling admin authentication.
+    * @param agencyService - Service for handling agency authentication.
+    * @param companyService - Service for handling company authentication.
+    * @param employeeService - Service for handling employee authentication.
+    * @param authenticationService - Service for general authentication operations.
+    * @param clientService - Service for handling client authentication.
+    */
     constructor(
         @inject('AdminService') adminService: IAdminService,
         @inject('AgencyService') agencyService: IAgencyService,
@@ -37,22 +52,40 @@ export default class AuthenticationController implements IAuthenticationControll
     }
 
 
-
-    async login(req: Request, res: Response, next: NextFunction): Promise<void> {
+    /**
+    * Authenticates a user based on role and creates access and refresh tokens
+    * @param req Express Request object containing email, password, and role
+    * @param res Express Response object
+    * @param next Express NextFunction for error handling
+    * @returns Promise resolving to void
+    */
+    async login(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
         try {
             const { email, password, role }: { email: string, password: string, role: string } = req.body
             let id;
 
-            if (role == "Admin") {
-                id = await this.adminService.adminLoginHandler(email, password)
-            } else if (role == "Agency") {
-                id = await this.agencyService.agencyLoginHandler(email, password)
-            } else if (role == "Company") {
-                id = await this.companyService.companyLoginHandler(email, password)
-            } else if (role == "Client") {
-                id = await this.clientService.clientLoginHandler(email, password)
-            } else if (role == "Employee") {
-                id = await this.employeeService.employeeLoginHandler(email, password)
+            switch (role) {
+                case "Admin":
+                    id = await this.adminService.adminLoginHandler(email, password);
+                    break;
+                case "Agency":
+                    id = await this.agencyService.agencyLoginHandler(email, password);
+                    break;
+                case "Company":
+                    id = await this.companyService.companyLoginHandler(email, password);
+                    break;
+                case "Client":
+                    id = await this.clientService.clientLoginHandler(email, password);
+                    break;
+                case "Employee":
+                    id = await this.employeeService.employeeLoginHandler(email, password);
+                    break;
+                default:
+                    throw new Error('Invalid role specified');
             }
 
             let accessTokenSecret = JWT_ACCESS_SECRET || 'defaultAccessSecret';
@@ -69,25 +102,72 @@ export default class AuthenticationController implements IAuthenticationControll
     }
 
 
-
-    async forgotPassword(req: Request, res: Response, next: NextFunction): Promise<any> {
+    /**
+    * Logs out the user by blacklisting the access token and clearing authentication cookies
+    * @param req Express Request object containing token details
+    * @param res Express Response object
+    * @param next Express NextFunction for error handling
+    * @returns Promise resolving to void
+    */
+    async logout(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
         try {
-            const { email, role } = req.body
-            let response = await this.authenticationService.resetPassword(email, role)
-            if (!response) return res.status(400).json({ success: false, message: "Account not found" })
+            let token: string = req.cookies.accessToken ?? null
+            await blacklistToken(req.tokenDetails, token)
+
+            res.clearCookie('accessToken')
+            res.clearCookie('refreshToken')
+
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-
-
         } catch (error: any) {
             next(error);
         }
     }
 
 
-    async resetPassword(req: Request, res: Response, next: NextFunction): Promise<any> {
+    /**
+    * Initiates the password reset process for a user
+    * @param req Express Request object containing the user's email and role
+    * @param res Express Response object
+    * @param next Express NextFunction for error handling
+    * @returns Promise resolving to void
+    */
+    async forgotPassword(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
         try {
-            const { token } = req.params;
-            const { newPassword } = req.body;
+            const { email, role }: { email: string, role: string } = req.body
+
+            await this.authenticationService.resetPassword(email, role)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
+        } catch (error: any) {
+            next(error);
+        }
+    }
+
+
+    /**
+    * Resets  password using a reset token
+    * @param req Express Request object containing the reset token and new password
+    * @param res Express Response object
+    * @param next Express NextFunction for error handling
+    * @returns Promise resolving to void
+    */
+    async resetPassword(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            const { token } = req.params as { token: string };
+            const { newPassword } = req.body as { newPassword: string };
+
+
             await this.authenticationService.changePassword(token, newPassword)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
         } catch (error: any) {

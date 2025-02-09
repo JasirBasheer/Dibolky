@@ -130,7 +130,7 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
   }, [location.pathname, menu]);
 
   const currentPath = useMemo(() => 
-    location.pathname.replace('/agency', ''), 
+    location.pathname.replace('/client', ''), 
     [location.pathname]
   );
 
@@ -158,8 +158,8 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
             <MenuItem
               icon={LayoutDashboard}
               label="Dashboard"
-              path={[`/agency`]}
-              isActive={location.pathname === `/agency`}
+              path={[`/client`]}
+              isActive={location.pathname === `/client`}
             />
             {Object.entries(menu).map(([key, menuItem]: [string, any]) =>
               !menuItem.subItems ? (
@@ -186,8 +186,8 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
             <MenuItem
               icon={Settings}
               label="Settings"
-              path={[`/${userDetails.role.toLowerCase()}}/settings`]}
-              isActive={location.pathname === `/agency/settings`}
+              path={[`/client/settings`]}
+              isActive={location.pathname === `/client/settings`}
             />
           </>
         )}

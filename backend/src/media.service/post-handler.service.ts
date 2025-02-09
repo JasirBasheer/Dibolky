@@ -1,6 +1,6 @@
 import { checkIGContainerStatus, createInstaCarousel, createInstaPostContainer, fetchIGAccountId, publishInstagramContent } from "../provider.strategies/instagram.strategy"
 import { INSTAGRAM } from "../shared/utils/constants"
-import { VIDEO_EXTENSIONS } from "../shared/utils/video-dimensions.util"
+import { VIDEO_EXTENSIONS } from "../shared/utils/video-dimensions.utils"
 import { getPages } from "./shared.service"
 
 

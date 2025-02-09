@@ -40,12 +40,13 @@ const ProtectedRoute = ({ children,role }: { children: any,role:string }) => {
             remainingClients: response.data.details.remainingClients
           }));
         }else if (role == "Client"&& response?.data.details.orgId && response?.data.details.email){
-        const res = await axios.get(`/api/client/get-client-details`);
+          const res = await axios.get(`/api/client/get-client-details`);
           dispatch(setClient({
             id: res.data.client._id,
             orgId: res.data.client.orgId,
             name: res.data.client.name,
             email: res.data.client.email,
+            services: res.data.client.services
           }));
 
         }
@@ -53,7 +54,7 @@ const ProtectedRoute = ({ children,role }: { children: any,role:string }) => {
         
 
         const roleRedirects: IRedirectionUrls = {
-          "Agency": '/agency/',
+          "Agency": '/agency',
           "Company": '/company/',
           "Employee": '/employee/',
           "Admin": '/admin/'

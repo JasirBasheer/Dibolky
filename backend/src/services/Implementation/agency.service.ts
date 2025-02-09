@@ -1,15 +1,15 @@
-import { clientSchema, IClient } from "../../models/agency/clientModel";
-import { IAgencyOwner } from "../../shared/types/agencyTypes";
+import { clientSchema, IClient } from "../../models/agency/client.model";
+import { IAgencyOwner } from "../../shared/types/agency.types";
 import { createClientMailData } from "../../shared/utils/mail.datas";
 import bcrypt from 'bcrypt'
 import { IAgencyService } from "../Interface/IAgencyService";
 import { inject, injectable } from "tsyringe";
 import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepository";
 import { ConflictError, CustomError, generatePassword, hashPassword, NotFoundError, sendMail, UnauthorizedError } from "mern.common";
-import { ownerDetailsSchema } from "../../models/agency/agencyModel";
+import { ownerDetailsSchema } from "../../models/agency/agency.model";
 import { createNewMenuForClient } from "../../shared/utils/menu.utils";
 import { connectTenantDB } from "../../config/db";
-import { ReviewBucketSchema } from "../../models/agency/reviewBucketModel";
+import { ReviewBucketSchema } from "../../models/agency/reviewBucket.model";
 import { uploadToS3 } from "../../shared/utils/aws";
 import { AWS_S3_BUCKET_NAME } from "../../config/env";
 

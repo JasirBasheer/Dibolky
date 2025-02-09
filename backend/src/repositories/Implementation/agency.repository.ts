@@ -1,6 +1,6 @@
-import Client, { clientSchema, IClient } from '../../models/agency/clientModel'
-import Agency from "../../models/agency/agencyModel";
-import { IAgencyOwner } from '../../shared/types/agencyTypes';
+import Client, { clientSchema, IClient } from '../../models/agency/client.model'
+import Agency from "../../models/agency/agency.model";
+import { IAgencyOwner } from '../../shared/types/agency.types';
 import { IAgencyRepository } from '../Interface/IAgencyRepository';
 
 

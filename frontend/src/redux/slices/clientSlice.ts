@@ -9,7 +9,8 @@ interface IClient {
     facebookAccessToken: string,
     facebookUsername:string,
     instagramAccessToken:string,
-    instagramUsername:string
+    instagramUsername:string,
+    services:any
 }
 
 const initialState: IClient = {
@@ -20,7 +21,8 @@ const initialState: IClient = {
     facebookAccessToken: "",
     facebookUsername:"",
     instagramAccessToken:"",
-    instagramUsername:""
+    instagramUsername:"",
+    services:{}
 };
 
 

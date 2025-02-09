@@ -1,5 +1,5 @@
-import { IClient } from "../../models/agency/clientModel";
-import { IAgencyOwner } from "../../shared/types/agencyTypes";
+import { IClient } from "../../models/agency/client.model";
+import { IAgencyOwner } from "../../shared/types/agency.types";
 
 export interface IAgencyRepository {
     findAgencyWithMail(email: string): Promise<IAgencyOwner | null>;

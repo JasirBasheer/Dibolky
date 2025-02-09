@@ -136,11 +136,12 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
           </>
         ) : (
           <>
+
             <MenuItem
               icon={LayoutDashboard}
               label="Dashboard"
               path={[`/client`]}
-              isActive={location.pathname === `/client/`}
+              isActive={location.pathname === `/client`}
             />
             {Object.entries(menu).map(([key, menuItem]: [string, any]) =>
               !menuItem.subItems ? (

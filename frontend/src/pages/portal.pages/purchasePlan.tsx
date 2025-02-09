@@ -9,8 +9,8 @@ import { message } from "antd";
 import { FormData, Plan, ValidationError } from '../../types/portalTypes';
 import { renderInputField } from '../../components/portalComponents/Input';
 import { handleRazorpayPayment } from '../../helpers/portal.helpers/razporpay';
-import { useSelector } from 'react-redux';
 import { handleStripePayment } from '@/helpers/portal.helpers/stripe';
+import { useSelector } from 'react-redux';
 
 
 const PurchasePlan: React.FC = () => {
@@ -318,7 +318,7 @@ const PurchasePlan: React.FC = () => {
                                 <>
                                     <h2 className="text-3xl font-bold mb-2 text-center text-gray-800">Complete Your Purchase</h2>
                                     <p className="text-center text-gray-600 mb-8">Please fill in your details to continue</p>
-                                    {renderStepIndicator()}
+                                    {/* {renderStepIndicator()} */}
 
                                     <form onSubmit={handleSubmit} className="space-y-6">
                                         {renderStep()}

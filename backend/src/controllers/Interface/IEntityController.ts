@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
+/** Interface for Entity Controller */
 export interface IEntityController {
     checkMail(req: Request, res: Response, next: NextFunction): Promise<any>
     getAllPlans(req: Request, res: Response, next: NextFunction): Promise<any>

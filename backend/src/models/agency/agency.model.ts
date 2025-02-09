@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { IAgency, IOwnerDetailsSchema } from '../../shared/types/agencyTypes';
+import { IAgency, IOwnerDetailsSchema } from '../../shared/types/agency.types';
 
 
 

@@ -23,6 +23,7 @@ export interface IPlan extends Document {
         crm?: IMenuItem;
         accounting?: IMenuItem;
     };
+    isActive:boolean;
 }
 
 const subItemSchema = new Schema<ISubItem>({
@@ -62,6 +63,11 @@ const planSchema: Schema<IPlan> = new Schema({
         crm: menuItemSchema,
         accounting: menuItemSchema,
     },
+    isActive:{
+        type:Boolean,
+        default:true
+
+    }
 });
 
 export const AgencyPlan = mongoose.model<IPlan>('agencyPlans', planSchema);

@@ -119,7 +119,6 @@ export default class AdminService implements IAdminService {
             createdPlan = await this.planRepository.createAgencyPlan(details)
         }else{
             createdPlan = await this.planRepository.createCompanyPlan(details)
-
         }
         if(!createdPlan)throw new CustomError("Error While creating Plan",500)
     }
@@ -138,6 +137,63 @@ export default class AdminService implements IAdminService {
         }
         if(!editedPlan)throw new CustomError("Error While editing Plan",500)
     }
+
+    async changePlanStatus(
+        entity:string,
+        id:string,
+    ):Promise<void>{
+        let changedStatus;
+        if(entity == "Agency"){
+            console.log("changedStatus")
+            changedStatus = await this.planRepository.changeAgencyPlanStatus(id)
+            console.log(changedStatus)
+        }else{
+            changedStatus = await this.planRepository.changeCompanyPlanStatus(id)
+        }
+        if(!changedStatus)throw new CustomError("Error While changing Plan status",500)
+    }
+
+    async getPlanDetails(
+        entity:string,
+        id:string
+    ):Promise<any>{
+        let details;
+        if(entity=="Agency"){
+            const planDetails = await this.planRepository.getAgencyPlan(id)
+            const planConsumers = await this.planRepository.getAgencyPlanConsumers(id)
+            const consumers = Array.isArray(planConsumers) 
+            ? planConsumers.map((item) => ({
+                name: item.name,
+                organizationName: item.organizationName,
+                validity: item.validity,
+                industry: item.industry,
+              }))
+            : []; 
+                
+            details = {
+                ...planDetails,
+                planConsumers:consumers
+            }
+        }else{
+            const planDetails = await this.planRepository.getCompanyPlan(id)
+            const planConsumers = await this.planRepository.getCompanyPlanConsumers(id)
+            const consumers = Array.isArray(planConsumers) 
+            ? planConsumers.map((item) => ({
+                name: item.name,
+                organizationName: item.organizationName,
+                validity: item.validity,
+                industry: item.industry,
+              }))
+            : []; 
+                
+            details = {
+                ...planDetails,
+                planConsumers:consumers
+            }
+        }
+        return details
+    }
+
 
 
 }

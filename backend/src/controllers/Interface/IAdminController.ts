@@ -14,5 +14,6 @@ export interface IAdminController {
     // plan-management
     createPlan(req: Request, res: Response, next:NextFunction): Promise<void>
     editPlan(req: Request, res: Response, next:NextFunction): Promise<void>
-    // editPlan(req: Request, res: Response, next:NextFunction): Promise<void>
+    changePlanStatus(req: Request, res: Response, next:NextFunction): Promise<void>
+    getPlan(req: Request, res: Response, next:NextFunction): Promise<void>
 }

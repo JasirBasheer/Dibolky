@@ -126,6 +126,7 @@ export default class AdminController implements IAdminController {
     ): Promise<void> {
         try {
             const { entity, details }: { entity: string, details: planDetails } = req.body
+            console.log(entity, details)
             await this.adminService.createPlan(entity, details)
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
@@ -141,12 +142,46 @@ export default class AdminController implements IAdminController {
     ): Promise<void> {
         try {
             const { entity, details }: { entity: string, details: planDetails } = req.body
-            await this.adminService.editPlan(entity,details)
-            
+            await this.adminService.editPlan(entity, details)
+
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
         } catch (error) {
             next(error)
         }
+    }
+
+    async changePlanStatus(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            const { entity, id }: { entity: string, id: string } = req.body
+            console.log(entity,"entity")
+            console.log(id,"id")
+            await this.adminService.changePlanStatus(entity, id)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
+
+        } catch (error) {
+            next(error)
+        }
+
+    }
+
+    async getPlan(
+        req: Request<{ entity: string; id: string }>,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            const { entity, id } = req.params
+            const details = await this.adminService.getPlanDetails(entity,id)
+            
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{details})
+        } catch (error) {
+            next(error)
+        }
+
     }
 
 

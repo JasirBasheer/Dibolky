@@ -134,10 +134,10 @@ const clientBaseMenu: any = {
 };
 
 const planBaseMenu: any = {
-    "SMM": smm,
-    "MARKETING": marketing,
-    "CRM": crm,
-    "ACCOUTING":accounting
+    "smm": smm,
+    "marketing": marketing,
+    "crm": crm,
+    "accounting":accounting
 };
 
 

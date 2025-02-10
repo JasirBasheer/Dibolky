@@ -144,9 +144,7 @@ export default class AdminService implements IAdminService {
     ):Promise<void>{
         let changedStatus;
         if(entity == "Agency"){
-            console.log("changedStatus")
             changedStatus = await this.planRepository.changeAgencyPlanStatus(id)
-            console.log(changedStatus)
         }else{
             changedStatus = await this.planRepository.changeCompanyPlanStatus(id)
         }

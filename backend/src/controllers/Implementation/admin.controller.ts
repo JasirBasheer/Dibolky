@@ -119,6 +119,13 @@ export default class AdminController implements IAdminController {
     }
 
 
+    /**
+    * Creates a new plan using the provided entity and details.
+    * @param req - Express Request object containing the plan data in the request body
+    * @param res - Express Response object used to send the response
+    * @param next - Express NextFunction for error handling
+    * @returns A success response if the plan is created successfully, or forwards an error to the next middleware
+    */
     async createPlan(
         req: Request,
         res: Response,
@@ -135,6 +142,14 @@ export default class AdminController implements IAdminController {
         }
     }
 
+
+    /**
+    * Edits an existing plan with the provided entity and updated details.
+    * @param req - Express Request object containing the updated plan data in the request body
+    * @param res - Express Response object used to send the response
+    * @param next - Express NextFunction for error handling
+    * @returns A success response if the plan is updated successfully, or forwards an error to the next middleware
+    */
     async editPlan(
         req: Request,
         res: Response,
@@ -150,6 +165,14 @@ export default class AdminController implements IAdminController {
         }
     }
 
+
+    /**
+    * Changes the status of a plan based on the provided entity and plan ID.
+    * @param req - Express Request object containing the entity and plan ID in the request body
+    * @param res - Express Response object used to send the response
+    * @param next - Express NextFunction for error handling
+    * @returns A success response if the plan status is updated successfully, or forwards an error to the next middleware
+    */
     async changePlanStatus(
         req: Request,
         res: Response,
@@ -157,8 +180,6 @@ export default class AdminController implements IAdminController {
     ): Promise<void> {
         try {
             const { entity, id }: { entity: string, id: string } = req.body
-            console.log(entity,"entity")
-            console.log(id,"id")
             await this.adminService.changePlanStatus(entity, id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
 
@@ -168,6 +189,14 @@ export default class AdminController implements IAdminController {
 
     }
 
+
+    /**
+    * Retrieves the details of a specific plan based on the provided entity and plan ID.
+    * @param req - Express Request object containing the entity and plan ID in the request parameters
+    * @param res - Express Response object used to send the response
+    * @param next - Express NextFunction for error handling
+    * @returns A success response with the plan details if found, or forwards an error to the next middleware
+    */
     async getPlan(
         req: Request<{ entity: string; id: string }>,
         res: Response,

@@ -2,12 +2,13 @@ import { NextFunction, Request, Response } from 'express';
 import { IAdminController } from '../Interface/IAdminController';
 import { inject, injectable } from 'tsyringe';
 import { IAdminService } from '../../services/Interface/IAdminService';
-import { 
-    HTTPStatusCodes, 
-    NotFoundError, 
-    ResponseMessage, 
-    SendResponse 
+import {
+    HTTPStatusCodes,
+    NotFoundError,
+    ResponseMessage,
+    SendResponse
 } from 'mern.common';
+import { planDetails } from '../../shared/types/admin.types';
 
 @injectable()
 /** Implementation of AdminController Controller */
@@ -116,6 +117,103 @@ export default class AdminController implements IAdminController {
             next(error)
         }
     }
+
+
+    /**
+    * Creates a new plan using the provided entity and details.
+    * @param req - Express Request object containing the plan data in the request body
+    * @param res - Express Response object used to send the response
+    * @param next - Express NextFunction for error handling
+    * @returns A success response if the plan is created successfully, or forwards an error to the next middleware
+    */
+    async createPlan(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            const { entity, details }: { entity: string, details: planDetails } = req.body
+            console.log(entity, details)
+            await this.adminService.createPlan(entity, details)
+
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    /**
+    * Edits an existing plan with the provided entity and updated details.
+    * @param req - Express Request object containing the updated plan data in the request body
+    * @param res - Express Response object used to send the response
+    * @param next - Express NextFunction for error handling
+    * @returns A success response if the plan is updated successfully, or forwards an error to the next middleware
+    */
+    async editPlan(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            const { entity, details }: { entity: string, details: planDetails } = req.body
+            await this.adminService.editPlan(entity, details)
+
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    /**
+    * Changes the status of a plan based on the provided entity and plan ID.
+    * @param req - Express Request object containing the entity and plan ID in the request body
+    * @param res - Express Response object used to send the response
+    * @param next - Express NextFunction for error handling
+    * @returns A success response if the plan status is updated successfully, or forwards an error to the next middleware
+    */
+    async changePlanStatus(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            const { entity, id }: { entity: string, id: string } = req.body
+            await this.adminService.changePlanStatus(entity, id)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
+
+        } catch (error) {
+            next(error)
+        }
+
+    }
+
+
+    /**
+    * Retrieves the details of a specific plan based on the provided entity and plan ID.
+    * @param req - Express Request object containing the entity and plan ID in the request parameters
+    * @param res - Express Response object used to send the response
+    * @param next - Express NextFunction for error handling
+    * @returns A success response with the plan details if found, or forwards an error to the next middleware
+    */
+    async getPlan(
+        req: Request<{ entity: string; id: string }>,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            const { entity, id } = req.params
+            const details = await this.adminService.getPlanDetails(entity,id)
+            
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{details})
+        } catch (error) {
+            next(error)
+        }
+
+    }
+
+
 }
 
 

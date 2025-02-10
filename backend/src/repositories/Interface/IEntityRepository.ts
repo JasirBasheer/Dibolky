@@ -1,3 +1,5 @@
+import { planDetails } from "../../shared/types/admin.types";
+
 export interface IEntityRepository {
     createAgency(newAgency:any):Promise<any>;
     createCompany(newCompany:any):Promise<any>;
@@ -11,4 +13,6 @@ export interface IEntityRepository {
     getAllRecentCompanyOwners():Promise<any>;
     getAllRecentAgencyOwners():Promise<any>;
     getTransactionsWithOrgId(id:string):Promise<any>;
+
+    
 }

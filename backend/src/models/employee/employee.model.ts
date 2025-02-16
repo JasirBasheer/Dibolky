@@ -6,8 +6,7 @@ export interface IEmployee {
     organizationName: string;
     name: string;
     email: string;
-    departmentName: string;
-    departmentId: string;
+    department: string;
     password: string;
     contactNumber: number;
     profile: string;
@@ -18,10 +17,6 @@ export interface IEmployee {
 
 export const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
     orgId: {
-        type: String,
-        required: true
-    },
-    organizationName: {
         type: String,
         required: true
     },
@@ -36,8 +31,7 @@ export const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
     password: {
         type: String
     },
-    departmentId: { type: String },
-    departmentName: { type: String },
+    department: { type: String },
     contactNumber: {
         type: Number
     },

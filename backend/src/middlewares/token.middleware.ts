@@ -29,12 +29,8 @@ export const TokenMiddleWare = async (req: Request, res: Response, next: NextFun
         let token = req.cookies.accessToken ?? null
         let refreshToken = req.cookies.refreshToken ?? null
 
-
-
         let refreshTokenSecret = JWT_REFRESH_SECRET || 'defaultRefreshSecret';
         let accessTokenSecret = JWT_ACCESS_SECRET || 'defaultAccessSecret';
-
-
         if (!token && !refreshToken) return res.status(400).json({ success: false })
 
 
@@ -62,6 +58,7 @@ export const TokenMiddleWare = async (req: Request, res: Response, next: NextFun
         } else if (tokenDetails.role == "Client") {
             ownerDetails = await clientService.verifyClient(tokenDetails.id)
         }
+        
 
         if (ownerDetails?.isBlocked) throw new UnauthorizedError('Account is Blocked')
         const isTokenBlaclisted = await isTokenBlacklisted(token)

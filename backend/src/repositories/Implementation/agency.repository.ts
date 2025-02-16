@@ -3,6 +3,21 @@ import Agency from "../../models/agency/agency.model";
 import { IAgencyOwner } from '../../shared/types/agency.types';
 import { IAgencyRepository } from '../Interface/IAgencyRepository';
 
+interface Client {
+    _id: string;
+    name: string;
+}
+
+interface Employee {
+    _id: string;
+    name: string;
+}
+
+interface User {
+    _id: string;
+    name: string;
+    type: 'client' | 'employee';
+}
 
 
 export default class AgencyRepository implements IAgencyRepository {
@@ -14,6 +29,7 @@ export default class AgencyRepository implements IAgencyRepository {
     async findAgencyWithId(id: string): Promise<IAgencyOwner | null> {
         return await Agency.findOne({ _id: id });
     }
+
 
     async findAgencyWithOrgId(orgId: string): Promise<IAgencyOwner | null> {
         return await Agency.findOne({ orgId: orgId })
@@ -75,6 +91,26 @@ export default class AgencyRepository implements IAgencyRepository {
          console.log('done')
          return "hellow" 
         
+    }
+
+
+    
+
+    async fetchAllAvailableUsers(clientModel: any, employeeModel: any): Promise<User[]> {
+        const clients = await clientModel.find({}, { _id: 1, name: 1 }).lean()
+            .then((clients: Client[]) => clients.map(client => ({
+                _id: client._id,
+                name: client.name,
+                type: 'client' as const
+            })));
+            
+        const employees = await employeeModel.find({}, { _id: 1, name: 1 }).lean()
+            .then((employees: Employee[]) => employees.map(employee => ({
+                ...employee,
+                type: 'employee' as const
+            })));
+        
+        return [...clients, ...employees];
     }
 
 

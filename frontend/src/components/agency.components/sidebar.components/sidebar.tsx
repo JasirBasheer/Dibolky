@@ -143,7 +143,7 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
   return (
 
     <div
-      className={`lg:relative absolute flex-col lg:w-[19rem] flex w-full md:h-screen bg-white border-r border-gray-200 ${isOpen ? 'h-screen' : 'h-0'
+      className={`lg:relative absolute flex-col lg:w-[19rem] flex w-full lg:h-screen bg-white border-r border-gray-200 ${isOpen ? 'h-screen' : 'h-0'
         } duration-300 transition-all top-0`}>
       <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden">
         {isLoading ? (

@@ -12,6 +12,7 @@ import { connectTenantDB } from "../../config/db";
 import { ReviewBucketSchema } from "../../models/agency/reviewBucket.model";
 import { uploadToS3 } from "../../shared/utils/aws";
 import { AWS_S3_BUCKET_NAME } from "../../config/env";
+import { employeeSchema } from "../../models/employee/employee.model";
 
 @injectable()
 export default class AgencyService implements IAgencyService {
@@ -46,11 +47,12 @@ export default class AgencyService implements IAgencyService {
 
 
 
-    async createClient(db: any, orgId: string, name: string, email: string,
-        industry: string, socialMedia_credentials: any, services: any, menu: string[]
-    ): Promise<IClient | void> {
 
-        console.log(db)
+
+    async createClient(db: any, orgId: string, name: string, email: string,
+        industry: string, socialMedia_credentials: any, services: any, menu: string[],
+        organizationName:string
+    ): Promise<IClient | void> {
 
         const client = await this.agencyRepository.isClientExists(email)
         if (client && client.orgId == orgId) throw new ConflictError('Client already exists with this email')
@@ -70,7 +72,7 @@ export default class AgencyService implements IAgencyService {
         const ClientModel = db.model('client', clientSchema)
         const createdClient = await this.agencyRepository.createClient(ClientModel, { ...clientDetails, services, menu: newMenu })
         if (createdClient) await this.agencyRepository.saveClientToMainDB(clientDetails)
-        const data = createClientMailData(email, name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(), password)
+        const data = createClientMailData(email, name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(),organizationName, password)
         sendMail(
             email,
             `Welcome to ${Agency.organizationName}! Excited to Partner with You`,
@@ -127,6 +129,12 @@ export default class AgencyService implements IAgencyService {
     async changeContentStatus(tenantDb: any, contentId: string, status: string): Promise<any> {
         const db = await tenantDb.model('reviewBucket', ReviewBucketSchema)
         return await this.agencyRepository.changeContentStatusById(contentId, db, status)
+    }
+
+    async getAvailableUsers(tenantDb:any):Promise<any>{
+        const clientModel = await tenantDb.model('client', clientSchema)
+        const employeeModel = await tenantDb.model('employee', employeeSchema)
+        return await this.agencyRepository.fetchAllAvailableUsers(clientModel,employeeModel)
     }
 
 }

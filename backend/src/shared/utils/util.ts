@@ -34,3 +34,20 @@ async function retry<T>(
   }
   throw new Error(`Failed after ${attempts} attempts`);
 }
+
+
+
+
+import crypto from 'crypto'
+
+export const getSecretRoomId = (userId:string) =>{
+  return crypto
+    .createHash("sha256")
+    .update(userId)
+    .digest("hex")
+}
+
+
+
+
+

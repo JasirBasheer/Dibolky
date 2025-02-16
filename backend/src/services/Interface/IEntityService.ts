@@ -10,4 +10,10 @@ export interface IEntityService {
         industry: string, contactNumber: number, logo: string, password: string): Promise<any>;
     getAgencyMenu(planId: string):Promise<any>;
     getCompanyMenu(planId:string):Promise<any>;
+    createDepartment(tenantDatabase:any,department:string,permissions:string[]):Promise<void>
+    createEmployee(orgId:string,orgName:string,tenantDatabase:any,name:string,email:string,role:string,department:string):Promise<void>
+    getDepartments(tenantDb:any):Promise<any>    
+    getEmployees(tenantDb:any):Promise<any>    
+    getOwner(tenantDb:any):Promise<any>
+    
 }

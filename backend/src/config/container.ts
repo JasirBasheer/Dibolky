@@ -49,6 +49,10 @@ import ProviderController from "../controllers/Implementation/provider.controlle
 import { IProviderService } from "../services/Interface/IProviderService";
 import ProviderService from "../services/Implementation/provider.service";
 import Admin from "../models/admin/admin.model";
+import ChatRepository from "../repositories/Implementation/chat.repository";
+import { IChatRepository } from "../repositories/Interface/IChatRepository";
+import { IChatService } from "../services/Interface/IChatService";
+import ChatService from "../services/Implementation/chat.service";
 
 
 //* Model Registeration
@@ -63,6 +67,7 @@ container.register<IEmployeeRepository>('EmployeeRepository', { useClass: Employ
 container.register<IEntityRepository>('EntityRepository', { useClass: EntityRepository });
 container.register<IPlanRepository>('PlanRepository', { useClass: PlanRepository });
 container.register<IClientRepository>('ClientRepository', { useClass: ClientRepository });
+container.register<IChatRepository>('ChatRepository', { useClass: ChatRepository });
 
 
 
@@ -76,6 +81,7 @@ container.register<IEntityService>('EntityService', { useClass: EntityService })
 container.register<IPaymentService>('PaymentService', { useClass: PaymentService });
 container.register<IClientService>('ClientService', { useClass: ClientService });
 container.register<IProviderService>('ProviderService', { useClass: ProviderService });
+container.register<IChatService>('ChatService', { useClass: ChatService });
 
 
 

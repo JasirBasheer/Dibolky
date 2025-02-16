@@ -5,6 +5,7 @@ import { NotFoundError, UnauthorizedError, comparePassword } from "mern.common";
 import { clientSchema } from "../../models/agency/client.model";
 import { exchangeForLongLivedToken } from "../../provider.strategies/instagram.strategy";
 import { ReviewBucketSchema } from "../../models/agency/reviewBucket.model";
+import { ownerDetailsSchema } from "../../models/agency/agency.model";
 
 @injectable()
 export default class ClientService implements IClientService {
@@ -36,6 +37,12 @@ export default class ClientService implements IClientService {
     tenantDb = await tenantDb.model('clients',clientSchema)
     return await this.clientRepository.getClientDetailsByMail(tenantDb,email)
   }
+
+  async getOwners(tenantDb:any):Promise<any>{
+    const ownerSchema = await tenantDb.model('OwnerDetail',ownerDetailsSchema)
+    return await this.clientRepository.getOwnerDetails(ownerSchema)
+  }
+
 
   async saveClientSocialMediaTokens(id: string, provider: string, token: string, db?: any): Promise<any> {
     token = await exchangeForLongLivedToken(token)

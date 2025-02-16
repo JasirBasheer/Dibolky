@@ -120,7 +120,6 @@ export default class AuthenticationController implements IAuthenticationControll
 
             res.clearCookie('accessToken')
             res.clearCookie('refreshToken')
-
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
         } catch (error: any) {
             next(error);
@@ -166,7 +165,6 @@ export default class AuthenticationController implements IAuthenticationControll
         try {
             const { token } = req.params as { token: string };
             const { newPassword } = req.body as { newPassword: string };
-
 
             await this.authenticationService.changePassword(token, newPassword)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)

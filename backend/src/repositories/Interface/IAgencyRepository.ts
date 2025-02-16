@@ -15,5 +15,6 @@ export interface IAgencyRepository {
     saveContentToDb(ReviewBucket:any,details:any): Promise<any>;
     getContentById(clientId:string,db:any):Promise<any>;
     changeContentStatusById(contentId:string,db:any,status:string):Promise<any>;
+    fetchAllAvailableUsers(clientModel:any,employeeModel:any):Promise<any>
   }
   

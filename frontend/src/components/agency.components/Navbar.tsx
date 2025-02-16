@@ -277,6 +277,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
       )}
 
       <div className="lg:hidden col-span-2 flex items-center">
+        {isOpen}
         {isOpen ? (<X onClick={() => setIsOpen(prev => !prev)} />) : (<AlignLeft onClick={() => setIsOpen(prev => !prev)} />)}
       </div>
     </div>

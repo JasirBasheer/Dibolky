@@ -5,6 +5,8 @@ import Company from "../../models/company/company.model";
 import { departmentSchema } from "../../models/agency/department.model";
 import { IEntityRepository } from "../Interface/IEntityRepository";
 import { planDetails } from "../../shared/types/admin.types";
+import mongoose from "mongoose";
+import  employeeSchema  from "../../models/employee/employee.model";
 
 export default class EntityRepository implements IEntityRepository {
     async createAgency(newAgency: any): Promise<any> {
@@ -22,16 +24,9 @@ export default class EntityRepository implements IEntityRepository {
         return await Agency.findOne({ email: email })
     }
 
-    async createDepartment(details: any): Promise<any> {
-        const { department, permissions } = details
-        const DB = await connectTenantDB('vicigrow333986')
-        const departmentModel = DB.model('department', departmentSchema)
-        const newDepartment = new departmentModel({
-            department,
-            permissions
-        })
-        const createdDepartment = await newDepartment.save()
-        return createdDepartment
+    async createDepartment(departmentModel:any,details:any):Promise<any>{
+        const newDepartment = new departmentModel(details)
+        return await newDepartment.save()
     }
 
 
@@ -71,6 +66,30 @@ export default class EntityRepository implements IEntityRepository {
     async getTransactionsWithOrgId(id: string):Promise<any> {
         return await Transaction.find({ orgId: id })
     }
+    async createEmployee(orgId:string,tenantDatabase:any,name:string,email:string,role:string,password:string,department:string):Promise<any>{
+        let employee = new employeeSchema({orgId,name,email,password,department,role})
+        await employee.save()
+        employee = new tenantDatabase({orgId,name,email,password,department})
+        await employee.save()       
+    }
+
+    async findEmployeeWithEmail(email:string):Promise<any>{
+        return await employeeSchema.findOne({email:email})
+    }
+    async findOrganizationWithOrgId(orgId:string):Promise<any>{
+    }
+    async fetchAllDepartments(tenantDb:any):Promise<any>{
+        return await tenantDb.find()
+    }
+
+    async fetchAllEmployees(tenantDb:any):Promise<any>{
+        return await tenantDb.find()
+    }
+
+    async fetchOwnerDetails(tenantDb:any):Promise<any>{
+        return await tenantDb.find()
+    }
+
 
 
 

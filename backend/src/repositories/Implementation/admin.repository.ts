@@ -22,4 +22,5 @@ export class AdminRepository extends BaseRepository<IAdmin> implements IAdminRep
         async changePassword(id: string, password: string): Promise<IAdmin | null> {
                 return await this.update({ _id: id }, { $set: { password } }, { new: true });
         }
+        
 }

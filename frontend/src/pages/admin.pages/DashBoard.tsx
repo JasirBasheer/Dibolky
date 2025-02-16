@@ -75,7 +75,6 @@ const AdminDashboard = () => {
                   </div>
                 ))
                 : <Skeleton className='mt-2' width={300} height={31} />}
-
             </div>
           </div>
 

@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { IChatService } from '../Interface/IChatService';
 import { IChatRepository } from '../../repositories/Interface/IChatRepository';
 import { connectTenantDB } from '../../config/db';
-import { chatSchema } from '../../models/chat/chat';
+import { chatSchema, messageSchema } from '../../models/chat/chat';
 import { getSecretRoomId } from '../../shared/utils/util';
 import mongoose from 'mongoose';
 import { ownerDetailsSchema } from '../../models/agency/agency.model';
@@ -42,8 +42,9 @@ export default class ChatService implements IChatService {
         try {
             const db = await connectTenantDB(orgId);
             const chatModel = db.model("chat", chatSchema);
+            const messageModel = db.model("message", messageSchema);
 
-            return await this.chatRepository.createMessage(chatModel, chatId, newMessage);
+            return await this.chatRepository.createMessage(chatModel, messageModel, chatId, newMessage);
         } catch (error) {
             console.log("Error in sendMessage:", error);
         }
@@ -52,7 +53,21 @@ export default class ChatService implements IChatService {
     async getChats(tenantDb: any, userId: string): Promise<any> {
         try {
             const chatModel = await tenantDb.model("chat", chatSchema);
-            return await this.chatRepository.fetchChats(chatModel, userId)
+            const messageModel = await tenantDb.model("message", messageSchema);
+            const chats =  await this.chatRepository.fetchChats(chatModel, userId)
+            const plainChats = chats.map((chat: { toObject: () => any; }) => chat.toObject());
+
+            return await Promise.all(plainChats.map(async (item :any) => {
+                const chatMessages = await this.chatRepository.fetchChatMessages(messageModel, item._id);
+                const sortedMessages = chatMessages.sort((a: any, b: any) => {
+                    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+                });
+                return {
+                    ...item,
+                    messages: sortedMessages
+                };
+            }));
+            
         } catch (error) {
             console.log(error)
         }
@@ -71,10 +86,28 @@ export default class ChatService implements IChatService {
     async getChat(tenantDb: any, chatId: string): Promise<any> {
         try {
             const chatModel = tenantDb.model("chat", chatSchema);
-            return await this.chatRepository.fetchChatByChatId(chatModel, chatId)
-
+            const messageModel = tenantDb.model("message", messageSchema); 
+    
+            const chat = await this.chatRepository.fetchChatByChatId(chatModel, chatId);
+            if (!chat) {
+                throw new Error('Chat not found');
+            }
+            const plainChat = chat.toObject();
+            const messages = await this.chatRepository.fetchChatMessages(messageModel, chatId);
+            const sortedMessages = messages.length > 0 ? 
+                messages.sort((a: any, b: any) => {
+                    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+                }) : 
+                [];
+    
+            return {
+                ...plainChat,
+                messages: sortedMessages
+            };
+    
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            throw error; 
         }
     }
 
@@ -107,11 +140,11 @@ export default class ChatService implements IChatService {
         }
     }
 
-    async createCommonMessage(orgId:string,chatId:string,message:any):Promise<any>{
+    async createCommonMessage(orgId:string,message:any):Promise<any>{
         try {
             const tenantDb = await connectTenantDB(orgId)
-            const chatModel = tenantDb.model("chat", chatSchema);
-            return await this.chatRepository.createCommonMessage(chatModel,chatId,message)
+            const messageModel = tenantDb.model("message", messageSchema);
+            return await this.chatRepository.createCommonMessage(messageModel,message)
                   
         } catch (error) {
             console.log(error)

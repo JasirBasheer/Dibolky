@@ -2,9 +2,6 @@ import mongoose, { Schema, Document } from 'mongoose';
 import { IAgency, IOwnerDetailsSchema } from '../../shared/types/agency.types';
 
 
-
-
-
 const agencySchema: Schema<IAgency> = new mongoose.Schema({
     orgId: {
         type: String,

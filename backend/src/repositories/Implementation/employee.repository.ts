@@ -1,4 +1,5 @@
-import Employee, { IEmployee } from '../../models/employee/employee.model'
+import Employee from '../../models/employee/employee.model'
+import { IEmployee } from '../../shared/types/employee.types';
 import { IEmployeeRepository } from '../Interface/IEmployeeRepository';
 
 

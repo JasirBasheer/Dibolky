@@ -1,7 +1,7 @@
 import axios from '@/utils/axios';
 import createSocketConnection from '@/utils/socket';
-import { formatDate } from '@/utils/util';
-import { MoreVertical, Paperclip, Plus, Search, Send, UserCircle, UserPlus, Users } from 'lucide-react'
+import { formatDate } from '@/utils/utils';
+import { Crown, MoreVertical, Paperclip, Plus, Search, Send, UserCircle, UserMinus, UserPlus, Users } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -9,6 +9,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+// import { Badge } from '@/components/ui/badge';
+
 
 
 
@@ -23,6 +31,8 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
   const fetchRecentMessages = async () => {
     try {
       const res = await axios.post(`/api/entities/chats`, { chatId })
+      console.log(res.data);
+
       setMessage([...res.data.chats.messages])
       const { messages, ...details } = res?.data.chats
       setChatDetails(details)
@@ -81,9 +91,21 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
   }, [messages]);
 
 
-  const handleAddMember = (targetUserId:string,targetUsername:string,targetType:string) => {
-    console.log({chatId, orgId, userId:targetUserId, userName:targetUsername, type:targetType, admin:userName});
-    socket.current.emit('add-member', ({ chatId, orgId, userId:targetUserId, userName:targetUsername, type:targetType, admin:userName }))
+  const handleAddMember = async (targetUserId: string, targetUsername: string, targetType: string) => {
+    try {
+      if (!chatId || !orgId || !userName) {
+        console.error("Missing required data for adding member:", { chatId, orgId, userName });
+        return;
+      }
+
+      const socket = createSocketConnection();
+      socket.emit('set-up', { orgId, userId })
+
+      console.log({ chatId, orgId, userId: targetUserId, userName: targetUsername, type: targetType, admin: userName })
+      socket.emit('add-member', ({ chatId, orgId, userId: targetUserId, userName: targetUsername, type: targetType, admin: userName }))
+    } catch (error) {
+      console.log(error);
+    }
   }
 
 
@@ -95,8 +117,13 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
             <Users className="text-slate-600" size={20} onClick={() => setShowChatDetails(true)} />
           </div>
           <div>
-            <h2 className="font-medium text-slate-800">Chat Title</h2>
-            <p className="text-sm text-slate-500">Online</p>
+            <h2 className="font-medium text-slate-800">
+              {chatDetails.name ||
+                chatDetails.participants?.find((item) => item?.userId != userId)?.name ||
+                "Unknown"
+              }
+            </h2>
+            <p className="text-sm text-slate-500"></p>
           </div>
         </div>
         <button className="p-2 hover:bg-slate-200 rounded-full">
@@ -146,11 +173,11 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
               </div>
             )
           )
-          
+
         })}
 
       </div>
-      {showChatDetails && <ChatDetails setShowChatDetails={setShowChatDetails} details={chatDetails} userId={userId} onAddMember={handleAddMember} socket={socket} />}
+      {showChatDetails && <ChatDetails setShowChatDetails={setShowChatDetails} details={chatDetails} userId={userId} onAddMember={handleAddMember} orgId={orgId} />}
 
 
       <div className="p-4 border-t border-slate-200">
@@ -197,26 +224,24 @@ export default ChatInterface
 
 
 
-
-
-
 interface ChatDetailsProps {
   setShowChatDetails: (arg0: boolean) => void;
   details: any;
   userId: string;
-  onAddMember?: (targetUserId:string,targetUsername:string,targetType:string) => void;
-  socket: any
+  onAddMember: (targetUserId: string, targetUsername: string, targetType: string) => void;
+  orgId: string
 }
 
-const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, userId, onAddMember, socket }) => {
+const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, userId, onAddMember, orgId }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestedMembers, setSuggestedMembers] = useState([]);
-  const [currentParticipants,setCurrentParticipants] = useState<any>(details.participants || [])
-
+  const [currentParticipants, setCurrentParticipants] = useState<any>(details.participants || [])
+  const [filteredSuggestions,setFilteredSuggestions] = useState<any>([])
+  const user = currentParticipants.find((item) => item.userId == userId)
 
   const fetchAvailableUsers = async () => {
     const res = await axios.get("/api/agency/availabe-users")
-    console.log(res.data.users)
+    console.log(res.data);
     setSuggestedMembers(res.data.users || [])
   }
 
@@ -225,30 +250,33 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, 
   }, [])
 
   useEffect(() => {
-    if (!userId || !socket) return
 
-    socket.current.on('new-member-added', ({ member }) => {
-      console.log("member Addedddddddddddddddddddddddddddd",member)
+    const socket = createSocketConnection();
+    socket.emit('set-up', { orgId, userId })
+
+    socket.on('new-member-added', ({ member }) => {
       const isParticipant = details.participants.some((item) => item.userId == userId)
-      if(isParticipant)setCurrentParticipants(prev => [...prev,member])
+      if (isParticipant) setCurrentParticipants(prev => [...prev, member])
     })
 
 
     return () => {
-      socket.current.disconnect()
+      socket.disconnect()
     }
   }, [userId])
 
+  useEffect(()=>{
+  if(suggestedMembers.length == 0)return 
+  const members = suggestedMembers.filter((member) => !currentParticipants.some((p) => p.userId === member?._id)).filter((member) => member.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  setFilteredSuggestions(members)
+  fetchAvailableUsers()
+  },[suggestedMembers,currentParticipants])
 
+  const getInitials = (name?: string) => {
+    if (!name) return '?';
+    return name.split(' ').map(part => part[0]).join('').toUpperCase().substring(0, 2);
+  };
 
-  const filteredSuggestions = suggestedMembers.filter((member) => !currentParticipants.some((p) => p.userId === member?._id))
-    .filter((member) => member.name.toLowerCase().includes(searchTerm.toLowerCase()));
-
-    const getInitials = (name?: string) => {
-      if (!name) return '?';
-      return name.split(' ').map(part => part[0]).join('').toUpperCase().substring(0, 2);
-    };
-    
 
 
   return (
@@ -275,32 +303,88 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, 
                 <div className="space-y-2">
                   <h3 className="text-lg font-medium">Group Details</h3>
                   <p className="text-sm text-gray-500">Name: {details.name}</p>
-                  <p className="text-sm text-gray-500">Total Members: {currentParticipants.length}</p>
                 </div>
               </div>
               <h3 className="text-lg font-medium mt-4">Current Members</h3>
 
-              <ScrollArea className="h-48 border rounded-md p-2">
-                {currentParticipants.map((participant: any) => (
-                  <div key={participant.userId} className="flex items-center justify-between py-2">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback>{getInitials(participant.name)}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="text-sm font-medium">{participant.name}</p>
-                        <p className="text-xs text-gray-500 capitalize">{participant.type}</p>
-                      </div>
-                    </div>
+              <ScrollArea className="h-64 w-full rounded-md border">
+                <div className="p-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-medium">Participants ({currentParticipants.length})</h3>
                   </div>
-                ))}
+                  <div className="space-y-2">
+                    {currentParticipants.map((participant: any) => (
+                      <div
+                        key={participant.userId}
+                        className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-9 w-9 border">
+                            <AvatarFallback className="bg-primary/10">
+                              {getInitials(participant.name)}
+                            </AvatarFallback>
+                            {/* {participant.avatarUrl && <AvatarImage src={participant.avatarUrl} />} */}
+                          </Avatar>
+
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-1.5">
+                              <p className="text-sm font-medium leading-none">{participant.name}</p>
+                              {participant.type === "admin" && (
+                                <Crown className="h-3 w-3 mr-1 text-amber-500" />
+                              )}
+                            </div>
+                            {participant.userId === user?.userId && (
+                              <p className="text-xs text-muted-foreground">
+                                You
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {user?.type === "admin" && participant.userId !== user.userId && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <MoreVertical className="h-4 w-4" />
+                                <span className="sr-only">Open menu</span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48">
+                              {participant.type === "admin" ? (
+                                <DropdownMenuItem
+                                  // onClick={() => onDemoteAdmin(participant.userId)}
+                                  className="text-amber-600 focus:text-amber-600"
+                                >
+                                  <Crown className="h-4 w-4 mr-2 rotate-180" />
+                                  Demote from admin
+                                </DropdownMenuItem>
+                              ) : (
+                                <DropdownMenuItem
+                                  // onClick={() => onMakeAdmin(participant.userId)}
+                                  className="text-amber-600 focus:text-amber-600"
+                                >
+                                  <Crown className="h-4 w-4 mr-2" />
+                                  Make admin
+                                </DropdownMenuItem>
+                              )}
+                              <DropdownMenuItem
+                                // onClick={() => onRemoveMember(participant.userId)}
+                                className="text-red-600 focus:text-red-600"
+                              >
+                                <UserMinus className="h-4 w-4 mr-2" />
+                                Remove participant
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </ScrollArea>
             </TabsContent>
-
             <TabsContent value="members" className="flex-1 overflow-hidden flex flex-col">
               <div className="mt-6 space-y-4 flex-1 overflow-hidden flex flex-col">
-
-
                 <div className="pt-4">
                   <h3 className="text-lg font-medium flex items-center gap-2">
                     <UserPlus size={18} />
@@ -319,8 +403,8 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, 
 
                   <ScrollArea className="h-48 mt-2 border rounded-md p-2">
                     {filteredSuggestions.length > 0 ? (
-                      filteredSuggestions.map((member) => (
-                        <div key={member.id} className="flex items-center justify-between py-2">
+                      filteredSuggestions.map((member: any) => (
+                        <div key={member._id} className="flex items-center justify-between py-2">
                           <div className="flex items-center gap-3">
                             <Avatar className="h-8 w-8">
                               <AvatarFallback>{getInitials(member.name)}</AvatarFallback>
@@ -332,8 +416,7 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, 
                           </div>
                           <Button
                             size="sm"
-                            // targetUserId,targetUsername,targetType
-                            onClick={() => onAddMember(member._id,member.name,member.name)}
+                            onClick={() => onAddMember(member?._id, member?.name, member?.type)}
                             className="h-8"
                           >
                             Add
@@ -347,6 +430,7 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, 
                 </div>
               </div>
             </TabsContent>
+
           </Tabs>
         </CardContent>
       </Card>

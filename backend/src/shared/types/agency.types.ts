@@ -83,3 +83,31 @@ export interface IAgencyOwner {
     isBlocked: boolean;
     planPurchasedRate: number
 }
+
+
+
+
+
+interface IPlatforms {
+    platform: string;
+    scheduledDate: string;
+    isPublished?: boolean;
+    isRescheduled?: boolean;
+}
+
+
+export interface IReviewBucket {
+    id: string;
+    orgId: string;
+    url: string[];
+    status: string;
+    platforms: IPlatforms[];
+    contentType: string;
+    title: string;
+    caption: string;
+    tags: string[];
+    isPublished?: boolean;
+    feedBack: string;
+    changePlatformPublishStatus(platform: string, value: boolean): Promise<void>;
+}
+

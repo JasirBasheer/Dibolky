@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import createSocketConnection from "@/utils/socket"
 
 interface MenuListModalProps {
   setShowMenuListModal: (show: boolean) => void
@@ -14,10 +15,10 @@ interface MenuListModalProps {
   role: string;
   orgId:string;
   userName:string;
-  socket:any;
 }
 
-export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userName , socket}: MenuListModalProps) => {
+export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userName }: MenuListModalProps) => {
+  
   const [groupName, setGroupName] = useState("")
   const [availableUsers, setAvailableUsers] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
@@ -52,13 +53,22 @@ export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userN
 
   const handleCreateGroup = async () => {
     try {
+      const socket = createSocketConnection()
+      socket.emit('set-up',{orgId,userId})
       const details = {
         members: [...selectedMembers, { _id: userId, name: userName, type: role }],
         groupName,
       }
       const res = await axios.post("/api/entities/create-group", { details, userId })
+      console.log(res.data.group);
+    
+    
       if(res){
-        socket.current.emit("create-group",({group:res.data.group}))
+        const group = {
+          ...res.data.group,
+          message:[]
+        }
+        socket.emit("create-group",({group}))
       }
       setShowMenuListModal(false)
     } catch (error: any) {
@@ -68,8 +78,11 @@ export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userN
 
   const handleCreateChat = async(targetUserId:string,targetUserName:string) =>{
     try {
+      const socket = createSocketConnection()
+      socket.emit('set-up',{orgId,userId})
+      console.log(orgId,userId);
  
-      socket.current.emit("create-chat",({userId,targetUserId,orgId,userName,targetUserName}))
+      socket.emit("create-chat",({userId,targetUserId,orgId,userName,targetUserName}))
       
     } catch (error) {
       console.log(error)

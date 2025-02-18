@@ -29,7 +29,7 @@ router.post('/create-group', (req, res, next) => entityController.createGroup(re
 router.use(permissionGate(["Company", "Agency", "Client", "Employee"]))
 router.post('/chats', (req, res, next) => entityController.getChat(req, res, next))
 router.post('/get-chats', (req, res, next) => entityController.getChats(req, res, next))
-
+router.post('/get-messages', (req, res, next) => entityController.getMessages(req, res, next))
 
 
 router.use(permissionGate(["Company", "Agency"]))

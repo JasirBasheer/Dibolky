@@ -325,7 +325,6 @@ export default class EntityController implements IEntityController {
         next: NextFunction
     ): Promise<void> {
         const {userId} = req.body
-        console.log("ownerDetailsssssssssssssssssssssssssssssssssssssss",userId)
         const chats = await this.chatService.getChats(req.tenantDb, userId)
         SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
     }
@@ -340,6 +339,15 @@ export default class EntityController implements IEntityController {
         console.log(chatId);
         const chats = await this.chatService.getChat(req.tenantDb, chatId)
         SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
+    }
+
+    async getMessages(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
+        const {userId} = req.body
+        // const messages = await this.chatService.getMessages(req.tenantDb,userId)
     }
 
 

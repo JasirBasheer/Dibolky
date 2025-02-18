@@ -23,7 +23,6 @@ interface platform {
 
 
 
-//Model for Main DB
 export const Client: Schema<IClient> = new mongoose.Schema({
   orgId: {
     type: String,
@@ -48,8 +47,6 @@ export default mongoose.model<IClient>('Client', Client);
 
 
 
-
-//Model for tenant DB
 export const clientSchema: Schema<IClient> = new mongoose.Schema({
   orgId: {
     type: String,

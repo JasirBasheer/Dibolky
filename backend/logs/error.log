@@ -1,392 +1,276 @@
-::1 - - [14/Feb/2025:06:47:47 +0000] "GET /api/agency/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-14T06:47:47.078Z"} ms 
+::1 - - [18/Feb/2025:07:30:00 +0000] "GET /api/client/" 500  
+ Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-18T07:30:00.510Z"} ms 
  
 
-::1 - - [14/Feb/2025:06:47:47 +0000] "GET /api/agency/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-14T06:47:47.173Z"} ms 
+::1 - - [18/Feb/2025:07:30:02 +0000] "GET /api/client/" 500  
+ Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-18T07:30:02.228Z"} ms 
  
 
-::1 - - [14/Feb/2025:06:48:18 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T06:48:18.322Z"} ms 
+::1 - - [18/Feb/2025:07:30:02 +0000] "GET /api/agency/" 500  
+ Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-18T07:30:02.819Z"} ms 
  
 
-::1 - - [14/Feb/2025:06:48:18 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T06:48:18.421Z"} ms 
+::1 - - [18/Feb/2025:07:32:30 +0000] "GET /api/client/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-18T07:32:30.042Z"} ms 
  
 
-::1 - - [14/Feb/2025:06:48:23 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T06:48:23.896Z"} ms 
+::1 - - [18/Feb/2025:07:32:30 +0000] "GET /api/client/" 404  
+ Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-18T07:32:30.157Z"} ms 
  
 
-::1 - - [14/Feb/2025:06:48:24 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T06:48:24.005Z"} ms 
+::1 - - [18/Feb/2025:10:53:41 +0000] "GET /api/agency/" 500  
+ Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-18T10:53:41.443Z"} ms 
  
 
-::1 - - [14/Feb/2025:06:49:01 +0000] "GET /api/agency/" 400  
+::1 - - [18/Feb/2025:10:53:41 +0000] "GET /api/agency/" 500  
+ Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-18T10:53:41.473Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:10:53:44 +0000] "GET /api/client/" 500  
+ Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-18T10:53:44.330Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:10:53:44 +0000] "GET /api/client/" 500  
+ Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-18T10:53:44.367Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:10:54:09 +0000] "GET /api/agency/clients" 500  
+ Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-18T10:54:09.093Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:10:54:09 +0000] "GET /api/agency/clients" 500  
+ Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-18T10:54:09.200Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:09:47 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:09:47.272Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:09:47 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:09:47.343Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:10:00 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:10:00.644Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:10:00 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:10:00.717Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:13:33 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:13:33.529Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:13:33 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:13:33.592Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:42:37 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:42:37.855Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:42:37 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:42:37.942Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:42:42 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:42:42.093Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:42:42 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:42:42.224Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:42:49 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:42:49.446Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:42:49 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:42:49.515Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:42:51 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:42:51.383Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:42:51 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:42:51.452Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:43:36 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:43:36.685Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:43:37 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:43:37.289Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:43:38 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:43:38.544Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:43:40 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:43:40.351Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:43:41 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:43:41.151Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:43:41 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:43:41.514Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:43:42 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:43:42.063Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:43:42 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:43:42.821Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:43:43 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:43:43.051Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:43:43 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:43:43.691Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:43:44 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:43:44.615Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:43:45 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:43:45.205Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:43:46 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:43:46.220Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:50:13 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:50:13.224Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:50:13 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:50:13.279Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:50:20 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:50:20.432Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:50:20 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:50:20.498Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:51:03 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:51:03.148Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:51:08 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:51:08.013Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:51:08 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:51:08.084Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:51:16 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:51:16.084Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:51:16 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:51:16.166Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:51:29 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:51:29.636Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:51:29 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:51:29.733Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:53:14 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:53:14.610Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:53:14 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:53:14.677Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:54:31 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:54:31.928Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:54:37 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:54:37.173Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:54:44 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:54:44.551Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:57:08 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:57:08.769Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:57:08 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:57:08.842Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:58:51 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:58:51.512Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:11:58:51 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T11:58:51.587Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:12:50:19 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T12:50:19.847Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:12:50:19 +0000] "GET /api/agency/availabe-users" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T12:50:19.922Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:12:50:59 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T12:50:59.780Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:12:50:59 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-18T12:50:59.846Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:12:51:01 +0000] "POST /api/auth/login" 401  
+ Error: {"message":"Invalid credentials","stack":"Error: Invalid credentials\n    at AgencyService.<anonymous> (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:34:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:17:58)","timestamp":"2025-02-18T12:51:01.343Z"} ms 
+ 
+
+::1 - - [18/Feb/2025:12:51:16 +0000] "GET /api/client/" 400  
  Error: No error details ms 
  
 
-::1 - - [14/Feb/2025:06:49:01 +0000] "GET /api/agency/" 400  
+::1 - - [18/Feb/2025:12:51:16 +0000] "GET /api/client/" 400  
  Error: No error details ms 
  
 
-::1 - - [14/Feb/2025:06:49:03 +0000] "GET /api/agency/" 400  
+::1 - - [18/Feb/2025:12:51:19 +0000] "GET /api/agency/" 400  
  Error: No error details ms 
  
 
-::1 - - [14/Feb/2025:06:49:03 +0000] "GET /api/agency/" 400  
+::1 - - [18/Feb/2025:12:51:19 +0000] "GET /api/agency/" 400  
  Error: No error details ms 
  
 
-::1 - - [14/Feb/2025:06:49:17 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T06:49:17.052Z"} ms 
- 
-
-::1 - - [14/Feb/2025:06:49:17 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T06:49:17.173Z"} ms 
- 
-
-::1 - - [14/Feb/2025:07:06:36 +0000] "GET /api/entities/get-chats/" 404  
+::1 - - [18/Feb/2025:12:51:56 +0000] "GET /api/agency/client/" 404  
  Error: No error details ms 
  
 
-::1 - - [14/Feb/2025:07:06:46 +0000] "GET /api/entities/get-chats/" 404  
+::1 - - [18/Feb/2025:12:51:56 +0000] "GET /api/agency/client/" 404  
  Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:06:49 +0000] "GET /api/entities/get-chats/$" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:06:55 +0000] "GET /api/entities/get-chats/67a5c6f3b6576f9b39f95972" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:06:55 +0000] "GET /api/entities/get-chats/67a5c6f3b6576f9b39f95972" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:07:23 +0000] "GET /api/entities/get-chats/[object%20Object]" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:07:25 +0000] "GET /api/entities/get-chats/[object%20Object]" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:07:28 +0000] "GET /api/entities/get-chats/undefined" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:07:29 +0000] "GET /api/entities/get-chats/undefined" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:07:45 +0000] "GET /api/entities/get-chats/undefined" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:07:45 +0000] "GET /api/entities/get-chats/undefined" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:07:51 +0000] "GET /api/entities/get-chats/" 404  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:07:51 +0000] "GET /api/entities/get-chats/" 404  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:08:54 +0000] "GET /api/entities/get-chats/undefined" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:08:57 +0000] "GET /api/entities/get-chats/undefined" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:08:58 +0000] "GET /api/entities/get-chats/undefined" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:08:58 +0000] "GET /api/entities/get-chats/undefined" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:07:09:09 +0000] "POST /api/entities/get-chats/undefined" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-14T07:09:09.090Z"} ms 
- 
-
-::1 - - [14/Feb/2025:07:09:24 +0000] "GET /api/entities/get-chats" 404  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:08:43:46 +0000] "GET /api/admin/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-14T08:43:46.194Z"} ms 
- 
-
-::1 - - [14/Feb/2025:08:43:46 +0000] "GET /api/admin/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-14T08:43:46.269Z"} ms 
- 
-
-::1 - - [14/Feb/2025:08:43:52 +0000] "GET /api/agency/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-14T08:43:52.902Z"} ms 
- 
-
-::1 - - [14/Feb/2025:08:43:52 +0000] "GET /api/agency/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-14T08:43:52.971Z"} ms 
- 
-
-::1 - - [14/Feb/2025:08:44:14 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T08:44:14.161Z"} ms 
- 
-
-::1 - - [14/Feb/2025:08:44:14 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T08:44:14.276Z"} ms 
- 
-
-::1 - - [14/Feb/2025:08:44:27 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T08:44:27.106Z"} ms 
- 
-
-::1 - - [14/Feb/2025:08:44:27 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T08:44:27.226Z"} ms 
- 
-
-::1 - - [14/Feb/2025:10:01:50 +0000] "GET /api/agency/" 500  
- Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-14T10:01:50.874Z"} ms 
- 
-
-::1 - - [14/Feb/2025:10:01:50 +0000] "GET /api/agency/" 500  
- Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-14T10:01:50.902Z"} ms 
- 
-
-::1 - - [14/Feb/2025:10:01:52 +0000] "GET /api/client/" 500  
- Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-14T10:01:52.854Z"} ms 
- 
-
-::1 - - [14/Feb/2025:10:01:52 +0000] "GET /api/client/" 500  
- Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-14T10:01:52.886Z"} ms 
- 
-
-::1 - - [14/Feb/2025:10:02:14 +0000] "GET /api/agency/clients" 500  
- Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-14T10:02:14.622Z"} ms 
- 
-
-::1 - - [14/Feb/2025:10:36:43 +0000] "GET /api/agency/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-14T10:36:43.803Z"} ms 
- 
-
-::1 - - [14/Feb/2025:10:36:43 +0000] "GET /api/agency/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-14T10:36:43.898Z"} ms 
- 
-
-::1 - - [14/Feb/2025:10:36:47 +0000] "POST /api/auth/login" 401  
- Error: {"message":"Invalid credentials","stack":"Error: Invalid credentials\n    at AgencyService.<anonymous> (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:34:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:17:58)","timestamp":"2025-02-14T10:36:47.637Z"} ms 
- 
-
-::1 - - [14/Feb/2025:10:38:00 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T10:38:00.143Z"} ms 
- 
-
-::1 - - [14/Feb/2025:10:38:00 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T10:38:00.326Z"} ms 
- 
-
-::1 - - [14/Feb/2025:10:38:02 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T10:38:02.883Z"} ms 
- 
-
-::1 - - [14/Feb/2025:10:38:03 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T10:38:03.012Z"} ms 
- 
-
-::1 - - [14/Feb/2025:15:02:51 +0000] "GET /api/admin/" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:15:02:51 +0000] "GET /api/admin/" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:15:02:55 +0000] "GET /api/agency/" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:15:02:55 +0000] "GET /api/agency/" 400  
- Error: No error details ms 
- 
-
-::1 - - [14/Feb/2025:17:35:09 +0000] "GET /api/agency/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-14T17:35:09.587Z"} ms 
- 
-
-::1 - - [14/Feb/2025:17:35:09 +0000] "GET /api/agency/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-14T17:35:09.649Z"} ms 
- 
-
-::1 - - [14/Feb/2025:17:35:17 +0000] "POST /api/auth/login" 404  
- Error: {"message":"User not found","stack":"Error: User not found\n    at AgencyService.<anonymous> (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:30:38)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T17:35:17.237Z"} ms 
- 
-
-::1 - - [14/Feb/2025:17:35:22 +0000] "POST /api/auth/login" 404  
- Error: {"message":"User not found","stack":"Error: User not found\n    at AgencyService.<anonymous> (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:30:38)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T17:35:22.755Z"} ms 
- 
-
-::1 - - [14/Feb/2025:17:36:21 +0000] "POST /api/auth/login" 404  
- Error: {"message":"User not found","stack":"Error: User not found\n    at AgencyService.<anonymous> (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:30:38)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/services/Implementation/agency.service.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T17:36:21.167Z"} ms 
- 
-
-::1 - - [14/Feb/2025:17:38:24 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T17:38:24.195Z"} ms 
- 
-
-::1 - - [14/Feb/2025:17:38:24 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-14T17:38:24.478Z"} ms 
- 
-
-::1 - - [14/Feb/2025:19:36:38 +0000] "GET /api/agency/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-14T19:36:38.146Z"} ms 
- 
-
-::1 - - [14/Feb/2025:19:36:38 +0000] "GET /api/agency/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-14T19:36:38.263Z"} ms 
- 
-
-::1 - - [15/Feb/2025:04:48:52 +0000] "GET /api/agency/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-15T04:48:52.893Z"} ms 
- 
-
-::1 - - [15/Feb/2025:04:48:52 +0000] "GET /api/agency/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-15T04:48:52.981Z"} ms 
- 
-
-::1 - - [15/Feb/2025:07:08:38 +0000] "GET /api/agency/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-15T07:08:38.675Z"} ms 
- 
-
-::1 - - [15/Feb/2025:07:08:38 +0000] "GET /api/agency/" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-15T07:08:38.786Z"} ms 
- 
-
-::1 - - [15/Feb/2025:08:53:02 +0000] "GET /api/agency/" 500  
- Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-15T08:53:02.216Z"} ms 
- 
-
-::1 - - [15/Feb/2025:08:53:02 +0000] "GET /api/agency/" 500  
- Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-15T08:53:02.249Z"} ms 
- 
-
-::1 - - [15/Feb/2025:08:53:08 +0000] "GET /api/client/" 500  
- Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-15T08:53:08.789Z"} ms 
- 
-
-::1 - - [15/Feb/2025:08:53:08 +0000] "GET /api/client/" 500  
- Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-15T08:53:08.861Z"} ms 
- 
-
-::1 - - [15/Feb/2025:09:03:31 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-15T09:03:31.212Z"} ms 
- 
-
-::1 - - [15/Feb/2025:09:03:31 +0000] "GET /api/client/" 404  
- Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:20:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-15T09:03:31.353Z"} ms 
- 
-
-::1 - - [15/Feb/2025:10:57:54 +0000] "GET /api/client/" 500  
- Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-15T10:57:54.990Z"} ms 
- 
-
-::1 - - [15/Feb/2025:10:57:56 +0000] "GET /api/client/" 500  
- Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-15T10:57:56.933Z"} ms 
- 
-
-::1 - - [15/Feb/2025:10:57:57 +0000] "GET /api/agency/" 500  
- Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-15T10:57:57.681Z"} ms 
- 
-
-::1 - - [15/Feb/2025:10:57:57 +0000] "GET /api/agency/" 500  
- Error: {"message":"read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","timestamp":"2025-02-15T10:57:57.708Z"} ms 
- 
-
-::1 - - [15/Feb/2025:15:11:03 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-15T15:11:03.141Z"} ms 
- 
-
-::1 - - [15/Feb/2025:15:11:03 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-15T15:11:03.202Z"} ms 
- 
-
-::1 - - [15/Feb/2025:15:12:18 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-15T15:12:18.394Z"} ms 
- 
-
-::1 - - [15/Feb/2025:15:12:18 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-15T15:12:18.459Z"} ms 
- 
-
-::1 - - [15/Feb/2025:15:12:45 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-15T15:12:45.288Z"} ms 
- 
-
-::1 - - [15/Feb/2025:15:12:45 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-15T15:12:45.346Z"} ms 
- 
-
-::1 - - [16/Feb/2025:14:00:56 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-16T14:00:56.780Z"} ms 
- 
-
-::1 - - [16/Feb/2025:14:00:56 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-16T14:00:56.841Z"} ms 
- 
-
-::1 - - [16/Feb/2025:14:22:45 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-16T14:22:45.959Z"} ms 
- 
-
-::1 - - [16/Feb/2025:14:22:46 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-16T14:22:46.028Z"} ms 
- 
-
-::1 - - [16/Feb/2025:14:22:51 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-16T14:22:51.088Z"} ms 
- 
-
-::1 - - [16/Feb/2025:14:22:51 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-16T14:22:51.146Z"} ms 
- 
-
-::1 - - [16/Feb/2025:14:22:57 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-16T14:22:57.909Z"} ms 
- 
-
-::1 - - [16/Feb/2025:14:22:57 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-16T14:22:57.975Z"} ms 
- 
-
-::1 - - [16/Feb/2025:14:23:02 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-16T14:23:02.616Z"} ms 
- 
-
-::1 - - [16/Feb/2025:14:23:02 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-16T14:23:02.683Z"} ms 
- 
-
-::1 - - [16/Feb/2025:14:49:10 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-16T14:49:10.439Z"} ms 
- 
-
-::1 - - [16/Feb/2025:14:49:10 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-16T14:49:10.496Z"} ms 
- 
-
-::1 - - [16/Feb/2025:15:14:56 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-16T15:14:56.150Z"} ms 
- 
-
-::1 - - [16/Feb/2025:15:14:56 +0000] "GET /api/agency/availabe-users" 401  
- Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:9:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:5:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-16T15:14:56.214Z"} ms 
  
 

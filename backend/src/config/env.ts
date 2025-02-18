@@ -24,3 +24,4 @@ export const AWS_S3_BUCKET_SECRET_KEY = process.env.SECRET_KEY as string
 
 // STIRPE
 export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET as string
+export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY as string

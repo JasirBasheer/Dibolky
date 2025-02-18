@@ -1,30 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-
-
-interface IPlatforms {
-    platform: string;
-    scheduledDate: string;
-    isPublished?: boolean;
-    isRescheduled?: boolean;
-}
-
-
-export interface IReviewBucket {
-    id: string;
-    orgId: string;
-    url: string[];
-    status: string;
-    platforms: IPlatforms[];
-    contentType: string;
-    title: string;
-    caption: string;
-    tags: string[];
-    isPublished?: boolean;
-    feedBack: string;
-    changePlatformPublishStatus(platform: string, value: boolean): Promise<void>;
-
-}
-
+import { IReviewBucket } from '../../shared/types/agency.types';
 
 
 export const ReviewBucketSchema: Schema<IReviewBucket> = new mongoose.Schema({
@@ -42,7 +17,7 @@ export const ReviewBucketSchema: Schema<IReviewBucket> = new mongoose.Schema({
     },
     status: {
         type: String,
-        default: "Pending"  
+        default: "Pending"
     },
     platforms: [
         {
@@ -87,7 +62,7 @@ export const ReviewBucketSchema: Schema<IReviewBucket> = new mongoose.Schema({
 
 
 
-ReviewBucketSchema.methods.changePlatformPublishStatus = async function(
+ReviewBucketSchema.methods.changePlatformPublishStatus = async function (
     platform: string,
     value: boolean
 ): Promise<void> {

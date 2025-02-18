@@ -6,6 +6,6 @@ export interface IChatService {
     createGroup(orgId: string, userId: string, details: any): Promise<any>
     findOwnerDetails(tenantDb: any, orgId: string): Promise<any>;
     addMember(orgId:string,chatId:string,memberDetails:any): Promise<any>;
-    createCommonMessage(orgId:string,chatId:string,message:any):Promise<any>
+    createCommonMessage(orgId:string,message:any):Promise<any>
     findChatByMembers(orgId:string,userId:string,targetUserId:string):Promise<any>
 }

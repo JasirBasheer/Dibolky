@@ -1,21 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
-
-export interface IEmployee {
-    _id?:any;
-    orgId: string;
-    organizationName: string;
-    name: string;
-    email: string;
-    department: string;
-    password: string;
-    contactNumber: number;
-    profile: string;
-    isBlocked: boolean;
-}
+import { IEmployee } from '../../shared/types/employee.types';
 
 
-
-export const employeeSchema: Schema<IEmployee> = new mongoose.Schema({
+export const employeeSchema: Schema<IEmployee> = new Schema({
     orgId: {
         type: String,
         required: true

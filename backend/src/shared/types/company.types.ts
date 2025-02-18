@@ -24,3 +24,29 @@ export interface ICompanyOwner {
     isBlocked: boolean;
     planPurchasedRate: number
 }
+
+
+export interface IOwnerDetailsSchema {
+    ownerId?: string; 
+    orgId?: string; 
+    socialMedias?: {
+        instagram?: {
+            accessToken?: string;
+            apiKey?: string;
+        };
+        facebook?: {
+            accessToken?: string;
+            apiKey?: string;
+        };
+        x?: {
+            accessToken?: string;
+            apiKey?: string;
+        };
+        tiktok?: {
+            accessToken?: string;
+            apiKey?: string;
+        };
+    };
+    createdAt?: Date;
+    updatedAt?: Date;
+}

@@ -1,9 +1,9 @@
 import { Server } from 'socket.io';
 import { getSecretRoomId } from './util';
-import Chat from '../../models/chat/chat';
 import { container } from 'tsyringe';
 import { IChatService } from '../../services/Interface/IChatService';
 import mongoose from 'mongoose';
+import { connectTenantDB } from '../../config/db';
 
 
 const chatService = container.resolve<IChatService>('ChatService')
@@ -31,6 +31,7 @@ const initializeSocket = (server: any) => {
         socket.on("send-message", async ({ orgId, chatId, userId, userName, message }) => {
             try {
                 const roomId = `org_${orgId}`;
+                console.log(orgId, chatId, userId, userName, message);
 
                 const messageData = {
                     senderId: new mongoose.Types.ObjectId(userId),
@@ -42,10 +43,11 @@ const initializeSocket = (server: any) => {
                     updatedAt: new Date()
                 };
         
-                const savedMessage = await chatService.sendMessage(messageData, orgId, chatId);
-                const participants = savedMessage?.participants;
+                await chatService.sendMessage(messageData, orgId, chatId);
+                const tenantDb  = await connectTenantDB(orgId)
+                const chat = await chatService.getChat(tenantDb,chatId)
 
-                io.to(roomId).emit("new-message-received", { newMessage: messageData,chat_id:chatId,participants });
+                io.to(roomId).emit("new-message-received", { newMessage: messageData,chat_id:chatId,participants:chat.participants });
                
             } catch (error) {
                 console.error("Error sending message:", error);
@@ -62,18 +64,15 @@ const initializeSocket = (server: any) => {
             console.log(isChatExists);
             return 
             }
-            console.log("isChatExists");
-
             const newChat = await chatService.createChat(userId, targetUserId, orgId, userName, targetUserName)
             if (newChat) io.to(roomId).emit('new-chat-created', { newChat });
-
         })
 
         socket.on("create-group", ({ group }) => {
             io.emit('group-created', ({ group }))
         });
 
-        socket.on('add-member',async({chatId, orgId, userId, userName, type, admin})=>{
+        socket.on('add-member',async ({chatId, orgId, userId, userName, type, admin})=>{
             const roomId = `org_${orgId}`;
             const memberDetails = {userId,name:userName,type}
             console.log("memberDetails",memberDetails);
@@ -82,13 +81,17 @@ const initializeSocket = (server: any) => {
             const createdMember = await chatService.addMember(orgId,chatId,memberDetails)
             console.log("createdMember",createdMember);
 
-            const message = {text:`${admin} added ${memberDetails.name}`,type:"common",seen: []}
+            const message = {chatId,text:`${admin} added ${memberDetails.name}`,type:"common",seen: []}
             if(createdMember){
                 io.to(roomId).emit("new-message-received", { newMessage: message,chat_id:chatId,participants:createdMember.participants });
                 io.to(roomId).emit("new-member-added", { member:memberDetails });
             }
-            await chatService.createCommonMessage(orgId,chatId,message)            
+
+            await chatService.createCommonMessage(orgId,message)            
         })
+
+        // socket.on('remove-member')
+        // socket.on('change group Name')
 
 
         socket.on("disconnect", () => {

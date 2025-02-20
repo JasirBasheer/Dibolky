@@ -6,7 +6,7 @@ import { IProviderService } from "../../services/Interface/IProviderService";
 import { createInstagramOAuthURL } from "../../provider.strategies/instagram.strategy";
 import { createFacebookOAuthURL } from "../../provider.strategies/facebook.strategy";
 import { FACEBOOK, INSTAGRAM } from "../../shared/utils/constants";
-import { ReviewBucketSchema } from "../../models/agency/reviewBucket.model";
+import { ReviewBucketSchema } from "../../models/agency/review-bucket.model";
 import { IClientService } from "../../services/Interface/IClientService";
 
 

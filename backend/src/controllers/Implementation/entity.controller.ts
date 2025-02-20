@@ -6,11 +6,9 @@ import { CountryToCurrency, getPriceConversionFunc } from '../../shared/utils/cu
 import {
     findCountryByIp,
     HTTPStatusCodes,
-    NotFoundError,
     ResponseMessage,
     SendResponse
 } from 'mern.common';
-import mongoose from 'mongoose';
 import { IChatService } from '../../services/Interface/IChatService';
 
 @injectable()
@@ -146,31 +144,6 @@ export default class EntityController implements IEntityController {
 
     }
 
-
-    /**
-    * Handles mail existence check for a given platform.
-    * @param req - Express request object containing `Mail` and `platform` in the body.
-    * @param res - Express response object used to return the result.
-    * @param next - Express next function for error handling.
-    * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
-    */
-    async registerCompany(
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
-            const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password } = req.body
-
-            const createdCompany = await this.entityService.registerCompany(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password)
-            if (!createdCompany) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.UNAUTHORIZED)
-            SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
-        } catch (error) {
-            next(error);
-        }
-    }
-
-
     /**
     * Returns menu for the given role.
     * @param req - Express request object containing `role` and `planId` in the params.
@@ -189,8 +162,6 @@ export default class EntityController implements IEntityController {
 
             if (role === "Agency") {
                 menu = await this.entityService.getAgencyMenu(planId);
-            } else if (role === "Company") {
-                menu = await this.entityService.getCompanyMenu(planId);
             } else if (role === "Admin") {
                 menu = {
                     clients: {
@@ -247,64 +218,6 @@ export default class EntityController implements IEntityController {
     }
 
 
-    async createDepartment(
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
-            const { department, permissions }: { department: string, permissions: string[] } = req.body
-            await this.entityService.createDepartment(req.tenantDb, department, permissions)
-            SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
-        } catch (error) {
-            next(error)
-        }
-
-    }
-
-
-    async createEmployee(
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
-            const { name, email, role, department }: { name: string, email: string, role: string, department: string } = req.body
-            await this.entityService.createEmployee(req.details.orgId, req.details.organizationName, req.tenantDb, name, email, role, department)
-            SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
-        } catch (error) {
-            next(error)
-        }
-    }
-
-
-    async getDepartments(
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
-            const departments = await this.entityService.getDepartments(req.tenantDb)
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { departments })
-        } catch (error) {
-            next(error)
-        }
-
-    }
-
-    async getEmployees(
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
-            const employees = await this.entityService.getEmployees(req.tenantDb)
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { employees })
-        } catch (error) {
-            next(error)
-        }
-    }
-
     async getOwner(
         req: Request,
         res: Response,
@@ -324,7 +237,7 @@ export default class EntityController implements IEntityController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        const {userId} = req.body
+        const { userId } = req.body
         const chats = await this.chatService.getChats(req.tenantDb, userId)
         SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
     }
@@ -342,11 +255,11 @@ export default class EntityController implements IEntityController {
     }
 
     async getMessages(
-        req: Request, 
-        res: Response, 
+        req: Request,
+        res: Response,
         next: NextFunction
     ): Promise<void> {
-        const {userId} = req.body
+        const { userId } = req.body
         // const messages = await this.chatService.getMessages(req.tenantDb,userId)
     }
 
@@ -362,6 +275,17 @@ export default class EntityController implements IEntityController {
         SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { group: createdGroup })
 
     }
+
+
+    async getAllProjects(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const projects = await this.entityService.fetchAllProjects(req.tenantDb)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects })
+        } catch (error) {
+            next(error)
+        }
+    }
+
 
 }
 

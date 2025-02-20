@@ -1,16 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import { generateToken, UnauthorizedError, verifyToken } from "mern.common";
 import { container } from "tsyringe";
-import { ICompanyService } from "../services/Interface/ICompanyService";
 import { IAgencyService } from "../services/Interface/IAgencyService";
-import { IAdminService } from "../services/Interface/IAdminService";
+// import { IAdminService } from "../services/Interface/IAdminService";
 import { IClientService } from "../services/Interface/IClientService";
 import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../config/env";
 import { isTokenBlacklisted } from "../config/redis";
 
-const companyService = container.resolve<ICompanyService>("CompanyService");
 const agencyService = container.resolve<IAgencyService>("AgencyService");
-const adminService = container.resolve<IAdminService>("AdminService");
+// const adminService = container.resolve<IAdminService>("AdminService");
 const clientService = container.resolve<IClientService>("ClientService");
 
 declare global {
@@ -31,7 +29,7 @@ export const TokenMiddleWare = async (req: Request, res: Response, next: NextFun
 
         let refreshTokenSecret = JWT_REFRESH_SECRET || 'defaultRefreshSecret';
         let accessTokenSecret = JWT_ACCESS_SECRET || 'defaultAccessSecret';
-        if (!token && !refreshToken) return res.status(400).json({ success: false })
+        if (!token && !refreshToken) throw new UnauthorizedError('Access Denied')
 
 
         if (!token && refreshToken) {
@@ -51,10 +49,8 @@ export const TokenMiddleWare = async (req: Request, res: Response, next: NextFun
         let ownerDetails
         if (tokenDetails.role == 'Agency') {
             ownerDetails = await agencyService.verifyOwner(tokenDetails.id)
-        } else if (tokenDetails.role == 'Company') {
-            ownerDetails = await companyService.verifyOwner(tokenDetails.id)
         } else if (tokenDetails.role == 'Admin') {
-            ownerDetails = await adminService.verifyAdmin(tokenDetails.id)
+            // ownerDetails = await adminService.verifyAdmin(tokenDetails.id)
         } else if (tokenDetails.role == "Client") {
             ownerDetails = await clientService.verifyClient(tokenDetails.id)
         }

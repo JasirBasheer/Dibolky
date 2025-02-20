@@ -9,10 +9,10 @@ import { ConflictError, CustomError, generatePassword, hashPassword, NotFoundErr
 import { ownerDetailsSchema } from "../../models/agency/agency.model";
 import { createNewMenuForClient } from "../../shared/utils/menu.utils";
 import { connectTenantDB } from "../../config/db";
-import { ReviewBucketSchema } from "../../models/agency/reviewBucket.model";
+import { ReviewBucketSchema } from "../../models/agency/review-bucket.model";
 import { uploadToS3 } from "../../shared/utils/aws";
 import { AWS_S3_BUCKET_NAME } from "../../config/env";
-import { employeeSchema } from "../../models/employee/employee.model";
+import { projectSchema } from "../../models/agency/project.model";
 
 @injectable()
 export default class AgencyService implements IAgencyService {
@@ -70,7 +70,17 @@ export default class AgencyService implements IAgencyService {
         let newMenu = createNewMenuForClient(menu)
 
         const ClientModel = db.model('client', clientSchema)
-        const createdClient = await this.agencyRepository.createClient(ClientModel, { ...clientDetails, services, menu: newMenu })
+        const ProjectModel = db.model('project',projectSchema)
+        const createdClient:any = await this.agencyRepository.createClient(ClientModel, { ...clientDetails, menu: newMenu })
+
+        for(let item in services){
+            const { serviceName, serviceDetails } = services[item];  
+            const { deadline, ...details } = serviceDetails; 
+            await this.agencyRepository.createProject(ProjectModel,createdClient._id,createdClient.name,serviceName,details,item,new Date(deadline))
+            console.log(services[item])
+        }
+        
+        
         if (createdClient) await this.agencyRepository.saveClientToMainDB(clientDetails)
         const data = createClientMailData(email, name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(),organizationName, password)
         sendMail(
@@ -133,9 +143,34 @@ export default class AgencyService implements IAgencyService {
 
     async getAvailableUsers(tenantDb:any):Promise<any>{
         const clientModel = await tenantDb.model('client', clientSchema)
-        const employeeModel = await tenantDb.model('employee', employeeSchema)
-        return await this.agencyRepository.fetchAllAvailableUsers(clientModel,employeeModel)
+        return await this.agencyRepository.fetchAllAvailableUsers(clientModel)
     }
+
+    async  getProjectsCount(tenantDb:any):Promise<any>{
+        const projectModel = await tenantDb.model('project', projectSchema)
+        const projects = await this.agencyRepository.getProjectsCount(projectModel)
+        const weaklyProjects = projects.filter((project:any)=>new Date(project.createdAt).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
+        return {
+            count:projects.length || 0,
+            lastWeekCount:weaklyProjects.length || 0
+        }
+    }   
+
+    async getClientsCount(tenantDb:any):Promise<any>{
+        const clientModel = await tenantDb.model('client', clientSchema)
+        const clients = await this.agencyRepository.getClientsCount(clientModel)
+        const weaklyClients = clients.filter((client:any)=>new Date(client.createdAt).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
+        return {
+            count:clients.length || 0,
+            lastWeekCount:weaklyClients.length || 0
+        }
+    }
+
+    async editProjectStatus(tenantDb:any,projectId:string,status:string):Promise<any>{
+        const projectModel = await tenantDb.model('project', projectSchema)
+        return await this.agencyRepository.editProjectStatus(projectModel,projectId,status)
+    }
+
 
 }
 

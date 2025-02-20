@@ -16,7 +16,6 @@ router.get('/:role/:planId', (req, res, next) => entityController.getMenu(req, r
 
 // Post requests
 router.post('/create-agency', (req, res, next) => entityController.registerAgency(req, res, next))
-router.post('/create-company', (req, res, next) => entityController.registerCompany(req, res, next))
 router.post('/get-plan', (req, res, next) => entityController.getPlan(req, res, next))
 router.post('/check-mail', (req, res, next) => entityController.checkMail(req, res, next))
 
@@ -34,14 +33,14 @@ router.post('/get-messages', (req, res, next) => entityController.getMessages(re
 
 router.use(permissionGate(["Company", "Agency"]))
 
-// Get requests
-router.get('/get-departments', (req, res, next) => entityController.getDepartments(req, res, next))
-router.get('/get-employees', (req, res, next) => entityController.getEmployees(req, res, next))
-router.get('/owner', (req, res, next) => entityController.getOwner(req, res, next))
 
-// Post requests
-router.post('/create-department', (req, res, next) => entityController.createDepartment(req, res, next))
-router.post('/create-employee', (req, res, next) => entityController.createEmployee(req, res, next))
+
+// Get requests
+
+router.get('/owner', (req, res, next) => entityController.getOwner(req, res, next))
+router.get('/projects', (req, res, next) =>entityController.getAllProjects(req,res,next))
+router.get('/get-tasks', (req, res, next) =>entityController.getAllProjects(req,res,next))
+
 
 
 

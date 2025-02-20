@@ -1,10 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { IAuthenticationController } from '../Interface/IAuthenticationController';
 import { inject, injectable } from 'tsyringe';
-import { IAdminService } from '../../services/Interface/IAdminService';
+// import { IAdminService } from '../../services/Interface/IAdminService';
 import { IAgencyService } from '../../services/Interface/IAgencyService';
-import { ICompanyService } from '../../services/Interface/ICompanyService';
-import { IEmployeeService } from '../../services/Interface/IEmployeeService';
 import { IAuthenticationService } from '../../services/Interface/IAuthenticationService';
 import { IClientService } from '../../services/Interface/IClientService';
 import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from '../../config/env';
@@ -19,10 +17,8 @@ import {
 @injectable()
 /** Implementation of Authentication Controller */
 export default class AuthenticationController implements IAuthenticationController {
-    private adminService: IAdminService;
+    // private adminService: IAdminService;
     private agencyService: IAgencyService;
-    private companyService: ICompanyService;
-    private employeeService: IEmployeeService;
     private authenticationService: IAuthenticationService;
     private clientService: IClientService;
 
@@ -30,23 +26,17 @@ export default class AuthenticationController implements IAuthenticationControll
     * Initializes the AuthenticationController with required service dependencies.
     * @param adminService - Service for handling admin authentication.
     * @param agencyService - Service for handling agency authentication.
-    * @param companyService - Service for handling company authentication.
-    * @param employeeService - Service for handling employee authentication.
     * @param authenticationService - Service for general authentication operations.
     * @param clientService - Service for handling client authentication.
     */
     constructor(
-        @inject('AdminService') adminService: IAdminService,
+        // @inject('AdminService') adminService: IAdminService,
         @inject('AgencyService') agencyService: IAgencyService,
-        @inject('CompanyService') companyService: ICompanyService,
-        @inject('EmployeeService') employeeService: IEmployeeService,
         @inject('AuthenticationService') authenticationService: IAuthenticationService,
         @inject('ClientService') clientService: IClientService,
     ) {
-        this.adminService = adminService;
+        // this.adminService = adminService;
         this.agencyService = agencyService;
-        this.companyService = companyService;
-        this.employeeService = employeeService;
         this.authenticationService = authenticationService;
         this.clientService = clientService;
     }
@@ -70,19 +60,13 @@ export default class AuthenticationController implements IAuthenticationControll
 
             switch (role) {
                 case "Admin":
-                    id = await this.adminService.adminLoginHandler(email, password);
+                    // id = await this.adminService.adminLoginHandler(email, password);
                     break;
                 case "Agency":
                     id = await this.agencyService.agencyLoginHandler(email, password);
                     break;
-                case "Company":
-                    id = await this.companyService.companyLoginHandler(email, password);
-                    break;
                 case "Client":
                     id = await this.clientService.clientLoginHandler(email, password);
-                    break;
-                case "Employee":
-                    id = await this.employeeService.employeeLoginHandler(email, password);
                     break;
                 default:
                     throw new Error('Invalid role specified');

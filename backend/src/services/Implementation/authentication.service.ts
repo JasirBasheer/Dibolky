@@ -2,36 +2,30 @@ import { createForgotPasswordData } from "../../shared/utils/mail.datas";
 import { IAuthenticationService } from "../Interface/IAuthenticationService";
 import { inject, injectable } from "tsyringe";
 import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepository";
-import { ICompanyRepository } from "../../repositories/Interface/ICompanyRepository";
-import { IAdminRepository } from "../../repositories/Interface/IAdminRepository";
+// import { IAdminRepository } from "../../repositories/Interface/IAdminRepository";
 import { generateToken, hashPassword, NotFoundError, sendMail, verifyToken } from "mern.common";
 import { JWT_RESET_PASSWORD_SECRET } from "../../config/env";
 
 @injectable()
 export default class AuthenticationService implements IAuthenticationService {
     private agencyRepository: IAgencyRepository;
-    private companyRepository: ICompanyRepository;
-    private adminRepository: IAdminRepository;
+    // private adminRepository: IAdminRepository;
 
     constructor(
         @inject('AgencyRepository') agencyRepository : IAgencyRepository,
-        @inject('CompanyRepository') companyRepository : ICompanyRepository,
-        @inject('AdminRepository') adminRepository : IAdminRepository
+        // @inject('AdminRepository') adminRepository : IAdminRepository
 
     ) {
         this.agencyRepository = agencyRepository
-        this.companyRepository = companyRepository
-        this.adminRepository = adminRepository
+        // this.adminRepository = adminRepository
     }
 
     async resetPassword(email: string, role: string): Promise<any> {
         let details
         if (role == "Agency") {
             details = await this.agencyRepository.findAgencyWithMail(email)
-        } else if (role == "Company") {
-            details = await this.companyRepository.findCompanyWithMail(email)
-        } else if (role == "Admin") {
-            details = await this.adminRepository.findAdminWithMail(email)
+        }  else if (role == "Admin") {
+            // details = await this.adminRepository.findAdminWithMail(email)
         }
         let jwtSecret = JWT_RESET_PASSWORD_SECRET || 'defaultsecretkey'
         if (!details) throw new NotFoundError('Account not found');
@@ -56,10 +50,8 @@ export default class AuthenticationService implements IAuthenticationService {
         let hashedPassword = await hashPassword(password) || 'password'
         if (isValid.role == "Agency") {
             return await this.agencyRepository.changePassword(isValid.id, hashedPassword)
-        } else if (isValid.role == "Company") {
-            return await this.companyRepository.changePassword(isValid.id, hashedPassword)
-        } else if (isValid.role == "Admin") {
-            return await this.adminRepository.changePassword(isValid.id, hashedPassword)
+        }else if (isValid.role == "Admin") {
+            // return await this.adminRepository.changePassword(isValid.id, hashedPassword)
         }
     }
 

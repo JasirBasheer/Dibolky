@@ -19,6 +19,13 @@ router.get('/', (req, res, next) =>agencyController.getAgency(req,res,next))
 router.get('/availabe-users', (req, res, next) =>agencyController.getAvailableUsers(req,res,next))
 router.get('/clients', (req, res, next) =>agencyController.getAllClients(req,res,next))
 router.get('/client/:id', (req, res, next) =>agencyController.getClient(req,res,next))
+router.get('/projects-count', (req, res, next) =>agencyController.getProjectsCount(req,res,next))
+router.get('/clients-count', (req, res, next) =>agencyController.getClientsCount(req,res,next))
+
+// Patch requests
+router.patch('/edit-project-status', (req, res, next) =>agencyController.editProjectStatus(req,res,next))
+
+
 
 // Post requests
 router.post('/client', (req, res, next) =>agencyController.createClient(req,res,next))

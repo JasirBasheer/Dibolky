@@ -6,14 +6,8 @@ export interface IEntityService {
     registerAgency(organizationName: string, name: string, email: string, address: any, websiteUrl: string, industry: string,
         contactNumber: number, logo: string, password: string, planId: string, validity: number, planPurchasedRate: number,
         transactionId: string, paymentGateway: string, description: string,currency:string): Promise<any> ;
-    registerCompany(organizationName: string, name: string, email: string, address: any, websiteUrl: string,
-        industry: string, contactNumber: number, logo: string, password: string): Promise<any>;
     getAgencyMenu(planId: string):Promise<any>;
-    getCompanyMenu(planId:string):Promise<any>;
-    createDepartment(tenantDatabase:any,department:string,permissions:string[]):Promise<void>
-    createEmployee(orgId:string,orgName:string,tenantDatabase:any,name:string,email:string,role:string,department:string):Promise<void>
-    getDepartments(tenantDb:any):Promise<any>    
-    getEmployees(tenantDb:any):Promise<any>    
     getOwner(tenantDb:any):Promise<any>
+    fetchAllProjects(tenantDb:any):Promise<any>
     
 }

@@ -1,16 +1,14 @@
-import { addMonthsToDate } from '../../shared/utils/date-utils';
+import mongoose from 'mongoose';
+import { inject, injectable } from 'tsyringe';
 import { IEntityService } from '../Interface/IEntityService';
 import { IEntityRepository } from '../../repositories/Interface/IEntityRepository';
 import { IPlanRepository } from '../../repositories/Interface/IPlanRepository';
-import { inject, injectable } from 'tsyringe';
-import { ConflictError, CustomError, generatePassword, hashPassword, sendMail } from 'mern.common';
-import { departmentSchema } from '../../models/agency/department.model';
-import employeeModel, { employeeSchema } from '../../models/employee/employee.model';
-import mongoose from 'mongoose';
-import { createClientMailData } from '../../shared/utils/mail.datas';
-import { NotFoundError } from 'rxjs';
-import { createNewPlanMenu } from '../../shared/utils/menu.utils';
 import { ownerDetailsSchema } from '../../models/agency/agency.model';
+import { projectSchema } from '../../models/agency/project.model';
+import { addMonthsToDate } from '../../shared/utils/date-utils';
+import {
+    hashPassword,
+} from 'mern.common';
 
 @injectable()
 export default class EntityService implements IEntityService {
@@ -28,11 +26,9 @@ export default class EntityService implements IEntityService {
 
 
     async getAllPlans(): Promise<any> {
-        let companyPlans = await this.planRepository.getCompanyPlans()
         let agencyPlans = await this.planRepository.getAgencyPlans()
         return {
             Agency: agencyPlans,
-            Company: companyPlans
         }
 
     }
@@ -43,10 +39,6 @@ export default class EntityService implements IEntityService {
             if (isExists) return true
             return false
 
-        } else if (platform == "Company") {
-            const isExists = await this.entityRepository.isCompanyMailExists(Mail)
-            if (isExists) return true
-            return false
         }
         return null
 
@@ -88,79 +80,23 @@ export default class EntityService implements IEntityService {
 
 
 
-    async registerCompany(organizationName: string, name: string, email: string, address: any, websiteUrl: string,
-        industry: string, contactNumber: number, logo: string, password: string): Promise<any> {
-        const hashedPassword = await hashPassword(password)
-        let orgId = organizationName.replace(/\s+/g, "") + Math.floor(Math.random() * 1000000);
-
-        const newCompany = {
-            orgId, organizationName,
-            name, email, address,
-            websiteUrl, industry,
-            contactNumber, logo,
-            password: hashedPassword,
-        };
-
-        const createdCompany = await this.entityRepository.createCompany(newCompany)
-        return createdCompany
-
-    }
-
     async getAgencyMenu(planId: string): Promise<any> {
         const plan = await this.planRepository.getAgencyPlan(planId)
         return plan.menu
     }
 
-    async getCompanyMenu(planId: string): Promise<any> {
-        const plan = await this.planRepository.getCompanyPlan(planId)
-        return plan.menu
-    }
 
-    async createDepartment(tenantDatabase: any, department: string, permissions: string[]): Promise<void> {
-        const departmentModel = await tenantDatabase.model('department', departmentSchema);
-        const menu = createNewPlanMenu(permissions)
-        const details = { department,permissions,menu }
-        const createdDepartment = await this.entityRepository.createDepartment(departmentModel, details);
-        if (!createdDepartment) throw new CustomError("Error while creating Department", 500)
-    }
-
-    async createEmployee(orgId: string, orgName: string, tenantDatabase: any, name: string, email: string, role: string, department: string): Promise<void> {
-        const employeeModel = await tenantDatabase.model('employee', employeeSchema)
-        let password = await generatePassword(orgName)
-
-        const employee = await this.entityRepository.findEmployeeWithEmail(email)
-        if (employee) throw new ConflictError('Employee already exists with this email')
-
-        await this.entityRepository.createEmployee(orgId, employeeModel, name, email, role, password, department)
-        const data = createClientMailData(email, name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(), orgName, password)
-        sendMail(
-            email,
-            `Welcome to ${orgName}! Excited to Work with You`,
-            data,
-            (error: any, info: any) => {
-                if (error) {
-                    console.error("Failed to send email:", error);
-                } else {
-                    console.log("Email sent successfully:", info.response);
-                }
-            }
-        );
-    }
-
-    async getDepartments(tenantDb:any):Promise<any>{
-        const departmentModel = await tenantDb.model('department', departmentSchema);
-        return await this.entityRepository.fetchAllDepartments(departmentModel)
-    }
-
-    async getEmployees(tenantDb:any):Promise<any>{
-        const employeeModel = await tenantDb.model('employee', employeeSchema);
-        return await this.entityRepository.fetchAllEmployees(employeeModel)
-    }
-
-    async  getOwner(tenantDb:any):Promise<any>{
+    async getOwner(tenantDb: any): Promise<any> {
         const ownerDetailModel = await tenantDb.model('OwnerDetail', ownerDetailsSchema);
         return await this.entityRepository.fetchOwnerDetails(ownerDetailModel)
     }
+
+    async fetchAllProjects(tenantDb: any): Promise<any> {
+        const projectModel = await tenantDb.model('project', projectSchema)
+        return await this.entityRepository.fetchAllProjects(projectModel)
+    }
+
+
 
 
 

@@ -50,10 +50,6 @@ const agencySchema: Schema<IAgency> = new mongoose.Schema({
     password: {
         type: String
     },
-    remainingProjects: {
-        type: Number,
-        default: 5
-    },
     remainingClients: {
         type: Number,
         default: 5

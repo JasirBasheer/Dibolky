@@ -5,7 +5,7 @@ interface AddressType {
     country: string;
 }
 
-export interface IAgency extends Document {
+export interface IAgencyBase {
     orgId: string;
     organizationName: string;
     name: string;
@@ -20,6 +20,27 @@ export interface IAgency extends Document {
     logo: string;
     remainingClients?: number;
     remainingProjects?: number;
+    isBlocked: boolean;
+    planPurchasedRate: number;
+    currency?: string;
+}
+
+
+
+export interface IAgency extends Document {
+    orgId: string;
+    organizationName: string;
+    name: string;
+    email: string;
+    address: AddressType;
+    websiteUrl: string;
+    industry: string;
+    password?: string;
+    contactNumber: number;
+    planId: string;
+    validity: string;
+    logo: string;
+    remainingClients?: number;
     isBlocked: boolean;
     planPurchasedRate: number;
     currency?:string;

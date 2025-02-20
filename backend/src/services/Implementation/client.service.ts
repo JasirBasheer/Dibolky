@@ -4,7 +4,7 @@ import { IClientService } from "../Interface/IClientService";
 import { NotFoundError, UnauthorizedError, comparePassword } from "mern.common";
 import { clientSchema } from "../../models/agency/client.model";
 import { exchangeForLongLivedToken } from "../../provider.strategies/instagram.strategy";
-import { ReviewBucketSchema } from "../../models/agency/reviewBucket.model";
+import { ReviewBucketSchema } from "../../models/agency/review-bucket.model";
 import { ownerDetailsSchema } from "../../models/agency/agency.model";
 
 @injectable()

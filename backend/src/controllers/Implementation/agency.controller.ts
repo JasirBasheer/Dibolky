@@ -121,5 +121,35 @@ export default class AgencyController implements IAgencyController {
     }
 
 
+    async getProjectsCount(req:Request,res:Response,next:NextFunction):Promise<void>{
+        try {
+            const projects = await this.agencyService.getProjectsCount(req.tenantDb)
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{projects})
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async getClientsCount(req:Request,res:Response,next:NextFunction):Promise<void>{
+        try {
+            const clients = await this.agencyService.getClientsCount(req.tenantDb)
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{clients})
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async editProjectStatus(req:Request,res:Response,next:NextFunction):Promise<void>{
+        try {
+            const {projectId,status} = req.body
+            const result = await this.agencyService.editProjectStatus(req.tenantDb,projectId,status)
+            if(result)SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+
 }
 

@@ -15,6 +15,10 @@ export interface IAgencyRepository {
     saveContentToDb(ReviewBucket:any,details:any): Promise<any>;
     getContentById(clientId:string,db:any):Promise<any>;
     changeContentStatusById(contentId:string,db:any,status:string):Promise<any>;
-    fetchAllAvailableUsers(clientModel:any,employeeModel:any):Promise<any>
+    fetchAllAvailableUsers(clientModel:any):Promise<any>
+    createProject(projectModel:any,clientId:string,clientName:string,serviceName:string,project:any,category:string ,deadLine:Date):Promise<any>
+    getProjectsCount(projectModel:any):Promise<any>
+    getClientsCount(clientModel:any):Promise<any>
+    editProjectStatus(projectModel:any,projectId:string,status:string):Promise<any>
   }
   

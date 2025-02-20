@@ -95,6 +95,7 @@ export default class PaymentController implements IPaymentController {
         const sig = req.headers['stripe-signature'] as string;
         let event: Stripe.Event;
         try {
+            
             event = stripe.webhooks.constructEvent(req.body, sig, STRIPE_WEBHOOK_SECRET as string);
 
             if (event.type == 'checkout.session.completed') {

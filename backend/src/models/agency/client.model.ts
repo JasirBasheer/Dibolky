@@ -106,13 +106,12 @@ export const clientSchema: Schema<IClient> = new mongoose.Schema({
   },
   services: {
     type: Object,
-    required: true
   },
   menu: {
     type: Object,
     required: true
   }
-})
+}, { timestamps: true });
 
 
 clientSchema.methods.setSocialMediaToken = async function (provider: string, token: string): Promise<void> {

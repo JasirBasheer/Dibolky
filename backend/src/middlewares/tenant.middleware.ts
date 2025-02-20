@@ -12,8 +12,9 @@ declare global {
 
 export const TenantMiddleWare = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      
+
         let path = req.path.slice(1)
+        console.log(path);
         if (!getTenantConnection(req.details.orgId) && path != "") {
              const connection = await connectTenantDB(req.details.orgId);
              req.tenantDb = connection

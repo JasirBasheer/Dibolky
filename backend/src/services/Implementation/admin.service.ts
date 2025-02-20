@@ -5,7 +5,6 @@ import { IEntityRepository } from '../../repositories/Interface/IEntityRepositor
 import { IAgencyRepository } from '../../repositories/Interface/IAgencyRepository';
 import { inject, injectable } from 'tsyringe';
 import { IAdminService } from '../Interface/IAdminService';
-import { ICompanyRepository } from '../../repositories/Interface/ICompanyRepository';
 import { CustomError, NotFoundError, UnauthorizedError } from 'mern.common';
 import { planDetails } from '../../shared/types/admin.types';
 import { createNewPlanMenu } from '../../shared/utils/menu.utils';
@@ -16,20 +15,17 @@ export default class AdminService implements IAdminService {
     private adminRepository: IAdminRepository;
     private entityRepository: IEntityRepository;
     private agencyRepository: IAgencyRepository;
-    private companyRepository: ICompanyRepository;
 
     constructor(
         @inject('PlanRepository') planRepository : IPlanRepository,
         @inject('AdminRepository') adminRepository : IAdminRepository,
         @inject('EntityRepository') entityRepository : IEntityRepository,
         @inject('AgencyRepository') agencyRepository : IAgencyRepository,
-        @inject('CompanyRepository') companyRepository : ICompanyRepository,
     ) {
         this.planRepository = planRepository;
         this.adminRepository = adminRepository;
         this.entityRepository = entityRepository;
         this.agencyRepository = agencyRepository;
-        this.companyRepository = companyRepository;
     }
 
     async adminLoginHandler(email: string, password: string):Promise<any> {
@@ -42,7 +38,6 @@ export default class AdminService implements IAdminService {
     
 
     async verifyAdmin(id: string): Promise<any> {
-        console.log('reached service');
         
             const admin = await this.adminRepository.findAdminWithId(id)
             if (!admin) throw new NotFoundError('Admin Not found')
@@ -50,11 +45,9 @@ export default class AdminService implements IAdminService {
     }
 
     async getAllPlans(): Promise<any> {
-            let companyPlans = await this.planRepository.getCompanyPlans()
             let agencyPlans = await this.planRepository.getAgencyPlans()
             return {
-                Agency: agencyPlans,
-                Company: companyPlans
+                Agency: agencyPlans
             }
     }
 
@@ -70,15 +63,12 @@ export default class AdminService implements IAdminService {
         return plan.menu
     }
 
-    async getCompanyMenu(planId: string): Promise<any> {
-        const plan = await this.planRepository.getCompanyPlan(planId)
-        return plan.menu
-    }
+
 
     async getRecentClients() {
-            let companies = await this.entityRepository.getAllRecentCompanyOwners()
+        console.log("Recent Clients")
             let agencies = await this.entityRepository.getAllRecentAgencyOwners()
-            let result = { Agency: agencies, Company: companies }
+            let result = { Agency: agencies }
             return result
     }
 
@@ -91,20 +81,14 @@ export default class AdminService implements IAdminService {
                 const transactions = await this.entityRepository.getTransactionsWithOrgId(details?.orgId)
                 clientDetials ={details,transactions}
                 
-            } else if (role == "Company") {
-                const details = await this.companyRepository.findCompanyWithId(id)
-                if(!details)throw new NotFoundError('Company Not Found')
-                const transactions = await this.entityRepository.getTransactionsWithOrgId(id)
-                clientDetials = {details,transactions}
             }
             return clientDetials
     }
 
 
     async getAllClients() : Promise<any>{
-            let companies = await this.entityRepository.getAllCompanyOwners()
             let agencies = await this.entityRepository.getAllAgencyOwners()
-            let result = { Agency: agencies, Company: companies }
+            let result = { Agency: agencies }
             return result
     }
 
@@ -117,8 +101,6 @@ export default class AdminService implements IAdminService {
         details.menu = menu
         if(entity == "Agency"){
             createdPlan = await this.planRepository.createAgencyPlan(details)
-        }else{
-            createdPlan = await this.planRepository.createCompanyPlan(details)
         }
         if(!createdPlan)throw new CustomError("Error While creating Plan",500)
     }
@@ -132,8 +114,6 @@ export default class AdminService implements IAdminService {
         details.menu = menu
         if(entity == "Agency"){
             editedPlan = await this.planRepository.editAgencyPlan(details)
-        }else{
-            editedPlan = await this.planRepository.editCompanyPlan(details)
         }
         if(!editedPlan)throw new CustomError("Error While editing Plan",500)
     }
@@ -145,8 +125,6 @@ export default class AdminService implements IAdminService {
         let changedStatus;
         if(entity == "Agency"){
             changedStatus = await this.planRepository.changeAgencyPlanStatus(id)
-        }else{
-            changedStatus = await this.planRepository.changeCompanyPlanStatus(id)
         }
         if(!changedStatus)throw new CustomError("Error While changing Plan status",500)
     }
@@ -172,28 +150,9 @@ export default class AdminService implements IAdminService {
                 ...planDetails,
                 planConsumers:consumers
             }
-        }else{
-            const planDetails = await this.planRepository.getCompanyPlan(id)
-            const planConsumers = await this.planRepository.getCompanyPlanConsumers(id)
-            const consumers = Array.isArray(planConsumers) 
-            ? planConsumers.map((item) => ({
-                name: item.name,
-                organizationName: item.organizationName,
-                validity: item.validity,
-                industry: item.industry,
-              }))
-            : []; 
-                
-            details = {
-                ...planDetails,
-                planConsumers:consumers
-            }
         }
         return details
     }
-
-
-
 }
 
 

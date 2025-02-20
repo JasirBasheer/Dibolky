@@ -134,10 +134,10 @@ const clientBaseMenu: any = {
 };
 
 const planBaseMenu: any = {
-    "smm": smm,
-    "marketing": marketing,
-    "crm": crm,
-    "accounting":accounting
+    "SMM": smm,
+    "MARKETING": marketing,
+    "CRM": crm,
+    "ACCOUNTING":accounting
 };
 
 
@@ -172,6 +172,9 @@ export const createNewPlanMenu = (selectedKeys: string[]) => {
         const menu = planBaseMenu[key];
 
         const menuKey = Object.keys(menu)[0];
+
+        console.log(menu)
+        console.log(menuKey,)
 
         if (!seen.has(menuKey)) {
             seen.add(menuKey);

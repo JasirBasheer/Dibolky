@@ -261,7 +261,6 @@ const AgencyClientContent = () => {
     <div className="min-h-screen bg-gradient-to-b from-white to-blue-50 p-8 pt-4 pb-5 mb-16">
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex gap-8">
-          {/* Left Column */}
           <Card className="flex-1 shadow-lg border-0 bg-white/80 backdrop-blur">
             <CardHeader className="border-b border-blue-100/30 pb-6">
               <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
@@ -269,7 +268,6 @@ const AgencyClientContent = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6 space-y-8">
-              {/* Platform Selection */}
               <section>
                 <h2 className="text-lg font-semibold text-gray-700 mb-4">
                   Distribution Channels

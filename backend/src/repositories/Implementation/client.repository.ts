@@ -32,6 +32,13 @@ export default class ClientRepository implements IClientRepository {
         return await tenantDb.findOne({email:email})
     }
 
+    async getOwnerDetails(tenantDb:any):Promise<any>{
+        return await tenantDb.find({}, {
+            orgId: 0,
+            'socialMedia_credentials': 0,
+        });
+    }
+
     async getClientInMainDb(email:string):Promise<any>{
         return await Client.findOne({email:email})
     }

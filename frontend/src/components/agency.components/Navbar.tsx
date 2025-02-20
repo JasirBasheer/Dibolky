@@ -178,8 +178,8 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
   return (
     <div className='relative grid grid-cols-12 min-h-[4.5rem]'>
       <div className="col-span-2 bg-white flex items-center justify-start pl-9 text-blue-600 text-2xl font-bold">Dibolky</div>
-      <div className="lg:col-span-6 col-span-6"></div>
-      <div className="lg:col-span-4 flex items-center lg:pl-12 gap-7">
+      <div className="lg:col-span-7 col-span-6"></div>
+      <div className="lg:col-span-3 flex items-center lg:pl-12 gap-7">
         <div className="lg:flex hidden gap-x-4">
           <Select
             onValueChange={handleSelect}
@@ -202,31 +202,6 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
                     {client.name}
                   </SelectItem>
                 ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-
-          <Select value={"default"}>
-            <SelectTrigger className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm appearance-none focus:outline-none bg-white cursor-pointer shadow-sm hover:border-blue-400">
-              <SelectValue placeholder="Owner" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="default" className="px-2 py-1 min-w-[11rem]">
-                  Employees
-                </SelectItem>
-                {clients.map((client) => (
-                  <SelectItem
-                    key={client._id}
-                    value={client._id}
-                    className="px-2 py-1 min-w-[16rem]"
-                  >
-                    <div className="flex gap-3">
-                      <img src="https://oliver-andersen.se/wp-content/uploads/2018/03/cropped-Profile-Picture-Round-Color.png" alt="" className='w-7' />  {client.name}
-                    </div>
-                  </SelectItem>
-                ))}
-                <Button className='w-full'>Save</Button>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -277,6 +252,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
       )}
 
       <div className="lg:hidden col-span-2 flex items-center">
+        {isOpen}
         {isOpen ? (<X onClick={() => setIsOpen(prev => !prev)} />) : (<AlignLeft onClick={() => setIsOpen(prev => !prev)} />)}
       </div>
     </div>

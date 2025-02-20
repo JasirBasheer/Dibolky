@@ -35,3 +35,39 @@ interface IMenuItem {
     icon: string;
     path: string[];
 }
+
+
+
+
+
+
+
+
+
+
+
+export interface ISubItem {
+    label: string;
+    icon: string;
+    path: string[];
+}
+
+export interface IMenuItems {
+    label: string;
+    icon: string;
+    subItems: ISubItem[];
+}
+
+export interface IPlan extends Document {
+    id?: number;
+    title: string;
+    price: number;
+    features: string[];
+    validity: string;
+    menu?: {
+        smm?: IMenuItems;
+        crm?: IMenuItems;
+        accounting?: IMenuItems;
+    };
+    isActive:boolean;
+}

@@ -11,12 +11,6 @@ const MainLoginPage:React.FC = () => {
       icon: <Activity className="w-12 h-12 text-blue-500" />
     },
     {
-      title: "Company",
-      description: "Manage your company workspace",
-      link: "/company/login",
-      icon: <Building2 className="w-12 h-12 text-green-500" />
-    },
-    {
       title: "Employee",
       description: "Access your employee dashboard",
       link: "/employee/login",
@@ -45,14 +39,14 @@ const MainLoginPage:React.FC = () => {
           <p className="text-gray-600">Choose your login portal to continue</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {options.map((item) => (
             <Link
               key={item.title}
               to={item.link}
               className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border"
             >
-              <div className="p-6">
+              <div className="p-6 flex flex-col items-center justify-center">
                 <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center mb-6 ">
                   {item.icon}
                 </div>

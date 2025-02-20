@@ -22,6 +22,13 @@ import AgencyContent from './pages/agency.pages/Content'
 import ClientDashboard from './pages/client.pages/client.dashboard'
 import ClientContent from './pages/client.pages/client.content'
 import ClientProjects from './pages/client.pages/client.projects'
+import AgencyEmployees from './pages/agency.pages/Employees'
+import AgencyMessages from './pages/agency.pages/message'
+import ClientMessages from './pages/client.pages/client.message'
+import Dashboard from './pages/agency.pages/Dashboard'
+import EmployeeDashboard from './pages/employee.pages/dashboard'
+import EmployeeLayout from './pages/employee.pages/Layout'
+import AgencyProject from './pages/agency.pages/projects'
 
 
 const App = () => {
@@ -32,10 +39,10 @@ const App = () => {
       <Route path='/agency/*' element={<AgencyRoutes />} />
       <Route path='/company/*' element={<CompanyRoutes />} />
       <Route path='/client/*' element={<ClientRoutes />} />
+      <Route path='/employee/*' element={<EmployeeRoutes />} />
     </Routes>
   )
 }
-
 export default App
 
 function PortalRoutes() {
@@ -77,6 +84,9 @@ function AgencyRoutes() {
         <Route path='create-client' element={<CreateClient />} />
         <Route path='contents' element={<AgencyContent />} />
         <Route path='leads' element={<AgencyLeads />} />
+        <Route path='employees' element={<AgencyEmployees />} />
+        <Route path='messages' element={<AgencyMessages />} />
+        <Route path='projects' element={<AgencyProject />} />
       </Route>
 
       <Route path='/login' element={<UnProtectedRoute role={"Agency"}><Login role={"Agency"} /></UnProtectedRoute>} />
@@ -97,6 +107,23 @@ function CompanyRoutes() {
 }
 
 
+function EmployeeRoutes() {
+  return (
+    <Routes>
+      <Route path='/login' element={<UnProtectedRoute role={"Employee"}><Login role={"Employee"} /></UnProtectedRoute>} />
+      <Route path='/forgot-password' element={<ForgotPassword role={"Employee"} />} />
+      <Route path='/reset-password/:token' element={<ResetPassword role={"Employee"} />} />
+      
+      <Route path='/' element={<ProtectedRoute role={"Employee"} ><EmployeeLayout /></ProtectedRoute>} >
+        <Route index element={<EmployeeDashboard />} />
+      </Route>
+
+    </Routes>
+
+    
+  )
+}
+
 function ClientRoutes() {
   return (
     <Routes>
@@ -104,6 +131,7 @@ function ClientRoutes() {
         <Route index element={<ClientDashboard />} />
         <Route path='contents' element={<ClientContent />} />
         <Route path='projects' element={<ClientProjects />} />
+        <Route path='message' element={<ClientMessages />} />
       </Route>
 
       <Route path='/login' element={<UnProtectedRoute role={"Client"} ><Login role={"Client"} /></UnProtectedRoute>} />

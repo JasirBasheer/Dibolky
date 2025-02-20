@@ -1,43 +1,26 @@
 import { connectTenantDB } from "../../config/db";
 import Agency, { ownerDetailsSchema } from "../../models/agency/agency.model";
 import Transaction from "../../models/admin/transaction.model";
-import Company from "../../models/company/company.model";
-import { departmentSchema } from "../../models/agency/department.model";
 import { IEntityRepository } from "../Interface/IEntityRepository";
-import { planDetails } from "../../shared/types/admin.types";
+import { IAgency } from "../../shared/types/agency.types";
+
 
 export default class EntityRepository implements IEntityRepository {
-    async createAgency(newAgency: any): Promise<any> {
-        const agency = new Agency(newAgency)
+
+    async createAgency(
+        new_agency: any
+    ): Promise<any | void> {
+        const agency = new Agency(new_agency)
         return await agency.save()
     }
 
-    async createCompany(newCompany: any): Promise<any> {
-        const company = new Company(newCompany)
-        return await company.save()
-    }
 
-
-    async isAgencyMailExists(email: string): Promise<any> {
+    async isAgencyMailExists(
+        email: string
+    ): Promise<IAgency | null> {
         return await Agency.findOne({ email: email })
     }
 
-    async createDepartment(details: any): Promise<any> {
-        const { department, permissions } = details
-        const DB = await connectTenantDB('vicigrow333986')
-        const departmentModel = DB.model('department', departmentSchema)
-        const newDepartment = new departmentModel({
-            department,
-            permissions
-        })
-        const createdDepartment = await newDepartment.save()
-        return createdDepartment
-    }
-
-
-    async isCompanyMailExists(email: string): Promise<any> {
-        return await Company.findOne({ email: email })
-    }
 
     async saveDetailsInAgencyDb(id: string, orgId: string): Promise<any> {
         const db = await connectTenantDB(orgId)
@@ -54,16 +37,10 @@ export default class EntityRepository implements IEntityRepository {
         return await newTransaction.save()
     }
 
-    async getAllCompanyOwners():Promise<any> {
-        return await Company.find()
-    }
     async getAllAgencyOwners():Promise<any> {
         return await Agency.find()
     }
 
-    async getAllRecentCompanyOwners():Promise<any> {
-        return await Company.find().limit(10)
-    }
     async getAllRecentAgencyOwners():Promise<any> {
         return await Agency.find().limit(10)
     }
@@ -72,6 +49,21 @@ export default class EntityRepository implements IEntityRepository {
         return await Transaction.find({ orgId: id })
     }
 
+
+    async fetchOwnerDetails(tenantDb:any):Promise<any>{
+        return await tenantDb.find()
+    }
+
+    async fetchAllProjects(projectsModel:any):Promise<any>{
+        const projects = await projectsModel.find({}).lean()
+        return projects
+    }
+
+
+
+    async fetchProjectTasks(taskModel:any,projectId:string):Promise<any>{
+        return await taskModel.find({projectId:projectId})
+    }
 
 
 }

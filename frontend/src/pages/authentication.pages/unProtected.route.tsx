@@ -31,7 +31,7 @@ const UnProtectedRoute = ({ children, role }: { children: any, role: string }) =
         if (response) {
 
           const roleRedirects: IRedirectionUrls = {
-            "Agency": '/agency/',
+            "Agency": '/agency',
             "Company": '/company/',
             "Employee": '/employee/',
             "Admin": '/admin/',

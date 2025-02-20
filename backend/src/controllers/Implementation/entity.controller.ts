@@ -3,26 +3,30 @@ import { IEntityController } from '../Interface/IEntityController';
 import { IEntityService } from '../../services/Interface/IEntityService';
 import { inject, injectable } from 'tsyringe';
 import { CountryToCurrency, getPriceConversionFunc } from '../../shared/utils/currency-conversion.utils';
-import { 
-    findCountryByIp, 
-    HTTPStatusCodes, 
-    ResponseMessage, 
-    SendResponse 
+import {
+    findCountryByIp,
+    HTTPStatusCodes,
+    ResponseMessage,
+    SendResponse
 } from 'mern.common';
+import { IChatService } from '../../services/Interface/IChatService';
 
 @injectable()
 /** Implementation of Entity Controller */
 export default class EntityController implements IEntityController {
     private entityService: IEntityService;
+    private chatService: IChatService;
 
     /**
     * Initializes the EntityController with required service dependencies.
     * @param entityService - Service for general entity operations.
     */
     constructor(
-        @inject('EntityService') entityService: IEntityService
+        @inject('EntityService') entityService: IEntityService,
+        @inject('ChatService') chatService: IChatService
     ) {
         this.entityService = entityService
+        this.chatService = chatService
     }
 
 
@@ -34,8 +38,8 @@ export default class EntityController implements IEntityController {
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
     async checkMail(
-        req: Request, 
-        res: Response, 
+        req: Request,
+        res: Response,
         next: NextFunction
     ): Promise<void> {
         try {
@@ -58,8 +62,8 @@ export default class EntityController implements IEntityController {
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
     async getAllPlans(
-        req: Request, 
-        res: Response, 
+        req: Request,
+        res: Response,
         next: NextFunction
     ): Promise<void> {
         try {
@@ -69,16 +73,12 @@ export default class EntityController implements IEntityController {
 
             const convertedPlans = {
                 Agency: plans.Agency.map((item: any) => ({
-                    ...item.toObject(), 
-                    price: PriceConverisonFunc(item.price as number)
-                })),
-                Company: plans.Company.map((item: any) => ({
-                    ...item.toObject(), 
+                    ...item.toObject(),
                     price: PriceConverisonFunc(item.price as number)
                 }))
             };
-    
-            if (plans) return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plans : convertedPlans})
+
+            if (plans) return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plans: convertedPlans })
             SendResponse(res, HTTPStatusCodes.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR)
         } catch (error) {
             next(error);
@@ -94,8 +94,8 @@ export default class EntityController implements IEntityController {
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
     async getPlan(
-        req: Request, 
-        res: Response, 
+        req: Request,
+        res: Response,
         next: NextFunction
     ): Promise<void> {
         try {
@@ -122,16 +122,16 @@ export default class EntityController implements IEntityController {
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
     async registerAgency(
-        req: Request, 
-        res: Response, 
+        req: Request,
+        res: Response,
         next: NextFunction
     ): Promise<void> {
         try {
-            const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, paymentGateway, description,currency } = req.body.details
-            const { transaction_id } = req.body.response
-            console.log(req.body.response)
+            
+            const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, paymentGateway, description, currency } = req.body.details
+            const { transaction_id } = req.body
 
-            const createdAgency = await this.entityService.registerAgency(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, transaction_id, paymentGateway, description,currency)
+            const createdAgency = await this.entityService.registerAgency(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, transaction_id, paymentGateway, description, currency)
             if (!createdAgency) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.BAD_REQUEST)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
         } catch (error) {
@@ -139,31 +139,6 @@ export default class EntityController implements IEntityController {
         }
 
     }
-
-
-    /**
-    * Handles mail existence check for a given platform.
-    * @param req - Express request object containing `Mail` and `platform` in the body.
-    * @param res - Express response object used to return the result.
-    * @param next - Express next function for error handling.
-    * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
-    */
-    async registerCompany(
-        req: Request, 
-        res: Response, 
-        next: NextFunction
-    ): Promise<void> {
-        try {
-            const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password } = req.body
-            const createdCompany = await this.entityService.registerCompany(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password)
-            if (!createdCompany) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.UNAUTHORIZED)
-            console.log('company created successfully');
-            SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
-        } catch (error) {
-            next(error);
-        }
-    }
-
 
     /**
     * Returns menu for the given role.
@@ -173,8 +148,8 @@ export default class EntityController implements IEntityController {
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
     async getMenu(
-        req: Request, 
-        res: Response, 
+        req: Request,
+        res: Response,
         next: NextFunction
     ): Promise<void> {
         try {
@@ -183,8 +158,6 @@ export default class EntityController implements IEntityController {
 
             if (role === "Agency") {
                 menu = await this.entityService.getAgencyMenu(planId);
-            } else if (role === "Company") {
-                menu = await this.entityService.getCompanyMenu(planId);
             } else if (role === "Admin") {
                 menu = {
                     clients: {
@@ -221,8 +194,8 @@ export default class EntityController implements IEntityController {
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
      */
     async getCountry(
-        req: Request, 
-        res: Response, 
+        req: Request,
+        res: Response,
         next: NextFunction
     ): Promise<void> {
         try {
@@ -230,15 +203,86 @@ export default class EntityController implements IEntityController {
             ipAddressWithProxy = ipAddressWithProxy == "::1" ? "49.36.231.0" : ipAddressWithProxy;
             const locationData = findCountryByIp(ipAddressWithProxy as string)
             let userCountry = req.cookies?.userCountry
-            if(!userCountry){
+            if (!userCountry) {
                 userCountry = CountryToCurrency[locationData?.country as string]
                 res.cookie('userCountry', userCountry, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: false, secure: false, sameSite: 'strict', path: '/' });
             }
-           SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
         } catch (error) {
             next(error);
         }
     }
+
+
+    async getOwner(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            console.log("ownerDetails")
+            const ownerDetails = await this.entityService.getOwner(req.tenantDb)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { ownerDetails: ownerDetails[0] })
+        } catch (error) {
+
+        }
+    }
+
+    async getChats(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        const { userId } = req.body
+        const chats = await this.chatService.getChats(req.tenantDb, userId)
+        SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
+    }
+
+
+    async getChat(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        const { chatId } = req.body
+        console.log(chatId);
+        const chats = await this.chatService.getChat(req.tenantDb, chatId)
+        SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
+    }
+
+    async getMessages(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        const { userId } = req.body
+        // const messages = await this.chatService.getMessages(req.tenantDb,userId)
+    }
+
+
+    async createGroup(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        const { details, userId } = req.body
+        const createdGroup = await this.chatService.createGroup(req.details?.orgId, userId, details)
+        console.log(createdGroup);
+        SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { group: createdGroup })
+
+    }
+
+
+    async getAllProjects(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const projects = await this.entityService.fetchAllProjects(req.tenantDb)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
 }
 
 

@@ -59,9 +59,9 @@ const Login = ({ role }: LoginProps) => {
       if (response && response.status == 200) {
         message.success('Successfully Logged in')
         const roleRedirects: IRedirectionUrls = {
-          "Agency": "/agency/",
+          "Agency": "/agency",
           "Company": "/company/",
-          "Employee": "/employee/",
+          "Employee": "/employee",
           "Admin": "/admin/",
           "Client": "/client/",
         }
@@ -128,7 +128,6 @@ const Login = ({ role }: LoginProps) => {
               >
                 {isLoading ?
                   <SpinnerCircular size={20} thickness={200} speed={100} color="rgba(255, 255, 255, 1)" secondaryColor="rgba(0, 0, 0, 0.44)" />
-
                   : <>Login</>}
               </button>
             </div>

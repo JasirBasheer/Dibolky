@@ -67,7 +67,8 @@ const handlePaymentSuccess = async (response: any,formData:FormData,plan:any,pla
     }
 
     if (platform == "Agency") {
-        console.log(response);
+
+        console.log("details",details,"response",response.razorpay_payment_id);
         
         const res = await axios.post('/api/entities/create-agency', {details,transaction_id:response.razorpay_payment_id})
         if (res.status == 201) {

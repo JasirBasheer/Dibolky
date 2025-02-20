@@ -1,17 +1,18 @@
 import "reflect-metadata";
 import "./config/container"
-import express from 'express';
 import cors from 'cors';
+import morgan from 'morgan';
 import dotenv from 'dotenv';
-import morgan from 'morgan'
+import express from 'express';
+import http from "http";
+import router from './routes/routes';
 import compression from 'compression';
 import cookieParser from 'cookie-parser'
-import router from './routes/routes';
-import { connectToMongoDB, errorHandler, limiter } from 'mern.common';
 import { DB_URI, PORT } from "./config/env";
-import { startScheduledPostsProcessor } from "./media.service/scheduled-posts.service";
+import { connectToMongoDB, errorHandler, limiter } from 'mern.common';
 import { clearErrorLogsJob, errorLogger, logStream } from "./shared/utils/logger";
-import path from "path";
+import { startScheduledPostsProcessor } from "./media.service/scheduled-posts.service";
+import initializeSocket from "./shared/utils/socket";
 
 dotenv.config();
 
@@ -42,7 +43,9 @@ app.use(errorHandler);
 clearErrorLogsJob()
 startScheduledPostsProcessor()
 
+const server = http.createServer(app)
+initializeSocket(server)
 
-app.listen(PORT || 5000, () => {
+server.listen(PORT || 5000, () => {
     console.log(`http://localhost:${PORT || 5000}`);
 })

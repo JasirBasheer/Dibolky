@@ -2,13 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { IAgencyController } from "../Interface/IAgencyController";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
 import { inject, injectable } from "tsyringe";
-import { ConflictError, HTTPStatusCodes, NotFoundError, ResponseMessage, SendResponse } from "mern.common";
-import { createInstagramOAuthURL } from "../../provider.strategies/instagram.strategy";
+import { ConflictError, CustomError, HTTPStatusCodes, NotFoundError, ResponseMessage, SendResponse } from "mern.common";
 import { IClientService } from "../../services/Interface/IClientService";
-import { uploadToS3 } from "../../shared/utils/aws";
-import { AWS_S3_BUCKET_NAME } from "../../config/env";
-import { FACEBOOK, INSTAGRAM } from "../../shared/utils/constants";
-import { createFacebookOAuthURL } from "../../provider.strategies/facebook.strategy";
+
 
 
 declare global {
@@ -49,32 +45,32 @@ export default class AgencyController implements IAgencyController {
 
 
 
+
+
     async createClient(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { orgId, name, email, industry, socialMedia_credentials, services, menu } = req.body
             const isClientExists = await this.clientService.getClientInMainDb(email)
-            console.log(isClientExists,"clientDetails");
-            if(isClientExists)throw new ConflictError("Client with this email is already exists in the main database")
-            await this.agencyService.createClient(req.tenantDb, orgId, name, email, industry, socialMedia_credentials, services, menu)
+            if (isClientExists) throw new ConflictError("Client with this email is already exists in the main database")
+            await this.agencyService.createClient(req.tenantDb, orgId, name, email, industry, socialMedia_credentials, services, menu, req.details.organizationName)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
         } catch (error: any) {
             next(error)
         }
     }
 
-   
-    
+
+
 
 
     async getAllClients(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const orgId = req.details.orgId
-            console.log('orgId', orgId)
             const clients = await this.agencyService.getAllClients(orgId)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { clients })
 
         } catch (error) {
-            console.log(error)
+            next(error)
 
         }
     }
@@ -84,12 +80,10 @@ export default class AgencyController implements IAgencyController {
         try {
             const orgId = req.details.orgId
             const { id } = req.params
-            console.log('orgId', orgId)
             const client = await this.agencyService.getClient(req.tenantDb, id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { client })
-
         } catch (error) {
-            console.log(error)
+            next(error)
 
         }
     }
@@ -114,6 +108,47 @@ export default class AgencyController implements IAgencyController {
 
         }
     }
+
+
+    async getAvailableUsers(req:Request,res:Response,next:NextFunction):Promise<void>{
+        try {
+            const users = await this.agencyService.getAvailableUsers(req.tenantDb)
+            if(!users)throw new CustomError('Error while fetch available users',500)
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{users})
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    async getProjectsCount(req:Request,res:Response,next:NextFunction):Promise<void>{
+        try {
+            const projects = await this.agencyService.getProjectsCount(req.tenantDb)
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{projects})
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async getClientsCount(req:Request,res:Response,next:NextFunction):Promise<void>{
+        try {
+            const clients = await this.agencyService.getClientsCount(req.tenantDb)
+            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{clients})
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async editProjectStatus(req:Request,res:Response,next:NextFunction):Promise<void>{
+        try {
+            const {projectId,status} = req.body
+            const result = await this.agencyService.editProjectStatus(req.tenantDb,projectId,status)
+            if(result)SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS)
+        } catch (error) {
+            next(error)
+        }
+    }
+
 
 
 }

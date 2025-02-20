@@ -1,30 +1,5 @@
-import mongoose, { Schema, Document } from 'mongoose';
-
-export interface ISubItem {
-    label: string;
-    icon: string;
-    path: string[];
-}
-
-export interface IMenuItem {
-    label: string;
-    icon: string;
-    subItems: ISubItem[];
-}
-
-export interface IPlan extends Document {
-    id?: number;
-    title: string;
-    price: number;
-    features: string[];
-    validity: string;
-    menu?: {
-        smm?: IMenuItem;
-        crm?: IMenuItem;
-        accounting?: IMenuItem;
-    };
-    isActive:boolean;
-}
+import mongoose, { Schema } from 'mongoose';
+import { IMenuItems, IPlan, ISubItem } from '../../shared/types/admin.types';
 
 const subItemSchema = new Schema<ISubItem>({
     label: { type: String, required: true },
@@ -32,11 +7,12 @@ const subItemSchema = new Schema<ISubItem>({
     path: { type: [String], required: true },
 }, { _id: false });
 
-const menuItemSchema = new Schema<IMenuItem>({
+const menuItemSchema = new Schema<IMenuItems>({
     label: { type: String, required: true },
     icon: { type: String, required: true },
     subItems: { type: [subItemSchema], required: true },
-},{ _id: false });
+}, { _id: false });
+
 
 const planSchema: Schema<IPlan> = new Schema({
     id: {
@@ -63,9 +39,9 @@ const planSchema: Schema<IPlan> = new Schema({
         crm: menuItemSchema,
         accounting: menuItemSchema,
     },
-    isActive:{
-        type:Boolean,
-        default:true
+    isActive: {
+        type: Boolean,
+        default: true
 
     }
 });

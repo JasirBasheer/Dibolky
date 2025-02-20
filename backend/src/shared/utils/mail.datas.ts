@@ -1,7 +1,7 @@
 
 /////datas
 
-export const createClientMailData = (email:string,name:string,password:string)=>{
+export const createClientMailData = (email:string,name:string,orgName:string,password:string)=>{
     return`<p>Hey ${name},</p>
 
         <p>A very warm Welcome ! We’re thrilled to have you on board and are excited to help grow your company to new heights.</p>
@@ -17,7 +17,7 @@ export const createClientMailData = (email:string,name:string,password:string)=>
 
         <p>Remember, we are here for you whenever you need support. Wishing you and your company all the best!</p>
 
-        <p>Warm regards,<br>The Dibolky Team</p>
+        <p>Warm regards,<br>${orgName} Team</p>
 `}
 
 

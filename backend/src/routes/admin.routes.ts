@@ -8,7 +8,7 @@ import { permissionGate } from '../middlewares/permissionGate.middleware';
 const adminController = container.resolve<IAdminController>('AdminController')
 
 // Middlewares
-router.use(permissionGate("Admin"))
+router.use(permissionGate(["Admin"]))
 
 // Get requests
 router.get('/', (req, res, next) => adminController.verifyAdmin(req, res, next))

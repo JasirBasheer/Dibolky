@@ -2,16 +2,16 @@ import "reflect-metadata";
 import { container } from "tsyringe";
 import { IAuthenticationController } from '../controllers/Interface/IAuthenticationController'
 import AuthenticationController from '../controllers/Implementation/authentication.controller'
-// import  AdminRepository  from "../repositories/Implementation/admin.repository";
-// import { IAdminRepository } from '../repositories/Interface/IAdminRepository';
+import  AdminRepository  from "../repositories/Implementation/admin.repository";
+import { IAdminRepository } from '../repositories/Interface/IAdminRepository';
 import { IAgencyRepository } from '../repositories/Interface/IAgencyRepository';
 import  AgencyRepository  from '../repositories/Implementation/agency.repository';
 import EntityRepository from '../repositories/Implementation/entity.repository'; 
 import { IEntityRepository } from '../repositories/Interface/IEntityRepository';
 import PlanRepository from '../repositories/Implementation/plan.repository';
 import { IPlanRepository } from '../repositories/Interface/IPlanRepository';
-// import { IAdminService } from '../services/Interface/IAdminService';
-// import AdminService from '../services/Implementation/admin.service';
+import { IAdminService } from '../services/Interface/IAdminService';
+import AdminService from '../services/Implementation/admin.service';
 import AgencyService from '../services/Implementation/agency.service';
 import { IAgencyService } from '../services/Interface/IAgencyService';
 import AuthenticationService from '../services/Implementation/authentication.service';
@@ -20,8 +20,8 @@ import { IEntityService } from '../services/Interface/IEntityService';
 import EntityService from '../services/Implementation/entity.service';
 import PaymentService from '../services/Implementation/payment.service';
 import { IPaymentService } from '../services/Interface/IPaymentService';
-// import { IAdminController } from '../controllers/Interface/IAdminController';
-// import AdminController from '../controllers/Implementation/admin.controller';
+import { IAdminController } from '../controllers/Interface/IAdminController';
+import AdminController from '../controllers/Implementation/admin.controller';
 import { IAgencyController } from '../controllers/Interface/IAgencyController';
 import AgencyController from '../controllers/Implementation/agency.controller';
 import { IEntityController } from '../controllers/Interface/IEntityController';
@@ -55,7 +55,7 @@ container.register('AdminModel', { useValue: Admin });
 
 
 //* Repo Registeration
-// container.register<IAdminRepository>('AdminRepository', { useClass: AdminRepository });
+container.register<IAdminRepository>('AdminRepository', { useClass: AdminRepository });
 container.register<IAgencyRepository>('AgencyRepository', { useClass: AgencyRepository });
 container.register<IEntityRepository>('EntityRepository', { useClass: EntityRepository });
 container.register<IPlanRepository>('PlanRepository', { useClass: PlanRepository });
@@ -66,7 +66,7 @@ container.register<IChatRepository>('ChatRepository', { useClass: ChatRepository
 
 //* Service Registeration
 container.register<IAuthenticationService>('AuthenticationService', { useClass: AuthenticationService });
-// container.register<IAdminService>('AdminService', { useClass: AdminService });
+container.register<IAdminService>('AdminService', { useClass: AdminService });
 container.register<IAgencyService>('AgencyService', { useClass: AgencyService });
 container.register<IEntityService>('EntityService', { useClass: EntityService });
 container.register<IPaymentService>('PaymentService', { useClass: PaymentService });
@@ -79,7 +79,7 @@ container.register<IChatService>('ChatService', { useClass: ChatService });
 
 //* Controller Registeration
 container.register<IAuthenticationController>('AuthenticationController', { useClass: AuthenticationController });
-// container.register<IAdminController>('AdminController', { useClass: AdminController });
+container.register<IAdminController>('AdminController', { useClass: AdminController });
 container.register<IAgencyController>('AgencyController', { useClass: AgencyController });
 container.register<IClientController>('ClientController', { useClass: ClientController });
 container.register<IEntityController>('EntityController', { useClass: EntityController });

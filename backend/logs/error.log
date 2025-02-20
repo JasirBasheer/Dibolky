@@ -1,64 +1,128 @@
-::1 - - [20/Feb/2025:13:33:06 +0000] "GET /api/agency/client/" 404  
+::1 - - [20/Feb/2025:15:05:32 +0000] "POST /" 404  
  Error: No error details ms 
  
 
-::1 - - [20/Feb/2025:13:33:06 +0000] "GET /api/agency/client/" 404  
+::1 - - [20/Feb/2025:15:05:32 +0000] "POST /" 404  
  Error: No error details ms 
  
 
-::1 - - [20/Feb/2025:13:36:53 +0000] "GET /api/client/approve-content/67b72fe74eb12a6398d27f0b/67b62c33191fa58b5442940c" 500  
- Error: {"message":"All uploads failed: {\n  platform: 'instagram',\n  scheduledDate: '',\n  isPublished: false,\n  isRescheduled: false,\n  _id: new ObjectId('67b72fe74eb12a6398d27f0c')\n}: Failed to upload reel: Container creation failed: {\"message\":\"Unsupported post request. Object with ID 'undefined' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api\",\"type\":\"GraphMethodException\",\"code\":100,\"error_subcode\":33,\"fbtrace_id\":\"ALZJNM1Zya2Zd4BiIrvaHqx\"}","stack":"Error: All uploads failed: {\n  platform: 'instagram',\n  scheduledDate: '',\n  isPublished: false,\n  isRescheduled: false,\n  _id: new ObjectId('67b72fe74eb12a6398d27f0c')\n}: Failed to upload reel: Container creation failed: {\"message\":\"Unsupported post request. Object with ID 'undefined' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api\",\"type\":\"GraphMethodException\",\"code\":100,\"error_subcode\":33,\"fbtrace_id\":\"ALZJNM1Zya2Zd4BiIrvaHqx\"}\n    at ProviderService.<anonymous> (/home/jasir/Dibolky/backend/src/services/Implementation/provider.service.ts:77:19)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/services/Implementation/provider.service.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-20T13:36:53.103Z"} ms 
- 
-
-::1 - - [20/Feb/2025:13:38:03 +0000] "GET /api/agency/client/" 404  
+::1 - - [20/Feb/2025:15:05:32 +0000] "POST /" 404  
  Error: No error details ms 
  
 
-::1 - - [20/Feb/2025:13:38:03 +0000] "GET /api/agency/client/" 404  
+::1 - - [20/Feb/2025:15:05:32 +0000] "POST /" 404  
  Error: No error details ms 
  
 
-::1 - - [20/Feb/2025:13:38:07 +0000] "GET /api/client/approve-content/67b72fe74eb12a6398d27f0b/67b62c33191fa58b5442940c" 500  
- Error: {"message":"All uploads failed: {\n  platform: 'instagram',\n  scheduledDate: '',\n  isPublished: false,\n  isRescheduled: false,\n  _id: new ObjectId('67b72fe74eb12a6398d27f0c')\n}: Failed to upload reel: Container creation failed: {\"message\":\"Unsupported post request. Object with ID 'undefined' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api\",\"type\":\"GraphMethodException\",\"code\":100,\"error_subcode\":33,\"fbtrace_id\":\"AODvW-m9Wy9PmCmYLg2-yvB\"}","stack":"Error: All uploads failed: {\n  platform: 'instagram',\n  scheduledDate: '',\n  isPublished: false,\n  isRescheduled: false,\n  _id: new ObjectId('67b72fe74eb12a6398d27f0c')\n}: Failed to upload reel: Container creation failed: {\"message\":\"Unsupported post request. Object with ID 'undefined' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api\",\"type\":\"GraphMethodException\",\"code\":100,\"error_subcode\":33,\"fbtrace_id\":\"AODvW-m9Wy9PmCmYLg2-yvB\"}\n    at ProviderService.<anonymous> (/home/jasir/Dibolky/backend/src/services/Implementation/provider.service.ts:77:19)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/services/Implementation/provider.service.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-20T13:38:07.896Z"} ms 
+::1 - - [20/Feb/2025:15:05:34 +0000] "POST /" 404  
+ Error: No error details ms 
  
 
-::1 - - [20/Feb/2025:13:38:32 +0000] "GET /api/entities/get-all-plans" 500  
- Error: {"message":"Cannot read properties of undefined (reading 'map')","stack":"TypeError: Cannot read properties of undefined (reading 'map')\n    at EntityController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:79:40)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-20T13:38:32.083Z"} ms 
+::1 - - [20/Feb/2025:15:05:37 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T15:05:37.381Z"} ms 
  
 
-::1 - - [20/Feb/2025:13:38:32 +0000] "GET /api/entities/get-all-plans" 500  
- Error: {"message":"Cannot read properties of undefined (reading 'map')","stack":"TypeError: Cannot read properties of undefined (reading 'map')\n    at EntityController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:79:40)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-20T13:38:32.169Z"} ms 
+::1 - - [20/Feb/2025:15:05:37 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T15:05:37.394Z"} ms 
  
 
-::1 - - [20/Feb/2025:13:38:32 +0000] "GET /api/entities/get-all-plans" 500  
- Error: {"message":"Cannot read properties of undefined (reading 'map')","stack":"TypeError: Cannot read properties of undefined (reading 'map')\n    at EntityController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:79:40)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-20T13:38:32.256Z"} ms 
+::1 - - [20/Feb/2025:15:09:33 +0000] "POST /api/stpayment/stripe-webhook" 404  
+ Error: No error details ms 
  
 
-::1 - - [20/Feb/2025:13:38:32 +0000] "GET /api/entities/get-all-plans" 500  
- Error: {"message":"Cannot read properties of undefined (reading 'map')","stack":"TypeError: Cannot read properties of undefined (reading 'map')\n    at EntityController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:79:40)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-20T13:38:32.335Z"} ms 
+::1 - - [20/Feb/2025:15:09:33 +0000] "POST /api/stpayment/stripe-webhook" 404  
+ Error: No error details ms 
  
 
-::1 - - [20/Feb/2025:13:38:32 +0000] "GET /api/entities/get-all-plans" 500  
- Error: {"message":"Cannot read properties of undefined (reading 'map')","stack":"TypeError: Cannot read properties of undefined (reading 'map')\n    at EntityController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:79:40)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-20T13:38:32.417Z"} ms 
+::1 - - [20/Feb/2025:15:09:33 +0000] "POST /api/stpayment/stripe-webhook" 404  
+ Error: No error details ms 
  
 
-::1 - - [20/Feb/2025:13:38:40 +0000] "GET /api/entities/get-all-plans" 500  
- Error: {"message":"Cannot read properties of undefined (reading 'map')","stack":"TypeError: Cannot read properties of undefined (reading 'map')\n    at EntityController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:79:40)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-20T13:38:40.048Z"} ms 
+::1 - - [20/Feb/2025:15:09:33 +0000] "POST /api/stpayment/stripe-webhook" 404  
+ Error: No error details ms 
  
 
-::1 - - [20/Feb/2025:13:38:40 +0000] "GET /api/entities/get-all-plans" 500  
- Error: {"message":"Cannot read properties of undefined (reading 'map')","stack":"TypeError: Cannot read properties of undefined (reading 'map')\n    at EntityController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:79:40)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-20T13:38:40.140Z"} ms 
+::1 - - [20/Feb/2025:15:09:35 +0000] "POST /api/stpayment/stripe-webhook" 404  
+ Error: No error details ms 
  
 
-::1 - - [20/Feb/2025:13:38:40 +0000] "GET /api/entities/get-all-plans" 500  
- Error: {"message":"Cannot read properties of undefined (reading 'map')","stack":"TypeError: Cannot read properties of undefined (reading 'map')\n    at EntityController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:79:40)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-20T13:38:40.220Z"} ms 
+::1 - - [20/Feb/2025:15:09:39 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T15:09:39.134Z"} ms 
  
 
-::1 - - [20/Feb/2025:13:38:40 +0000] "GET /api/entities/get-all-plans" 500  
- Error: {"message":"Cannot read properties of undefined (reading 'map')","stack":"TypeError: Cannot read properties of undefined (reading 'map')\n    at EntityController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:79:40)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-20T13:38:40.298Z"} ms 
+::1 - - [20/Feb/2025:15:09:39 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T15:09:39.143Z"} ms 
  
 
-::1 - - [20/Feb/2025:13:38:40 +0000] "GET /api/entities/get-all-plans" 500  
- Error: {"message":"Cannot read properties of undefined (reading 'map')","stack":"TypeError: Cannot read properties of undefined (reading 'map')\n    at EntityController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:79:40)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/entity.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-02-20T13:38:40.373Z"} ms 
+::1 - - [20/Feb/2025:15:11:31 +0000] "POST /api/stpayment/stripe-webhook" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [20/Feb/2025:15:11:31 +0000] "POST /api/stpayment/stripe-webhook" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [20/Feb/2025:15:11:31 +0000] "POST /api/stpayment/stripe-webhook" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [20/Feb/2025:15:11:32 +0000] "POST /api/stpayment/stripe-webhook" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [20/Feb/2025:15:11:34 +0000] "POST /api/stpayment/stripe-webhook" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [20/Feb/2025:15:11:37 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T15:11:37.655Z"} ms 
+ 
+
+::1 - - [20/Feb/2025:15:11:37 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T15:11:37.675Z"} ms 
+ 
+
+::1 - - [20/Feb/2025:15:14:04 +0000] "POST /api/payment/stripe-webhook" 500  
+ Error: {"message":"Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. \nSignature verification is impossible without access to the original signed material. \n\nLearn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature\n","stack":"Error: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. \nSignature verification is impossible without access to the original signed material. \n\nLearn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature\n\n    at validateComputedSignature (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:133:23)\n    at Object.verifyHeader (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:65:13)\n    at Object.constructEvent (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:13:32)\n    at PaymentController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:99:37)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:16:12)\n    at PaymentController.stripeWebhook (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:84:16)\n    at /home/jasir/Dibolky/backend/src/routes/payment.routes.ts:12:66","timestamp":"2025-02-20T15:14:04.766Z"} ms 
+ 
+
+::1 - - [20/Feb/2025:15:14:04 +0000] "POST /api/payment/stripe-webhook" 500  
+ Error: {"message":"Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. \nSignature verification is impossible without access to the original signed material. \n\nLearn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature\n","stack":"Error: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. \nSignature verification is impossible without access to the original signed material. \n\nLearn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature\n\n    at validateComputedSignature (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:133:23)\n    at Object.verifyHeader (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:65:13)\n    at Object.constructEvent (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:13:32)\n    at PaymentController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:99:37)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:16:12)\n    at PaymentController.stripeWebhook (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:84:16)\n    at /home/jasir/Dibolky/backend/src/routes/payment.routes.ts:12:66","timestamp":"2025-02-20T15:14:04.813Z"} ms 
+ 
+
+::1 - - [20/Feb/2025:15:14:04 +0000] "POST /api/payment/stripe-webhook" 500  
+ Error: {"message":"Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. \nSignature verification is impossible without access to the original signed material. \n\nLearn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature\n","stack":"Error: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. \nSignature verification is impossible without access to the original signed material. \n\nLearn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature\n\n    at validateComputedSignature (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:133:23)\n    at Object.verifyHeader (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:65:13)\n    at Object.constructEvent (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:13:32)\n    at PaymentController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:99:37)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:16:12)\n    at PaymentController.stripeWebhook (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:84:16)\n    at /home/jasir/Dibolky/backend/src/routes/payment.routes.ts:12:66","timestamp":"2025-02-20T15:14:04.832Z"} ms 
+ 
+
+::1 - - [20/Feb/2025:15:14:05 +0000] "POST /api/payment/stripe-webhook" 500  
+ Error: {"message":"Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. \nSignature verification is impossible without access to the original signed material. \n\nLearn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature\n","stack":"Error: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. \nSignature verification is impossible without access to the original signed material. \n\nLearn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature\n\n    at validateComputedSignature (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:133:23)\n    at Object.verifyHeader (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:65:13)\n    at Object.constructEvent (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:13:32)\n    at PaymentController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:99:37)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:16:12)\n    at PaymentController.stripeWebhook (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:84:16)\n    at /home/jasir/Dibolky/backend/src/routes/payment.routes.ts:12:66","timestamp":"2025-02-20T15:14:05.175Z"} ms 
+ 
+
+::1 - - [20/Feb/2025:15:14:06 +0000] "POST /api/payment/stripe-webhook" 500  
+ Error: {"message":"Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. \nSignature verification is impossible without access to the original signed material. \n\nLearn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature\n","stack":"Error: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. \nSignature verification is impossible without access to the original signed material. \n\nLearn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature\n\n    at validateComputedSignature (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:133:23)\n    at Object.verifyHeader (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:65:13)\n    at Object.constructEvent (/home/jasir/Dibolky/backend/node_modules/stripe/cjs/Webhooks.js:13:32)\n    at PaymentController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:99:37)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:16:12)\n    at PaymentController.stripeWebhook (/home/jasir/Dibolky/backend/src/controllers/Implementation/payment.controller.ts:84:16)\n    at /home/jasir/Dibolky/backend/src/routes/payment.routes.ts:12:66","timestamp":"2025-02-20T15:14:06.892Z"} ms 
+ 
+
+::1 - - [20/Feb/2025:15:14:09 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T15:14:09.962Z"} ms 
+ 
+
+::1 - - [20/Feb/2025:15:14:09 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T15:14:09.978Z"} ms 
+ 
+
+::1 - - [20/Feb/2025:15:15:00 +0000] "GET /api/payment/stripe-webhook" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [20/Feb/2025:15:15:02 +0000] "GET /api/payment/stripe-webhook" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [20/Feb/2025:15:18:25 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T15:18:25.197Z"} ms 
+ 
+
+::1 - - [20/Feb/2025:15:18:25 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T15:18:25.211Z"} ms 
  
 

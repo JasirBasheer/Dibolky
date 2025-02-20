@@ -145,24 +145,6 @@ const CreateEmployee: React.FC<CreateEmployeeProps> = ({ setIsAddEmployeeClicked
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="role">Role</Label>
-              <Select 
-                value={formData.role}
-                onValueChange={(value) => handleChange(value, 'role')}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select role" />
-                </SelectTrigger>
-                <SelectContent>
-                  {ROLES.map((role) => (
-                    <SelectItem key={role} value={role}>
-                      {role.charAt(0).toUpperCase() + role.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
           </div>
 
           <div className="flex justify-end gap-3 pt-6 border-t">

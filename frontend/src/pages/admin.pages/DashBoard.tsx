@@ -15,7 +15,7 @@ const AdminDashboard = () => {
       console.log(response)
 
       if (response && response.status == 200) {
-        setRecentClients([...response.data.clients.Agency, ...response.data.clients.Company])
+        setRecentClients([...response.data.clients.Agency])
       }
     } catch (error: any) {
       message.error(error.response.data.error || "")

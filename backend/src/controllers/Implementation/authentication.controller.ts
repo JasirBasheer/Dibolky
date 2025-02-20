@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { IAuthenticationController } from '../Interface/IAuthenticationController';
 import { inject, injectable } from 'tsyringe';
-// import { IAdminService } from '../../services/Interface/IAdminService';
+import { IAdminService } from '../../services/Interface/IAdminService';
 import { IAgencyService } from '../../services/Interface/IAgencyService';
 import { IAuthenticationService } from '../../services/Interface/IAuthenticationService';
 import { IClientService } from '../../services/Interface/IClientService';
@@ -17,7 +17,7 @@ import {
 @injectable()
 /** Implementation of Authentication Controller */
 export default class AuthenticationController implements IAuthenticationController {
-    // private adminService: IAdminService;
+    private adminService: IAdminService;
     private agencyService: IAgencyService;
     private authenticationService: IAuthenticationService;
     private clientService: IClientService;
@@ -30,12 +30,12 @@ export default class AuthenticationController implements IAuthenticationControll
     * @param clientService - Service for handling client authentication.
     */
     constructor(
-        // @inject('AdminService') adminService: IAdminService,
+        @inject('AdminService') adminService: IAdminService,
         @inject('AgencyService') agencyService: IAgencyService,
         @inject('AuthenticationService') authenticationService: IAuthenticationService,
         @inject('ClientService') clientService: IClientService,
     ) {
-        // this.adminService = adminService;
+        this.adminService = adminService;
         this.agencyService = agencyService;
         this.authenticationService = authenticationService;
         this.clientService = clientService;
@@ -60,7 +60,7 @@ export default class AuthenticationController implements IAuthenticationControll
 
             switch (role) {
                 case "Admin":
-                    // id = await this.adminService.adminLoginHandler(email, password);
+                    id = await this.adminService.adminLoginHandler(email, password);
                     break;
                 case "Agency":
                     id = await this.agencyService.agencyLoginHandler(email, password);

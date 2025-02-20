@@ -48,7 +48,9 @@ const ProtectedRoute = ({ children,role }: { children: any,role:string }) => {
             email: res.data.client.email,
             services: res.data.client.services
           }));
-
+        }else if(role == "Employee" && response?.data.details.orgId && response?.data.details.email){
+          console.log(response?.data);
+          
         }
    
         

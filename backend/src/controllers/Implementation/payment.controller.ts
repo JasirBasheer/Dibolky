@@ -96,7 +96,7 @@ export default class PaymentController implements IPaymentController {
         let event: Stripe.Event;
         try {
             
-            event = stripe.webhooks.constructEvent(req.body, sig, STRIPE_WEBHOOK_SECRET as string);
+            event = stripe.webhooks.constructEvent(req.body, sig, "whsec_cae33044573115c56711a0bacaf0e229d72fbadd3301a0fc3f8bafe6c4093fe3");
 
             if (event.type == 'checkout.session.completed') {
                 const session = event.data.object as Stripe.Checkout.Session;

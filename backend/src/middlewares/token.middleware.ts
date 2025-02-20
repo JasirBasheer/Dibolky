@@ -2,13 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import { generateToken, UnauthorizedError, verifyToken } from "mern.common";
 import { container } from "tsyringe";
 import { IAgencyService } from "../services/Interface/IAgencyService";
-// import { IAdminService } from "../services/Interface/IAdminService";
+import { IAdminService } from "../services/Interface/IAdminService";
 import { IClientService } from "../services/Interface/IClientService";
 import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../config/env";
 import { isTokenBlacklisted } from "../config/redis";
 
 const agencyService = container.resolve<IAgencyService>("AgencyService");
-// const adminService = container.resolve<IAdminService>("AdminService");
+const adminService = container.resolve<IAdminService>("AdminService");
 const clientService = container.resolve<IClientService>("ClientService");
 
 declare global {
@@ -50,7 +50,7 @@ export const TokenMiddleWare = async (req: Request, res: Response, next: NextFun
         if (tokenDetails.role == 'Agency') {
             ownerDetails = await agencyService.verifyOwner(tokenDetails.id)
         } else if (tokenDetails.role == 'Admin') {
-            // ownerDetails = await adminService.verifyAdmin(tokenDetails.id)
+            ownerDetails = await adminService.verifyAdmin(tokenDetails.id)
         } else if (tokenDetails.role == "Client") {
             ownerDetails = await clientService.verifyClient(tokenDetails.id)
         }

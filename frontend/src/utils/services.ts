@@ -24,7 +24,8 @@ type Input = {
       inputs: [
         { name: "budget", label: "Budget", type: "number", placeholder: "Enter amount" },
         { name: "targetAudience", label: "Target Audience", type: "text", placeholder: "eg: Age 25-45, professionals" },
-        { name: "marketingGoals", label: "Marketing Goals", type: "text", placeholder: "eg: Brand Awareness, Lead Generation" }
+        { name: "marketingGoals", label: "Marketing Goals", type: "text", placeholder: "eg: Brand Awareness, Lead Generation" },
+        { name: "deadline", label: "Dead line", type: "date", placeholder: "Dead line of the project" }
       ]
     },
   
@@ -38,7 +39,9 @@ type Input = {
           name: "communityManagement", label: "Community Management", type: "select",
           options: ["Basic", "Standard", "Premium"],
           placeholder: "Select level"
-        }
+        },
+        { name: "deadline", label: "Dead line", type: "date", placeholder: "Dead line of the project" }
+
       ]
     },
   
@@ -53,7 +56,9 @@ type Input = {
           name: "serviceType", label: "Service Type", type: "select",
           options: ["Local SEO", "National SEO", "International SEO", "E-commerce SEO"],
           placeholder: "Select type"
-        }
+        },
+        { name: "deadline", label: "Dead line", type: "date", placeholder: "Dead line of the project" }
+
       ]
     },
   
@@ -76,7 +81,9 @@ type Input = {
           name: "language", label: "Content Language", type: "select",
           options: ["English", "Spanish", "French", "German", "Arabic", "Chinese"],
           placeholder: "Select language"
-        }
+        },
+        { name: "deadline", label: "Dead line", type: "date", placeholder: "Dead line of the project" }
+
       ]
     },
   
@@ -90,7 +97,9 @@ type Input = {
           options: ["Sales", "Leads", "Website Traffic", "Brand Awareness", "App Promotion"],
           placeholder: "Select goal"
         },
-        { name: "adPlatforms", label: "Platforms", type: "text", placeholder: "eg: Google Ads, Facebook Ads" }
+        { name: "adPlatforms", label: "Platforms", type: "text", placeholder: "eg: Google Ads, Facebook Ads" },
+        { name: "deadline", label: "Dead line", type: "date", placeholder: "Dead line of the project" }
+
       ]
     },
   
@@ -104,7 +113,9 @@ type Input = {
           options: ["Product Launch", "Brand Awareness", "Lead Generation", "Sales Promotion", "Event Marketing"],
           placeholder: "Select type"
         },
-        { name: "targetAudience", label: "Target Audience", type: "text", placeholder: "eg: professionals, students" }
+        { name: "targetAudience", label: "Target Audience", type: "text", placeholder: "eg: professionals, students" },
+        { name: "deadline", label: "Dead line", type: "date", placeholder: "Dead line of the project" }
+
       ]
     },
   
@@ -117,7 +128,9 @@ type Input = {
           name: "location", label: "Shoot Location", type: "select",
           options: ["Studio", "On-location", "Outdoor", "Mixed"],
           placeholder: "Select location"
-        }
+        },
+        { name: "deadline", label: "Dead line", type: "date", placeholder: "Dead line of the project" }
+
       ]
     },
   
@@ -131,7 +144,9 @@ type Input = {
           placeholder: "Select type"
         },
         { name: "duration", label: "Video Duration (minutes)", type: "number", placeholder: "eg: 2, 5" },
-        { name: "additionalServices", label: "Additional Services", type: "text", placeholder: "eg: Scripting, Animation" }
+        { name: "additionalServices", label: "Additional Services", type: "text", placeholder: "eg: Scripting, Animation" },
+        { name: "deadline", label: "Dead line", type: "date", placeholder: "Dead line of the project" }
+
       ]
     },
   
@@ -147,7 +162,8 @@ type Input = {
           name: "purpose", label: "Purpose", type: "select",
           options: ["Product Visualization", "Training", "Entertainment", "Educational", "Marketing", ""],
           placeholder: "Select purpose"
-        }
+        },
+        { name: "deadline", label: "Dead line", type: "date", placeholder: "Dead line of the project" }
       ]
     }
   };

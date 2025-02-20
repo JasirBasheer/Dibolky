@@ -75,10 +75,6 @@ export default class EntityController implements IEntityController {
                 Agency: plans.Agency.map((item: any) => ({
                     ...item.toObject(),
                     price: PriceConverisonFunc(item.price as number)
-                })),
-                Company: plans.Company.map((item: any) => ({
-                    ...item.toObject(),
-                    price: PriceConverisonFunc(item.price as number)
                 }))
             };
 
@@ -131,9 +127,9 @@ export default class EntityController implements IEntityController {
         next: NextFunction
     ): Promise<void> {
         try {
+            
             const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, paymentGateway, description, currency } = req.body.details
-            const { transaction_id } = req.body.response
-            console.log(req.body.response)
+            const { transaction_id } = req.body
 
             const createdAgency = await this.entityService.registerAgency(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, transaction_id, paymentGateway, description, currency)
             if (!createdAgency) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.BAD_REQUEST)

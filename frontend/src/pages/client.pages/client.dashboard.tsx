@@ -31,7 +31,6 @@ const ClientDashboard = () => {
               {[1,2,3,4].map(()=>{
                 return (
                   <div className="w-full bg-slate-100 flex items-center h-14 mb-3">asdf</div>
-
                 )
               })}
             </div>

@@ -63,21 +63,7 @@ const AdminClients = () => {
             </div>
           </div>
 
-          <div className="w-[37rem] min-h-[11rem] rounded-xl border-2 border-gray-200 bg-white p-5 hover:shadow-md  transition-all duration-300 mt">
-            <h1 className='text-md cantarell font-cantarell pb-4 font-semibold'>Company Owners</h1>
-            <div className="w-full    gap-5  ">
-              {clients.Company.map((item: any, index: number) => {
-                return (
-                  <div key={index} className="w-full min-h-12 flex mb-2 px-4 bg-slate-50  transition-all duration-500 rounded-md hover:shadow-md cursor-pointer items-center text-sm"
-                    onClick={() => viewClient(item._id, "Company")}
-                  >{item.name || ""}
 
-                  </div>
-                )
-              })}
-
-            </div>
-          </div>
 
         </div>
       </div>

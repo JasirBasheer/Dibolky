@@ -78,14 +78,6 @@ const Plans = () => {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Company Plans</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {renderPlanList(plans.Company, 'Company')}
-          </CardContent>
-        </Card>
       </div>
 
       {isAddPlan && <AddPlan setIsAddPlan={setIsAddPlan} />}

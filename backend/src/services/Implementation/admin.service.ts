@@ -8,6 +8,7 @@ import { IAdminService } from '../Interface/IAdminService';
 import { CustomError, NotFoundError, UnauthorizedError } from 'mern.common';
 import { planDetails } from '../../shared/types/admin.types';
 import { createNewPlanMenu } from '../../shared/utils/menu.utils';
+import { ITransactionRepository } from '../../repositories/Interface/ITransactionRepository';
 
 @injectable()
 export default class AdminService implements IAdminService {
@@ -15,17 +16,20 @@ export default class AdminService implements IAdminService {
     private adminRepository: IAdminRepository;
     private entityRepository: IEntityRepository;
     private agencyRepository: IAgencyRepository;
+    private transactionRepository: ITransactionRepository;
 
     constructor(
         @inject('PlanRepository') planRepository : IPlanRepository,
         @inject('AdminRepository') adminRepository : IAdminRepository,
         @inject('EntityRepository') entityRepository : IEntityRepository,
         @inject('AgencyRepository') agencyRepository : IAgencyRepository,
+        @inject('TransactionRepository') transactionRepository : ITransactionRepository,
     ) {
         this.planRepository = planRepository;
         this.adminRepository = adminRepository;
         this.entityRepository = entityRepository;
         this.agencyRepository = agencyRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     async adminLoginHandler(email: string, password: string):Promise<any> {
@@ -60,7 +64,7 @@ export default class AdminService implements IAdminService {
 
     async getAgencyMenu(planId: string): Promise<any> {
         const plan = await this.planRepository.getAgencyPlan(planId)
-        return plan.menu
+        return plan!.menu
     }
 
 
@@ -78,9 +82,8 @@ export default class AdminService implements IAdminService {
             if (role == "Agency") {
                 const details = await this.agencyRepository.findAgencyWithId(id)
                 if(!details)throw new NotFoundError('Agency Not Found')
-                const transactions = await this.entityRepository.getTransactionsWithOrgId(details?.orgId)
+                const transactions = await this.transactionRepository.getTransactionsWithOrgId(details?.orgId)
                 clientDetials ={details,transactions}
-                
             }
             return clientDetials
     }
@@ -131,12 +134,12 @@ export default class AdminService implements IAdminService {
 
     async getPlanDetails(
         entity:string,
-        id:string
+        plan_id:string
     ):Promise<any>{
         let details;
         if(entity=="Agency"){
-            const planDetails = await this.planRepository.getAgencyPlan(id)
-            const planConsumers = await this.planRepository.getAgencyPlanConsumers(id)
+            const planDetails = await this.planRepository.getAgencyPlan(plan_id)
+            const planConsumers = await this.agencyRepository.getAgencyPlanConsumers(plan_id)
             const consumers = Array.isArray(planConsumers) 
             ? planConsumers.map((item) => ({
                 name: item.name,

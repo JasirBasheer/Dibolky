@@ -1,53 +1,34 @@
-import Client from "../../models/agency/client.model";
+import { BaseRepository } from "mern.common";
+import { IClient } from "../../shared/types/client.types";
 import { IClientRepository } from "../Interface/IClientRepository";
+import { Model } from "mongoose";
+import { inject, injectable } from "tsyringe";
 
-export default class ClientRepository implements IClientRepository {
-
-    async findClientWithMail(email: string): Promise<any> {
-        return await Client.findOne({ email: email });
-    }
-    async findClientWithId(id: string): Promise<any> {
-        return await Client.findOne({ _id: id });
-    }
-    async setSocialMediaTokens(id: string, provider: string, token: string, db: any): Promise<any> {
-        const details = await db.findOne({ _id: id })
-        return await details.setSocialMediaToken(provider, token);
-    }
-    async setSocialMediaUserNames(id: string, provider: string, username: string, db: any): Promise<any> {
-        const details = await db.findOne({ _id: id })
-        return await details.setSocialMediaUserName(provider, username);
+@injectable()
+export default class ClientRepository extends BaseRepository<IClient> implements IClientRepository {
+    constructor(
+        @inject('client_model') model: Model<IClient>
+    ) {
+        super(model);
     }
 
-    async getContentById(contentId: string, db: any): Promise<any> {
-        return await db.findOne({ _id: contentId })
-    }
-    async changeContentStatusById(contentId: string, db: any, status: string): Promise<any> {
-        return await db.findByIdAndUpdate(contentId, { status: status })   
-    }
-    async getReviewBucketById(clientId:string,db:any):Promise<any>{
-        return await db.find({id:clientId})
+    async findClientWithMail(
+        email: string
+    ): Promise<IClient | null> {
+        return await this.findOne({ email: email });
     }
 
-    async getClientDetailsByMail(tenantDb:any,email:string):Promise<any>{
-        return await tenantDb.findOne({email:email})
+    async findClientWithId(
+        client_id: string
+    ): Promise<IClient | null> {
+        return await this.findOne({ _id: client_id });
     }
 
-    async getOwnerDetails(tenantDb:any):Promise<any>{
-        return await tenantDb.find({}, {
-            orgId: 0,
-            'socialMedia_credentials': 0,
-        });
+    async createClient(
+        newClient: IClient
+    ): Promise<IClient | null> {
+        return await this.create(newClient)
     }
-
-    async getClientInMainDb(email:string):Promise<any>{
-        return await Client.findOne({email:email})
-    }
-
-
-
-    
-
-
 
 }
 

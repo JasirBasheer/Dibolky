@@ -1,8 +1,13 @@
 import mongoose from "mongoose";
 
+import { Document, Model, Types } from 'mongoose';
+
 interface AddressType {
+    street: string;
     city: string;
+    state: string;
     country: string;
+    zipCode: string;
 }
 
 export interface IAgencyBase {
@@ -19,7 +24,6 @@ export interface IAgencyBase {
     validity: string;
     logo: string;
     remainingClients?: number;
-    remainingProjects?: number;
     isBlocked: boolean;
     planPurchasedRate: number;
     currency?: string;
@@ -117,7 +121,7 @@ interface IPlatforms {
 }
 
 
-export interface IReviewBucket {
+export interface IReviewBucket extends Document {
     id: string;
     orgId: string;
     url: string[];

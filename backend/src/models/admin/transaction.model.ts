@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface ITransaction {
+export interface ITransaction extends Document {
     orgId: string;
     planId?:string
     email: string;
@@ -12,7 +12,7 @@ export interface ITransaction {
     currency:string;
 }
 
-const planSchema: Schema<ITransaction> = new Schema({
+export const transactionSchema: Schema<ITransaction> = new Schema({
     orgId: {
         type: String,
         required: true,
@@ -46,5 +46,5 @@ const planSchema: Schema<ITransaction> = new Schema({
     }
 });
 
-const Transaction = mongoose.model<ITransaction>('transaction', planSchema);
+const Transaction = mongoose.model<ITransaction>('transaction', transactionSchema);
 export default Transaction

@@ -1,16 +1,12 @@
+import { ITransaction } from "../../models/admin/transaction.model";
+import { IAgency } from "../../shared/types/agency.types";
 
 export interface IEntityRepository {
-    createAgency(newAgency:any):Promise<any>;
-    isAgencyMailExists(email:string):Promise<any>;
-    saveDetailsInAgencyDb(id:string,orgId:string):Promise<any>;
-    createTransaction(transaction:any):Promise<any>;
-    getAllAgencyOwners():Promise<any>;
-    getAllRecentAgencyOwners():Promise<any>;
-    getTransactionsWithOrgId(id:string):Promise<any>;
-   
-    
-    fetchOwnerDetails(tenantDb:any):Promise<any>;
-    fetchAllProjects(projectsModel:any):Promise<any>
-    fetchProjectTasks(taskModel:any,projectId:string):Promise<any>
-
+    createAgency(newAgency: Partial<IAgency>): Promise<IAgency | null>;
+    isAgencyMailExists(email: string): Promise<IAgency | null>;
+    saveDetailsInAgencyDb(agency_id: string, orgId: string): Promise<any>;
+    getAllAgencyOwners(): Promise<Partial<IAgency[]> | null>;
+    getAllRecentAgencyOwners(): Promise<Partial<IAgency[]> | null>;
+    fetchOwnerDetails(tenantDb: any): Promise<any>;
+    fetchAllProjects(projectsModel: any): Promise<any>
 }

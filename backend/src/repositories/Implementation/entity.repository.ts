@@ -1,6 +1,6 @@
 import { connectTenantDB } from "../../config/db";
 import Agency, { ownerDetailsSchema } from "../../models/agency/agency.model";
-import Transaction from "../../models/admin/transaction.model";
+import Transaction, { ITransaction } from "../../models/admin/transaction.model";
 import { IEntityRepository } from "../Interface/IEntityRepository";
 import { IAgency } from "../../shared/types/agency.types";
 
@@ -8,61 +8,47 @@ import { IAgency } from "../../shared/types/agency.types";
 export default class EntityRepository implements IEntityRepository {
 
     async createAgency(
-        new_agency: any
-    ): Promise<any | void> {
+        new_agency: Partial<IAgency>
+    ): Promise<IAgency | null> {
         const agency = new Agency(new_agency)
         return await agency.save()
     }
 
 
     async isAgencyMailExists(
-        email: string
+        agency_mail: string
     ): Promise<IAgency | null> {
-        return await Agency.findOne({ email: email })
+        return await Agency.findOne({ email: agency_mail })
     }
 
 
-    async saveDetailsInAgencyDb(id: string, orgId: string): Promise<any> {
+    async saveDetailsInAgencyDb(agency_id: string, orgId: string): Promise<any> {
         const db = await connectTenantDB(orgId)
         const AgencyModel = db.model('OwnerDetail', ownerDetailsSchema)
         const agency = new AgencyModel({
-            ownerId: id,
+            ownerId: agency_id,
             orgId: orgId
         })
         return await agency.save()
     }
 
-    async createTransaction(transaction: any):Promise<any> {
-        const newTransaction = new Transaction(transaction)
-        return await newTransaction.save()
-    }
 
-    async getAllAgencyOwners():Promise<any> {
+    async getAllAgencyOwners(): Promise<Partial<IAgency[]> | null> {
         return await Agency.find()
     }
 
-    async getAllRecentAgencyOwners():Promise<any> {
+    async getAllRecentAgencyOwners(): Promise<Partial<IAgency[]> | null> {
         return await Agency.find().limit(10)
     }
 
-    async getTransactionsWithOrgId(id: string):Promise<any> {
-        return await Transaction.find({ orgId: id })
-    }
 
-
-    async fetchOwnerDetails(tenantDb:any):Promise<any>{
+    async fetchOwnerDetails(tenantDb: any): Promise<any> {
         return await tenantDb.find()
     }
 
-    async fetchAllProjects(projectsModel:any):Promise<any>{
+    async fetchAllProjects(projectsModel: any): Promise<any> {
         const projects = await projectsModel.find({}).lean()
         return projects
-    }
-
-
-
-    async fetchProjectTasks(taskModel:any,projectId:string):Promise<any>{
-        return await taskModel.find({projectId:projectId})
     }
 
 

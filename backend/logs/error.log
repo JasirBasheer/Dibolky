@@ -126,3 +126,27 @@
  Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T15:18:25.211Z"} ms 
  
 
+::1 - - [20/Feb/2025:16:03:53 +0000] "GET /api/agency/client/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [20/Feb/2025:16:03:53 +0000] "GET /api/agency/client/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [20/Feb/2025:16:04:08 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T16:04:08.820Z"} ms 
+ 
+
+::1 - - [20/Feb/2025:16:04:08 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T16:04:08.836Z"} ms 
+ 
+
+::1 - - [20/Feb/2025:16:05:18 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T16:05:18.779Z"} ms 
+ 
+
+::1 - - [20/Feb/2025:16:05:18 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:32:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:25:104)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-02-20T16:05:18.795Z"} ms 
+ 
+

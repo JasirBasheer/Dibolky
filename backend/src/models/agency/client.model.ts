@@ -1,26 +1,5 @@
-import mongoose, { Document, Schema } from "mongoose";
-
-export interface IClient extends Document {
-  orgId: string;
-  name: string;
-  email: string;
-  industry: string;
-  password?: string;
-  socialMedia_credentials?: credentials;
-  services?: any;
-  menu?: any;
-}
-interface credentials {
-  facebook: platform;
-  instagram: platform;
-  tiktok: platform;
-  x: platform;
-}
-interface platform {
-  accessToken: string;
-  userName: string;
-}
-
+import mongoose, { Schema } from "mongoose";
+import { IClient, IClientTenant } from "../../shared/types/client.types";
 
 
 export const Client: Schema<IClient> = new mongoose.Schema({
@@ -47,7 +26,7 @@ export default mongoose.model<IClient>('Client', Client);
 
 
 
-export const clientSchema: Schema<IClient> = new mongoose.Schema({
+export const clientSchema: Schema<IClientTenant> = new mongoose.Schema({
   orgId: {
     type: String,
     required: true

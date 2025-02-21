@@ -2,9 +2,9 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IProject extends Document {
     client: object;
-    serviceName: string;
-    serviceDetails: object;
-    deadLine: Date;
+    service_name: string;
+    service_details: object;
+    dead_line: Date;
     category: string;
     status: string
 }
@@ -14,14 +14,14 @@ export const projectSchema: Schema<IProject> = new mongoose.Schema({
         type: Object,
         required: true
     },
-    serviceName: {
+    service_name: {
         type: String,
         required: true
     },
-    serviceDetails: {
+    service_details: {
         type: Object
     },
-    deadLine: {
+    dead_line: {
         type: Date,
         required:true
     },

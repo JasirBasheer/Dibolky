@@ -2,11 +2,11 @@ import "reflect-metadata";
 import { container } from "tsyringe";
 import { IAuthenticationController } from '../controllers/Interface/IAuthenticationController'
 import AuthenticationController from '../controllers/Implementation/authentication.controller'
-import  AdminRepository  from "../repositories/Implementation/admin.repository";
+import AdminRepository from "../repositories/Implementation/admin.repository";
 import { IAdminRepository } from '../repositories/Interface/IAdminRepository';
 import { IAgencyRepository } from '../repositories/Interface/IAgencyRepository';
-import  AgencyRepository  from '../repositories/Implementation/agency.repository';
-import EntityRepository from '../repositories/Implementation/entity.repository'; 
+import { AgencyRepository } from '../repositories/Implementation/agency.repository';
+import EntityRepository from '../repositories/Implementation/entity.repository';
 import { IEntityRepository } from '../repositories/Interface/IEntityRepository';
 import PlanRepository from '../repositories/Implementation/plan.repository';
 import { IPlanRepository } from '../repositories/Interface/IPlanRepository';
@@ -43,15 +43,37 @@ import ChatRepository from "../repositories/Implementation/chat.repository";
 import { IChatRepository } from "../repositories/Interface/IChatRepository";
 import { IChatService } from "../services/Interface/IChatService";
 import ChatService from "../services/Implementation/chat.service";
+import agencyModel from "../models/agency/agency.model";
+import { projectSchema } from "../models/agency/project.model";
+import { ProjectRepository } from "../repositories/Implementation/project.repository";
+import { IProjectRepository } from "../repositories/Interface/IProjectRepository";
+import { Client, clientSchema } from "../models/agency/client.model";
+import { chatSchema, messageSchema } from "../models/chat/chat";
+import { ReviewBucketSchema } from "../models/agency/review-bucket.model";
+import { AgencyPlan } from "../models/admin/plan.model";
+import { IClientTenantRepository } from "../repositories/Interface/IClientTenantRepository";
+import { ClientTenantRepository } from "../repositories/Implementation/client-tenant.repository";
+import { IContentRepositroy } from "../repositories/Interface/IContentRepository";
+import { ContentRepository } from "../repositories/Implementation/content.repository";
+import { IMessageRepository } from "../repositories/Interface/IMessageRepository";
+import MessageRepository from "../repositories/Implementation/message.repository";
+import { ITransactionRepository } from "../repositories/Interface/ITransactionRepository";
+import TransactionRepository from "../repositories/Implementation/transaction.repository";
+
+
+
 
 //* Model Registeration
-container.register('AdminModel', { useValue: Admin });
-// container.register('AGENCY_MODEL', { useValue: agencyModel });
-// container.register('CLIENT_MODEL', { useValue: Client });
-// container.register('PROJECT_MODEL', { useValue: Client });
-// container.register('PLAN_MODEL', { useValue: Client });
-// container.register('CHAT_MODEL', { useValue: Client });
-// container.register('CHAT_MODEL', { useValue: Client });
+container.register('admin_model', { useValue: Admin });
+container.register('agency_model', { useValue: agencyModel });
+container.register('project_model', { useValue: projectSchema });
+container.register('client_tenant_model', { useValue: clientSchema });
+container.register('client_model', { useValue: Client });
+container.register('chat_model', { useValue: chatSchema });
+container.register('review_bucket_model', { useValue: ReviewBucketSchema });
+container.register('message_model', { useValue: messageSchema });
+container.register('plan_model', { useValue: AgencyPlan });
+
 
 
 //* Repo Registeration
@@ -61,6 +83,12 @@ container.register<IEntityRepository>('EntityRepository', { useClass: EntityRepo
 container.register<IPlanRepository>('PlanRepository', { useClass: PlanRepository });
 container.register<IClientRepository>('ClientRepository', { useClass: ClientRepository });
 container.register<IChatRepository>('ChatRepository', { useClass: ChatRepository });
+container.register<IProjectRepository>('ProjectRepository', { useClass: ProjectRepository });
+container.register<IChatRepository>('ChatRepository', { useClass: ChatRepository });
+container.register<IClientTenantRepository>('ClientTenantRepository', { useClass: ClientTenantRepository });
+container.register<IContentRepositroy>('ContentRepository', { useClass: ContentRepository });
+container.register<IMessageRepository>('MessageRepository', { useClass: MessageRepository });
+container.register<ITransactionRepository>('TransactionRepository', { useClass: TransactionRepository });
 
 
 

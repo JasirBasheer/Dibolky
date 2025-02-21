@@ -1,5 +1,5 @@
 import { clientSchema, IClient } from "../../models/agency/client.model";
-import { IAgencyOwner } from "../../shared/types/agency.types";
+import { IAgency, IAgencyOwner } from "../../shared/types/agency.types";
 import { createClientMailData } from "../../shared/utils/mail.datas";
 import bcrypt from 'bcrypt'
 import { IAgencyService } from "../Interface/IAgencyService";
@@ -13,26 +13,43 @@ import { ReviewBucketSchema } from "../../models/agency/review-bucket.model";
 import { uploadToS3 } from "../../shared/utils/aws";
 import { AWS_S3_BUCKET_NAME } from "../../config/env";
 import { projectSchema } from "../../models/agency/project.model";
+import { createClientDTO } from "../../dto/client";
+import { IClientRepository } from "../../repositories/Interface/IClientRepository";
+import { IProjectRepository } from "../../repositories/Interface/IProjectRepository";
+import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
 
 @injectable()
 export default class AgencyService implements IAgencyService {
     private agencyRepository: IAgencyRepository;
+    private clientRepository: IClientRepository;
+    private clientTenantRepository: IClientTenantRepository;
+    private projectRepository: IProjectRepository;
 
     constructor(
-        @inject('AgencyRepository') agencyRepository: IAgencyRepository
+        @inject('AgencyRepository') agencyRepository: IAgencyRepository,
+        @inject('ClientRepository') clientRepository: IClientRepository,
+        @inject('ClientTenatRepository') clientTenantRepository: IClientTenantRepository,
+        @inject('ProjectRepository') projectRepository: IProjectRepository,
+
     ) {
-        this.agencyRepository = agencyRepository
+        this.agencyRepository = agencyRepository,
+        this.clientRepository = clientRepository,
+        this.clientTenantRepository = clientTenantRepository,
+        this.projectRepository = projectRepository
     }
 
-    async agencyLoginHandler(email: string, password: string): Promise<any> {
+    async agencyLoginHandler(
+        email: string, 
+        password: string
+    ): Promise<string> {
         try {
             const ownerDetails = await this.agencyRepository.findAgencyWithMail(email);
             if (!ownerDetails) throw new NotFoundError('User not found');
             if (ownerDetails.isBlocked) throw new UnauthorizedError('Account is blocked');
 
-            const isValid = await bcrypt.compare(password, ownerDetails.password);
+            const isValid = await bcrypt.compare(password, ownerDetails.password!);
             if (!isValid) throw new UnauthorizedError('Invalid credentials');
-            return ownerDetails?._id;
+            return ownerDetails?._id as string;
 
         } catch (error) {
             throw error
@@ -40,51 +57,46 @@ export default class AgencyService implements IAgencyService {
     }
 
 
-    async verifyOwner(id: string): Promise<IAgencyOwner | null> {
-        return await this.agencyRepository.findAgencyWithId(id)
+    async verifyOwner(
+        agency_id: string
+    ): Promise<IAgency | null> {
+        return await this.agencyRepository.findAgencyWithId(agency_id)
     }
 
 
-
-
-
-
-    async createClient(db: any, orgId: string, name: string, email: string,
-        industry: string, socialMedia_credentials: any, services: any, menu: string[],
-        organizationName:string
+    async createClient(
+        newClientDetials:createClientDTO
     ): Promise<IClient | void> {
 
-        const client = await this.agencyRepository.isClientExists(email)
-        if (client && client.orgId == orgId) throw new ConflictError('Client already exists with this email')
-        const Agency = await this.agencyRepository.findAgencyWithOrgId(orgId)
+        const client = await this.clientRepository.findClientWithMail(newClientDetials.email)
+        if (client && client.orgId == newClientDetials.orgId) throw new ConflictError('Client already exists with this email')
+        const Agency = await this.agencyRepository.findAgencyWithOrgId(newClientDetials.orgId)
         if (!Agency) throw new NotFoundError("Agency not found , Please try again")
         if (Agency.remainingClients == 0) throw new CustomError("Client creation limit reached ,Please upgrade for more clients", 402)
 
-        let password = await generatePassword(name)
+        let password = await generatePassword(newClientDetials.name)
         const HashedPassword = await hashPassword(password)
+
         const clientDetails = {
-            orgId, name, email,
-            industry, socialMedia_credentials,
+            orgId:newClientDetials.orgId, name:newClientDetials.name, email:newClientDetials.email,
+            industry:newClientDetials.industry, socialMedia_credentials:newClientDetials.socialMedia_credentials,
             password: HashedPassword
         }
-        let newMenu = createNewMenuForClient(menu)
+        let newMenu = createNewMenuForClient(newClientDetials.menu)
 
-        const ClientModel = db.model('client', clientSchema)
-        const ProjectModel = db.model('project',projectSchema)
-        const createdClient:any = await this.agencyRepository.createClient(ClientModel, { ...clientDetails, menu: newMenu })
+        const createdClient:any = await this.clientTenantRepository.createClient(newClientDetials.orgId, { ...clientDetails, menu: newMenu })
 
-        for(let item in services){
-            const { serviceName, serviceDetails } = services[item];  
+        for(let item in newClientDetials.services){
+            const { serviceName, serviceDetails } = newClientDetials.services[item];  
             const { deadline, ...details } = serviceDetails; 
-            await this.agencyRepository.createProject(ProjectModel,createdClient._id,createdClient.name,serviceName,details,item,new Date(deadline))
-            console.log(services[item])
+            await this.projectRepository.createProject(createdClient.orgId,createdClient._id,createdClient.name,serviceName,details,item,new Date(deadline))
         }
         
         
-        if (createdClient) await this.agencyRepository.saveClientToMainDB(clientDetails)
-        const data = createClientMailData(email, name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(),organizationName, password)
+        if (createdClient) await this.clientRepository.createClient(clientDetails)
+        const data = createClientMailData(newClientDetials.email, newClientDetials.name.charAt(0).toUpperCase() + newClientDetials.name.slice(1).toLowerCase(),newClientDetials.organizationName, password)
         sendMail(
-            email,
+            newClientDetials.email,
             `Welcome to ${Agency.organizationName}! Excited to Partner with You`,
             data,
             (error: any, info: any) => {

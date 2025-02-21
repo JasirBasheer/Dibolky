@@ -1,13 +1,14 @@
+import { Document, Types } from "mongoose";
 
 export interface Seen {
-    userId: mongoose.Types.ObjectId;
+    userId: Types.ObjectId;
     seenAt: Date;
   }
   
   export interface IMessage extends Document {
-    chatId: mongoose.Types.ObjectId;
+    chatId: Types.ObjectId;
     type: 'text' | 'common';
-    senderId?: mongoose.Types.ObjectId;
+    senderId?: Types.ObjectId;
     senderName?: string;
     text: string;
     fileUrl?: string;
@@ -17,7 +18,7 @@ export interface Seen {
   }
   
   export interface Participant {
-    userId: mongoose.Types.ObjectId;
+    userId: Types.ObjectId;
     type?: string;
     name?: string;
   }

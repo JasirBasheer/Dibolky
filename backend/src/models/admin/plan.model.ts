@@ -47,4 +47,3 @@ const planSchema: Schema<IPlan> = new Schema({
 });
 
 export const AgencyPlan = mongoose.model<IPlan>('agencyPlans', planSchema);
-export const CompanyPlan = mongoose.model<IPlan>('companyPlans', planSchema);

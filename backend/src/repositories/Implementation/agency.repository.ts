@@ -1,107 +1,55 @@
-import Client, { clientSchema, IClient } from '../../models/agency/client.model'
-import Agency from "../../models/agency/agency.model";
-import { IAgencyOwner, IReviewBucket } from '../../shared/types/agency.types';
+import { IAgency, IReviewBucket } from '../../shared/types/agency.types';
 import { IAgencyRepository } from '../Interface/IAgencyRepository';
-import { IEmployee } from '../../shared/types/employee.types';
-import { User } from '../../shared/types/common.types';
+import { BaseRepository } from 'mern.common';
+import { Model } from 'mongoose';
+import { inject, injectable } from 'tsyringe';
+import { AgencyPlan } from '../../models/admin/plan.model';
+import { IPlan } from '../../shared/types/admin.types';
 
 
+@injectable()
+export class AgencyRepository extends BaseRepository<IAgency> implements IAgencyRepository {
 
-export default class AgencyRepository implements IAgencyRepository {
-
-    async findAgencyWithMail(email: string): Promise<IAgencyOwner | null> {
-        return await Agency.findOne({ email: email });
+    constructor(
+        @inject('agency_model') model: Model<IAgency>
+    ) {
+        super(model);
     }
 
-    async findAgencyWithId(id: string): Promise<IAgencyOwner | null> {
-        return await Agency.findOne({ _id: id });
+    async findAgencyWithMail(
+        agency_mail: string
+    ): Promise<IAgency | null> {
+        return this.findOne({ email: agency_mail });
     }
 
-
-    async findAgencyWithOrgId(orgId: string): Promise<IAgencyOwner | null> {
-        return await Agency.findOne({ orgId: orgId })
+    async findAgencyWithId(
+        agency_id: string
+    ): Promise<IAgency | null> {
+        return this.findOne({ _id: agency_id });
     }
 
-    async isClientExists(email: string): Promise<any> {
-        return await Client.findOne({ email: email })
+    async findAgencyWithOrgId(
+        orgId: string
+    ): Promise<IAgency | null> {
+        return this.findOne({ orgId });
     }
 
-    async createClient(clientModel: any, details: any): Promise<IClient | void> {
-        const newClient = new clientModel(details)
-        const createdClient = await newClient.save()
-        return createdClient
+    async changePassword(
+        agency_Id: string,
+        password: string
+    ): Promise<IAgency | null> {
+        return this.update(
+            { _id: agency_Id },
+            { $set: { password } },
+            { new: true }
+        );
     }
 
-    async saveClientToMainDB(details: any): Promise<any> {
-        const newClient = new Client(details)
-        return await newClient.save()
+    async getAgencyPlanConsumers(
+        planId: string
+    ): Promise<IPlan[] | null> {
+        return await AgencyPlan.find({ planId: planId }).lean();
     }
-
-    async changePassword(id: string, password: string): Promise<IAgencyOwner | null> {
-        return await Agency.findOneAndUpdate(
-            { _id: id },
-            { $set: { password: password } },
-            { new: true })
-    }
-
-    async setSocialMediaTokens(orgId: string, Provider: string, token: string, db: any): Promise<void> {
-        const details = await db.findOne({ orgId: orgId })
-        await details.setSocialMediaToken(Provider, token);
-    }
-
-    async getAllClients(db: any): Promise<IClient[]> {
-        const ClientModel = db.model('clients', clientSchema);
-        return await ClientModel.find({});
-    }
-
-    async getClientById(db: any, id: string): Promise<IClient> {
-        const ClientModel = db.model('clients', clientSchema);
-        return await ClientModel.findOne({ _id: id });
-    }
-
-    async saveContentToDb(ReviewBucket: any, details: any): Promise<IReviewBucket> {
-        const newReviewBucket = new ReviewBucket(details)
-        return await newReviewBucket.save()
-
-    }
-
-    async getContentById(contentId: string, db: any): Promise<any> {
-        return await db.findOne({ _id: contentId })
-    }
-
-    async changeContentStatusById(contentId: string, db: any, status: string): Promise<void> {
-        await db.findByIdAndUpdate(contentId, { status: status })
-    }
-
-    async fetchAllAvailableUsers(clientModel: any): Promise<User[]> {
-        const clients = await clientModel.find({}, { _id: 1, name: 1 }).lean()
-            .then((clients: IClient[]) => clients.map(client => ({
-                _id: client._id,
-                name: client.name,
-                type: 'client' as const
-            })));
-
-        return [...clients];
-    }
-
-    async createProject(projectModel:any,clientId:string,clientName:string,serviceName:string,details:any,category:string ,deadLine:Date): Promise<any> {
-        const project = new projectModel({ client:{clientId,clientName}, serviceName, serviceDetails: details, category, deadLine })
-        return await project.save()
-    }
-
-    async getProjectsCount(projectModel:any):Promise<any>{
-        return await projectModel.find({})
-    }
-
-    async getClientsCount(clientModel:any):Promise<any>{
-        return await clientModel.find({})
-    }
-
-    async editProjectStatus():Promise<any>{
-        return 
-    }
-
-
 
 }
 

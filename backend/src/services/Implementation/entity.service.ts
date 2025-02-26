@@ -1,58 +1,93 @@
-import mongoose from 'mongoose';
 import { inject, injectable } from 'tsyringe';
 import { IEntityService } from '../Interface/IEntityService';
 import { IEntityRepository } from '../../repositories/Interface/IEntityRepository';
 import { IPlanRepository } from '../../repositories/Interface/IPlanRepository';
 import { ownerDetailsSchema } from '../../models/agency/agency.model';
-import { projectSchema } from '../../models/agency/project.model';
 import { addMonthsToDate } from '../../shared/utils/date-utils';
 import {
     hashPassword,
 } from 'mern.common';
+import {  IAgencyOwner } from '../../shared/types/agency.types';
+import { ITransactionRepository } from '../../repositories/Interface/ITransactionRepository';
+import { IPlan } from '../../shared/types/admin.types';
+import { IProject } from '../../models/agency/project.model';
+import { IProjectRepository } from '../../repositories/Interface/IProjectRepository';
+import { IOwnerDetailsSchema } from '../../shared/types/influencer.types';
+import { IClientTenantRepository } from '../../repositories/Interface/IClientTenantRepository';
+import s3Client from '../../config/aws-s3.config';
 
 @injectable()
 export default class EntityService implements IEntityService {
     private entityRepository: IEntityRepository;
     private planRepository: IPlanRepository;
+    private transactionRepository: ITransactionRepository;
+    private projectRepository: IProjectRepository;
+    private clientTenantRepository: IClientTenantRepository;
 
     constructor(
         @inject('EntityRepository') entityRepository: IEntityRepository,
-        @inject('PlanRepository') planRepository: IPlanRepository
+        @inject('PlanRepository') planRepository: IPlanRepository,
+        @inject('TransactionRepository') transactionRepository: ITransactionRepository,
+        @inject('ProjectRepository') projectRepository: IProjectRepository,
+        @inject('ClientTenantRepository') clientTenantRepository: IClientTenantRepository,
 
     ) {
         this.entityRepository = entityRepository
         this.planRepository = planRepository
+        this.transactionRepository = transactionRepository
+        this.projectRepository = projectRepository
+        this.clientTenantRepository = clientTenantRepository
     }
 
 
-    async getAllPlans(): Promise<any> {
+    async getAllPlans()
+    : Promise<Record<string,Array<any>> | null> {
         let agencyPlans = await this.planRepository.getAgencyPlans()
+        let influencerPlans = await this.planRepository.getInfluencerPlans()
         return {
-            Agency: agencyPlans,
+            Agency: agencyPlans || [],
+            Influencer: influencerPlans || []
         }
-
     }
 
-    async IsMailExists(Mail: string, platform: string): Promise<any> {
-        if (platform == "Agency") {
-            const isExists = await this.entityRepository.isAgencyMailExists(Mail)
-            if (isExists) return true
-            return false
-
-        }
-        return null
-
-    }
-
-    async getPlan(plans: any, id: any, platform: any) {
-        const plan = plans[platform].find((elem: any) => elem._id.toString() === id.toString());
+    async getPlan(plans: any, plan_id: string, platform: string): Promise<Partial<IPlan> | null>{
+        const plan = plans[platform].find((elem: any) => elem._id.toString() === plan_id.toString());
         if (!plan) return null
         return plan
+        }
+
+    async fetchAllProjects(orgId:string):Promise<Partial<IProject[]> | null> {
+        return await this.projectRepository.fetchAllProjects(orgId)
+    }
+        
+
+    async IsMailExists(
+        mail: string, 
+        platform: string
+    ): Promise<boolean | null> {
+        if (platform == "Agency") {
+            const isExists = await this.entityRepository.isAgencyMailExists(mail)
+            if (isExists) return true
+            return false
+        }else if (platform == "Influencer") {
+            const isExists = await this.entityRepository.isInfluencerMailExists(mail)
+            if (isExists) return true
+            return false
+        }
+        return null
     }
 
-    async registerAgency(organizationName: string, name: string, email: string, address: any, websiteUrl: string, industry: string,
-        contactNumber: number, logo: string, password: string, planId: string, validity: number, planPurchasedRate: number,
-        transactionId: string, paymentGateway: string, description: string, currency: string): Promise<any> {
+
+    async registerAgency(
+        organizationName: string, name: string, 
+        email: string, address: any, 
+        websiteUrl: string, industry: string,
+        contactNumber: number, logo: string, 
+        password: string, planId: string, 
+        validity: number, planPurchasedRate: number,
+        transactionId: string, paymentGateway: string, 
+        description: string, currency: string
+    ): Promise<Partial<IAgencyOwner> | null> {
 
         const hashedPassword = await hashPassword(password)
         let orgId = organizationName.replace(/\s+/g, "") + Math.floor(Math.random() * 1000000);
@@ -63,42 +98,86 @@ export default class EntityService implements IEntityService {
             email, address, websiteUrl, industry, contactNumber, logo, password: hashedPassword,
             planPurchasedRate: planPurchasedRate, currency
         };
-        const ownerDetails = await this.entityRepository.createAgency(newAgency);
 
+        const ownerDetails = await this.entityRepository.createAgency(newAgency);
+        
+        const newTenantAgency = {
+            ownerId: ownerDetails?._id,orgId,
+            planId, organizationName, name,
+            email
+        };
 
         const newTransaction = {
-            orgId, email, userId: ownerDetails._id,
+            orgId, email, userId: ownerDetails?._id,
             planId, paymentGateway, transactionId,
             amount: planPurchasedRate, description,
             currency
         }
 
-        await this.entityRepository.createTransaction(newTransaction)
-        await this.entityRepository.saveDetailsInAgencyDb(ownerDetails._id, ownerDetails.orgId)
+        await this.transactionRepository.createTransaction(newTransaction)
+        await this.entityRepository.saveDetailsInAgencyDb(newTenantAgency, orgId as string)
         return ownerDetails
     }
 
 
 
-    async getAgencyMenu(planId: string): Promise<any> {
-        const plan = await this.planRepository.getAgencyPlan(planId)
-        return plan.menu
+    async createInfluencer(
+        organizationName: string, name: string, 
+        email: string, address: any, 
+        websiteUrl: string, industry: string,
+        contactNumber: number, logo: string, 
+        password: string, planId: string, 
+        validity: number, planPurchasedRate: number,
+        transactionId: string, paymentGateway: string, 
+        description: string, currency: string
+    ): Promise<Partial<IOwnerDetailsSchema> | null> {
+
+        const hashedPassword = await hashPassword(password)
+        let orgId = name.replace(/\s+/g, "") + Math.floor(Math.random() * 1000000);
+        let validityInDate = addMonthsToDate(validity)
+
+        const newInfluencer = {
+            orgId, planId, validity: validityInDate, organizationName, name,
+            email, address, websiteUrl, industry, contactNumber, logo, password: hashedPassword,
+            planPurchasedRate: planPurchasedRate, currency
+        };
+        const ownerDetails = await this.entityRepository.createInfluencer(newInfluencer);
+
+
+        const newTransaction = {
+            orgId, email, userId: ownerDetails?._id,
+            planId, paymentGateway, transactionId,
+            amount: planPurchasedRate, description,
+            currency
+        }
+
+        await this.transactionRepository.createTransaction(newTransaction)
+        await this.entityRepository.saveDetailsInfluencerDb(ownerDetails?._id as string, ownerDetails?.orgId as string)
+        return ownerDetails
     }
 
 
-    async getOwner(tenantDb: any): Promise<any> {
-        const ownerDetailModel = await tenantDb.model('OwnerDetail', ownerDetailsSchema);
+
+    async getAgencyMenu(
+        planId: string
+    ): Promise<any> {
+        const plan = await this.planRepository.getAgencyPlan(planId)
+        return plan?.menu
+
+    }
+
+    async getClientMenu(orgId:string,client_id:string): Promise<any> {
+        const client = await this.clientTenantRepository.getClientById(orgId,client_id)
+        return client?.menu
+    }
+
+
+    async getOwner(
+        tenantDb: any
+    ): Promise<any> {
+        const ownerDetailModel = tenantDb.model('OwnerDetail', ownerDetailsSchema);
         return await this.entityRepository.fetchOwnerDetails(ownerDetailModel)
     }
-
-    async fetchAllProjects(tenantDb: any): Promise<any> {
-        const projectModel = await tenantDb.model('project', projectSchema)
-        return await this.entityRepository.fetchAllProjects(projectModel)
-    }
-
-
-
-
 
 }
 

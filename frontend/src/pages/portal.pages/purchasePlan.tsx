@@ -6,7 +6,7 @@ import axios from '../../utils/axios';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { message } from "antd";
-import { FormData, Plan, ValidationError } from '../../types/portalTypes';
+import { FormData, Plan, ValidationError } from '../../types/portal.types';
 import { renderInputField } from '../../components/portalComponents/Input';
 import { handleRazorpayPayment } from '../../helpers/portal.helpers/razporpay';
 import { handleStripePayment } from '@/helpers/portal.helpers/stripe';

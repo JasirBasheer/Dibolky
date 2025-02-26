@@ -8,6 +8,10 @@ interface IAgency {
     ownerName: string;
     email: string;
     industry: string;
+    facebookAccessToken: string,
+    facebookUsername:string,
+    instagramAccessToken:string,
+    instagramUsername:string,
     logo:string;
     remainingProjects: string;
     remainingClients: string;
@@ -20,6 +24,10 @@ const initialState: IAgency = {
     ownerName: "",
     email: "",
     industry: "",
+    facebookAccessToken: "",
+    facebookUsername:"",
+    instagramAccessToken:"",
+    instagramUsername:"",
     logo:"",
     remainingProjects: "",
     remainingClients: ""
@@ -30,7 +38,7 @@ const AgencySlice = createSlice({
     name: 'agency',
     initialState,
     reducers: {
-        setAgency: (state, action: PayloadAction<IAgency>) => {
+        setAgency: (state, action: PayloadAction<Partial<IAgency>>) => {
             return {
                 ...state,
                 ...action.payload

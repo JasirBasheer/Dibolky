@@ -1,5 +1,5 @@
 import axios from "../../utils/axios";
-import { FormData } from "../../types/portalTypes";
+import { FormData } from "../../types/portal.types";
 
 
 export  const handleStripePayment = async (formData:FormData,plan:any,platform:string,selectedCurrency:string):Promise<any> => {

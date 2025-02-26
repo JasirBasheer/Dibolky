@@ -6,7 +6,7 @@ import { IAgencyRepository } from '../../repositories/Interface/IAgencyRepositor
 import { inject, injectable } from 'tsyringe';
 import { IAdminService } from '../Interface/IAdminService';
 import { CustomError, NotFoundError, UnauthorizedError } from 'mern.common';
-import { planDetails } from '../../shared/types/admin.types';
+import { IAdmin, IPlan, planDetails, Plans } from '../../shared/types/admin.types';
 import { createNewPlanMenu } from '../../shared/utils/menu.utils';
 import { ITransactionRepository } from '../../repositories/Interface/ITransactionRepository';
 
@@ -19,11 +19,11 @@ export default class AdminService implements IAdminService {
     private transactionRepository: ITransactionRepository;
 
     constructor(
-        @inject('PlanRepository') planRepository : IPlanRepository,
-        @inject('AdminRepository') adminRepository : IAdminRepository,
-        @inject('EntityRepository') entityRepository : IEntityRepository,
-        @inject('AgencyRepository') agencyRepository : IAgencyRepository,
-        @inject('TransactionRepository') transactionRepository : ITransactionRepository,
+        @inject('PlanRepository') planRepository: IPlanRepository,
+        @inject('AdminRepository') adminRepository: IAdminRepository,
+        @inject('EntityRepository') entityRepository: IEntityRepository,
+        @inject('AgencyRepository') agencyRepository: IAgencyRepository,
+        @inject('TransactionRepository') transactionRepository: ITransactionRepository,
     ) {
         this.planRepository = planRepository;
         this.adminRepository = adminRepository;
@@ -32,129 +32,145 @@ export default class AdminService implements IAdminService {
         this.transactionRepository = transactionRepository;
     }
 
-    async adminLoginHandler(email: string, password: string):Promise<any> {
-            const admin = await this.adminRepository.findAdminWithMail(email)
-            if (!admin) throw new NotFoundError('Admin Not found')
-            let isValidPassword = await bcrypt.compare(password, admin.password)
-            if (!isValidPassword) throw new UnauthorizedError("Invalid credentials")
-            return admin._id
-    }
-    
-
-    async verifyAdmin(id: string): Promise<any> {
-        
-            const admin = await this.adminRepository.findAdminWithId(id)
-            if (!admin) throw new NotFoundError('Admin Not found')
-            return admin
+    async adminLoginHandler(
+        email: string,
+        password: string
+    ): Promise<string> {
+        const admin = await this.adminRepository.findAdminWithMail(email)
+        if (!admin) throw new NotFoundError('Admin Not found')
+        let isValidPassword = await bcrypt.compare(password, admin.password)
+        if (!isValidPassword) throw new UnauthorizedError("Invalid credentials")
+        return admin._id as string
     }
 
-    async getAllPlans(): Promise<any> {
-            let agencyPlans = await this.planRepository.getAgencyPlans()
-            return {
-                Agency: agencyPlans
-            }
+
+    async verifyAdmin(
+        admin_id: string
+    ): Promise<IAdmin> {
+        const admin = await this.adminRepository.findAdminWithId(admin_id)
+        if (!admin) throw new NotFoundError('Admin Not found')
+        return admin
     }
 
-    async getPlan(plans: any, id: any, platform: any): Promise<any> {
-        const plan = plans[platform].find((elem: any) => elem._id.toString() === id.toString());
+    async getAllPlans()
+        : Promise<object> {
+        let agencyPlans = await this.planRepository.getAgencyPlans()
+        return {
+            Agency: agencyPlans
+        }
+    }
+
+    async getPlan(
+        plans: Plans,
+        plan_id: string,
+        platform: string
+    ): Promise<IPlan | null> {
+        const plan = plans[platform]?.find((elem: any) => elem._id.toString() === plan_id.toString()) || null;
         if (!plan) return null
         return plan
     }
 
 
-    async getAgencyMenu(planId: string): Promise<any> {
+    async getAgencyMenu(
+        planId: string
+    ): Promise<object> {
         const plan = await this.planRepository.getAgencyPlan(planId)
-        return plan!.menu
+        return plan!.menu as object
     }
 
 
 
-    async getRecentClients() {
-        console.log("Recent Clients")
-            let agencies = await this.entityRepository.getAllRecentAgencyOwners()
-            let result = { Agency: agencies }
-            return result
+    async getRecentClients()
+    : Promise<object> {
+        let agencies = await this.entityRepository.getAllRecentAgencyOwners()
+        let result = { Agency: agencies }
+        return result
     }
 
-    async getClient(id: string, role: string): Promise<any> {
-            let clientDetials;
-            
-            if (role == "Agency") {
-                const details = await this.agencyRepository.findAgencyWithId(id)
-                if(!details)throw new NotFoundError('Agency Not Found')
-                const transactions = await this.transactionRepository.getTransactionsWithOrgId(details?.orgId)
-                clientDetials ={details,transactions}
-            }
-            return clientDetials
+    async getClient(
+        client_id: string, 
+        role: string
+    ): Promise<object> {
+        let clientDetials;
+        if (role == "Agency") {
+            const details = await this.agencyRepository.findAgencyWithId(client_id)
+            if (!details) throw new NotFoundError('Agency Not Found')
+            const transactions = await this.transactionRepository.getTransactionsWithOrgId(details?.orgId)
+            clientDetials = { details, transactions }
+        }
+        return clientDetials as object
     }
 
 
-    async getAllClients() : Promise<any>{
-            let agencies = await this.entityRepository.getAllAgencyOwners()
-            let result = { Agency: agencies }
-            return result
+    async getAllClients()
+    : Promise<object | null> {
+        let agencies = await this.entityRepository.getAllAgencyOwners()
+        let result = { Agency: agencies }
+        return result
     }
 
     async createPlan(
-        entity:string,
-        details:planDetails
-    ):Promise<void>{
+        entity: string,
+        details: planDetails
+    ): Promise<void> {
         let createdPlan;
         let menu = createNewPlanMenu(details.menu)
         details.menu = menu
-        if(entity == "Agency"){
+        if (entity == "Agency") {
             createdPlan = await this.planRepository.createAgencyPlan(details)
+        }else if(entity == "Influencer"){
+            createdPlan = await this.planRepository.createInfluencerPlan(details)
         }
-        if(!createdPlan)throw new CustomError("Error While creating Plan",500)
+        if (!createdPlan) throw new CustomError("Error While creating Plan", 500)
     }
 
     async editPlan(
-        entity:string,
-        details:planDetails
-    ):Promise<void>{
+        entity: string,
+        details: planDetails
+    ): Promise<void> {
         let editedPlan;
         let menu = createNewPlanMenu(details.menu)
         details.menu = menu
-        if(entity == "Agency"){
+        if (entity == "Agency") {
             editedPlan = await this.planRepository.editAgencyPlan(details)
         }
-        if(!editedPlan)throw new CustomError("Error While editing Plan",500)
+        if (!editedPlan) throw new CustomError("Error While editing Plan", 500)
     }
 
     async changePlanStatus(
-        entity:string,
-        id:string,
-    ):Promise<void>{
+        entity: string,
+        plan_id: string,
+    ): Promise<void> {
         let changedStatus;
-        if(entity == "Agency"){
-            changedStatus = await this.planRepository.changeAgencyPlanStatus(id)
+        if (entity == "Agency") {
+            changedStatus = await this.planRepository.changeAgencyPlanStatus(plan_id)
         }
-        if(!changedStatus)throw new CustomError("Error While changing Plan status",500)
+        if (!changedStatus) throw new CustomError("Error While changing Plan status", 500)
     }
 
     async getPlanDetails(
-        entity:string,
-        plan_id:string
-    ):Promise<any>{
+        entity: string,
+        plan_id: string
+    ): Promise<object> {
         let details;
-        if(entity=="Agency"){
+        if (entity == "Agency") {
             const planDetails = await this.planRepository.getAgencyPlan(plan_id)
             const planConsumers = await this.agencyRepository.getAgencyPlanConsumers(plan_id)
-            const consumers = Array.isArray(planConsumers) 
-            ? planConsumers.map((item) => ({
-                name: item.name,
-                organizationName: item.organizationName,
-                validity: item.validity,
-                industry: item.industry,
-              }))
-            : []; 
-                
+            const consumers = Array.isArray(planConsumers)
+                ? planConsumers.map((item) => ({
+                    name: item.name,
+                    organizationName: item.organizationName,
+                    validity: item.validity,
+                    industry: item.industry,
+                }))
+                : [];
+
             details = {
                 ...planDetails,
-                planConsumers:consumers
+                planConsumers: consumers
             }
         }
-        return details
+        return details as object
     }
 }
 

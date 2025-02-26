@@ -7,6 +7,6 @@ export interface IClientTenantRepository  {
   getClientById(orgId: string, client_id: string): Promise<IClientTenant | null>;
   setSocialMediaTokens(orgId: string, client_id: string, provider: string, token: string): Promise<void>;
   setSocialMediaUserNames(orgId: string, client_id: string, provider: string, username: string): Promise<void>;
-  getClientDetailsByMail(tenantDb: any, email: string): Promise<IClientTenant | null>;
+  getClientDetailsByMail(orgId:string, email: string): Promise<IClientTenant | null>;
   getOwnerDetails(orgId: string): Promise<IClientTenant[] | null>
 }

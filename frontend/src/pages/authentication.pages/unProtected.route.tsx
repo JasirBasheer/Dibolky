@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from '../../utils/axios';
 import { useNavigate } from 'react-router-dom';
 import { ScaleLoader } from 'react-spinners';
 
 
 interface IRedirectionUrls {
-  Agency: string;
+  agency: string;
   Company: string;
   Employee: string;
   Admin: string;
@@ -31,7 +31,7 @@ const UnProtectedRoute = ({ children, role }: { children: any, role: string }) =
         if (response) {
 
           const roleRedirects: IRedirectionUrls = {
-            "Agency": '/agency',
+            "agency": '/agency',
             "Company": '/company/',
             "Employee": '/employee/',
             "Admin": '/admin/',

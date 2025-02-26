@@ -26,7 +26,7 @@ export default class ClientController implements IClientController {
 
     async getClientDetails(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const details = await this.clientService.getClientDetails(req.tenantDb, req.details.email)
+            const details = await this.clientService.getClientDetails(req.details.orgId, req.details.email)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { client: details })
 
@@ -37,9 +37,9 @@ export default class ClientController implements IClientController {
 
     async getOwner(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const owners = await this.clientService.getOwners(req.tenantDb)
+            const owners = await this.clientService.getOwners(req.details.orgId)
             if (!owners) throw new NotFoundError("Account Not found")
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { owners})
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { owners })
 
         } catch (error: any) {
             next(error)

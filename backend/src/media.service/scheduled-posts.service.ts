@@ -47,8 +47,7 @@ async function processAgencyScheduledPosts() {
 
             for (let content of filteredScheduledContents) {
                 if (content.platforms.length > 0) {
-                db = await connectTenantDB(agency.orgId)
-                const result :any = await providerService.handleSocialMediaUploads(db,content,content.id,true)
+                const result :any = await providerService.handleSocialMediaUploads(agency.orgId,content,content.id,true)
                     console.log("result",result)
                 if(result){
                     for(let platform of result){

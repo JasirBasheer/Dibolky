@@ -89,7 +89,15 @@ export const clientSchema: Schema<IClientTenant> = new mongoose.Schema({
   menu: {
     type: Object,
     required: true
-  }
+  },
+  isSocialMediaInitialized: {
+    type: Boolean,
+    default : false
+},
+isPaymentInitialized: {
+    type: Boolean,
+    default : false
+}
 }, { timestamps: true });
 
 

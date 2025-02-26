@@ -3,7 +3,6 @@ import { getSecretRoomId } from './util';
 import { container } from 'tsyringe';
 import { IChatService } from '../../services/Interface/IChatService';
 import mongoose from 'mongoose';
-import { connectTenantDB } from '../../config/db';
 
 
 const chatService = container.resolve<IChatService>('ChatService')
@@ -44,10 +43,9 @@ const initializeSocket = (server: any) => {
                 };
         
                 await chatService.sendMessage(messageData, orgId, chatId);
-                const tenantDb  = await connectTenantDB(orgId)
-                const chat = await chatService.getChat(tenantDb,chatId)
+                const chat = await chatService.getChat(orgId,chatId)
 
-                io.to(roomId).emit("new-message-received", { newMessage: messageData,chat_id:chatId,participants:chat.participants });
+                io.to(roomId).emit("new-message-received", { newMessage: messageData,chat_id:chatId,participants:chat?.participants });
                
             } catch (error) {
                 console.error("Error sending message:", error);

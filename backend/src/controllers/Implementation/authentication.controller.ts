@@ -62,7 +62,7 @@ export default class AuthenticationController implements IAuthenticationControll
                 case "Admin":
                     id = await this.adminService.adminLoginHandler(email, password);
                     break;
-                case "Agency":
+                case "agency":
                     id = await this.agencyService.agencyLoginHandler(email, password);
                     break;
                 case "Client":

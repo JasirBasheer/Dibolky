@@ -4,20 +4,19 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAllEmployeeApi, getAllProjects, getAllProjectTasksApi, updateProjectStatus } from "@/services/common/get.services";
+import { getAllProjects } from "@/services/common/get.services";
 import { getStatusColor } from '@/utils/utils';
 import { Card, CardContent } from '@/components/ui/card';
 
 
 interface IAgencyProjects {
   _id: string;
-  serviceName: string;
+  service_name: string;
   category: string;
-  client: { clientName: string; };
+  client: { client_name: string,client_id:string };
   status: string;
-  deadLine: string | number | Date;
-  serviceDetails: Record<string, string>;
-  subtasks: any[];
+  dead_line: string | number | Date;
+  service_details: Record<string, string>;
 }
 
 interface IProject extends Omit<IAgencyProjects, '_id' | 'serviceName' | 'deadLine'> {
@@ -43,46 +42,24 @@ export default function AgencyProject() {
     select: (data) => ({
       projects: data?.data?.projects.map((project: IAgencyProjects) => ({
         id: project._id,
-        name: project.serviceName,
+        name: project.service_name,
         category: project.category,
         client: project.client,
         status: project.status,
-        deadline: new Date(project.deadLine).toLocaleDateString(),
-        serviceDetails: project.serviceDetails,
-        subtasks: project.subtasks || []
+        deadline: new Date(project.dead_line).toLocaleDateString(),
+        serviceDetails: project.service_details,
       })),
       totalPages: Math.ceil(data?.data?.total / 10)
     }),
   });
 
 
-  const updateStatusMutation = useMutation({
-    mutationFn: (data: { projectId: string; status: string }) => 
-      updateProjectStatus(data.projectId, data.status),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["agency-projects"] });
-    }
-  });
-
-  const handleStatusChange = (newStatus: string) => {
-    if (selectedProject) {
-      updateStatusMutation.mutate({
-        projectId: selectedProject.id,
-        status: newStatus
-      });
-      setSelectedProject({ ...selectedProject, status: newStatus });
-    }
-  };
-
-  const handleMarkAsDone = () => {
-    handleStatusChange('Completed');
-  };
 
   const categories = ["All", "VIDEO", "SM", "CRM"];
 
   const filteredProjects = projectsData?.projects?.filter((project: IProject) =>
     (selectedCategory === "All" || project.category === selectedCategory) &&
-    project.name.toLowerCase().includes(searchTerm.toLowerCase())
+    project.name.toLowerCase().includes(searchTerm.toLowerCase()) || project.client.client_name.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
 
   if (isProjectsLoading) {
@@ -156,7 +133,7 @@ export default function AgencyProject() {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {project.client.clientName}
+                  {project.client.client_name}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(project.status)}`}>
@@ -172,7 +149,6 @@ export default function AgencyProject() {
         </table>
       </div>
 
-      {/* Pagination */}
       <div className="mt-4 flex justify-center gap-2">
         <Button
           variant="outline"
@@ -192,7 +168,6 @@ export default function AgencyProject() {
         </Button>
       </div>
 
-      {/* Project Details Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
@@ -203,7 +178,6 @@ export default function AgencyProject() {
           </DialogHeader>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-            {/* Project Info Card */}
             <Card>
               <CardContent className="pt-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
@@ -215,7 +189,7 @@ export default function AgencyProject() {
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4 text-gray-500" />
                     <span className="font-medium">Client:</span>
-                    <span>{selectedProject?.client.clientName}</span>
+                    <span>{selectedProject?.client.client_name}</span>
                   </div>
                   
                   <div className="flex items-center gap-2">
@@ -283,7 +257,6 @@ export default function AgencyProject() {
             <Button
               variant="default"
               className="bg-black"
-              onClick={handleMarkAsDone}
               disabled={selectedProject?.status === 'Completed'}
             >
               <CheckCircle2 className="w-4 h-4 mr-2" />

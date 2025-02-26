@@ -16,11 +16,9 @@ const AgencyMessages: React.FC = () => {
     select: (data) => data?.data?.ownerDetails
   })
 
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  console.log(data?.ownerId);
   return <Chat user={agency} ownerId={data?.ownerId} isAdmin={true} />;
 };
 

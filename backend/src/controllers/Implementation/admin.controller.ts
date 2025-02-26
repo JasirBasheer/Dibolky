@@ -198,13 +198,13 @@ export default class AdminController implements IAdminController {
     * @returns A success response with the plan details if found, or forwards an error to the next middleware
     */
     async getPlan(
-        req: Request<{ entity: string; plan_id: string }>,
+        req: Request<{ entity: string; id: string }>,
         res: Response,
         next: NextFunction
     ): Promise<void> {
         try {
-            const { entity, plan_id } = req.params
-            const details = await this.adminService.getPlanDetails(entity,plan_id)
+            const { entity, id } = req.params
+            const details = await this.adminService.getPlanDetails(entity,id)
             
             SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{details})
         } catch (error) {

@@ -6,6 +6,7 @@ export interface IAdmin extends Document {
     name: string;
     email: string;
     password: string;
+    isBlocked?: boolean;
 }
 
 
@@ -64,10 +65,18 @@ export interface IPlan extends Document {
     price: number;
     features: string[];
     validity: string;
+    totalProjects?: number;
+    totalManagers?: number;
     menu?: {
         smm?: IMenuItems;
         crm?: IMenuItems;
         accounting?: IMenuItems;
     };
     isActive:boolean;
+}
+
+
+
+export interface Plans {
+    [key: string]: IPlan[]; 
 }

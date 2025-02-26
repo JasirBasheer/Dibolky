@@ -27,12 +27,13 @@ const Plans = () => {
 
     useEffect(() => {
         if (plans) {
-            setSortedPlans(plans[isAgency ? 'Agency' : 'Company'] || []); 
+            console.log(plans)
+            setSortedPlans(plans[isAgency ? 'Agency' : 'Influencer'] || []); 
         }
     }, [isAgency, plans]); 
 
     const handlePurchasePlan = (planId: any) => {
-        const platform = isAgency ? "Agency" : "Company";
+        const platform = isAgency ? "Agency" : "Influencer";
         navigate(`/purchase/${platform}/${planId}`);
     };
 
@@ -64,7 +65,7 @@ const Plans = () => {
                                 }`}
                             onClick={() => setIsAgency(false)}
                         >
-                            Company
+                            Influencer
                         </button>
                         <div
                             className={`absolute top-0 h-9 w-36 md:w-44 bg-blue-600 rounded-md transition-all duration-300 ${isAgency ? "left-0" : "left-[144px] md:left-44"

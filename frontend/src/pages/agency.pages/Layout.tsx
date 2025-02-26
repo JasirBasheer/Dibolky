@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Navbar from '../../components/agency.components/Navbar'
+import Navbar from '../../components/agency.components/navbar'
 import SideBar from '../../components/agency.components/sidebar.components/sidebar'
 import { Outlet } from 'react-router-dom'
 

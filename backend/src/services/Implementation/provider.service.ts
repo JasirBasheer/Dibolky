@@ -1,31 +1,37 @@
 import { inject, injectable } from "tsyringe";
-import { ReviewBucketSchema } from "../../models/agency/review-bucket.model";
 import { IProviderService } from "../Interface/IProviderService";
-import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepository";
-import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { FACEBOOK, INSTAGRAM } from "../../shared/utils/constants";
-import { handleFacebookUpload } from "../../provider.strategies/facebook.strategy";
+import { getMetaPagesDetails, handleFacebookUpload } from "../../provider.strategies/facebook.strategy";
 import { handleInstagramUpload } from "../../provider.strategies/instagram.strategy";
+import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
+import { IContentRepository } from "../../repositories/Interface/IContentRepository";
+import { IReviewBucket } from "../../shared/types/agency.types";
+import { get } from "http";
 
 
 @injectable()
 export default class ProviderService implements IProviderService {
-    private agencyRepository: IAgencyRepository;
-    private clientRepository: IClientRepository;
+    private clientTenantRepository: IClientTenantRepository;
+    private contentRepository : IContentRepository
 
     constructor(
-        @inject('AgencyRepository') agencyRepository: IAgencyRepository,
-        @inject('ClientRepository') clientRepository: IClientRepository
+        @inject('ClientTenantRepository') clientTenantRepository: IClientTenantRepository,
+        @inject('ContentRepository') contentRepository: IContentRepository,
     ) {
-        this.agencyRepository = agencyRepository
-        this.clientRepository = clientRepository
+        this.clientTenantRepository = clientTenantRepository
+        this.contentRepository = contentRepository
     }
 
 
 
-    async handleSocialMediaUploads(tenantDb: any, content: any, clientId: string,isCron:boolean): Promise<any> {
+    async handleSocialMediaUploads(
+        orgId:string, 
+        content: any, 
+        clientId: string,
+        isCron:boolean
+    ): Promise<any> {
 
-        const client = await this.agencyRepository.getClientById(tenantDb, clientId)
+        const client = await this.clientTenantRepository.getClientById(orgId, clientId)
         if (!client) throw new Error('client does not exists')
        
         const uploadPromises = content.platforms.map(async (platform: any) => {
@@ -39,11 +45,13 @@ export default class ProviderService implements IProviderService {
                 try {
                     switch (platform.platform) {
                         case INSTAGRAM:
-                            access_token = client.socialMedia_credentials.instagram.accessToken;
+                            access_token = client?.socialMedia_credentials?.instagram.accessToken;
+                            if(!access_token) throw new Error('Instagram access token not found');
                             return response = await handleInstagramUpload(content, access_token, client);
                                                         
                         case FACEBOOK:
-                            access_token = client.socialMedia_credentials.facebook.accessToken;
+                            access_token = client?.socialMedia_credentials?.facebook.accessToken;
+                            if(!access_token) throw new Error('FaceBook access token not found');
                             return response = await handleFacebookUpload(content, access_token, client);
                              
                         default:
@@ -64,12 +72,7 @@ export default class ProviderService implements IProviderService {
         const results = await Promise.all(uploadPromises);
         const validResults : any = results.filter(result => result !== null);
 
-        if(validResults.length==0){
-            return results
-
-        }
-
-        
+        if(validResults.length==0)return results        
         console.log('Upload Results:', results);
         
         const successfulUploads = results.filter(result => result.status === 'success');
@@ -82,16 +85,25 @@ export default class ProviderService implements IProviderService {
         
     }
 
-
-
-    async updateContentStatus(tenantDb: any, contentId: string, status: string): Promise<any> {
-        const db = await tenantDb.model('reviewBucket', ReviewBucketSchema)
-       return await this.clientRepository.changeContentStatusById(contentId, db, status)
+    async getMetaPagesDetails(access_token:string):Promise<any>{
+        return await getMetaPagesDetails(access_token)
     }
 
 
-    async getContentById(contentId:any, db:any):Promise<any>{
-        return await this.clientRepository.getContentById(contentId,db)
+    async updateContentStatus(
+        orgId: string, 
+        contentId: string, 
+        status: string
+    ): Promise<IReviewBucket | null> {
+       return await this.contentRepository.changeContentStatus(orgId, contentId, status)
+    }
+
+
+    async getContentById(
+        orgId:string,
+        contentId:string
+    ):Promise<IReviewBucket | null>{
+        return await this.contentRepository.getContentById(orgId,contentId)
     }
 
 }

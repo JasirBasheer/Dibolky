@@ -14,7 +14,7 @@ export default class TransactionRepository extends BaseRepository<ITransaction> 
 
 
     async createTransaction(
-        transaction: Partial<ITransaction>
+        transaction: object
     ): Promise<ITransaction | null> {
         return await this.create(transaction)
     }

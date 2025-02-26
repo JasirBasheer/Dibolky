@@ -1,5 +1,5 @@
 import axios from "../../utils/axios";
-import { FormData } from "../../types/portalTypes";
+import { FormData } from "../../types/portal.types";
 import { message } from "antd";
 import notificationSound from '../../assets/audios/currectanswer.wav'
 import notificationSound2 from '../../assets/audios/notification-2-269292.mp3'
@@ -68,7 +68,6 @@ const handlePaymentSuccess = async (response: any,formData:FormData,plan:any,pla
 
     if (platform == "Agency") {
 
-        console.log("details",details,"response",response.razorpay_payment_id);
         
         const res = await axios.post('/api/entities/create-agency', {details,transaction_id:response.razorpay_payment_id})
         if (res.status == 201) {
@@ -84,7 +83,7 @@ const handlePaymentSuccess = async (response: any,formData:FormData,plan:any,pla
             navigate('/agency/login')
         }
     } else {
-        const res = await axios.post('/api/entities/create-company', details, response)
+        const res = await axios.post('/api/entities/create-influencer', {details,transaction_id:response.razorpay_payment_id})
         if (res.status == 201) {
             setTimeout(() => {
                 message.success('Company have been successfully')

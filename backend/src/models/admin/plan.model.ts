@@ -34,6 +34,12 @@ const planSchema: Schema<IPlan> = new Schema({
         type: String,
         required: true,
     },
+    totalProjects: {
+        type: Number,
+    },
+    totalManagers:{
+        type: Number,
+     },
     menu: {
         smm: menuItemSchema,
         crm: menuItemSchema,
@@ -47,3 +53,4 @@ const planSchema: Schema<IPlan> = new Schema({
 });
 
 export const AgencyPlan = mongoose.model<IPlan>('agencyPlans', planSchema);
+export const InfluencerPlan = mongoose.model<IPlan>('influencerPlan', planSchema);

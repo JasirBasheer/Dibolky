@@ -5,41 +5,48 @@ import { container } from 'tsyringe';
 import { permissionGate } from '../middlewares/permissionGate.middleware';
 import { TokenMiddleWare } from '../middlewares/token.middleware';
 import { TenantMiddleWare } from '../middlewares/tenant.middleware';
+import { IProviderController } from '../controllers/Interface/IProviderController';
 
 // Controllers
 const entityController = container.resolve<IEntityController>('EntityController')
+const providerController = container.resolve<IProviderController>('ProviderController')
 
+router.get('/get-meta-pages/:access_token', (req, res, next) => providerController.getMetaPagesDetails(req, res, next))
 // Get requests
 router.get('/get-all-plans', (req, res, next) => entityController.getAllPlans(req, res, next))
 router.get('/get-country', (req, res, next) => entityController.getCountry(req, res, next))
-router.get('/:role/:planId', (req, res, next) => entityController.getMenu(req, res, next));
+
 
 // Post requests
 router.post('/create-agency', (req, res, next) => entityController.registerAgency(req, res, next))
+router.post('/create-influencer', (req, res, next) => entityController.createInfluencer(req, res, next))
 router.post('/get-plan', (req, res, next) => entityController.getPlan(req, res, next))
 router.post('/check-mail', (req, res, next) => entityController.checkMail(req, res, next))
 
 router.use(TokenMiddleWare)
 router.use(TenantMiddleWare)
-// router.use(permissionGate(["Company", "Agency", "Employee"]))
+// router.use(permissionGate(["Company", "agency", "Employee"]))
 router.post('/create-group', (req, res, next) => entityController.createGroup(req, res, next))
 
+router.use(permissionGate(["Company", "agency"]))
+router.get('/owner', (req, res, next) => entityController.getOwner(req, res, next))
+router.get('/projects', (req, res, next) => entityController.getAllProjects(req, res, next))
+router.get('/get-tasks', (req, res, next) => entityController.getAllProjects(req, res, next))
 
-router.use(permissionGate(["Company", "Agency", "Client", "Employee"]))
+router.use(permissionGate(["agency", "client", "influencer"]))
+router.get('/connect/:provider', (req, res, next) => providerController.connectSocialPlatforms(req, res, next))
+router.get('/approve-content/:contentId/:clientId', (req, res, next) =>providerController.processContentApproval(req,res,next))
+router.get('/get-review-bucket/:clientId', (req, res, next) =>providerController.getReviewBucket(req,res,next))
+router.post('/save-platform-token/:platform/:provider/:user_id',(req, res, next) =>providerController.saveSocialPlatformToken(req,res,next))
+
+
+router.use(permissionGate(["Company", "agency", "Client", "Employee"]))
+router.post('/get-s3-upload-url', (req, res, next) => entityController.getS3UploadUrl(req, res, next));
+router.get('/:role/:planId', (req, res, next) => entityController.getMenu(req, res, next));
 router.post('/chats', (req, res, next) => entityController.getChat(req, res, next))
 router.post('/get-chats', (req, res, next) => entityController.getChats(req, res, next))
 router.post('/get-messages', (req, res, next) => entityController.getMessages(req, res, next))
 
-
-router.use(permissionGate(["Company", "Agency"]))
-
-
-
-// Get requests
-
-router.get('/owner', (req, res, next) => entityController.getOwner(req, res, next))
-router.get('/projects', (req, res, next) =>entityController.getAllProjects(req,res,next))
-router.get('/get-tasks', (req, res, next) =>entityController.getAllProjects(req,res,next))
 
 
 

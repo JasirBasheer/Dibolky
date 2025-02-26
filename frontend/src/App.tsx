@@ -25,10 +25,8 @@ import ClientProjects from './pages/client.pages/client.projects'
 import AgencyEmployees from './pages/agency.pages/Employees'
 import AgencyMessages from './pages/agency.pages/message'
 import ClientMessages from './pages/client.pages/client.message'
-import Dashboard from './pages/agency.pages/Dashboard'
-import EmployeeDashboard from './pages/employee.pages/dashboard'
-import EmployeeLayout from './pages/employee.pages/Layout'
 import AgencyProject from './pages/agency.pages/projects'
+import SettingsPage from './components/agency.components/settings'
 
 
 const App = () => {
@@ -39,7 +37,6 @@ const App = () => {
       <Route path='/agency/*' element={<AgencyRoutes />} />
       <Route path='/company/*' element={<CompanyRoutes />} />
       <Route path='/client/*' element={<ClientRoutes />} />
-      <Route path='/employee/*' element={<EmployeeRoutes />} />
     </Routes>
   )
 }
@@ -77,7 +74,7 @@ function AdminRoutes() {
 function AgencyRoutes() {
   return (
     <Routes>
-      <Route path='/' element={<ProtectedRoute role={"Agency"} ><Layout /></ProtectedRoute>} >
+      <Route path='/' element={<ProtectedRoute role={"agency"} ><Layout /></ProtectedRoute>} >
         <Route index element={<AgencyDashboard />} />
         <Route path='analytics' element={<AgencyAnalytics />} />
         <Route path='clients' element={<Clients />} />
@@ -87,11 +84,12 @@ function AgencyRoutes() {
         <Route path='employees' element={<AgencyEmployees />} />
         <Route path='messages' element={<AgencyMessages />} />
         <Route path='projects' element={<AgencyProject />} />
+        <Route path='settings' element={<SettingsPage />} />
       </Route>
 
-      <Route path='/login' element={<UnProtectedRoute role={"Agency"}><Login role={"Agency"} /></UnProtectedRoute>} />
-      <Route path='/forgot-password' element={<ForgotPassword role={"Agency"} />} />
-      <Route path='/reset-password/:token' element={<ResetPassword role={"Agency"} />} />
+      <Route path='/login' element={<UnProtectedRoute role={"agency"}><Login role={"agency"} /></UnProtectedRoute>} />
+      <Route path='/forgot-password' element={<ForgotPassword role={"agency"} />} />
+      <Route path='/reset-password/:token' element={<ResetPassword role={"agency"} />} />
     </Routes>
   )
 }
@@ -107,22 +105,6 @@ function CompanyRoutes() {
 }
 
 
-function EmployeeRoutes() {
-  return (
-    <Routes>
-      <Route path='/login' element={<UnProtectedRoute role={"Employee"}><Login role={"Employee"} /></UnProtectedRoute>} />
-      <Route path='/forgot-password' element={<ForgotPassword role={"Employee"} />} />
-      <Route path='/reset-password/:token' element={<ResetPassword role={"Employee"} />} />
-      
-      <Route path='/' element={<ProtectedRoute role={"Employee"} ><EmployeeLayout /></ProtectedRoute>} >
-        <Route index element={<EmployeeDashboard />} />
-      </Route>
-
-    </Routes>
-
-    
-  )
-}
 
 function ClientRoutes() {
   return (

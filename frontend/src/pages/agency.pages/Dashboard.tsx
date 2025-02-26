@@ -1,24 +1,20 @@
-import { setUser } from '@/redux/slices/userSlice';
 import  { useEffect,useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import AgencyDashboard from '../../components/agency.components/agencyside.components/agencyDashoard';
 import AgencyClientDashboard from '@/components/agency.components/clientside.components/clientDashboard';
+import { RootState } from '@/types/common.types';
 
 const Dashboard = () => {
   const [isAgencyDashboard,setIsAgencyDashboard] = useState(false)
-  const dispatch = useDispatch()
-  const userDetails = useSelector((state:any)=>state.user)
+  const user = useSelector((state:RootState)=>state.user)
 
    useEffect(() => {
-    const selectedId = localStorage.getItem('selectedClient');
-    if (selectedId && selectedId !== "") {
+    if (user.user_id && user.user_id !== "") {
       setIsAgencyDashboard(false)
-      dispatch(setUser({Id:selectedId,role:"Agency-Client"}))
     }else{
       setIsAgencyDashboard(true)
-      dispatch(setUser({role:"Agency"}))
     }
-  }, [userDetails.role,userDetails.Id]);
+  }, [user.role,user.user_id]);
   return (
     isAgencyDashboard?<AgencyDashboard/>:<AgencyClientDashboard/>
   )

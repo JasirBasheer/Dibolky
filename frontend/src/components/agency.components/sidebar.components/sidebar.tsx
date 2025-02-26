@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import ExpandableMenuItem from './expandableMenu-item';
+import MenuItem from './menu-item';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/types/common.types';
+import { useQuery } from '@tanstack/react-query';
+import { fetchAgencyMenuApi } from '@/services/agency/get.services';
 import {
   LayoutDashboard, Users, BarChart, FileText, Settings,
   DollarSign, FileClock, FileChartColumn, Pen,
@@ -7,16 +15,9 @@ import {
   ChartNoAxesCombined, ChartBarStacked,
   MessageSquareText, Building2, UserCircle, Shield,
 } from 'lucide-react';
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import ExpandableMenuItem from './expandableMenu-item';
-import MenuItem from './menu-item';
-import { useDispatch, useSelector } from 'react-redux';
-import axios from '../../../utils/axios';
-import { setUser } from '@/redux/slices/userSlice';
 
 
-const icons: any = {
+const icons: Record<string, React.ComponentType> = {
   LayoutDashboard: LayoutDashboard,
   Users: Users,
   BarChart: BarChart,
@@ -46,48 +47,26 @@ interface SideBarProps {
 const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
   const location = useLocation();
   const [activeMenus, setActiveMenus] = useState<Record<string, boolean>>({});
-  const [menu, setMenu] = useState<any>({});
-  const userDetails = useSelector((state: any) => state.user);
-  const [isLoading, setIsLoading] = useState(true)
-  const dispatch = useDispatch()
-
-  const fetchMenus = async () => {
-    try {
-      setIsLoading(true);
-      const endpoint = userDetails?.role === "Agency-Client"
-        ? `/api/agency/client/${userDetails.Id}`
-        : `/api/entities/${userDetails.role}/${userDetails.planId}`;
+  const user = useSelector((state: RootState) => state.user);
 
 
-      const response = await axios.get(endpoint);
+  const { data: menu, isLoading, refetch } = useQuery({
+    queryKey: ["get-agency-menu"],
+    queryFn: () => {
+      return fetchAgencyMenuApi(user.role, user.role == "agency" ? user.planId : user.user_id)
+    },
+    select: (data) => data?.data.menu || {},
+  })
 
-      if (response) {
-        const menuData = userDetails?.role === "Agency-Client"
-          ? response.data.client.menu || {}
-          : response.data.menu || {};
-
-        setMenu(menuData);
-      }
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Menu Fetch Error:", error);
-      setIsLoading(false);
-      setMenu({});
-    }
-  };
 
 
 
 
   useEffect(() => {
-    const selectedId = localStorage.getItem('selectedClient');
-    if (selectedId && selectedId !== "") {
-      dispatch(setUser({ role: "Agency-Client", Id: selectedId }));
+    if (user.role != "") {
+      refetch();
     }
-    if (userDetails?.role) {
-      fetchMenus();
-    }
-  }, [userDetails?.role, userDetails?.Id, dispatch]);
+  }, [user.name]);
 
   const menuSkeletons = Array(2).fill(0).map((_, index) => (
     <div key={index} >
@@ -129,8 +108,8 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
 
   }, [location.pathname, menu]);
 
-  const currentPath = useMemo(() => 
-    location.pathname.replace('/client', ''), 
+  const currentPath = useMemo(() =>
+    location.pathname.replace('/agency', ''),
     [location.pathname]
   );
 
@@ -161,6 +140,12 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
               path={[`/agency`]}
               isActive={location.pathname === `/agency`}
             />
+            <MenuItem
+              icon={FileText}
+              label="Projects"
+              path={[`/projects`]}
+              isActive={currentPath === `/projects`}
+            />
             {Object.entries(menu).map(([key, menuItem]: [string, any]) =>
               !menuItem.subItems ? (
                 <MenuItem
@@ -170,7 +155,7 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
                   path={menuItem.path}
                   isActive={menuItem.path.includes(currentPath)}
                 />
-                
+
               ) : (
                 <ExpandableMenuItem
                   key={key}
@@ -179,15 +164,15 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
                   isOpen={activeMenus[key]}
                   onClick={() => toggleMenu(key)}
                   subItems={menuItem.subItems}
-                  activeSubPath={currentPath} 
+                  activeSubPath={currentPath}
                 />
               )
             )}
             <MenuItem
               icon={Settings}
               label="Settings"
-              path={[`/client/settings`]}
-              isActive={location.pathname === `/client/settings`}
+              path={[`/settings`]}
+              isActive={currentPath === `/settings`}
             />
           </>
         )}

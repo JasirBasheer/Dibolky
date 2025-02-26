@@ -9,6 +9,8 @@ export interface IClientTenant extends Document {
     socialMedia_credentials?: credentials;
     services?: any;
     menu?: any;
+    isSocialMediaInitialized: boolean,
+    isPaymentInitialized: boolean,
     setSocialMediaToken?: (provider: string, token: string) => Promise<void>;
     setSocialMediaUserName?: (provider: string, username: string) => Promise<void>;
 
@@ -33,6 +35,7 @@ export interface IClient extends Document {
     email: string;
     industry: string;
     password: string;
+    isBlocked?: boolean;
 }
 
 

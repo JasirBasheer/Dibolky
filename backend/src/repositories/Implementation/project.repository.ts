@@ -44,9 +44,9 @@ export class ProjectRepository extends BaseRepository<IProject> implements IProj
         service_details: object, 
         category: string, 
         dead_line: Date
-    ): Promise<IProject> {
+    ): Promise<void> {
         const model = await this.getModel(orgId);
-        return await model.create({orgId,clientId,client_name,service_name,service_details,category,dead_line});
+        const res =  await model.create({orgId,client:{clientId,client_name},service_name,service_details,category,dead_line});
     }
 
     async fetchAllProjects(
@@ -54,6 +54,15 @@ export class ProjectRepository extends BaseRepository<IProject> implements IProj
     ): Promise<Partial<IProject[]> | null> {
         const model = await this.getModel(orgId);
         return await model.find({});
+    }
+
+    async editProjectStatus(
+        orgId:string,
+        projectId:string,
+        status:string
+    ):Promise<IProject | null>{
+        const model = await this.getModel(orgId);
+        return null
     }
 
 }

@@ -1,5 +1,5 @@
 import { validateField } from "../../validation/portalValidation";
-import { FormContextType, InputFieldProps } from '../../types/portalTypes';
+import { FormContextType, InputFieldProps } from '../../types/portal.types';
 
 
 export const renderInputField = (fieldProps: InputFieldProps,formContext: FormContextType) => {

@@ -1,5 +1,5 @@
 import { inject, injectable } from 'tsyringe';
-import { AgencyPlan } from '../../models/admin/plan.model'
+import { AgencyPlan, InfluencerPlan, } from '../../models/admin/plan.model'
 import { IPlan, planDetails } from '../../shared/types/admin.types'
 import { IPlanRepository } from '../Interface/IPlanRepository'
 import { Model } from 'mongoose';
@@ -24,11 +24,30 @@ export default class PlanRepository extends BaseRepository<IPlan> implements IPl
                 return await AgencyPlan.findOne({ _id: planId }).lean();
         }
 
+        async getInfluencerPlans()
+                : Promise<IPlan[] | null> {
+                return await InfluencerPlan.find({})
+        }
+
+        async getInfluencerPlan(
+                planId: string
+        ): Promise<IPlan | null> {
+                return await InfluencerPlan.findOne({ _id: planId }).lean();
+        }
+
+
 
         async createAgencyPlan(
                 details: planDetails
-        ): Promise<IPlan | null> {
+        ): Promise<Partial<IPlan> | null> {
                 const newPlan = new AgencyPlan(details);
+                return await newPlan.save();
+        }
+
+        async createInfluencerPlan(
+                details: planDetails
+        ): Promise<Partial<IPlan> | null> {
+                const newPlan = new InfluencerPlan(details);
                 return await newPlan.save();
         }
 

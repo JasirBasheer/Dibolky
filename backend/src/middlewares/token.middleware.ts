@@ -47,7 +47,7 @@ export const TokenMiddleWare = async (req: Request, res: Response, next: NextFun
         const tokenDetails = await verifyToken(accessTokenSecret, token ?? '')
 
         let ownerDetails
-        if (tokenDetails.role == 'Agency') {
+        if (tokenDetails.role == 'agency') {
             ownerDetails = await agencyService.verifyOwner(tokenDetails.id)
         } else if (tokenDetails.role == 'Admin') {
             ownerDetails = await adminService.verifyAdmin(tokenDetails.id)
@@ -62,7 +62,7 @@ export const TokenMiddleWare = async (req: Request, res: Response, next: NextFun
             res.clearCookie('accessToken')
             throw new UnauthorizedError('Token blacklisted please login to continue')
         }
-        ownerDetails = ownerDetails.toObject();
+        ownerDetails = ownerDetails?.toObject();
         ownerDetails.role = tokenDetails.role
         req.details = ownerDetails
         req.tokenDetails = tokenDetails

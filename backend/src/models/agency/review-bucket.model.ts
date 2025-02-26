@@ -11,8 +11,8 @@ export const ReviewBucketSchema: Schema<IReviewBucket> = new mongoose.Schema({
         type: String,
         required: true
     },
-    url: {
-        type: [String],
+    files: {
+        type: Object,
         required: true
     },
     status: {

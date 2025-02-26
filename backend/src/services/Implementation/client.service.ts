@@ -2,23 +2,38 @@ import { inject, injectable } from "tsyringe";
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { IClientService } from "../Interface/IClientService";
 import { NotFoundError, UnauthorizedError, comparePassword } from "mern.common";
-import { clientSchema } from "../../models/agency/client.model";
 import { exchangeForLongLivedToken } from "../../provider.strategies/instagram.strategy";
-import { ReviewBucketSchema } from "../../models/agency/review-bucket.model";
-import { ownerDetailsSchema } from "../../models/agency/agency.model";
+import { IClient, IClientTenant } from "../../shared/types/client.types";
+import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
+import { IContentRepository } from "../../repositories/Interface/IContentRepository";
+import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
+import { IOwnerDetailsSchema } from "../../shared/types/agency.types";
 
 @injectable()
 export default class ClientService implements IClientService {
   private clientRepository: IClientRepository;
+  private clientTenantRepository: IClientTenantRepository
+  private contentRepository: IContentRepository
+  private agencyTenantRepository: IAgencyTenantRepository
 
   constructor(
     @inject('ClientRepository') clientRepository: IClientRepository,
+    @inject('ClientTenantRepository') clientTenantRepository: IClientTenantRepository,
+    @inject('ContentRepository') contentRepository: IContentRepository,
+    @inject('AgencyTenantRepository') agencyTenantRepository: IAgencyTenantRepository,
+    
 
   ) {
     this.clientRepository = clientRepository
+    this.clientTenantRepository = clientTenantRepository
+    this.contentRepository = contentRepository
+    this.agencyTenantRepository = agencyTenantRepository
   }
 
-  async clientLoginHandler(email: string, password: string): Promise<any> {
+  async clientLoginHandler(
+    email: string,
+    password: string
+  ): Promise<string> {
     const clientDetails = await this.clientRepository.findClientWithMail(email);
     if (!clientDetails) throw new NotFoundError('Account not found');
     if (clientDetails?.isBlocked) throw new UnauthorizedError('Account is blocked');
@@ -26,44 +41,60 @@ export default class ClientService implements IClientService {
     const isValid = await comparePassword(password, clientDetails.password);
     if (!isValid) throw new UnauthorizedError('Invalid credentials');
 
-    return clientDetails._id
+    return clientDetails._id as string
   }
 
-  async verifyClient(id: string): Promise<any> {
-    return await this.clientRepository.findClientWithId(id)
+  async verifyClient(
+    client_id: string
+  ): Promise<IClient | null> {
+    return await this.clientRepository.findClientWithId(client_id)
   }
 
-  async getClientDetails(tenantDb:any,email:string):Promise<any>{
-    tenantDb = await tenantDb.model('clients',clientSchema)
-    return await this.clientRepository.getClientDetailsByMail(tenantDb,email)
+  async getClientDetails(
+    orgId: string,
+    email: string
+  ): Promise<IClientTenant | null> {
+    return await this.clientTenantRepository.getClientDetailsByMail(orgId, email)
   }
 
-  async getOwners(tenantDb:any):Promise<any>{
-    const ownerSchema = await tenantDb.model('OwnerDetail',ownerDetailsSchema)
-    return await this.clientRepository.getOwnerDetails(ownerSchema)
+  async getOwners(
+    orgId: string
+  ): Promise<IOwnerDetailsSchema[] | null> {
+    return await this.agencyTenantRepository.getOwners(orgId)
   }
 
 
-  async saveClientSocialMediaTokens(id: string, provider: string, token: string, db?: any): Promise<any> {
+  async saveClientSocialMediaTokens(
+    orgId: string,
+    client_id: string,
+    provider: string,
+    token: string,
+  ): Promise<void> {
     token = await exchangeForLongLivedToken(token)
-    const database = db.model('clients', clientSchema)
-    return await this.clientRepository.setSocialMediaTokens(id, provider, token, database)
+    return await this.clientTenantRepository.setSocialMediaTokens(orgId, client_id, provider, token)
 
   }
 
-  async setSocialMediaUserNames(id: string, provider: string, username: string, db?: any): Promise<any> {
-    const database = db.model('clients', clientSchema)
-    return await this.clientRepository.setSocialMediaUserNames(id, provider, username, database)
+  async setSocialMediaUserNames(
+    orgId: string,
+    client_id: string,
+    provider: string,
+    username: string
+  ): Promise<void> {
+    return await this.clientTenantRepository.setSocialMediaUserNames(orgId, client_id, provider, username)
   }
 
-  async getReviewBucket(clientId: string, tenantDb: any): Promise<any> {
-    const db = await tenantDb.model('reviewBucket', ReviewBucketSchema)
-    return await this.clientRepository.getReviewBucketById(clientId, db)
+  async getReviewBucket(
+    orgId: string,
+    clientId: string
+  ): Promise<any> {
+    return await this.contentRepository.getContentById(orgId, clientId)
   }
 
-  async getClientInMainDb(email:string):Promise<any>{
-    const client = await this.clientRepository.getClientInMainDb(email)
-    return client
+  async getClientInMainDb(
+    email: string
+  ): Promise<any> {
+    return await this.clientRepository.findClientWithMail(email)
   }
 
 }

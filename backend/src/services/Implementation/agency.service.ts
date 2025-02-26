@@ -1,45 +1,46 @@
-import { clientSchema, IClient } from "../../models/agency/client.model";
-import { IAgency, IAgencyOwner } from "../../shared/types/agency.types";
+import { IAgency, IOwnerDetailsSchema, IReviewBucket } from "../../shared/types/agency.types";
 import { createClientMailData } from "../../shared/utils/mail.datas";
 import bcrypt from 'bcrypt'
 import { IAgencyService } from "../Interface/IAgencyService";
 import { inject, injectable } from "tsyringe";
 import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepository";
 import { ConflictError, CustomError, generatePassword, hashPassword, NotFoundError, sendMail, UnauthorizedError } from "mern.common";
-import { ownerDetailsSchema } from "../../models/agency/agency.model";
 import { createNewMenuForClient } from "../../shared/utils/menu.utils";
-import { connectTenantDB } from "../../config/db";
-import { ReviewBucketSchema } from "../../models/agency/review-bucket.model";
-import { uploadToS3 } from "../../shared/utils/aws";
-import { AWS_S3_BUCKET_NAME } from "../../config/env";
-import { projectSchema } from "../../models/agency/project.model";
-import { createClientDTO } from "../../dto/client";
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { IProjectRepository } from "../../repositories/Interface/IProjectRepository";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
+import { IClient, IClientTenant } from "../../shared/types/client.types";
+import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
+import { IContentRepository } from "../../repositories/Interface/IContentRepository";
 
 @injectable()
 export default class AgencyService implements IAgencyService {
     private agencyRepository: IAgencyRepository;
+    private agencyTenantRepository: IAgencyTenantRepository;
     private clientRepository: IClientRepository;
     private clientTenantRepository: IClientTenantRepository;
     private projectRepository: IProjectRepository;
+    private contentRepository: IContentRepository;
 
     constructor(
         @inject('AgencyRepository') agencyRepository: IAgencyRepository,
+        @inject('AgencyTenantRepository') agencyTenantRepository: IAgencyTenantRepository,
         @inject('ClientRepository') clientRepository: IClientRepository,
-        @inject('ClientTenatRepository') clientTenantRepository: IClientTenantRepository,
+        @inject('ClientTenantRepository') clientTenantRepository: IClientTenantRepository,
         @inject('ProjectRepository') projectRepository: IProjectRepository,
+        @inject('ContentRepository') contentRepository: IContentRepository,
 
     ) {
         this.agencyRepository = agencyRepository,
+            this.agencyTenantRepository = agencyTenantRepository
         this.clientRepository = clientRepository,
-        this.clientTenantRepository = clientTenantRepository,
-        this.projectRepository = projectRepository
+            this.clientTenantRepository = clientTenantRepository,
+            this.projectRepository = projectRepository
+        this.contentRepository = contentRepository
     }
 
     async agencyLoginHandler(
-        email: string, 
+        email: string,
         password: string
     ): Promise<string> {
         try {
@@ -56,6 +57,35 @@ export default class AgencyService implements IAgencyService {
         }
     }
 
+    async getProjectsCount(
+        orgId: string
+    ): Promise<object> {
+        const projects = await this.projectRepository.fetchAllProjects(orgId)
+        const weaklyProjects = projects?.filter((project: any) => new Date(project.createdAt).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
+        return {
+            count: projects?.length || 0,
+            lastWeekCount: weaklyProjects?.length || 0
+        }
+    }
+
+    async getClientsCount(
+        orgId: string
+    ): Promise<object> {
+        const clients = await this.clientTenantRepository.getAllClients(orgId)
+        const weaklyClients = clients.filter((client: any) => new Date(client.createdAt).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
+        return {
+            count: clients.length || 0,
+            lastWeekCount: weaklyClients.length || 0
+        }
+    }
+
+
+    async getAllAvailableClients(
+        orgId: string
+    ): Promise<IClientTenant[]> {
+        return await this.clientTenantRepository.getAllClients(orgId)
+    }
+
 
     async verifyOwner(
         agency_id: string
@@ -64,39 +94,55 @@ export default class AgencyService implements IAgencyService {
     }
 
 
+    async getAgencyOwnerDetails(
+        orgId: string
+    ): Promise<IOwnerDetailsSchema | null> {
+        let AgencyOwners =  await this.agencyTenantRepository.getOwners(orgId)
+        if(!AgencyOwners)throw new NotFoundError("Agency not found , Please try again")
+        return AgencyOwners[0] 
+    }
+    
     async createClient(
-        newClientDetials:createClientDTO
+        orgId: string,
+        name: string,
+        email: string,
+        industry: string,
+        services: any,
+        menu: string[],
+        organizationName: string
     ): Promise<IClient | void> {
-
-        const client = await this.clientRepository.findClientWithMail(newClientDetials.email)
-        if (client && client.orgId == newClientDetials.orgId) throw new ConflictError('Client already exists with this email')
-        const Agency = await this.agencyRepository.findAgencyWithOrgId(newClientDetials.orgId)
+        const client = await this.clientRepository.findClientWithMail(email)
+        if (client && client.orgId == orgId) throw new ConflictError('Client already exists with this email')
+        const Agency = await this.agencyRepository.findAgencyWithOrgId(orgId)
         if (!Agency) throw new NotFoundError("Agency not found , Please try again")
         if (Agency.remainingClients == 0) throw new CustomError("Client creation limit reached ,Please upgrade for more clients", 402)
 
-        let password = await generatePassword(newClientDetials.name)
+        let password = await generatePassword(name)
         const HashedPassword = await hashPassword(password)
 
         const clientDetails = {
-            orgId:newClientDetials.orgId, name:newClientDetials.name, email:newClientDetials.email,
-            industry:newClientDetials.industry, socialMedia_credentials:newClientDetials.socialMedia_credentials,
+            orgId: orgId, name: name, email: email,
+            industry: industry,
             password: HashedPassword
         }
-        let newMenu = createNewMenuForClient(newClientDetials.menu)
+        let newMenu = createNewMenuForClient(menu)
 
-        const createdClient:any = await this.clientTenantRepository.createClient(newClientDetials.orgId, { ...clientDetails, menu: newMenu })
+        const createdClient: any = await this.clientTenantRepository.createClient(orgId, { ...clientDetails, menu: newMenu })
 
-        for(let item in newClientDetials.services){
-            const { serviceName, serviceDetails } = newClientDetials.services[item];  
-            const { deadline, ...details } = serviceDetails; 
-            await this.projectRepository.createProject(createdClient.orgId,createdClient._id,createdClient.name,serviceName,details,item,new Date(deadline))
+        for (let item in services) {
+            const { serviceName, serviceDetails } = services[item];
+            const { deadline, ...details } = serviceDetails;
+            await this.projectRepository.createProject(createdClient.orgId, createdClient._id, createdClient.name, serviceName, details, item, new Date(deadline))
         }
-        
-        
-        if (createdClient) await this.clientRepository.createClient(clientDetails)
-        const data = createClientMailData(newClientDetials.email, newClientDetials.name.charAt(0).toUpperCase() + newClientDetials.name.slice(1).toLowerCase(),newClientDetials.organizationName, password)
+
+
+        if (createdClient) {
+            const c = await this.clientRepository.createClient(clientDetails)
+            console.log("client created in main db", c)
+        }
+        const data = createClientMailData(email, name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(), organizationName, password)
         sendMail(
-            newClientDetials.email,
+            email,
             `Welcome to ${Agency.organizationName}! Excited to Partner with You`,
             data,
             (error: any, info: any) => {
@@ -110,79 +156,78 @@ export default class AgencyService implements IAgencyService {
         return createdClient
     }
 
-    async saveAgencySocialMediaTokens(orgId: string, Provider: string, token: string, tenantDb: any): Promise<any> {
-        try {
-            const db = await tenantDb.model('ownerDetails', ownerDetailsSchema)
-            return await this.agencyRepository.setSocialMediaTokens(orgId, Provider, token, db)
-        } catch (error) {
 
-        }
+    async saveAgencySocialMediaTokens(
+        orgId: string,
+        provider: string,
+        token: string,
+    ): Promise<any> {
+        return await this.agencyTenantRepository.setSocialMediaTokens(orgId, provider, token)
     }
 
-    async getAllClients(orgId: string): Promise<any> {
-        const db = await connectTenantDB(orgId)
-        return await this.agencyRepository.getAllClients(db)
+    async getAllClients(
+        orgId: string
+    ): Promise<IClientTenant[] | null> {
+        return await this.clientTenantRepository.getAllClients(orgId)
     }
 
-    async getClient(db: any, id: string): Promise<any> {
-        return await this.agencyRepository.getClientById(db, id)
-
-    }
-    async saveContentToDb(id: string, orgId: string, tenantDb: any, files: any, platforms: any, contentType: string, caption: string): Promise<any> {
-        let contentUrls = [];
-        for (let file of files) {
-            const fileObject = new File([file.buffer], file.originalname.toLowerCase(), { type: file.mimetype });
-            const contentUrl = await uploadToS3(fileObject, `test/${file.originalname.toLowerCase()}`, AWS_S3_BUCKET_NAME);
-            contentUrls.push(contentUrl);
-        }
-
-        const db = await tenantDb.model('reviewBucket', ReviewBucketSchema)
-        const details = { url: contentUrls, platforms, contentType, id, orgId, caption }
-        return await this.agencyRepository.saveContentToDb(db, details)
+    async getClient(
+        orgId: string,
+        client_id: string
+    ): Promise<IClientTenant | null> {
+        return await this.clientTenantRepository.getClientById(orgId, client_id)
     }
 
 
-    async getContent(tenantDb: any, contentId: any): Promise<any> {
-        const db = await tenantDb.model('reviewBucket', ReviewBucketSchema)
-        return await this.agencyRepository.getContentById(contentId, db)
+    async saveContentToDb(
+        client_id: string,
+        orgId: string,
+        files: any,
+        platforms: any,
+        contentType: string,
+        caption: string
+    ): Promise<IReviewBucket | null> {
+        const details = { files, platforms, contentType, client_id, orgId, caption }
+        return await this.contentRepository.saveContent(details)
+    }
+
+
+    async getContent(
+        orgId: string,
+        contentId: string
+    ): Promise<IReviewBucket | null> {
+        return await this.contentRepository.getContentById(orgId, contentId)
 
     }
 
-    async changeContentStatus(tenantDb: any, contentId: string, status: string): Promise<any> {
-        const db = await tenantDb.model('reviewBucket', ReviewBucketSchema)
-        return await this.agencyRepository.changeContentStatusById(contentId, db, status)
+    async changeContentStatus(
+        orgId: string,
+        contentId: string,
+        status: string
+    ): Promise<IReviewBucket | null> {
+        return await this.contentRepository.changeContentStatus(orgId, contentId, status)
     }
 
-    async getAvailableUsers(tenantDb:any):Promise<any>{
-        const clientModel = await tenantDb.model('client', clientSchema)
-        return await this.agencyRepository.fetchAllAvailableUsers(clientModel)
+
+
+    async editProjectStatus(
+        orgId: string,
+        projectId: string,
+        status: string
+    ): Promise<any> {
+        return await this.projectRepository.editProjectStatus(orgId, projectId, status)
     }
 
-    async  getProjectsCount(tenantDb:any):Promise<any>{
-        const projectModel = await tenantDb.model('project', projectSchema)
-        const projects = await this.agencyRepository.getProjectsCount(projectModel)
-        const weaklyProjects = projects.filter((project:any)=>new Date(project.createdAt).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
+    async getInitialSetUp(
+        orgId: string
+    ): Promise<object> {
+        const owners = await this.agencyTenantRepository.getOwners(orgId)
+
         return {
-            count:projects.length || 0,
-            lastWeekCount:weaklyProjects.length || 0
-        }
-    }   
-
-    async getClientsCount(tenantDb:any):Promise<any>{
-        const clientModel = await tenantDb.model('client', clientSchema)
-        const clients = await this.agencyRepository.getClientsCount(clientModel)
-        const weaklyClients = clients.filter((client:any)=>new Date(client.createdAt).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
-        return {
-            count:clients.length || 0,
-            lastWeekCount:weaklyClients.length || 0
+            isSocialMediaInitialized: owners?.[0]?.isSocialMediaInitialized,
+            isPaymentInitialized: owners?.[0]?.isPaymentInitialized
         }
     }
-
-    async editProjectStatus(tenantDb:any,projectId:string,status:string):Promise<any>{
-        const projectModel = await tenantDb.model('project', projectSchema)
-        return await this.agencyRepository.editProjectStatus(projectModel,projectId,status)
-    }
-
 
 }
 

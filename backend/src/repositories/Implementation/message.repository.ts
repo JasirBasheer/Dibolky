@@ -36,11 +36,13 @@ export default class MessageRepository extends BaseRepository<IMessage> implemen
 
     async createMessage(
         orgId: string,
+        chatId:string,
         messageDetails: Partial<IMessage>
     ): Promise<IMessage | null> {
         const model = await this.getModel(orgId);
-        const newMessage = new model(messageDetails)
-        return await newMessage.save();
+        const newMessage = { chatId: chatId, ...messageDetails }
+        const message = new model(newMessage)
+        return await message.save();
     }
 
 
@@ -71,7 +73,7 @@ export default class MessageRepository extends BaseRepository<IMessage> implemen
     async createCommonMessage(
         orgId: string,
         message: Partial<IMessage>
-    ): Promise<Partial<IMessage> | null> {
+    ): Promise<IMessage | null> {
         const model = await this.getModel(orgId);
         const newCommonMessage = new model(message)
         return await newCommonMessage.save()

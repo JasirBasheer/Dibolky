@@ -1,5 +1,5 @@
 import { Model, Schema } from "mongoose";
-import { inject } from "tsyringe";
+import { inject, injectable } from "tsyringe";
 import { BaseRepository } from "mern.common";
 import { IClientTenantRepository } from "../Interface/IClientTenantRepository";
 import { IClientTenant, User } from "../../shared/types/client.types";
@@ -8,7 +8,7 @@ import { NotFoundError } from "rxjs";
 
 
 
-
+@injectable()
 export class ClientTenantRepository extends BaseRepository<IClientTenant> implements IClientTenantRepository {
     private clientSchema: Schema;
     private modelName = 'client';

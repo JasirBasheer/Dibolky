@@ -10,13 +10,13 @@ import {
     SendResponse
 } from 'mern.common';
 import { IChatService } from '../../services/Interface/IChatService';
+import { getS3UploadUrl } from '../../config/aws-s3.config';
 
 @injectable()
 /** Implementation of Entity Controller */
 export default class EntityController implements IEntityController {
     private entityService: IEntityService;
     private chatService: IChatService;
-
     /**
     * Initializes the EntityController with required service dependencies.
     * @param entityService - Service for general entity operations.
@@ -69,10 +69,15 @@ export default class EntityController implements IEntityController {
         try {
             let userCountry = req.cookies?.userCountry
             let plans = await this.entityService.getAllPlans()
+
             let PriceConverisonFunc = getPriceConversionFunc(userCountry)
 
             const convertedPlans = {
-                Agency: plans.Agency.map((item: any) => ({
+                Agency: plans?.Agency.map((item: any) => ({
+                    ...item.toObject(),
+                    price: PriceConverisonFunc(item.price as number)
+                })),
+                Influencer: plans?.Influencer.map((item: any) => ({
                     ...item.toObject(),
                     price: PriceConverisonFunc(item.price as number)
                 }))
@@ -105,7 +110,7 @@ export default class EntityController implements IEntityController {
             const plan = await this.entityService.getPlan(plans, id, platform)
             if (!plan) return SendResponse(res, HTTPStatusCodes.BAD_REQUEST, ResponseMessage.BAD_REQUEST, { message: "Platform or Plan not found please try again" })
             let PriceConverisonFunc = getPriceConversionFunc(userCountry)
-            const convertedPlanPrice = PriceConverisonFunc(plan.price)
+            const convertedPlanPrice = PriceConverisonFunc(plan.price as number)
             plan.price = convertedPlanPrice
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plan })
         } catch (error) {
@@ -127,7 +132,6 @@ export default class EntityController implements IEntityController {
         next: NextFunction
     ): Promise<void> {
         try {
-            
             const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, paymentGateway, description, currency } = req.body.details
             const { transaction_id } = req.body
 
@@ -138,6 +142,20 @@ export default class EntityController implements IEntityController {
             next(error);
         }
 
+    }
+
+
+    async createInfluencer(req: Request, res: Response, next: NextFunction): Promise<void>{
+        try {
+            const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, paymentGateway, description, currency } = req.body.details
+            const { transaction_id } = req.body
+
+            const createdAgency = await this.entityService.createInfluencer(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, transaction_id, paymentGateway, description, currency)
+            if (!createdAgency) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.BAD_REQUEST)
+            SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
+        } catch (error) {
+            next(error);
+        }
     }
 
     /**
@@ -156,9 +174,13 @@ export default class EntityController implements IEntityController {
             const { role, planId } = req.params;
             let menu;
 
-            if (role === "Agency") {
+
+            if (role === "agency" ) {
                 menu = await this.entityService.getAgencyMenu(planId);
-            } else if (role === "Admin") {
+            }else if(role === "agency-client"){
+                console.log(req.details.orgId,planId,"tehireaserfamsdjfklasdjflkasjfasdkl")
+                menu = await this.entityService.getClientMenu(req.details.orgId,planId);
+            }else if (role === "Admin") {
                 menu = {
                     clients: {
                         label: 'All Clients',
@@ -220,7 +242,7 @@ export default class EntityController implements IEntityController {
         next: NextFunction
     ): Promise<void> {
         try {
-            console.log("ownerDetails")
+
             const ownerDetails = await this.entityService.getOwner(req.tenantDb)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { ownerDetails: ownerDetails[0] })
         } catch (error) {
@@ -234,7 +256,7 @@ export default class EntityController implements IEntityController {
         next: NextFunction
     ): Promise<void> {
         const { userId } = req.body
-        const chats = await this.chatService.getChats(req.tenantDb, userId)
+        const chats = await this.chatService.getChats(req.details.orgId, userId)
         SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
     }
 
@@ -246,7 +268,7 @@ export default class EntityController implements IEntityController {
     ): Promise<void> {
         const { chatId } = req.body
         console.log(chatId);
-        const chats = await this.chatService.getChat(req.tenantDb, chatId)
+        const chats = await this.chatService.getChat(req.details.orgId, chatId)
         SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
     }
 
@@ -256,7 +278,7 @@ export default class EntityController implements IEntityController {
         next: NextFunction
     ): Promise<void> {
         const { userId } = req.body
-        // const messages = await this.chatService.getMessages(req.tenantDb,userId)
+        // const messages = await this.chatService.getMessages(req.details.orgId,userId)
     }
 
 
@@ -275,8 +297,18 @@ export default class EntityController implements IEntityController {
 
     async getAllProjects(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const projects = await this.entityService.fetchAllProjects(req.tenantDb)
+            const projects = await this.entityService.fetchAllProjects(req.details.orgId)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async getS3UploadUrl(req: Request, res: Response, next: NextFunction): Promise<void>{
+        try {
+            const { fileName, fileType } = req.body
+            const {uploadURL, key} = await getS3UploadUrl(fileName, fileType)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { uploadURL, key })
         } catch (error) {
             next(error)
         }

@@ -43,22 +43,25 @@ import ChatRepository from "../repositories/Implementation/chat.repository";
 import { IChatRepository } from "../repositories/Interface/IChatRepository";
 import { IChatService } from "../services/Interface/IChatService";
 import ChatService from "../services/Implementation/chat.service";
-import agencyModel from "../models/agency/agency.model";
+import agencyModel, { ownerDetailsSchema } from "../models/agency/agency.model";
 import { projectSchema } from "../models/agency/project.model";
 import { ProjectRepository } from "../repositories/Implementation/project.repository";
 import { IProjectRepository } from "../repositories/Interface/IProjectRepository";
-import { Client, clientSchema } from "../models/agency/client.model";
+import Client,{ clientSchema } from "../models/agency/client.model";
 import { chatSchema, messageSchema } from "../models/chat/chat";
 import { ReviewBucketSchema } from "../models/agency/review-bucket.model";
 import { AgencyPlan } from "../models/admin/plan.model";
 import { IClientTenantRepository } from "../repositories/Interface/IClientTenantRepository";
 import { ClientTenantRepository } from "../repositories/Implementation/client-tenant.repository";
-import { IContentRepositroy } from "../repositories/Interface/IContentRepository";
+import { IContentRepository } from "../repositories/Interface/IContentRepository";
 import { ContentRepository } from "../repositories/Implementation/content.repository";
 import { IMessageRepository } from "../repositories/Interface/IMessageRepository";
 import MessageRepository from "../repositories/Implementation/message.repository";
 import { ITransactionRepository } from "../repositories/Interface/ITransactionRepository";
 import TransactionRepository from "../repositories/Implementation/transaction.repository";
+import { IAgencyTenantRepository } from "../repositories/Interface/IAgencyTenantRepository";
+import AgencyTenantRepository from "../repositories/Implementation/agency-tenant.repository";
+import { transactionSchema } from "../models/admin/transaction.model";
 
 
 
@@ -66,11 +69,13 @@ import TransactionRepository from "../repositories/Implementation/transaction.re
 //* Model Registeration
 container.register('admin_model', { useValue: Admin });
 container.register('agency_model', { useValue: agencyModel });
+container.register('agency_tenant_model', { useValue: ownerDetailsSchema });
 container.register('project_model', { useValue: projectSchema });
-container.register('client_tenant_model', { useValue: clientSchema });
 container.register('client_model', { useValue: Client });
+container.register('client_tenant_model', { useValue: clientSchema });
 container.register('chat_model', { useValue: chatSchema });
 container.register('review_bucket_model', { useValue: ReviewBucketSchema });
+container.register('transaction_model', { useValue: transactionSchema });
 container.register('message_model', { useValue: messageSchema });
 container.register('plan_model', { useValue: AgencyPlan });
 
@@ -86,9 +91,10 @@ container.register<IChatRepository>('ChatRepository', { useClass: ChatRepository
 container.register<IProjectRepository>('ProjectRepository', { useClass: ProjectRepository });
 container.register<IChatRepository>('ChatRepository', { useClass: ChatRepository });
 container.register<IClientTenantRepository>('ClientTenantRepository', { useClass: ClientTenantRepository });
-container.register<IContentRepositroy>('ContentRepository', { useClass: ContentRepository });
+container.register<IContentRepository>('ContentRepository', { useClass: ContentRepository });
 container.register<IMessageRepository>('MessageRepository', { useClass: MessageRepository });
 container.register<ITransactionRepository>('TransactionRepository', { useClass: TransactionRepository });
+container.register<IAgencyTenantRepository>('AgencyTenantRepository', { useClass: AgencyTenantRepository });
 
 
 

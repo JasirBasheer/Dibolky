@@ -117,14 +117,14 @@ export default class ChatRepository extends BaseRepository<IChat> implements ICh
         if (!chat) throw new NotFoundError('Chat not found')
         chat.participants.push(memberDetails)
         return await chat.save()
-    }
+        }
 
 
     async findChatByMembers(
         orgId: string,
         userId: string,
         targetUserId: string
-    ): Promise<IChat[] | null> {
+    ): Promise<IChat | null> {
         const model = await this.getModel(orgId);
 
         return await model.findOne({

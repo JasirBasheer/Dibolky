@@ -25,6 +25,35 @@ export async function createFacebookOAuthURL(redirectUri: string): Promise<strin
 }
 
 
+export async function getMetaPagesDetails(access_token: string): Promise<any[]> {
+    try {
+        const pagesUrl = `https://graph.facebook.com/${META_API_VERSION}/me/accounts?access_token=${access_token}`;
+        const response = await fetch(pagesUrl);
+        const data = await response.json();
+        const pages = data?.data || [];
+
+        console.log("pages",pages,"data",data)
+
+        return await Promise.all(
+            pages.map(async (page: any) => {
+                const pageDetailsUrl = `https://graph.facebook.com/${META_API_VERSION}/${page.id}?fields=picture&access_token=${access_token}`;
+                const pageDetailsResponse = await fetch(pageDetailsUrl);
+                const pageDetailsData = await pageDetailsResponse.json();
+                
+                return {
+                    pageId:page.id,
+                    pageName: page.name,
+                    pageImage: pageDetailsData?.picture?.data?.url || '',
+                };
+            })
+        );
+
+    } catch (error) {
+        console.error("Error fetching pages:", error);
+        return [];
+    }
+}
+
 
 export async function handleFacebookUpload(content: any, access_token: string, client:any): Promise<any> {
     switch (content.contentType) {
@@ -33,6 +62,7 @@ export async function handleFacebookUpload(content: any, access_token: string, c
         case CONTENT_TYPE.VIDEO:
     }
 }
+
 
 
 // Reel init

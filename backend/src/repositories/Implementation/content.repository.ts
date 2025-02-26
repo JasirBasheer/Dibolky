@@ -4,10 +4,10 @@ import { IReviewBucket } from "../../shared/types/agency.types";
 import { Model } from "mongoose";
 import { Schema } from "mongoose";
 import { connectTenantDB } from "../../config/db";
-import { IContentRepositroy } from "../Interface/IContentRepository";
+import { IContentRepository } from "../Interface/IContentRepository";
 
 @injectable()
-export class ContentRepository extends BaseRepository<IReviewBucket> implements IContentRepositroy {
+export class ContentRepository extends BaseRepository<IReviewBucket> implements IContentRepository {
     private reviewBucketSchema: Schema;
     private modelName = 'reviewbucket';
     private models: Map<string, Model<IReviewBucket>> = new Map();

@@ -5,31 +5,42 @@ export interface AddressType {
     country: string;
 }
 
-export interface ICompanyOwner {
-    _id: mongoose.Types.ObjectId;
+
+export interface IInfluencer extends Document {
+    _id?: mongoose.Types.ObjectId | string;
     orgId: string;
-    planId: string;
-    validity: string;
-    organizaitionName: string;
+    organizationName: string;
     name: string;
     email: string;
     address: AddressType;
-    websiteUrl?: string;
+    websiteUrl: string;
     industry: string;
+    password?: string;
     contactNumber: number;
-    logo?: string;
-    password: string;
-    remainingProjects: number;
-    remainingClients: number;
+    planId: string;
+    validity: string;
+    logo: string;
+    remainingClients?: number;
     isBlocked: boolean;
-    planPurchasedRate: number
+    planPurchasedRate: number;
+    currency?:string;
 }
 
 
 export interface IOwnerDetailsSchema {
     ownerId?: string; 
     orgId?: string; 
-    socialMedias?: {
+    paymentCredentials?: {
+        razorpay?: {
+            key_id?: string;
+            key_secret?: string;
+        };
+        stripe?: {
+            key_id?: string;
+            key_secret?: string;
+        };
+    };
+    socialMedia_credentials?: {
         instagram?: {
             accessToken?: string;
             apiKey?: string;
@@ -49,4 +60,6 @@ export interface IOwnerDetailsSchema {
     };
     createdAt?: Date;
     updatedAt?: Date;
+    isSocialMediaInitialized?:boolean;
+    isPaymentInitialized?:boolean;
 }

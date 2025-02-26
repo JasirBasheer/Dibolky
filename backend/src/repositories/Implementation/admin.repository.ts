@@ -16,13 +16,13 @@ export default class AdminRepository extends BaseRepository<IAdmin> implements I
         return await this.findOne({ email });
     }
 
-    async findAdminWithId(id: string): Promise<IAdmin | null> {
-        return await this.findOne({ _id: id });
+    async findAdminWithId(admin_id: string): Promise<IAdmin | null> {
+        return await this.findOne({ _id: admin_id });
     }
     
-    async changePassword(id: string, password: string): Promise<IAdmin | null> {
+    async changePassword(admin_id: string, password: string): Promise<IAdmin | null> {
         return await this.update(
-            { _id: id }, 
+            { _id: admin_id }, 
             { $set: { password } }, 
             { new: true }
         );

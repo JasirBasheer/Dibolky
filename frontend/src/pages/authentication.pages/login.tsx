@@ -10,7 +10,7 @@ interface LoginProps {
   role: string;
 }
 interface IRedirectionUrls {
-  Agency: string;
+  agency: string;
   Company: string;
   Employee: string;
   Admin: string;
@@ -59,7 +59,7 @@ const Login = ({ role }: LoginProps) => {
       if (response && response.status == 200) {
         message.success('Successfully Logged in')
         const roleRedirects: IRedirectionUrls = {
-          "Agency": "/agency",
+          "agency": "/agency",
           "Company": "/company/",
           "Employee": "/employee",
           "Admin": "/admin/",

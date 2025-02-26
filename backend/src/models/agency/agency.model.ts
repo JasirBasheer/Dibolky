@@ -82,6 +82,22 @@ export const ownerDetailsSchema = new Schema<IOwnerDetailsSchema>({
         type: String,
         required: false,
     },
+    planId: {
+        type: String,
+        required: false,
+    },
+    organizationName: {
+        type: String,
+        required: false,
+    },
+    name: {
+        type: String,
+        required: false,
+    },
+    email: {
+        type: String,
+        required: false,
+    },
     paymentCredentials: {
         razorpay: {
             key_id: {
@@ -130,7 +146,15 @@ export const ownerDetailsSchema = new Schema<IOwnerDetailsSchema>({
             }
         }
     },
-}, { timestamps: true, });
+    isSocialMediaInitialized: {
+        type: Boolean,
+        default : false
+    },
+    isPaymentInitialized: {
+        type: Boolean,
+        default : false
+    }
+}, { timestamps: true });
 
 
 

@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { X, Plus, Users, FolderKanban } from 'lucide-react';
+import { X, Plus, FolderKanban } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
   const [formData, setFormData] = useState({
     title:"",price:0,description:"",
     validity:"Monthly",entity:"Agency",
-    projectCount:0,employeeCount:0 })
+    totalProjects:0,totalManagers:0 })
     
   const [features, setFeatures] = useState([]);
   const [selectedMenus, setSelectedMenus] = useState([]);
@@ -111,8 +111,8 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
                       <Label htmlFor="agency">Agency</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="company" id="company" onClick={() => handleChange("Company","entity")} />
-                      <Label htmlFor="company">Company</Label>
+                      <RadioGroupItem value="Influencer" id="influencer" onClick={() => handleChange("Influencer","entity")} />
+                      <Label htmlFor="influencer">Influencer</Label>
                     </div>
                   </RadioGroup>
                 </div>
@@ -154,6 +154,7 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-6 ml-1">
+              {formData.entity === 'Agency' && (
               <div className="space-y-2">
                 <Label className="flex items-center gap-2">
                   <FolderKanban className="h-4 w-4" />
@@ -161,21 +162,25 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
                 </Label>
                 <Input
                   type="number"
-                  onChange={(e) => handleChange(Number(e.target.value),  'projectCount')}
+                  onChange={(e) => handleChange(Number(e.target.value),  'totalProjects')}
                   placeholder="Enter project count"
                 />
               </div>
+              )}
+          {formData.entity === 'Influencer' && (
               <div className="space-y-2">
                 <Label className="flex items-center gap-2">
-                  <Users className="h-4 w-4" />
-                  Total Employees
+                  <FolderKanban className="h-4 w-4" />
+                  Total Managers
                 </Label>
                 <Input
                   type="number"
-                  onChange={(e) => handleChange(Number(e.target.value), 'employeeCount')}
-                  placeholder="Enter employee count"
+                  onChange={(e) => handleChange(Number(e.target.value),  'totalManagers')}
+                  placeholder="Enter project count"
                 />
               </div>
+              )}
+
             </div>
 
             <div>

@@ -1,10 +1,9 @@
 import { IAgency, IReviewBucket } from '../../shared/types/agency.types';
 import { IAgencyRepository } from '../Interface/IAgencyRepository';
-import { BaseRepository } from 'mern.common';
+import { BaseRepository, NotFoundError } from 'mern.common';
 import { Model } from 'mongoose';
 import { inject, injectable } from 'tsyringe';
-import { AgencyPlan } from '../../models/admin/plan.model';
-import { IPlan } from '../../shared/types/admin.types';
+import agencyModel from '../../models/agency/agency.model';
 
 
 @injectable()
@@ -46,9 +45,9 @@ export class AgencyRepository extends BaseRepository<IAgency> implements IAgency
     }
 
     async getAgencyPlanConsumers(
-        planId: string
-    ): Promise<IPlan[] | null> {
-        return await AgencyPlan.find({ planId: planId }).lean();
+        plan_id: string
+    ): Promise<IAgency[] | null> {
+        return await agencyModel.find({ planId: plan_id }).lean();
     }
 
 }

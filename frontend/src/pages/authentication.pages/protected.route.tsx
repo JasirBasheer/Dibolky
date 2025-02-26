@@ -10,7 +10,7 @@ import { setClient } from '@/redux/slices/clientSlice';
 
 
 interface IRedirectionUrls {
-  Agency: string;
+  agency: string;
   Company: string;
   Employee: string;
   Admin: string;
@@ -27,7 +27,7 @@ const ProtectedRoute = ({ children,role }: { children: any,role:string }) => {
       const response = await axios.get(`/api/${role.toLowerCase()}/`);
       
       if (response.data) {
-        if(role == "Agency"){
+        if(role == "agency"){
           dispatch(setAgency({
             id: response.data.details._id,
             orgId: response.data.details.orgId,
@@ -56,7 +56,7 @@ const ProtectedRoute = ({ children,role }: { children: any,role:string }) => {
         
 
         const roleRedirects: IRedirectionUrls = {
-          "Agency": '/agency',
+          "agency": '/agency',
           "Company": '/company/',
           "Employee": '/employee/',
           "Admin": '/admin/'

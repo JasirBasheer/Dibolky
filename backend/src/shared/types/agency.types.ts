@@ -1,6 +1,4 @@
-import mongoose from "mongoose";
-
-import { Document, Model, Types } from 'mongoose';
+import { Document } from 'mongoose';
 
 interface AddressType {
     street: string;
@@ -27,6 +25,7 @@ export interface IAgencyBase {
     isBlocked: boolean;
     planPurchasedRate: number;
     currency?: string;
+    
 }
 
 
@@ -51,9 +50,13 @@ export interface IAgency extends Document {
 }
 
 
-export interface IOwnerDetailsSchema {
+export interface IOwnerDetailsSchema extends Document {
     ownerId?: string; 
     orgId?: string; 
+    planId?: string;
+    organizationName?: string;
+    name?: string;
+    email?: string;
     paymentCredentials?: {
         razorpay?: {
             key_id?: string;
@@ -84,29 +87,31 @@ export interface IOwnerDetailsSchema {
     };
     createdAt?: Date;
     updatedAt?: Date;
+    isSocialMediaInitialized?:boolean;
+    isPaymentInitialized?:boolean;
+    setSocialMediaToken?(provider: string,token: string): Promise<void>;
 }
 
 
 
 
-export interface IAgencyOwner {
-    _id: mongoose.Types.ObjectId;
+export interface IAgencyOwner extends Document {
     orgId: string;
     planId: string;
-    validity: string;
+    validity?: string;
     organizationName: string;
     name: string;
-    email: string;
-    address: AddressType;
+    email?: string;
+    address?: AddressType;
     websiteUrl?:string | null ;
-    industry: string;
-    contactNumber: number;
+    industry?: string;
+    contactNumber?: number;
     logo?: string;
-    password: string;
-    remainingProjects: number;
-    remainingClients: number;
-    isBlocked: boolean;
-    planPurchasedRate: number
+    password?: string;
+    remainingProjects?: number;
+    remainingClients?: number;
+    isBlocked?: boolean;
+    planPurchasedRate?: number
 }
 
 
@@ -124,7 +129,7 @@ interface IPlatforms {
 export interface IReviewBucket extends Document {
     id: string;
     orgId: string;
-    url: string[];
+    files: object;
     status: string;
     platforms: IPlatforms[];
     contentType: string;
@@ -135,4 +140,3 @@ export interface IReviewBucket extends Document {
     feedBack: string;
     changePlatformPublishStatus(platform: string, value: boolean): Promise<void>;
 }
-

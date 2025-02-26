@@ -1,22 +1,21 @@
-import { IClient } from "../../models/agency/client.model";
+import { IAgency, IOwnerDetailsSchema, IReviewBucket } from "../../shared/types/agency.types";
+import { IClient, IClientTenant } from "../../shared/types/client.types";
 
 export interface IAgencyService {
-    getProjectsCount(tenantDb:any):Promise<any>
-    getClientsCount(tenantDb:any):Promise<any>
-    
-
-    agencyLoginHandler(email: string, password: string): Promise<any>;
-    verifyOwner(id: string): Promise<any>;
-    createClient(db:any,orgId: string, name: string, email: string, industry: string, socialMedia_credentials: any,services:any,menu:string[],organizationName:string): Promise<IClient | void>;
-    saveAgencySocialMediaTokens(orgId:string,Provider:string,token:string,tenantDb:any):Promise<any>;
-    getAllClients(orgId:string):Promise<any>
-    getClient(db:any,id:string):Promise<any>
-    saveContentToDb(id:string,orgId:string,tenantDb:any,files: any,platforms:any,contentType:string,caption:string):Promise<any>
-    getContent(tenantDb:any,contentId:any):Promise<any>
-    changeContentStatus(tenantDb:any,contentId:any,status:string):Promise<any>
-    getAvailableUsers(tenantDb:any):Promise<any>
-    
-    editProjectStatus(tenantDb:any,projectId:string,status:string):Promise<any>
-
+    verifyOwner(agency_id: string): Promise<IAgency | null>;
+    getAgencyOwnerDetails(orgId:string):Promise<IOwnerDetailsSchema | null>;
+    agencyLoginHandler(email: string, password: string): Promise<string>;
+    getProjectsCount(orgId:string):Promise<object>
+    getClientsCount(orgId:string):Promise<object>
+    getAllAvailableClients(orgId:string):Promise<IClientTenant[]>
+    createClient(orgId: string, name: string, email: string, industry: string, services:any,menu:string[],organizationName:string): Promise<IClient | void>;
+    saveAgencySocialMediaTokens(orgId:string,provider:string,token:string):Promise<any>;
+    getAllClients(orgId:string):Promise<IClientTenant[] | null>
+    getClient(orgId:string,client_id:string):Promise<IClientTenant | null>
+    saveContentToDb(client_id:string,orgId:string,files: any,platforms:any,contentType:string,caption:string):Promise<IReviewBucket | null>
+    getContent(orgId: string, contentId: string):Promise<IReviewBucket | null>
+    changeContentStatus(orgId: string, contentId: string, status: string):Promise<IReviewBucket | null>
+    editProjectStatus(orgId:string,projectId:string,status:string):Promise<IReviewBucket | null>
+    getInitialSetUp(orgId:string):Promise<object>
     
 }

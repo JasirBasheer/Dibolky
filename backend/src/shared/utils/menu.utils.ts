@@ -4,11 +4,6 @@ const smm = {
         icon: "BarChart",
         subItems: [
             {
-                label: "Projects",
-                icon: "FileText",
-                path: ["/projects"]
-            },
-            {
                 label: "Content",
                 icon: "Pen",
                 path: ["/contents"]

@@ -7,8 +7,6 @@ export interface IClientService {
     getClientDetails(orgId:string,email:string):Promise<IClientTenant | null>
     getOwners(orgId:string):Promise<IOwnerDetailsSchema[] | null>
     
-    saveClientSocialMediaTokens(orgId:string,client_id:string,provider:string,token:string):Promise<any>;
     setSocialMediaUserNames(orgId: string, client_id:string, provider: string, username: string): Promise<any>;
-    getReviewBucket(orgId: string,clientId: string): Promise<any>
     getClientInMainDb(email:string):Promise<any>;
 }

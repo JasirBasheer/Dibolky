@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Upload, Instagram, Facebook, Send, PlusCircle, Image, Video, Check, X, ArrowUpRight, Calendar, Twitter, Linkedin, Film, Home } from 'lucide-react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import axios from '@/utils/axios';
 import { message } from 'antd';
-import { setClient } from '@/redux/slices/clientSlice';
-import { RootState } from '@/types/common.types';
+import { IContentData, RootState } from '@/types/common.types';
 import { useNavigate } from 'react-router-dom';
 import InstagramAccountModal from '@/components/common.components/instagram.acccounts.list';
+import { InitiateS3BatchUpload, saveContentApi } from '@/services/common/post.services';
+import { getContentsApi } from '@/services/common/get.services';
 
 const PLATFORMS = [
   {
@@ -21,16 +22,6 @@ const PLATFORMS = [
     icon: <Facebook className="w-5 h-5 text-blue-600" />,
     uploadTypes: ['image', 'video', 'post']
   },
-  // {
-  //   name: 'x',
-  //   icon: <Twitter className="w-5 h-5 text-blue-400" />,
-  //   uploadTypes: ['image', 'video', 'text']
-  // },
-  // {
-  //   name: 'linkedin',
-  //   icon: <Linkedin   className="w-5 h-5 text-blue-400" />,
-  //   uploadTypes: ['image', 'video', 'text']
-  // }
 ];
 
 
@@ -46,11 +37,6 @@ const CONTENT_TYPES = [
     icon: <Image className="w-5 h-5 text-blue-500" />,
     accepts: 'image/*, video/*'
   },
-  // {
-  //   name: 'Video',
-  //   icon: <Video className="w-5 h-5 text-blue-500" />,
-  //   accepts: 'video/*'
-  // },
   {
     name: 'Reel',
     icon: <Film className="w-5 h-5 text-blue-500" />,
@@ -60,43 +46,18 @@ const CONTENT_TYPES = [
 
 const AgencyClientContent = () => {
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
-  const [selectedContentType, setSelectedContentType] = useState();
+  const [selectedContentType, setSelectedContentType] = useState<string>("");
   const [uploadedFile, setUploadedFile] = useState<any>([]);
-  const [reviewBucket, setReviewBucket] = useState([]);
+  const [reviewBucket, setReviewBucket] = useState<any>([]);
   const [isScheduled, setIsScheduled] = useState(false);
   const [caption, setCaption] = useState("")
   const user = useSelector((state: RootState) => state.user);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState("");
-  const [accounts,setAccounts] = useState<any>([])
-
-
-  const dispatch = useDispatch()
+  const [accounts, setAccounts] = useState<any>([])
+  const [contentUrls, setContentUrls] = useState<Record<string, string>>({})
   const navigate = useNavigate()
 
-
-
-  useEffect(() => {
-    fetchSelectedClient()
-  }, [])
-
-
-
-  const fetchSelectedClient = async () => {
-    try {
-      const response = await axios.get(`/api/agency/client/${user.user_id}`)
-      if (!response.data) return null
-      console.log(response.data)
-      dispatch(setClient({
-        facebookAccessToken: response?.data?.details?.socialMedia_credentials?.facebook?.accessToken || "",
-        facebookUsername: response?.data?.details?.socialMedia_credentials?.facebook?.userName || "",
-        instagramAccessToken: response?.data?.details?.socialMedia_credentials?.instagram?.accessToken || "",
-        instagramUsername: response?.data?.details?.socialMedia_credentials?.instagram?.userName || ""
-      }));
-    } catch (error) {
-      console.error('Error fetching clients:', error)
-    }
-  }
 
 
   const handlePlatformToggle = (platform) => {
@@ -128,34 +89,54 @@ const AgencyClientContent = () => {
     }
   }
 
+
+
+  const fetchSignedUrls = async () => {
+    const urlMap: Record<string, string> = {};
+
+    for (const item of reviewBucket) {
+      for (const file of item.files) {
+        try {
+          const response = await axios.post(`/api/entities/get-signedUrl`, { key: file.key });
+          urlMap[file.key] = response.data.signedUrl;
+        } catch (error) {
+          console.error(`Error fetching URL for ${file.key}:`, error);
+          urlMap[file.key] = ""
+        }
+      }
+    }
+    console.log(urlMap)
+
+    setContentUrls(urlMap);
+  };
+
   const fetchUserReviewBucket = async () => {
     try {
-      const res = await axios.get(`/api/client/get-review-bucket/${user.user_id}`)
+      const res = await getContentsApi(user.user_id == "" ? user.ownerId : user.user_id)
       if (res.status === 200) {
-        console.log(res.data.reviewBucket)
         setReviewBucket(Array.isArray(res.data.reviewBucket) ? res.data.reviewBucket : [])
       }
     } catch (error) {
       console.error('Failed to fetch review bucket', error)
-      alert('Failed to fetch review bucket')
+      message.error('Failed to fetch review bucket')
     }
   }
 
-  const handleApproveContent = async (id: string) => {
+  const handleApproveContent = async (content_id: string) => {
     try {
       message.loading('Uploading content')
-      await axios.get(`/api/client/approve-content/${id}/${user.user_id}`)
+      await axios.post(`/api/entities/approve-content`,{content_id, platform:user.user_id == "" ? "agency" : "client", user_id:user.user_id == "" ? user.ownerId : user.user_id})
       fetchUserReviewBucket()
       message.success('Content approved successfully')
     } catch (error) {
       console.error('Failed to approve content', error)
-      alert('Failed to approve content')
+      message.error('Failed to approve content')
     }
   }
 
-  const handleRejectContent = async (id) => {
+  const handleRejectContent = async (content_id: string) => {
     try {
-      await axios.get(`/api/client/reject-content/${id}`)
+      await axios.get(`/api/client/reject-content/${content_id}`)
       fetchUserReviewBucket()
       alert('Content rejected successfully')
     } catch (error) {
@@ -166,10 +147,15 @@ const AgencyClientContent = () => {
 
   const handleUpload = async () => {
 
-    if (!uploadedFile || selectedPlatforms.length === 0) {
-      message.warning('Please select a file and at least one platform')
+    if (!uploadedFile || !selectedContentType ||
+      !selectedPlatforms || !caption ||
+      selectedPlatforms.length === 0
+    ) {
+      message.error('Full the inputs accordingly inorder to upolad content')
       return
     }
+
+
     const requiredPlatforms: string[] = []
     for (const item of selectedPlatforms as PlatformItem[]) {
       if (item.platform == 'instagram' && user.instagramAccessToken == "") {
@@ -178,66 +164,128 @@ const AgencyClientContent = () => {
         requiredPlatforms.push('facebook')
       }
     }
+
+
     if (requiredPlatforms.length > 0) {
       navigate(`/agency/settings?required=${requiredPlatforms.join(',')}&`)
       return
     }
 
-    if (!uploadedFile || !selectedContentType || !selectedPlatforms || !caption) {
-      message.error('Full the inputs accordingly inorder to upolad content')
-      return
-    }
 
-    if (selectedPlatforms.some((p: PlatformItem) => ['instagram', 'facebook'].includes(p.platform)) && !selectedAccount){
+    if (selectedPlatforms.some((p: PlatformItem) => ['instagram', 'facebook'].includes(p.platform)) && !selectedAccount) {
       const response = await axios.get(`/api/entities/get-meta-pages/${!user.facebookAccessToken ? user.instagramAccessToken : user.facebookAccessToken}`)
       console.log(response.data)
       setAccounts(response?.data?.pages)
       setModalOpen(true)
+      return
     }
-      // message.loading('Preparing to upload content...');
 
-      try {
-        // const files = []
+    try {
+      const files = uploadedFile.map((file: File) => {
+        const type = file.type.startsWith('video/') ? 'video' : 'photo';
+        return {
+          file,
+          type,
+          id: `${Date.now()}-${Math.random().toString(36).substring(2)}-${file.name}`,
+        };
+      });
 
-        // for (const file of uploadedFile) {
-        //   const response = await axios.post('/api/entities/get-s3-upload-url', {
-        //     fileName: file.name,
-        //     fileType: file.type
-        //   });
+      const filesMetadata = files.map((file: any) => ({
+        id: file.id,
+        fileName: file.file.name,
+        fileType: file.file.type,
+        fileSize: file.file.size,
+        contentType: file.type,
+      }));
 
-        //   const { uploadURL, key } = response.data.data;
-        //   await axios.put(uploadURL, file, { headers: { 'Content-Type': file.type } });
+      const initResponse = await InitiateS3BatchUpload(filesMetadata);
+      const uploadInfos = initResponse.data.filesInfo;
+      const uploadedFiles = [];
 
-        //   files.push({
-        //     key: key,
-        //     name: file.name,
-        //     type: file.type
-        //   });
-        // }
+      for (const fileObj of files) {
+        const uploadInfo = uploadInfos.find((info: any) => info.fileId === fileObj.id);
 
-        // const postData = {
-        //   files: files,
-        //   selectedContentType: selectedContentType,
-        //   id: user.user_id,
-        //   selectedPlatforms: selectedPlatforms,
-        //   caption: caption
-        // };
+        if (!uploadInfo) {
+          console.error(`No upload information found for file ${fileObj.id}`);
+          continue;
+        }
 
-        // await axios.post('/api/agency/upload', postData);
+        try {
+          await axios.put(uploadInfo.url, fileObj.file, {
+            headers: {
+              'Content-Type': fileObj.file.type,
+              'Content-Disposition': 'inline',
+            },
+          });
 
-        // message.success('Content uploaded successfully, waiting for approval...');
-        // fetchUserReviewBucket();
-      } catch (error) {
-        console.error('Upload Error:', error);
-        message.error('Upload failed');
+
+          uploadedFiles.push({
+            id: fileObj.id,
+            fileName: fileObj.file.name,
+            contentType: fileObj.type,
+            key: uploadInfo.key,
+          });
+        } catch (error) {
+          console.error(`Error uploading file ${fileObj.id}:`, error);
+          throw error;
+        }
       }
+
+      const contentData: IContentData = {
+        files: uploadedFiles.map(file => ({
+          fileName: file.fileName,
+          contentType: file.contentType,
+          key: file.key,
+          uploadedAt: new Date().toISOString(),
+        })),
+        metadata: {
+          caption,
+          metaAccountId: selectedAccount || "",
+          isScheduled: isScheduled,
+        },
+        platforms: selectedPlatforms,
+        contentType:selectedContentType
+      };
+
+      console.log(contentData);
+      const savedContent = await saveContentApi(
+        user.user_id == "" ? "agency" : "client",
+        user.user_id == "" ? "agency" : user.user_id,
+        contentData
+      );
+
+      setUploadedFile([]);
+      setSelectedContentType("");
+      setSelectedPlatforms([]);
+      setCaption('');
+      setSelectedAccount('');
+
+      if (savedContent) {
+        message.success(`Content ${isScheduled ? 'scheduled' : 'uploaded'} successfully!`);
+      } else {
+        message.error('Failed to upload content');
+      }
+
+      fetchUserReviewBucket();
+    } catch (error) {
+      console.error('Upload Error:', error);
+      message.error('Upload failed');
+    }
   }
 
   useEffect(() => {
-    if (user?.user_id) {
-      fetchUserReviewBucket()
-    }
-  }, [user?.user_id])
+    if(user.ownerId!="" || user.user_id!="")
+    fetchUserReviewBucket()
+  }, [user.ownerId,user.user_id])
+
+
+  useEffect(() => {
+    fetchSignedUrls();
+
+    const refreshInterval = setInterval(fetchSignedUrls, 50 * 60 * 1000);
+    return () => clearInterval(refreshInterval);
+  }, [reviewBucket])
+
 
 
 
@@ -420,13 +468,21 @@ const AgencyClientContent = () => {
                           className="bg-white rounded-lg p-4 border border-blue-100 hover:border-blue-200 transition-colors flex items-center justify-between gap-4"
                         >
                           <div className="flex items-center gap-4">
-                            <div className="w-24 h-24 bg-blue-50 rounded-lg overflow-hidden">
-                              <video
-                                src={item.url}
-                                className="w-full h-full object-cover"
-                                controls
-                              />
+                            <div className="media-slider">
+                              {item.files.map((file: any) => {
+                                console.log(file.key, contentUrls[file.key], file.contentType);
+                                return (
+                                  <div key={file.key} className="media-item">
+                                    {file.contentType.startsWith('video') ? (
+                                      <video src={contentUrls[file.key]} className="media-content" controls />
+                                    ) : (
+                                      <img src={contentUrls[file.key]} alt={file.fileName} className="media-content" />
+                                    )}
+                                  </div>
+                                );
+                              })}
                             </div>
+
                             <div>
                               <h3 className="font-medium text-gray-800">{item.caption}</h3>
                               <p className="text-sm text-gray-500">Pending Review </p>

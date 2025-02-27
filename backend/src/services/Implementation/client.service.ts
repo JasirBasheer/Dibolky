@@ -64,17 +64,6 @@ export default class ClientService implements IClientService {
   }
 
 
-  async saveClientSocialMediaTokens(
-    orgId: string,
-    client_id: string,
-    provider: string,
-    token: string,
-  ): Promise<void> {
-    token = await exchangeForLongLivedToken(token)
-    return await this.clientTenantRepository.setSocialMediaTokens(orgId, client_id, provider, token)
-
-  }
-
   async setSocialMediaUserNames(
     orgId: string,
     client_id: string,
@@ -84,12 +73,6 @@ export default class ClientService implements IClientService {
     return await this.clientTenantRepository.setSocialMediaUserNames(orgId, client_id, provider, username)
   }
 
-  async getReviewBucket(
-    orgId: string,
-    clientId: string
-  ): Promise<any> {
-    return await this.contentRepository.getContentById(orgId, clientId)
-  }
 
   async getClientInMainDb(
     email: string

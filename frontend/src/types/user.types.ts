@@ -8,4 +8,5 @@ export interface ReduxIUser {
   email: string;
   name: string;
   organizationName: string;
+  ownerId:string
 }

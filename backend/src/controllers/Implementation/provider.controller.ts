@@ -8,6 +8,7 @@ import { FACEBOOK, INSTAGRAM } from "../../shared/utils/constants";
 import { IClientService } from "../../services/Interface/IClientService";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
 import { createFacebookOAuthURL } from "../../provider.strategies/facebook.strategy";
+import { IOwnerDetailsSchema } from "../../shared/types/agency.types";
 
 
 declare global {
@@ -39,17 +40,25 @@ export default class ProviderController implements IProviderController {
 
     }
 
-    async processContentApproval(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async processContentApproval(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
         try {
-            const { contentId, clientId } = req.params
-            const content: any = await this.providerService.getContentById(req.details.orgId, contentId)
-
+            const { content_id, user_id, platform } = req.body
+            const content: any = await this.providerService.getContentById(req.details.orgId, content_id)
+            let user;
+            if(platform == 'agency'){
+                user = await this.agencyService.getAgencyOwnerDetails(req.details.orgId)
+            }
             if (!content) throw new Error('content does not exists')
-            const response = await this.providerService.handleSocialMediaUploads(req.details.orgId, content, clientId, false)
+
+            const response = await this.providerService.handleSocialMediaUploads(content, user, false)
 
             if (response) {
                 console.log(response)
-                await this.providerService.updateContentStatus(req.details.orgId, contentId, "Approved")
+                await this.providerService.updateContentStatus(req.details.orgId, content_id, "Approved")
             }
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
         } catch (error) {
@@ -57,18 +66,26 @@ export default class ProviderController implements IProviderController {
         }
     }
 
-    async getMetaPagesDetails(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
+    async getMetaPagesDetails(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
+        try {           
             const { access_token } = req.params
+
             const pages = await this.providerService.getMetaPagesDetails(access_token as string)
-            console.log("pages", pages)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { pages })
         } catch (error) {
             next(error)
         }
     }
 
-    async connectSocialPlatforms(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async connectSocialPlatforms(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
         try {
             const { provider } = req.params
             const redirectUri: string = req.query.redirectUri as string;
@@ -98,24 +115,7 @@ export default class ProviderController implements IProviderController {
             const { platform, provider, user_id } = req.params
             const { token } = req.body
 
-            console.log(platform, provider, user_id, token)
-
-            if (user_id) {
-                switch (platform) {
-                    case 'agency':
-                        console.log('reached hereee', "platform", platform, "provider", provider, "user_id", user_id, "token", token)
-                        await this.agencyService.saveAgencySocialMediaTokens(req.details.orgId, provider, token)
-                        break;
-                    case 'client':
-                        await this.clientService.saveClientSocialMediaTokens(req.details.orgId, user_id, provider, token)
-                        break;
-                    case 'influencer':
-                        // await this.clientService.saveClientSocialMediaTokens(req.details.orgId, user_id, provider, token)
-                        break;
-                    default:
-                        break;
-                }
-            }
+            await this.providerService.saveSocialMediaToken(req.details.orgId,platform,user_id,provider,token)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
         } catch (error) {
             console.error('Error saving social platform token:', error)
@@ -124,37 +124,7 @@ export default class ProviderController implements IProviderController {
     }
 
 
-    async savePlatformUserNameToDb(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
 
-            const { provider, clientId } = req.params
-            const { username } = req.body
-
-            console.log(provider, clientId, username)
-
-            if (clientId) {
-                await this.clientService.setSocialMediaUserNames(req.details.orgId, clientId, provider, username)
-            }
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-
-
-
-        } catch (error) {
-            console.error('Error saving social platform token:', error)
-            next(error)
-        }
-    }
-
-    async getReviewBucket(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            const { clientId } = req.params
-            const reviewBucket = await this.clientService.getReviewBucket(req.details.orgId, clientId)
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { reviewBucket })
-
-        } catch (error) {
-            next(error)
-        }
-    }
 
 
 }

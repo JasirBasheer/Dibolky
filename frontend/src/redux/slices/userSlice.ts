@@ -13,6 +13,7 @@ const initialState: ReduxIUser = {
   email: "",
   name: "",
   organizationName: "",
+  ownerId:"",
 };
 
 

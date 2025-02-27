@@ -157,13 +157,6 @@ export default class AgencyService implements IAgencyService {
     }
 
 
-    async saveAgencySocialMediaTokens(
-        orgId: string,
-        provider: string,
-        token: string,
-    ): Promise<any> {
-        return await this.agencyTenantRepository.setSocialMediaTokens(orgId, provider, token)
-    }
 
     async getAllClients(
         orgId: string

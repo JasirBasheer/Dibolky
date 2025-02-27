@@ -11,3 +11,7 @@ export const getAllProjects = (pages: number, page: number) => {
 export const getConnectSocailMediaUrlApi = async(endpoint: string) => {
     return await api.get(endpoint)
 }   
+
+export const getContentsApi = async(userId : string) => {
+    return await api.get(`/api/entities/get-review-bucket/${userId}`)
+}   

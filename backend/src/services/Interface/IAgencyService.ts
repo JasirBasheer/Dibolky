@@ -9,7 +9,6 @@ export interface IAgencyService {
     getClientsCount(orgId:string):Promise<object>
     getAllAvailableClients(orgId:string):Promise<IClientTenant[]>
     createClient(orgId: string, name: string, email: string, industry: string, services:any,menu:string[],organizationName:string): Promise<IClient | void>;
-    saveAgencySocialMediaTokens(orgId:string,provider:string,token:string):Promise<any>;
     getAllClients(orgId:string):Promise<IClientTenant[] | null>
     getClient(orgId:string,client_id:string):Promise<IClientTenant | null>
     saveContentToDb(client_id:string,orgId:string,files: any,platforms:any,contentType:string,caption:string):Promise<IReviewBucket | null>

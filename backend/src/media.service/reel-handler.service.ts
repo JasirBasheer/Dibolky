@@ -1,3 +1,4 @@
+import { getS3ViewUrl } from "../config/aws-s3.config";
 import { checkReelUploadStatus, initializeReelUpload, publishReel, uploadHostedReel } from "../provider.strategies/facebook.strategy";
 import { checkIGContainerStatus, fetchIGAccountId, publishInstagramContent, uploadIGReelContent } from "../provider.strategies/instagram.strategy";
 import { FACEBOOK, INSTAGRAM } from "../shared/utils/constants";
@@ -9,20 +10,25 @@ import { getPages } from "./shared.service";
 export async function uploadIGReel(content: any, access_token: string, client: any): Promise<any> {
     try {
 
-        const pages = await getPages(access_token);
-        let pageId;
+        // const pages = await getPages(access_token);
+        // let pageId;
 
-        if (!Array.isArray(pages.data)) {
-            console.error("Error: pages is not an array", pages);
-        } else if (!client?.socialMedia_credentials?.facebook?.userName) {
-            console.error("Error: Facebook username is missing", client?.socialMedia_credentials?.facebook);
-        } else {
-            pageId = pages.data.find((item: any) => item.name === client.socialMedia_credentials.facebook.userName)?.id;
+        // if (!Array.isArray(pages.data)) {
+        //     console.error("Error: pages is not an array", pages);
+        // } else if (!client?.socialMedia_credentials?.facebook?.userName) {
+        //     console.error("Error: Facebook username is missing", client?.socialMedia_credentials?.facebook);
+        // } else {
+        //     pageId = pages.data.find((item: any) => item.name === client.socialMedia_credentials.facebook.userName)?.id;
 
-        }
+        // }
 
-        const instagramAccountId = await fetchIGAccountId(pageId, access_token);
-        const containerData = await uploadIGReelContent(access_token, instagramAccountId.id, content.url[0], content.caption)
+        const url = await getS3ViewUrl(content.files[0].key)
+
+        console.log("url",url)
+        const instagramAccountId = await fetchIGAccountId(content.metaAccountId, access_token);
+        console.log("instagramAccountId",instagramAccountId)
+
+        const containerData = await uploadIGReelContent(access_token, instagramAccountId.id, url, content.caption)
         if (containerData.error) throw new Error(`Container creation failed: ${JSON.stringify(containerData.error)}`);
 
         await checkIGContainerStatus(access_token, containerData.id);

@@ -127,13 +127,14 @@ interface IPlatforms {
 
 
 export interface IReviewBucket extends Document {
-    id: string;
+    user_id?: string;
     orgId: string;
     files: object;
     status: string;
+    metaAccountId:string;
     platforms: IPlatforms[];
-    contentType: string;
     title: string;
+    contentType:string;
     caption: string;
     tags: string[];
     isPublished?: boolean;

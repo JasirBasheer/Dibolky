@@ -14,7 +14,9 @@ import { IProject } from '../../models/agency/project.model';
 import { IProjectRepository } from '../../repositories/Interface/IProjectRepository';
 import { IOwnerDetailsSchema } from '../../shared/types/influencer.types';
 import { IClientTenantRepository } from '../../repositories/Interface/IClientTenantRepository';
-import s3Client from '../../config/aws-s3.config';
+import { IContentRepository } from '../../repositories/Interface/IContentRepository';
+import { IAgencyTenantRepository } from '../../repositories/Interface/IAgencyTenantRepository';
+import { getS3ViewUrl } from '../../config/aws-s3.config';
 
 @injectable()
 export default class EntityService implements IEntityService {
@@ -23,6 +25,8 @@ export default class EntityService implements IEntityService {
     private transactionRepository: ITransactionRepository;
     private projectRepository: IProjectRepository;
     private clientTenantRepository: IClientTenantRepository;
+    private contentRepository: IContentRepository;
+    private agencyTenantRepository: IAgencyTenantRepository;
 
     constructor(
         @inject('EntityRepository') entityRepository: IEntityRepository,
@@ -30,6 +34,8 @@ export default class EntityService implements IEntityService {
         @inject('TransactionRepository') transactionRepository: ITransactionRepository,
         @inject('ProjectRepository') projectRepository: IProjectRepository,
         @inject('ClientTenantRepository') clientTenantRepository: IClientTenantRepository,
+        @inject('ContentRepository') contentRepository: IContentRepository,
+        @inject('AgencyTenantRepository') agencyTenantRepository: IAgencyTenantRepository,
 
     ) {
         this.entityRepository = entityRepository
@@ -37,6 +43,8 @@ export default class EntityService implements IEntityService {
         this.transactionRepository = transactionRepository
         this.projectRepository = projectRepository
         this.clientTenantRepository = clientTenantRepository
+        this.contentRepository = contentRepository
+        this.agencyTenantRepository = agencyTenantRepository
     }
 
 
@@ -177,6 +185,61 @@ export default class EntityService implements IEntityService {
     ): Promise<any> {
         const ownerDetailModel = tenantDb.model('OwnerDetail', ownerDetailsSchema);
         return await this.entityRepository.fetchOwnerDetails(ownerDetailModel)
+    }
+
+    async saveContent(
+        orgId:string,
+        platform:string,
+        platforms:any,
+        user_id:string,
+        files:any,
+        metadata:any,
+        contentType:string
+    ):Promise<any>{
+        let detials;
+        if(platform == "agency"){
+            const ownerDetials = await this.agencyTenantRepository.getOwners(orgId)
+            detials = {
+                user_id : ownerDetials![0]._id as string,
+                orgId,files,platforms,title:metadata.title,
+                caption:metadata.caption,tags:metadata.tags,
+                metaAccountId: metadata.metaAccountId,contentType
+                }
+        }else if(platform == "client" ){
+            detials = {
+                user_id,orgId,files,platforms,title:metadata.title,
+                caption:metadata.caption,tags:metadata.tags,
+                metaAccountId: metadata.metaAccountId,contentType
+                }
+        }else if(platform == "influencer" ){
+            detials = {
+                user_id,orgId,files,platforms,title:metadata.title,
+                caption:metadata.caption,tags:metadata.tags,
+                metaAccountId: metadata.metaAccountId,contentType
+                }
+        }else{
+            detials = {
+                user_id,orgId,files,platforms,title:metadata.title,
+                caption:metadata.caption,tags:metadata.tags,
+                metaAccountId: metadata.metaAccountId,contentType
+                }
+        }
+       const content = this.contentRepository.saveContent(detials)
+       return content
+    }
+
+
+    async getS3ViewUrl(
+        key:string
+    ):Promise<string>{
+        return await getS3ViewUrl(key)
+    }
+
+    async fetchContents(
+        orgId: string,
+        user_id: string
+    ): Promise<any>{
+        return await this.contentRepository.getContentsByUserId(orgId, user_id)
     }
 
 }

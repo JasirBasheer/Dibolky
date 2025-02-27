@@ -3,7 +3,7 @@ import { IReviewBucket } from '../../shared/types/agency.types';
 
 
 export const ReviewBucketSchema: Schema<IReviewBucket> = new mongoose.Schema({
-    id: {
+    user_id: {
         type: String,
         required: true
     },
@@ -18,6 +18,9 @@ export const ReviewBucketSchema: Schema<IReviewBucket> = new mongoose.Schema({
     status: {
         type: String,
         default: "Pending"
+    },
+    metaAccountId:{
+        type: String,
     },
     platforms: [
         {
@@ -37,9 +40,8 @@ export const ReviewBucketSchema: Schema<IReviewBucket> = new mongoose.Schema({
             }
         },
     ],
-    contentType: {
-        type: String,
-        required: true
+    contentType:{
+        type:String,
     },
     title: {
         type: String

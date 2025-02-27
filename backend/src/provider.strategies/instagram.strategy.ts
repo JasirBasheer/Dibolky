@@ -86,6 +86,7 @@ export async function handleInstagramUpload(content: any, access_token: string, 
             case CONTENT_TYPE.VIDEO:
                 return null
             case CONTENT_TYPE.REEL:
+                console.log('entereing to rell')
                 return await uploadIGReel(content, access_token, client)
             case CONTENT_TYPE.STORY:
                 return null
@@ -182,7 +183,7 @@ export async function uploadIGReelContent(accessToken: string, pageId: string, c
 
 
 export async function checkIGContainerStatus(accessToken: string, containerId: string): Promise<any> {
-    
+    console.log("containerId",containerId)
     const url = `https://graph.facebook.com/${META_API_VERSION}/${containerId}?fields=status_code&access_token=${accessToken}`;
 
     while (true) {

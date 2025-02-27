@@ -19,7 +19,6 @@ router.use(permissionGate(["Client","agency"]))
 router.get('/', (req, res, next) =>clientController.getClient(req,res,next))
 router.get('/owner', (req, res, next) =>clientController.getOwner(req,res,next))
 router.get('/get-client-details', (req, res, next) =>clientController.getClientDetails(req,res,next))
-router.get('/check-username/:provider/:clientId', (req, res, next) =>providerController.getReviewBucket(req,res,next))
 // router.get('/connect/:provider',(req, res, next) =>providerController.connectSocialPlatforms(req,res,next))
 
 

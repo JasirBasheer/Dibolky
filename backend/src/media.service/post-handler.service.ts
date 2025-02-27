@@ -1,3 +1,4 @@
+import { getS3ViewUrl } from "../config/aws-s3.config"
 import { checkIGContainerStatus, createInstaCarousel, createInstaPostContainer, fetchIGAccountId, publishInstagramContent } from "../provider.strategies/instagram.strategy"
 import { INSTAGRAM } from "../shared/utils/constants"
 import { VIDEO_EXTENSIONS } from "../shared/utils/video-dimensions.utils"
@@ -8,27 +9,28 @@ import { getPages } from "./shared.service"
 
 // Instagram - post
 
-export async function uploadIGPost(content: any, access_token: string, client:any): Promise<any> {
+export async function uploadIGPost(content: any, access_token: string, user:any): Promise<any> {
     try {
         let containerIds = []
-        const pages = await getPages(access_token);
-        let pageId;
+        // const pages = await getPages(access_token);
+        // let pageId;
 
-        if (!Array.isArray(pages.data)) {
-            console.error("Error: pages is not an array", pages);
-        } else if (!client?.socialMedia_credentials?.facebook?.userName) {
-            console.error("Error: Facebook username is missing", client?.socialMedia_credentials?.facebook);
-        } else {
-            pageId = pages.data.find((item: any) => item.name === client.socialMedia_credentials.facebook.userName)?.id;
-        }
+        // if (!Array.isArray(pages.data)) {
+        //     console.error("Error: pages is not an array", pages);
+        // } else if (!content.metaAccountId) {
+        //     console.error("Error: Facebook username is missing", user?.content.metaAccountId);
+        // } else {
+        //     pageId = pages.data.find((item: any) => item.id === content.metaAccountId)?.id;
+        // }
         
-        const accountId = await fetchIGAccountId(pageId, access_token)
+        const accountId = await fetchIGAccountId(content.metaAccountId, access_token)
         
-        for (let url of content.url) {
-            const extension = url.toLowerCase().split('.').pop();
-            const isVideoExt = VIDEO_EXTENSIONS.includes(`.${extension}`);
+        for (let file of content.files) {
+            const isVideoExt = file.contentType == "video"
+            
             console.log(isVideoExt);
             console.log("accountId",accountId.id)
+            const url = await getS3ViewUrl(file.key)
             const containerId = await createInstaPostContainer(accountId.id, access_token, url, isVideoExt)
             console.log(containerId);
 

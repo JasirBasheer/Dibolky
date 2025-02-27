@@ -10,7 +10,12 @@ import {
     SendResponse
 } from 'mern.common';
 import { IChatService } from '../../services/Interface/IChatService';
-import { getS3UploadUrl } from '../../config/aws-s3.config';
+import s3Client from '../../config/aws-s3.config';
+import { AWS_S3_BUCKET_NAME, AWS_S3_BUCKET_REGION } from '../../config/env';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { v4 as uuidv4 } from 'uuid';
+
 
 @injectable()
 /** Implementation of Entity Controller */
@@ -295,7 +300,11 @@ export default class EntityController implements IEntityController {
     }
 
 
-    async getAllProjects(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getAllProjects(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
         try {
             const projects = await this.entityService.fetchAllProjects(req.details.orgId)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects })
@@ -304,11 +313,85 @@ export default class EntityController implements IEntityController {
         }
     }
 
-    async getS3UploadUrl(req: Request, res: Response, next: NextFunction): Promise<void>{
+    async initiateS3BatchUpload(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
         try {
-            const { fileName, fileType } = req.body
-            const {uploadURL, key} = await getS3UploadUrl(fileName, fileType)
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { uploadURL, key })
+            const { files } = req.body;
+    
+            const filesInfo = await Promise.all(
+                files.map(async (file: any) => {
+                    const key = `test/${uuidv4()}-${file.fileName}`;
+    
+                    const command = new PutObjectCommand({
+                        Bucket: AWS_S3_BUCKET_NAME,
+                        Key: key,
+                        ContentType: file.fileType,
+                        ContentDisposition: 'inline', 
+                    });
+    
+                    const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+    
+                    return {
+                        fileId: file.id,
+                        key,
+                        url,
+                        contentType: file.fileType,
+                    };
+                })
+            );
+    
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { filesInfo });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+
+    async saveContent(
+        req:Request,
+        res:Response,
+        next:NextFunction
+    ):Promise<void>{
+        try {
+            const {platform ,user_id} = req.params
+            const { files, platforms, metadata, contentType } = req.body
+            await this.entityService.saveContent(req.details.orgId,platform,platforms,user_id,files,metadata,contentType)
+            
+            SendResponse(res,HTTPStatusCodes.CREATED,ResponseMessage.CREATED)           
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    async getS3ViewUrl(
+        req:Request,
+        res:Response,
+        next:NextFunction
+    ):Promise<void>{
+        try {
+            const {key} = req.body
+            const signedUrl = await this.entityService.getS3ViewUrl(key)
+            
+            res.json({ signedUrl });
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async fetchContents(
+        req:Request,
+        res:Response,
+        next:NextFunction
+    ):Promise<void>{
+        try {
+            const { user_id } = req.params
+            const reviewBucket = await this.entityService.fetchContents(req.details.orgId, user_id)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { reviewBucket })
+
         } catch (error) {
             next(error)
         }

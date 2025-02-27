@@ -1,4 +1,4 @@
-import AgencyClientContent from '@/components/agency.components/clientside.components/client.content';
+import AgencyClientContent from '@/components/agency.components/content';
 import { RootState } from '@/types/common.types';
 import  { useEffect,useState } from 'react'
 import {  useSelector } from 'react-redux';

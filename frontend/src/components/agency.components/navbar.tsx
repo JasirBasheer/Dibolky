@@ -88,7 +88,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
         organizationName: response.data.details.organizationName,
         facebookAccessToken: response.data.details?.socialMedia_credentials?.facebook?.accessToken || "",
         instagramAccessToken: response.data.details?.socialMedia_credentials?.instagram?.accessToken || "",
-        role,
+        role,ownerId:response.data.details?._id || ""
       }))
     } catch (error: unknown) {
       if (error instanceof Error) {

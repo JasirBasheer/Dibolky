@@ -1,14 +1,14 @@
 import { ArrowUpRight } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import axios from '../../utils/axios'
 import { message } from 'antd'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { IClient } from '@/types/client.types'
 
 
 const AdminDashboard = () => {
-  const [recentClients, setRecentClients] = useState<any>([])
+  const [recentClients, setRecentClients] = useState<IClient[]>([])
   const fetchRecentClients = async () => {
     try {
       const response = await axios.get('/api/admin/recent-clients')
@@ -17,15 +17,17 @@ const AdminDashboard = () => {
       if (response && response.status == 200) {
         setRecentClients([...response.data.clients.Agency])
       }
-    } catch (error: any) {
-      message.error(error.response.data.error || "")
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { error?: string } } };
+      message.error(err.response?.data?.error || "");
     }
+    
   }
   useEffect(() => {
     fetchRecentClients()
   }, [])
 
-  const totalRevenue = recentClients.reduce((acc: number, item: any) => {
+  const totalRevenue = recentClients.reduce((acc: number, item: IClient) => {
     return acc + item.planPurchasedRate
   }, 0)
   return (
@@ -66,7 +68,7 @@ const AdminDashboard = () => {
             <h1 className='text-md cantarell font-cantarell pb-4 font-semibold'>Recent Clients</h1>
             <div className="w-full  border-t-2 border-gray-200  gap-5  ">
               {recentClients.length>0
-                ? recentClients.map((item: any, index: number) => (
+                ? recentClients.map((item: IClient, index: number) => (
                   <div
                     key={index}
                     className="w-full min-h-12 flex items-center text-sm"

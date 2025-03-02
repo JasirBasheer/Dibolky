@@ -1,13 +1,23 @@
 import { getS3PublicUrl } from "../config/aws-s3.config"
-import { checkIGContainerStatus, createInstaCarousel, createInstaPostContainer, fetchIGAccountId, publishInstagramContent, uploadSinglePost } from "../provider.strategies/instagram.strategy"
 import { IReviewBucket } from "../shared/types/common.types";
 import { INSTAGRAM } from "../shared/utils/constants"
+import { 
+    checkIGContainerStatus, 
+    createInstaCarousel, 
+    createInstaPostContainer, 
+    fetchIGAccountId, 
+    publishInstagramContent, 
+    uploadSinglePost
+} from "../provider.strategies/instagram.strategy"
 
 
 
 // Instagram - post
 
-export async function uploadIGPost(content: IReviewBucket, access_token: string): Promise<{ name: string, status: string, id: string }> {
+export async function uploadIGPost(
+    content: IReviewBucket, 
+    access_token: string
+): Promise<{ name: string, status: string, id: string }> {
     try {
         const accountId = await fetchIGAccountId(content.metaAccountId, access_token);
         let containerId;

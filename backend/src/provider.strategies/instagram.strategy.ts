@@ -7,7 +7,9 @@ import { CONTENT_TYPE } from "../shared/utils/constants";
 import { VIDEO_EXTENSIONS } from "../shared/utils/video-dimensions.utils";
 
 
-export async function createInstagramOAuthURL(redirectUri: string): Promise<string> {
+export async function createInstagramOAuthURL(
+    redirectUri: string
+): Promise<string> {
     const baseUrl = 'https://www.facebook.com/dialog/oauth';
     const params = new URLSearchParams({
         client_id: META_CLIENTID,
@@ -26,7 +28,9 @@ export async function createInstagramOAuthURL(redirectUri: string): Promise<stri
     return `${baseUrl}?${params.toString()}`;
 }
 
-export async function exchangeForLongLivedToken(shortLivedToken: string): Promise<string> {
+export async function exchangeForLongLivedToken(
+    shortLivedToken: string
+): Promise<string> {
     const baseUrl = `https://graph.facebook.com/${META_API_VERSION}/oauth/access_token`
     const params = new URLSearchParams({
         grant_type: 'fb_exchange_token',
@@ -52,7 +56,10 @@ export async function exchangeForLongLivedToken(shortLivedToken: string): Promis
 
 
 
-export async function fetchIGAccountId(pageId: string, accessToken: string): Promise<{isBusiness:boolean;id:string}> {
+export async function fetchIGAccountId(
+    pageId: string, 
+    accessToken: string
+): Promise<{isBusiness:boolean;id:string}> {
     const url = `https://graph.facebook.com/${META_API_VERSION}/${pageId}?fields=instagram_business_account&access_token=${accessToken}`;
     
     try {
@@ -80,7 +87,10 @@ export async function fetchIGAccountId(pageId: string, accessToken: string): Pro
 
 
 
-export async function handleInstagramUpload(content: IReviewBucket, access_token: string): Promise<{ name: string, status: string, id: string }> {
+export async function handleInstagramUpload(
+    content: IReviewBucket, 
+    access_token: string
+): Promise<{ name: string, status: string, id: string }> {
     try {
         switch (content.contentType) {
             case CONTENT_TYPE.POST:
@@ -106,7 +116,12 @@ export async function handleInstagramUpload(content: IReviewBucket, access_token
 
 // Post 
 
-export async function createInstaPostContainer(accountId: string, access_token: string, mediaUrl: string, isVideo: boolean): Promise<string> {
+export async function createInstaPostContainer(
+    accountId: string, 
+    access_token: string, 
+    mediaUrl: string, 
+    isVideo: boolean
+): Promise<string> {
     try {
         const url = `https://graph.facebook.com/${META_API_VERSION}/${accountId}/media`;
         
@@ -151,7 +166,11 @@ export async function createInstaPostContainer(accountId: string, access_token: 
 
 
 
-export async function createInstaCarousel(businessId:string,access_token:string,containerIds:string[]): Promise<string> {
+export async function createInstaCarousel(
+    businessId:string,
+    access_token:string,
+    containerIds:string[]
+): Promise<string> {
     try { 
         const containerIdsString = containerIds.join(',')
         const url = `https://graph.facebook.com/${META_API_VERSION}/${businessId}/media`
@@ -177,7 +196,11 @@ export async function createInstaCarousel(businessId:string,access_token:string,
 
 
 
-export async function uploadSinglePost(businessId:string,access_token:string,content:IReviewBucket): Promise<string> {
+export async function uploadSinglePost(
+    businessId:string,
+    access_token:string,
+    content:IReviewBucket
+): Promise<string> {
     try { 
         const url = `https://graph.facebook.com/${META_API_VERSION}/${businessId}/media`;
         let params;
@@ -217,7 +240,12 @@ export async function uploadSinglePost(businessId:string,access_token:string,con
 
 
 // Reel 
-export async function uploadIGReelContent(accessToken: string, pageId: string, contentUrl: string, caption: string): Promise<{id:string ; error?:string}> {
+export async function uploadIGReelContent(
+    accessToken: string, 
+    pageId: string, 
+    contentUrl: string, 
+    caption: string
+): Promise<{id:string ; error?:string}> {
     const url: string = `https://graph.facebook.com/${META_API_VERSION}/${pageId}/media?media_type=REELS&video_url=${contentUrl}&caption=${caption}&share_to_feed=true&thumb_offset=10&access_token=${accessToken}`;
     const publishResponse = await fetch(url, { method: 'POST' });
     const data = await publishResponse.json();
@@ -226,7 +254,10 @@ export async function uploadIGReelContent(accessToken: string, pageId: string, c
 }
 
 
-export async function checkIGContainerStatus(accessToken: string, containerId: string): Promise<{status_code:string;id:string}> {
+export async function checkIGContainerStatus(
+    accessToken: string, 
+    containerId: string
+): Promise<{status_code:string;id:string}> {
     console.log("containerId",containerId)
     const url = `https://graph.facebook.com/${META_API_VERSION}/${containerId}?fields=status_code&access_token=${accessToken}`;
 
@@ -248,7 +279,11 @@ export async function checkIGContainerStatus(accessToken: string, containerId: s
 }
 
 
-export async function publishInstagramContent(accessToken: string, businessId: string, creationId: string): Promise<{id:string}> {
+export async function publishInstagramContent(
+    accessToken: string, 
+    businessId: string, 
+    creationId: string
+): Promise<{id:string}> {
     const url = `https://graph.facebook.com/${META_API_VERSION}/${businessId}/media_publish?creation_id=${creationId}&access_token=${accessToken}`;
     const publishResponse = await fetch(url, { method: 'POST' });
     const data = await publishResponse.json();

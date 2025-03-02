@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import axios from '../../utils/axios';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +16,7 @@ interface IRedirectionUrls {
   Admin: string;
 }
 
-const ProtectedRoute = ({ children,role }: { children: any,role:string }) => {
+const ProtectedRoute = ({ children,role }: { children: ReactNode,role:string }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
@@ -46,7 +46,6 @@ const ProtectedRoute = ({ children,role }: { children: any,role:string }) => {
             orgId: res.data.client.orgId,
             name: res.data.client.name,
             email: res.data.client.email,
-            services: res.data.client.services
           }));
         }else if(role == "Employee" && response?.data.details.orgId && response?.data.details.email){
           console.log(response?.data);
@@ -70,8 +69,7 @@ const ProtectedRoute = ({ children,role }: { children: any,role:string }) => {
         }
         
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error:any) {
+    } catch (error:unknown) {
       console.log(error)
       Cookies.remove('accessToken');
       Cookies.remove('refreshToken');

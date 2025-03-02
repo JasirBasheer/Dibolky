@@ -5,26 +5,27 @@ import { Button } from '@/components/ui/button';
 import AddPlan from '@/components/admin.components/AddPlan';
 import PlanDetails from '@/components/admin.components/planDetails';
 import axios from '../../utils/axios';
+import { IPlan, IPlans } from '@/types/admin.types';
 
 
 
 interface PlansData {
-  Agency: any[];
-  Company: any[];
+  Agency: IPlans;
+  Influencer: IPlans;
 }
 
 const Plans = () => {
-  const [plans, setPlans] = useState<PlansData>({ Agency: [], Company: [] });
+  const [plans, setPlans] = useState<PlansData>();
   const [isAddPlan, setIsAddPlan] = useState(false);
   const [isPlanDetails, setIsPlanDetails] = useState(false);
   const [planId, setPlanId] = useState('');
-  const [entity, setEntity] = useState<'Agency' | 'Company'>('Agency');
+  const [entity, setEntity] = useState<'Agency' | 'Influencer'>('Agency');
 
   const fetchPlans = async () => {
     try {
       const response = await axios.get('/api/entities/get-all-plans');
       setPlans(response.data.plans);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log(error)
     }
   };
@@ -33,18 +34,18 @@ const Plans = () => {
     fetchPlans();
   }, []);
 
-  const handlePlanClick = (id: string, entityType: 'Agency' | 'Company') => {
+  const handlePlanClick = (id: string, entityType: 'Agency' | 'Influencer') => {
     setPlanId(id);
     setEntity(entityType);
     setIsPlanDetails(true);
   };
 
-  const renderPlanList = (planList: any[], entityType: 'Agency' | 'Company') => (
+  const renderPlanList = (planList: IPlan[], entityType: 'Agency' | 'Influencer') => (
     <div className="w-full space-y-2">
-      {planList.map((plan) => (
+      {planList.map((plan:IPlan) => (
         <div
           key={plan._id}
-          onClick={() => handlePlanClick(plan._id, entityType)}
+          onClick={() => handlePlanClick(plan._id as string, entityType)}
           className="w-full p-3 bg-slate-50 rounded-md hover:shadow-md 
                      transition-all duration-300 cursor-pointer
                      flex items-center justify-between"
@@ -74,7 +75,7 @@ const Plans = () => {
             <CardTitle>Agency Plans</CardTitle>
           </CardHeader>
           <CardContent>
-            {renderPlanList(plans.Agency, 'Agency')}
+          {renderPlanList(Array.isArray(plans?.Agency) ? plans.Agency : [], 'Agency')}
           </CardContent>
         </Card>
 

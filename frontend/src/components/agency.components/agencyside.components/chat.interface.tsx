@@ -16,17 +16,19 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { IMessage, IParticipant } from '@/types/common.types';
+import { Socket } from 'socket.io-client';
+import { IChat } from '@/types/chat.types';
 
 
 
 
 const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, orgId: string, chatId: string, userName: string }) => {
-  const [messages, setMessage] = useState<any>([])
-  const [newMessage, setNewMessage] = useState<any>({ text: "" })
-  const socket = useRef<any>(null);
+  const [messages, setMessage] = useState<IMessage[]>([])
+  const [newMessage, setNewMessage] = useState<IMessage>({ text: "" })
+  const socket = useRef<Socket | null>(null);
   const [showChatDetails, setShowChatDetails] = useState(false);
   const messageContainerRef = useRef<HTMLDivElement>(null);
-  const [chatDetails, setChatDetails] = useState<any>({})
+  const [chatDetails, setChatDetails] = useState<IChat>({})
 
   const fetchRecentMessages = async () => {
     try {
@@ -34,7 +36,7 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
       console.log(res.data);
 
       setMessage([...res.data.chats.messages])
-      const { messages, ...details } = res?.data.chats
+      const { messages, ...details } = res.data.chats
       setChatDetails(details)
     } catch (error) {
       console.log(error)
@@ -50,13 +52,13 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
     socket.current.on('new-message-received', ({ newMessage, chat_id, participants }) => {
       const isParticipant = participants.some((item: { userId: string }) => item.userId == userId)
       if (isParticipant && chatId == chat_id) {
-        setMessage((prev: any) => [...prev, newMessage])
+        setMessage((prev: IMessage[]) => [...prev, newMessage])
       }
     })
 
 
     return () => {
-      socket.current.disconnect()
+      socket?.current?.disconnect()
     }
   }, [userId, chatId, orgId])
 
@@ -65,7 +67,7 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
   }, [userId, chatId, orgId])
 
   const handleChange = (value: string, key: string) => {
-    setNewMessage((prev: any) => ({
+    setNewMessage((prev) => ({
       ...prev,
       [key]: value
     }));
@@ -73,10 +75,10 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
 
 
   const handleSendMessage = () => {
-    if (!newMessage.text.trim()) return;
+    if (!newMessage?.text?.trim()) return;
 
     const message = { text: newMessage.text, type: "text" };
-    socket.current.emit("send-message", { orgId, chatId, userId, userName, message });
+    socket?.current?.emit("send-message", { orgId, chatId, userId, userName, message });
     setNewMessage({ text: "" });
   }
   const scrollToBottom = () => {
@@ -119,10 +121,12 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
           <div>
             <h2 className="font-medium text-slate-800">
               {chatDetails.name ||
-                chatDetails.participants?.find((item: { userId: string; }) => item?.userId != userId)?.name ||
-                "Unknown"
-              }
+                chatDetails.participants?.find(
+                  (item) => item.userId && item.userId !== userId
+                )?.name ||
+                "Unknown"}
             </h2>
+
             <p className="text-sm text-slate-500"></p>
           </div>
         </div>
@@ -150,7 +154,7 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
                       <span className="font-normal text-sm text-slate-200">You</span>
                     </div>
                     <p className="text-white">{msg.text}</p>
-                    <span className="text-xs text-blue-200">{formatDate(msg.createdAt)}</span>
+                    <span className="text-xs text-blue-200">{formatDate(msg?.createdAt as string)}</span>
                   </div>
                 </div>
               </div>
@@ -167,7 +171,7 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
                       </span>
                     </div>
                     <p className="text-slate-800">{msg.text}</p>
-                    <span className="text-xs text-slate-400">{formatDate(msg.createdAt)}</span>
+                    <span className="text-xs text-slate-400">{formatDate(msg?.createdAt as string)}</span>
                   </div>
                 </div>
               </div>
@@ -226,7 +230,7 @@ export default ChatInterface
 
 interface ChatDetailsProps {
   setShowChatDetails: (arg0: boolean) => void;
-  details: any;
+  details: IChat;
   userId: string;
   onAddMember: (targetUserId: string, targetUsername: string, targetType: string) => void;
   orgId: string
@@ -236,9 +240,9 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, 
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestedMembers, setSuggestedMembers] = useState([]);
   const [currentParticipants, setCurrentParticipants] = useState<IParticipant[]>(details.participants || [])
-  const [filteredSuggestions,setFilteredSuggestions] = useState<any>([])
+  const [filteredSuggestions, setFilteredSuggestions] = useState<{ _id: string, name: string, type: string, }[]>([])
   const user = currentParticipants.find((item: { userId: string; }) => item.userId == userId)
-
+  
   const fetchAvailableUsers = async () => {
     const res = await axios.get("/api/agency/availabe-users")
     console.log(res.data);
@@ -255,7 +259,7 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, 
     socket.emit('set-up', { orgId, userId })
 
     socket.on('new-member-added', ({ member }) => {
-      const isParticipant = details.participants.some((item: { userId: string; }) => item.userId == userId)
+      const isParticipant = details?.participants?.some((item: { userId?: string }) => item.userId !== undefined && item.userId === userId);
       if (isParticipant) setCurrentParticipants((prev: IParticipant[]) => [...prev, member])
     })
 
@@ -265,12 +269,12 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, 
     }
   }, [userId])
 
-  useEffect(()=>{
-  if(suggestedMembers.length == 0)return 
-  const members = suggestedMembers.filter((member :{_id:string}) => !currentParticipants.some((p: { userId: string; }) => p.userId === member?._id)).filter((member:{name:string}) => member.name.toLowerCase().includes(searchTerm.toLowerCase()))
-  setFilteredSuggestions(members)
-  fetchAvailableUsers()
-  },[suggestedMembers,currentParticipants])
+  useEffect(() => {
+    if (suggestedMembers.length == 0) return
+    const members = suggestedMembers.filter((member: { _id: string }) => !currentParticipants.some((p: { userId: string; }) => p.userId === member?._id)).filter((member: { name: string }) => member.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    setFilteredSuggestions(members)
+    fetchAvailableUsers()
+  }, [suggestedMembers, currentParticipants])
 
   const getInitials = (name?: string) => {
     if (!name) return '?';
@@ -403,7 +407,7 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, 
 
                   <ScrollArea className="h-48 mt-2 border rounded-md p-2">
                     {filteredSuggestions.length > 0 ? (
-                      filteredSuggestions.map((member:{_id:string,name:string,type:string,}) => (
+                      filteredSuggestions.map((member: { _id: string, name: string, type: string, }) => (
                         <div key={member._id} className="flex items-center justify-between py-2">
                           <div className="flex items-center gap-3">
                             <Avatar className="h-8 w-8">

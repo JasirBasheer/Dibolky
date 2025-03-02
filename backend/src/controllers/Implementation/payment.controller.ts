@@ -2,15 +2,12 @@ import { NextFunction, Request, Response } from 'express';
 import { IPaymentController } from '../Interface/IPaymentController';
 import { inject, injectable } from 'tsyringe';
 import { IPaymentService } from '../../services/Interface/IPaymentService';
-import { stripe } from '../../config/stripe';
-import Stripe from 'stripe';
 import { IEntityService } from '../../services/Interface/IEntityService';
 import { 
     HTTPStatusCodes, 
     ResponseMessage, 
     SendResponse 
 } from 'mern.common';
-import { IUserDetails } from '../../shared/types/payment.types';
 
 @injectable()
 /** Implementation of Payment Controller */

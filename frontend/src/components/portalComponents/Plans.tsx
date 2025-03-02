@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FcCheckmark } from "react-icons/fc";
 import { useNavigate } from 'react-router-dom';
 import axios from '../../utils/axios';
 import { useSelector } from 'react-redux';
+import { IPlan, IPlans } from '@/types/admin.types';
+import { RootState } from '@/types/common.types';
 
 const Plans = () => {
-    const [plans, setPlans] = useState<any>(null); 
+    const [plans, setPlans] = useState<IPlans | null>(null); 
     const [isAgency, setIsAgency] = useState(true); 
-    const [sortedPlans, setSortedPlans] = useState<any[]>([]); 
-    const currency = useSelector((state:any)=>state.portal)
+    const [sortedPlans, setSortedPlans] = useState<IPlan[]>([]); 
+    const currency = useSelector((state:RootState)=>state.portal)
     const navigate = useNavigate();
 
     const getPlans = async () => {
@@ -32,7 +34,7 @@ const Plans = () => {
         }
     }, [isAgency, plans]); 
 
-    const handlePurchasePlan = (planId: any) => {
+    const handlePurchasePlan = (planId: string) => {
         const platform = isAgency ? "Agency" : "Influencer";
         navigate(`/purchase/${platform}/${planId}`);
     };
@@ -91,7 +93,7 @@ const Plans = () => {
                                         <span className="text-gray-500 ml-2">/{plan.validity}</span>
                                     </div>
                                     <div className="space-y-4 mt-6">
-                                        {plan.features.map((feature: any, index: any) => (
+                                        {plan.features.map((feature: string, index: number) => (
                                             <div key={index} className="flex items-center gap-3">
                                                 <FcCheckmark className="flex-shrink-0" />
                                                 <span>{feature}</span>
@@ -100,7 +102,7 @@ const Plans = () => {
                                     </div>
                                 </div>
                                 <button
-                                    onClick={() => handlePurchasePlan(plan._id)}
+                                    onClick={() => handlePurchasePlan(plan._id as string)}
                                     className={`w-full mt-6 h-14 rounded-md transition-all duration-300 ${i === 1
                                         ? "bg-blue-600 text-white hover:bg-blue-700"
                                         : "bg-gray-100 hover:bg-gray-200"

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import createSocketConnection from "@/utils/socket"
+import { IChatUser } from "@/types/chat.types"
 
 interface MenuListModalProps {
   setShowMenuListModal: (show: boolean) => void
@@ -23,10 +24,10 @@ export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userN
   const [availableUsers, setAvailableUsers] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
   const [showSuggestions, setShowSuggestions] = useState(false)
-  const [selectedMembers, setSelectedMembers] = useState<typeof availableUsers>([])
+  const [selectedMembers, setSelectedMembers] = useState<IChatUser[]>([])
 
   const filteredUsers = availableUsers.filter(
-    (user) =>
+    (user:IChatUser) =>
       user.name && user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       !selectedMembers.some((member) => member._id === user._id),
   )
@@ -41,15 +42,17 @@ export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userN
     fetchAvailableUsers()
   }, [])
 
-  const addMember = (user: (typeof availableUsers)[0]) => {
+  const addMember = (user: IChatUser) => {
     setSelectedMembers([...selectedMembers, user])
     setSearchTerm("")
     setShowSuggestions(false)
   }
 
-  const removeMember = (userId: number) => {
-    setSelectedMembers(selectedMembers.filter((member) => member._id !== userId))
-  }
+  const removeMember = (userId: string) => {
+    setSelectedMembers(
+      selectedMembers.filter((member: IChatUser) => member._id !== undefined && member._id != userId)
+    );
+      }
 
   const handleCreateGroup = async () => {
     try {
@@ -71,9 +74,15 @@ export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userN
         socket.emit("create-group",({group}))
       }
       setShowMenuListModal(false)
-    } catch (error: any) {
-      message.error(error.response.data.error || "")
+    } catch (error: unknown) {
+      if (typeof error === "object" && error !== null && "response" in error) {
+        const err = error as { response: { data?: { error?: string } } };
+        message.error(err.response.data?.error || "An unknown error occurred");
+      } else {
+        message.error("An unknown error occurred");
+      }
     }
+    
   }
 
   const handleCreateChat = async(targetUserId:string,targetUserName:string) =>{
@@ -110,11 +119,11 @@ export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userN
             </TabsList>
             <TabsContent value="newChat">
               <div className="mt-6 space-y-4">
-                {availableUsers.map((user:any) => (
+                {availableUsers.map((user:IChatUser) => (
                   <div
                     key={user._id}
                     className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 transition-colors"
-                    onClick={()=>handleCreateChat(user._id,user.name)}
+                    onClick={()=>handleCreateChat(user._id as string,user.name)}
                   >
                     <UserCircle className="text-slate-400" size={24} />
                     <div>
@@ -155,13 +164,13 @@ export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userN
                       {showSuggestions && searchTerm && (
                         <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-auto">
                           {filteredUsers.length > 0 ? (
-                            filteredUsers.map((user) => (
+                            filteredUsers.map((user:IChatUser) => (
                               <div
                                 key={user.id}
                                 className="p-2 hover:bg-gray-100 cursor-pointer"
                                 onClick={() => addMember(user)}
                               >
-                                <div className="font-medium">{user.name}</div>
+                                <div className="font-medium">{user?.name}</div>
                                 <div className="text-sm text-gray-500">{user.email}</div>
                               </div>
                             ))
@@ -185,7 +194,7 @@ export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userN
                                 <div className="font-medium">{member.name}</div>
                                 <div className="text-sm text-gray-500">{member.email}</div>
                               </div>
-                              <Button variant="ghost" size="icon" onClick={() => removeMember(member._id)}>
+                              <Button variant="ghost" size="icon" onClick={() => removeMember(member._id as string)}>
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </div>

@@ -65,9 +65,8 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
         message.success("Plan successfully created")
         setIsAddPlan(false)
       }
-    } catch (error:any) {
-      console.log(error)
-      message.error(error.message || 'Unexpected error occured while creating plan')
+    } catch (error:unknown) {
+      message.error(error instanceof Error ? error.message : 'Unexpected error occurred while creating plan');
     }
   }
 

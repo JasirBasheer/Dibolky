@@ -27,3 +27,5 @@ export const fetchAgencyOwnerDetailsApi = async() =>{
 export const fetchClientApi = async(client_id :string) =>{
     return await api.get(`/api/agency/client/${client_id}`)
 }
+
+

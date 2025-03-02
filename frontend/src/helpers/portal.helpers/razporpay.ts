@@ -3,7 +3,21 @@ import { FormData } from "../../types/portal.types";
 import { message } from "antd";
 import notificationSound from '../../assets/audios/currectanswer.wav'
 import notificationSound2 from '../../assets/audios/notification-2-269292.mp3'
-export  const handleRazorpayPayment = async (formData:FormData,plan:any,platform:string,navigate:any,selectedCurrency:string) => {
+import { NavigateFunction } from "react-router-dom";
+import { IPlan } from "@/types/admin.types";
+import { IRazorpayOrder } from "@/types/payment.types";
+
+
+
+
+  
+export  const handleRazorpayPayment = async (
+    formData:FormData,
+    plan:IPlan,
+    platform:string,
+    navigate:NavigateFunction,
+    selectedCurrency:string
+) => {
     try {
         const response = await axios.post('/api/payment/razorpay', {
             amount: plan?.price * formData.validity|| 0,
@@ -19,9 +33,14 @@ export  const handleRazorpayPayment = async (formData:FormData,plan:any,platform
             name: plan?.title || "Subscription Plan",
             description: plan?.description || "Plan Subscription",
             order_id: order_id,
-            handler: (response: any) => {
+            handler: (response: IRazorpayOrder) => {
                 if (response) {
-                    handlePaymentSuccess(response,formData,plan,platform,navigate,currency)
+                    handlePaymentSuccess(
+                        response,
+                        formData,
+                        plan,platform,
+                        navigate,currency
+                    )
                 }
             },
             prefill: {
@@ -34,7 +53,7 @@ export  const handleRazorpayPayment = async (formData:FormData,plan:any,platform
             },
         };
 
-        const paymentObject = new (window as any).Razorpay(options);
+        const paymentObject = new window.Razorpay(options);
         paymentObject.open();
     } catch (error) {
         console.error('Payment initiation failed:', error);
@@ -44,7 +63,13 @@ export  const handleRazorpayPayment = async (formData:FormData,plan:any,platform
 
 
 
-const handlePaymentSuccess = async (response: any,formData:FormData,plan:any,platform:string,navigate:any,currency:any) => {
+const handlePaymentSuccess = async (
+    response: IRazorpayOrder,
+    formData:FormData,
+    plan:IPlan,platform:string,
+    navigate:NavigateFunction,
+    currency:string
+) => {
     const details = {
         organizationName: formData.organizationName,
         name: formData.firstName + ' ' + formData.lastName,

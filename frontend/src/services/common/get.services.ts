@@ -15,3 +15,14 @@ export const getConnectSocailMediaUrlApi = async(endpoint: string) => {
 export const getContentsApi = async(userId : string) => {
     return await api.get(`/api/entities/get-review-bucket/${userId}`)
 }   
+
+export const fetchMessagesApi = async(userId :string) =>{
+    return await api.get(`/api/entities/get-messages/${userId}`)
+}
+
+export const fetchAllChatsApi = async(userId :string) =>{
+    return await api.get(`/api/entities/get-chats/${userId}`)
+}
+
+
+

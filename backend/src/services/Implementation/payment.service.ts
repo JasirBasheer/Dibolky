@@ -16,7 +16,9 @@ export default class PaymentService implements IPaymentService {
 
     }
 
-    async razorpay(details: { amount: number; currency: string }): Promise<IRazorpayOrder> {
+    async razorpay(
+        details: { amount: number; currency: string }
+    ): Promise<IRazorpayOrder> {
         const { amount, currency } = details;
         const options = {
             amount: amount * 100,
@@ -26,7 +28,11 @@ export default class PaymentService implements IPaymentService {
         const order = await razorpayInstance.orders.create(options);
         return order as IRazorpayOrder
     }
-    async stripe(details: IUserDetails, success_url: string, cancel_url: string): Promise<string> {
+    async stripe(
+        details: IUserDetails,
+        success_url: string, 
+        cancel_url: string
+    ): Promise<string> {
         try {
             console.log(details, "details")
             console.log("details=plan", details.plan)
@@ -60,7 +66,10 @@ export default class PaymentService implements IPaymentService {
     }
 
 
-    async stripeWebhook(details: Buffer | string, sig: string): Promise<boolean> {
+    async stripeWebhook(
+        details: Buffer | string, 
+        sig: string
+    ): Promise<boolean> {
         try {
             let event: Stripe.Event;
             event = stripe.webhooks.constructEvent(details, sig, "whsec_cae33044573115c56711a0bacaf0e229d72fbadd3301a0fc3f8bafe6c4093fe3");

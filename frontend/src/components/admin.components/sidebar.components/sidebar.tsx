@@ -6,11 +6,13 @@ import {
   GalleryVertical, CalendarDays, Send,
   ChartNoAxesCombined, ChartBarStacked,
   MessageSquareText, Building2, UserCircle, Shield,
+  LucideIcon,
 } from 'lucide-react';
 import ExpandableMenuItem from './expandableMenu-Item';
 import MenuItem from './menu-item';
+import { MenuItemType } from '@/types/common.types';
 
-const icons :any = {
+const icons: Record<string, LucideIcon> = {
   LayoutDashboard: LayoutDashboard,
   Users: Users,
   BarChart: BarChart,
@@ -32,21 +34,21 @@ const icons :any = {
 };
 
 
-const menu:any ={
+const menu: Record<string, MenuItemType> = {
   clients: {
-      label: 'All Clients',
-      icon: 'Users',
-      path: ['/admin/clients']
+    label: 'All Clients',
+    icon: 'Users',
+    path: ['/admin/clients']
   },
   plans: {
-      label: 'All Plans',
-      icon: 'GalleryVertical',
-      path: ['/admin/plans']
+    label: 'All Plans',
+    icon: 'GalleryVertical',
+    path: ['/admin/plans']
   },
   reports: {
-      label: "Reports",
-      icon: 'MessageSquareText',
-      path: ['/admin/reports']
+    label: "Reports",
+    icon: 'MessageSquareText',
+    path: ['/admin/reports']
   }
 }
 
@@ -69,24 +71,23 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
 
   useEffect(() => {
     const currentPath = location.pathname;
-
     if (menu) {
-      Object.entries(menu).forEach(([key, menuItem]: [any, any]) => {
-        if (menuItem && menuItem.subItems) {
-          if (menuItem.subItems.some((item: any) => item.path.includes(currentPath))) {
+      Object.entries(menu as Record<string, MenuItemType>).forEach(([key, menuItem]) => {
+        if (menuItem?.subItems) {
+          if (menuItem.subItems.some((item) => item.path.includes(currentPath))) {
             setActiveMenus((prev) => ({
               ...prev,
               [key]: true,
             }));
           }
-        } else if (menuItem?.path && menuItem.path.includes(currentPath)) {
+        } else if (menuItem?.path.includes(currentPath)) {
           setActiveMenus((prev) => ({
             ...prev,
             [key]: true,
           }));
         }
       });
-    }
+    }    
   }, [location.pathname, menu]);
 
   return (
@@ -96,16 +97,16 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
     >
       <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden">
 
-      <MenuItem
+        <MenuItem
           icon={LayoutDashboard}
           label="Dashboard"
           path={[`/admin/`]}
           isActive={location.pathname === `/admin/`}
         />
-        {Object.entries(menu).map(([key, menu]: [any, any]) => {
+        {Object.entries(menu as Record<string, MenuItemType>).map(([key, menu]) => {
           console.log(menu?.subItems)
           if (!menu?.subItems) {
-            const icon = icons[menu.icon]
+            const icon = icons[menu.icon as string]
             return (
               <MenuItem
                 key={key}
@@ -115,16 +116,16 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
                 isActive={menu.path.includes(location.pathname)}
               />
             );
-          }else{
+          } else {
             return (
               <ExpandableMenuItem
-              key={key}
-              icon={menu.icon}
-              label={menu.label}
-              isOpen={activeMenus[key]}
-              onClick={() => toggleMenu(key)}
-              subItems={menu.subItems}
-              activeSubPath={location.pathname}
+                key={key}
+                icon={menu.icon as string}
+                label={menu.label}
+                isOpen={activeMenus[key]}
+                onClick={() => toggleMenu(key)}
+                subItems={menu.subItems || []}
+                activeSubPath={location.pathname}
               />
             );
           }

@@ -19,9 +19,6 @@ export interface ISocialMediaUploadResponse {
     id: string;
 }
 
-
-
-
 export interface IPlatforms {
     platform: string;
     scheduledDate: string;
@@ -101,10 +98,6 @@ export interface IReelUploadStatus {
     };
     id: string;
 }
-
-
-
-
 
 export interface ISubItem {
     label: string;

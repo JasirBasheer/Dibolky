@@ -5,7 +5,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import ExpandableMenuItem from './expandableMenu-item';
 import MenuItem from './menu-item';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/types/common.types';
+import { MenuItemType, RootState } from '@/types/common.types';
 import { useQuery } from '@tanstack/react-query';
 import { fetchAgencyMenuApi } from '@/services/agency/get.services';
 import {
@@ -14,10 +14,11 @@ import {
   GalleryVertical, CalendarDays, Send,
   ChartNoAxesCombined, ChartBarStacked,
   MessageSquareText, Building2, UserCircle, Shield,
+  LucideIcon,
 } from 'lucide-react';
 
 
-const icons: Record<string, React.ComponentType> = {
+const icons:Record<string, LucideIcon>  = {
   LayoutDashboard: LayoutDashboard,
   Users: Users,
   BarChart: BarChart,
@@ -89,9 +90,9 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
 
 
     if (menu) {
-      Object.entries(menu).forEach(([key, menuItem]: [any, any]) => {
+      Object.entries(menu as Record<string, MenuItemType>).forEach(([key, menuItem]) => {
         if (menuItem && menuItem.subItems) {
-          if (menuItem.subItems.some((item: any) => item.path.includes(currentPath))) {
+          if (menuItem.subItems.some((item) => item.path.includes(currentPath))) {
             setActiveMenus((prev) => ({
               ...prev,
               [key]: true,
@@ -146,11 +147,11 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
               path={[`/projects`]}
               isActive={currentPath === `/projects`}
             />
-            {Object.entries(menu).map(([key, menuItem]: [string, any]) =>
+            {Object.entries(menu as Record<string, MenuItemType>).map(([key, menuItem]) =>
               !menuItem.subItems ? (
                 <MenuItem
                   key={key}
-                  icon={getIcon(menuItem.icon)}
+                  icon={getIcon(menuItem.icon as string)}
                   label={menuItem.label}
                   path={menuItem.path}
                   isActive={menuItem.path.includes(currentPath)}
@@ -159,11 +160,11 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
               ) : (
                 <ExpandableMenuItem
                   key={key}
-                  icon={menuItem.icon}
+                  icon={menuItem.icon as string}
                   label={menuItem.label}
                   isOpen={activeMenus[key]}
                   onClick={() => toggleMenu(key)}
-                  subItems={menuItem.subItems}
+                  subItems={menuItem.subItems || []}
                   activeSubPath={currentPath}
                 />
               )

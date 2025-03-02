@@ -76,7 +76,9 @@ export default class EntityRepository implements IEntityRepository {
     }
 
 
-    async fetchOwnerDetails(tenantDb: Model<IAgencyTenant>): Promise<IAgencyTenant[]> {
+    async fetchOwnerDetails(
+        tenantDb: Model<IAgencyTenant>
+    ): Promise<IAgencyTenant[]> {
         return await tenantDb.find({})
     }
 

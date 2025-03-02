@@ -1,11 +1,10 @@
-import { setUser } from '@/redux/slices/userSlice';
 import axios from '@/utils/axios';
 import { AlignLeft, Bell, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
 import { message } from 'antd';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { IClientTenant } from '@/types/client.types';
 
 
 type ClientNavBarProps = {
@@ -13,10 +12,6 @@ type ClientNavBarProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type Client = {
-  _id: string;
-  name: string;
-};
 interface SocialMediaConfig {
   name: string;
   buttonText: string;
@@ -38,10 +33,9 @@ const socialMediaConfigs: Record<string, SocialMediaConfig> = {
 
 
 const ClientNavBar: React.FC<ClientNavBarProps> = ({ isOpen, setIsOpen }) => {
-  const details = useSelector((state: any) => state.client)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isNotificationOpened, setIsNotificationOpened] = useState<boolean>(false)
-  const [client, setClient] = useState()
+  const [client, setClient] = useState<IClientTenant>()
   const [searchParams] = useSearchParams();
   const navigate = useNavigate()
 
@@ -78,7 +72,7 @@ const ClientNavBar: React.FC<ClientNavBarProps> = ({ isOpen, setIsOpen }) => {
     }
   }, []);
 
-  const handleCallback = async (token: string, provider: string): Promise<any> => {
+  const handleCallback = async (token: string, provider: string) => {
     try {
       const details = await fetchData()
       const response = await axios.post(
@@ -92,7 +86,7 @@ const ClientNavBar: React.FC<ClientNavBarProps> = ({ isOpen, setIsOpen }) => {
         message.error(`faced some issues while connect ${provider} please try again later `)
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log('Error in handleCallback:', error);
     }
   };
@@ -103,8 +97,8 @@ const ClientNavBar: React.FC<ClientNavBarProps> = ({ isOpen, setIsOpen }) => {
       const response = await axios.get(`${socialMediaConfigs[platform].connectEndpoint}?redirectUri=${window.location + `?provider=${platform}`}`);
       const url = new URL(response?.data.url);
       window.location.href = url.toString();
-    } catch (error: any) {
-      console.log("Error:", error.response?.data || error.message);
+    } catch (error: unknown) {
+      console.log("Error:", error);
     }
   };
 
@@ -159,7 +153,10 @@ const ClientNavBar: React.FC<ClientNavBarProps> = ({ isOpen, setIsOpen }) => {
               <p className="font-medium mb-2">Connect Platforms</p>
               <div className="flex flex-wrap gap-2">
                 {Object.keys(client?.socialMedia_credentials || {})
-                  .filter(platform => !client?.socialMedia_credentials[platform]?.accessToken)
+                  .filter(platform =>
+                    client?.socialMedia_credentials &&
+                    client.socialMedia_credentials[platform as keyof typeof client.socialMedia_credentials]?.accessToken === undefined
+                  )
                   .map((platform, index) => (
                     <motion.div
                       key={index}

@@ -9,9 +9,15 @@ import { IProviderService } from '../services/Interface/IProviderService';
 import { IClientService } from '../services/Interface/IClientService';
 import { IAgencyService } from '../services/Interface/IAgencyService';
 import { IClientTenant } from '../shared/types/client.types';
-import { IPlatforms, IReviewBucket, ISocialMediaUploadResponse } from '../shared/types/common.types';
 import { IAgencyTenant } from '../shared/types/agency.types';
+import {
+    IPlatforms,
+    IReviewBucket,
+    ISocialMediaUploadResponse
+} from '../shared/types/common.types';
 
+
+// services
 const providerService = container.resolve<IProviderService>('ProviderService');
 const clientService = container.resolve<IClientService>("ClientService");
 const agencyService = container.resolve<IAgencyService>("AgencyService");
@@ -30,19 +36,19 @@ async function processAgencyScheduledPosts() {
                 status: "Approved",
                 isPublished: false
             })
-   
+
 
             const filteredContents = scheduledContents.filter((content) => {
                 const validPlatforms = content.platforms.filter((platform) => {
-                    return !platform.isPublished && platform.scheduledDate !== '' && new Date(platform.scheduledDate).getTime() >= now.getTime() && new Date(platform.scheduledDate).getTime() <= endTime.getTime(); 
+                    return !platform.isPublished && platform.scheduledDate !== '' && new Date(platform.scheduledDate).getTime() >= now.getTime() && new Date(platform.scheduledDate).getTime() <= endTime.getTime();
                 })
                 return validPlatforms.length > 0;
             })
 
 
-             const filteredScheduledContents :  (Partial<IReviewBucket> & Partial<{ platforms: IPlatforms[] }>)[] = filteredContents.map((content) => {
+            const filteredScheduledContents: (Partial<IReviewBucket> & Partial<{ platforms: IPlatforms[] }>)[] = filteredContents.map((content) => {
                 const validPlatforms = content.platforms.filter((platform) => {
-                    return !platform.isPublished && platform.scheduledDate !== '' && new Date(platform.scheduledDate).getTime() >= now.getTime() && new Date(platform.scheduledDate).getTime() <= endTime.getTime(); 
+                    return !platform.isPublished && platform.scheduledDate !== '' && new Date(platform.scheduledDate).getTime() >= now.getTime() && new Date(platform.scheduledDate).getTime() <= endTime.getTime();
                 }) ?? [];
 
                 return {
@@ -54,22 +60,22 @@ async function processAgencyScheduledPosts() {
 
             for (let content of filteredScheduledContents) {
                 if ((content.platforms ?? []).length > 0) {
-                let user : IAgencyTenant | IClientTenant | null = await clientService.getClientTenantDetailsById(agency.orgId,content?.user_id as string)
-                if(!user){
-                    user = await agencyService.getAgencyOwnerDetails(agency.orgId)
-                }
-                const result :ISocialMediaUploadResponse[] = await providerService.handleSocialMediaUploads(content as IReviewBucket,user,true)
-                if(result){
-                    for(let platform of result){
-                        
-                        const reviewBucket = db.model('reviewBucket', ReviewBucketSchema)
-                        let content = await reviewBucket.findOne({_id:new Types.ObjectId(platform.id)})
-                        if(content){       
-                            await content.changePlatformPublishStatus(String(platform.name), true);
+                    let user: IAgencyTenant | IClientTenant | null = await clientService.getClientTenantDetailsById(agency.orgId, content?.user_id as string)
+                    if (!user) {
+                        user = await agencyService.getAgencyOwnerDetails(agency.orgId)
+                    }
+                    const result: ISocialMediaUploadResponse[] = await providerService.handleSocialMediaUploads(content as IReviewBucket, user, true)
+                    if (result) {
+                        for (let platform of result) {
+
+                            const reviewBucket = db.model('reviewBucket', ReviewBucketSchema)
+                            let content = await reviewBucket.findOne({ _id: new Types.ObjectId(platform.id) })
+                            if (content) {
+                                await content.changePlatformPublishStatus(String(platform.name), true);
+                            }
                         }
                     }
-                }
-                
+
                 }
             }
 

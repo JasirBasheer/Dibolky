@@ -14,7 +14,11 @@ export default class ClientController implements IClientController {
         this.clientService = clientService
     }
 
-    async getClient(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getClient(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
         try {
             if(!req.details)throw new NotFoundError("Details Not Fount")
             const details = await this.clientService.verifyClient(req.details._id as string)
@@ -25,7 +29,11 @@ export default class ClientController implements IClientController {
         }
     }
 
-    async getClientDetails(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getClientDetails(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
         try {
             if(!req.details)throw new NotFoundError("Details Not Fount")
             const details = await this.clientService.getClientDetails(req.details.orgId as string, req.details.email as string)
@@ -37,7 +45,11 @@ export default class ClientController implements IClientController {
         }
     }
 
-    async getOwner(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getOwner(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void> {
         try {
             if(!req.details)throw new NotFoundError("Details Not Fount")
             const owners = await this.clientService.getOwners(req.details.orgId as string)

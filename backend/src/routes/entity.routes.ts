@@ -34,6 +34,7 @@ router.get('/get-tasks', (req, res, next) => entityController.getAllProjects(req
 
 
 router.use(permissionGate(["agency", "Client", "influencer"]))
+router.get('/get-chats/:userId', (req, res, next) => entityController.getChats(req, res, next))
 router.post('/approve-content', (req, res, next) => providerController.processContentApproval(req, res, next))
 router.get('/get-review-bucket/:user_id', (req, res, next) => entityController.fetchContents(req, res, next))
 router.get('/connect/:provider', (req, res, next) => providerController.connectSocialPlatforms(req, res, next))
@@ -45,7 +46,6 @@ router.post('/content/save/:platform/:user_id', (req, res, next) => entityContro
 router.post('/get-signedUrl', (req, res, next) => entityController.getS3ViewUrl(req, res, next))
 
 router.post('/chats', (req, res, next) => entityController.getChat(req, res, next))
-router.post('/get-chats', (req, res, next) => entityController.getChats(req, res, next))
 router.post('/get-messages', (req, res, next) => entityController.getMessages(req, res, next))
 router.post('/create-group', (req, res, next) => entityController.createGroup(req, res, next))
 

@@ -6,17 +6,19 @@ import {
   GalleryVertical, CalendarDays, Send,
   ChartNoAxesCombined, ChartBarStacked,
   MessageSquareText, Building2, UserCircle, Shield,
+  LucideIcon,
 } from 'lucide-react';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import ExpandableMenuItem from './expandableMenu-item';
 import MenuItem from './menu-Item';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import axios from '../../../utils/axios';
-import { setUser } from '@/redux/slices/userSlice';
+import { MenuItemType, RootState } from '@/types/common.types';
+import { MenuData } from '@/types/client.types';
 
 
-const icons: any = {
+const icons:Record<string, LucideIcon>  = {
   LayoutDashboard: LayoutDashboard,
   Users: Users,
   BarChart: BarChart,
@@ -46,9 +48,11 @@ interface SideBarProps {
 const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
   const location = useLocation();
   const [activeMenus, setActiveMenus] = useState<Record<string, boolean>>({});
-  const [menu, setMenu] = useState<any>({});
-  const userDetails = useSelector((state: any) => state.user);
+  const [menu, setMenu] = useState<MenuData>({});
+  const userDetails = useSelector((state: RootState) => state.user);
   const [isLoading, setIsLoading] = useState(true)
+
+  console.log("menuu",menu)
 
   const fetchMenus = async () => {
     try {
@@ -85,24 +89,23 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
   useEffect(() => {
 
     const currentPath = location.pathname;
-    console.log(currentPath)
 
-
-    if (menu) {
-      Object.entries(menu).forEach(([key, menuItem]: [any, any]) => {
-        if (menuItem && menuItem.subItems) {
-          if (menuItem.subItems.some((item: any) => item.path.includes(currentPath))) {
+      if (menu) {
+        Object.entries(menu as Record<string, MenuItemType>).forEach(([key, menuItem]) => {
+          if (menuItem?.subItems) {
+            if (menuItem.subItems.some((item) => item.path.includes(currentPath))) {
+              setActiveMenus((prev) => ({
+                ...prev,
+                [key]: true,
+              }));
+            }
+          } else if (menuItem?.path.includes(currentPath)) {
             setActiveMenus((prev) => ({
               ...prev,
               [key]: true,
             }));
           }
-        } else if (menuItem?.path && menuItem.path.includes(currentPath)) {
-          setActiveMenus((prev) => ({
-            ...prev,
-            [key]: true,
-          }));
-        }
+  
       });
     }
 
@@ -143,11 +146,11 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
               path={[`/client`]}
               isActive={location.pathname === `/client`}
             />
-            {Object.entries(menu).map(([key, menuItem]: [string, any]) =>
+      {Object.entries(menu as Record<string, MenuItemType>).map(([key, menuItem]) => 
               !menuItem.subItems ? (
                 <MenuItem
                   key={key}
-                  icon={getIcon(menuItem.icon)}
+                  icon={getIcon(menuItem.icon as string)}
                   label={menuItem.label}
                   path={menuItem.path}
                   isActive={menuItem.path.includes(currentPath)}
@@ -160,7 +163,7 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
                   label={menuItem.label}
                   isOpen={activeMenus[key]}
                   onClick={() => toggleMenu(key)}
-                  subItems={menuItem.subItems}
+                  subItems={menuItem.subItems || []}
                   activeSubPath={currentPath} 
                 />
               )

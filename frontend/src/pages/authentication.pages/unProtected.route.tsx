@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import axios from '../../utils/axios';
 import { useNavigate } from 'react-router-dom';
 import { ScaleLoader } from 'react-spinners';
@@ -14,7 +14,7 @@ interface IRedirectionUrls {
 
 
 
-const UnProtectedRoute = ({ children, role }: { children: any, role: string }) => {
+const UnProtectedRoute = ({ children, role }: { children: ReactNode, role: string }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
@@ -45,9 +45,8 @@ const UnProtectedRoute = ({ children, role }: { children: any, role: string }) =
       } else {
         setIsAuthenticated(false);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log("error", error);
-
       setIsAuthenticated(false);
     } finally {
       setIsLoading(false);

@@ -32,7 +32,6 @@ morgan.token('error-details', (req: Request, res: Response) => {
 const errorLogFormat = `:remote-addr - :remote-user [:date[clf]] ":method :url" :status  \n Error: :error-details ms \n \n`;
 
 export const logStream = fs.createWriteStream(filePath, { flags: 'a' });
-
 export const errorLogger = morgan(errorLogFormat, {
   stream: logStream,
   skip: (req: Request, res: Response) => res.statusCode < 400
@@ -48,7 +47,6 @@ const clearLogs = () => {
         }
     })
 }
-
 
 
 export function clearErrorLogsJob() {

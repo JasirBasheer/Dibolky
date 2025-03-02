@@ -2,22 +2,29 @@ import { message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import axios from '../../utils/axios'
 import AdminClientDetails from './ClientsDetails'
+import { IAdminClientData } from '@/types/admin.types'
 
 const AdminClients = () => {
   const [isClicked, setIsClicked] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [clients, setClients] = useState({ Agency: [], Company: [] })
-  const [client, setClient] = useState({})
-  
+  const [client, setClient] = useState<IAdminClientData>()
+
   const fetchClients = async () => {
     try {
       const response = await axios.get('/api/admin/recent-clients')
       console.log(response)
       if (response && response.status == 200) setClients(response.data.clients)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      message.error(error.response.data.error || '')
+    } catch (error: unknown) {
+      if (typeof error === "object" && error !== null && "response" in error) {
+        const errResponse = error as { response: { data?: { error?: string } } };
+        message.error(errResponse.response.data?.error || 'An unknown error occurred');
+      } else {
+        message.error('An unknown error occurred');
+      }
     }
+
+
   }
   useEffect(() => {
     fetchClients()
@@ -28,13 +35,12 @@ const AdminClients = () => {
       setIsClicked(prev => !prev)
       setIsLoading(true);
       const client = await axios.get(`api/admin/get-client/${role}/${id}`)
-
-      if (client) {
-        setClient(client.data.details)
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      message.error(error.response.data.error || "")
+      if (client) setClient(client.data.details)
+        
+    } catch (error: unknown) {
+      message.error(
+        (error as { response?: { data?: { error?: string } } })?.response?.data?.error || "An unknown error occurred"
+      );
     }finally {
       setIsLoading(false);
     }

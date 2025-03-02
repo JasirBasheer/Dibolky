@@ -11,6 +11,7 @@ import { IAgency } from "../shared/types/agency.types";
 import { IAdmin } from "../shared/types/admin.types";
 import { ITokenDetails } from "../shared/types/common.types";
 
+// services
 const agencyService = container.resolve<IAgencyService>("AgencyService");
 const adminService = container.resolve<IAdminService>("AdminService");
 const clientService = container.resolve<IClientService>("ClientService");
@@ -26,7 +27,11 @@ declare global {
 
 
 
-export const TokenMiddleWare = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const TokenMiddleWare = async (
+    req: Request, 
+    res: Response, 
+    next: NextFunction
+): Promise<void> => {
     try {
         let token = req.cookies.accessToken ?? null
         let refreshToken = req.cookies.refreshToken ?? null

@@ -1,8 +1,11 @@
 import { validateField } from "../../validation/portalValidation";
-import { FormContextType, InputFieldProps } from '../../types/portal.types';
+import { 
+    FormContextType, 
+    InputFieldProps 
+} from '../../types/portal.types';
 
 
-export const renderInputField = (fieldProps: InputFieldProps,formContext: FormContextType) => {
+export const renderInputField = (fieldProps: InputFieldProps, formContext: FormContextType) => {
     const { icon: Icon, name, label, type = "text", ...props } = fieldProps;
     const { formData, errors, setFormData, setErrors } = formContext;
 
@@ -21,10 +24,11 @@ export const renderInputField = (fieldProps: InputFieldProps,formContext: FormCo
     };
 
     return (
+
         <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
             <div className="relative group">
-                <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-blue-500 transition-colors duration-200 h-5 w-5" />
+                {Icon && <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-blue-500 transition-colors duration-200 h-5 w-5" />}
                 <input
                     type={type}
                     name={name}
@@ -35,13 +39,13 @@ export const renderInputField = (fieldProps: InputFieldProps,formContext: FormCo
                         focus:border-blue-500 hover:border-blue-400 transition-all duration-200 bg-white shadow-sm`}
                     {...props}
                 />
-               
+
             </div>
             {errors[name] && (
-                    <p className="mt-1 text-sm text-red-500 transition-all duration-200">
-                        {errors[name]}
-                    </p>
-                )}
+                <p className="mt-1 text-sm text-red-500 transition-all duration-200">
+                    {errors[name]}
+                </p>
+            )}
         </div>
     );
 };

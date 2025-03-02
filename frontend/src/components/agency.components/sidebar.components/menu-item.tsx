@@ -1,12 +1,13 @@
-import React from 'react';
+import { LucideProps } from 'lucide-react';
+import React, { ComponentType, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface MenuItemProps {
-  icon: any;
-  label: any;
+  icon: ReactNode | ComponentType<LucideProps>;
+  label: string;
   onClick?: () => void;
   isActive?: boolean;
-  path?: any[];
+  path?: string[];
 }
 
 

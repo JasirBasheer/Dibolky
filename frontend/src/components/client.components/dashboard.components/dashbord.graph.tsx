@@ -23,7 +23,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function OneLineGraph({title,description,data}:{title:string,description:string,data:any}) {
+export function OneLineGraph({title,description,data}:{title:string,description:string,data:{month: string;desktop: number;}[]}) {
   return (
     <Card >
       <CardHeader>

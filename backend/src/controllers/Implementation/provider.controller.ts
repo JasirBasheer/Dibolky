@@ -118,9 +118,5 @@ export default class ProviderController implements IProviderController {
         }
     }
 
-
-
-
-
 }
 

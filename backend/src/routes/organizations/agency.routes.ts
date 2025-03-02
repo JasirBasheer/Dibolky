@@ -3,7 +3,6 @@ const router = express.Router()
 import { TenantMiddleWare } from '../../middlewares/tenant.middleware';
 import { IAgencyController } from '../../controllers/Interface/IAgencyController';
 import { container } from 'tsyringe';
-import { upload } from '../../config/multer';
 import { permissionGate } from '../../middlewares/permissionGate.middleware';
 
 // Controllers
@@ -23,6 +22,8 @@ router.get('/client/:id', (req, res, next) =>agencyController.getClient(req,res,
 router.get('/projects-count', (req, res, next) =>agencyController.getProjectsCount(req,res,next))
 router.get('/clients-count', (req, res, next) =>agencyController.getClientsCount(req,res,next))
 router.get('/get-initial-set-up', (req, res, next) =>agencyController.getInitialSetUp(req,res,next))
+
+
 // Patch requests
 router.patch('/edit-project-status', (req, res, next) =>agencyController.editProjectStatus(req,res,next))
 

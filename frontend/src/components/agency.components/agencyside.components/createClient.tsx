@@ -5,7 +5,7 @@ import { message } from "antd";
 import { useSelector } from "react-redux";
 import { X } from "lucide-react";
 import { SERVICES } from "../../../utils/services";
-import { RootState } from "@/types/common.types";
+import { APIError, RootState } from "@/types/common.types";
 
 const CreateClient = () => {
   const [name, setName] = useState("jasir");
@@ -86,10 +86,14 @@ const CreateClient = () => {
         navigate("/agency/clients");
         return;
       }
-    } catch (error:any) {
-      console.log(error);
-      message.error(error.response?.data?.error || "Failed to create client");
-    } finally {
+    } catch (error: APIError | unknown) {
+      if (typeof error === "object" && error !== null && "response" in error) {
+        const apiError = error as APIError;
+        message.error(apiError.response?.data?.error || "Failed to create client");
+      } else {
+        message.error("Failed to create client");
+      }
+    }finally {
       setIsLoading(false);
     }
   };
@@ -236,7 +240,7 @@ const ServiceModal = ({
         </button>
 
         <div className="grid grid-cols-2 gap-4">
-          {SERVICES[selectedService].inputs.map((item:any) => (
+          {SERVICES[selectedService].inputs.map((item:{name: string; label: string; type: string;  placeholder?: string;  options?: string[] }) => (
             <div key={item.name} className="col-span-2">
               <label htmlFor={item.name} className="block text-sm font-medium text-gray-700 mb-1">
                 {item.label}

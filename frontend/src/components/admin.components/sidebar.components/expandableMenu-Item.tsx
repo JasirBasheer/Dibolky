@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentType, ReactNode } from 'react';
 import SubMenuItem from './subMenu-item';
 import {
     LayoutDashboard, Users, BarChart, FileText, Settings,
@@ -6,11 +6,12 @@ import {
     GalleryVertical, CalendarDays, Send,
     ChartNoAxesCombined, ChartBarStacked,
     MessageSquareText, Building2, UserCircle, Shield,
-    ChevronDown
+    ChevronDown,
+    LucideIcon,
+    LucideProps
   } from 'lucide-react';
-import { useSelector } from 'react-redux';
   
-const icons:any  = {
+const icons:Record<string, LucideIcon>  = {
     LayoutDashboard: LayoutDashboard,
     Users: Users,
     BarChart: BarChart,
@@ -44,10 +45,9 @@ interface MenuItemProps {
 interface ExpandableMenuItemProps extends MenuItemProps {
     isOpen: boolean;
     subItems: Array<{
-        icon: string;
+        icon: ReactNode | ComponentType<LucideProps> | string;
         label: string;
         path: string[];
-        adminPaths?:string[];
     }>;
     activeSubPath?: string;
 }
@@ -61,15 +61,9 @@ const ExpandableMenuItem: React.FC<ExpandableMenuItemProps> = ({
     subItems, 
     activeSubPath 
 }) => {
-    const userDetails = useSelector((state: any) => state.user);
     const Icon = icons[iconName];
 
-    const isActive = subItems?.some(item => {
-        const paths = userDetails.role === "Agency-Client" 
-            ? (item.adminPaths || [])
-            : (item.path || []);
-        return paths.includes(activeSubPath || '');
-    }) || false;
+    const isActive = subItems?.some(item => item.path.includes(activeSubPath || '')) || false;
 
     return (
         <>
@@ -91,14 +85,10 @@ const ExpandableMenuItem: React.FC<ExpandableMenuItemProps> = ({
                     {subItems?.map((item, index) => (
                         <SubMenuItem 
                             key={index} 
-                            icon={icons[item.icon]} 
+                            icon={icons[item.icon as string]} 
                             label={item.label} 
                             path={item.path} 
-                            isActive={
-                                userDetails.role === "Agency-Client" 
-                                    ? (item.adminPaths || []).includes(activeSubPath || '')
-                                    : (item.path || []).includes(activeSubPath || '')
-                            }
+                            isActive={(item.path || []).includes(activeSubPath || '')}
                         />
                     ))}
                     {(!subItems || subItems.length === 0) && (

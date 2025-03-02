@@ -38,9 +38,9 @@ const planSchema: Schema<IPlan> = new Schema({
     totalProjects: {
         type: Number,
     },
-    totalManagers:{
+    totalManagers: {
         type: Number,
-     },
+    },
     menu: {
         smm: menuItemSchema,
         crm: menuItemSchema,

@@ -1,15 +1,28 @@
 import { NotFoundError } from "mern.common";
 import { getS3PublicUrl, getS3ViewUrl } from "../config/aws-s3.config";
-import { checkReelUploadStatus, initializeReelUpload, publishReel, uploadHostedReel } from "../provider.strategies/facebook.strategy";
-import { checkIGContainerStatus, fetchIGAccountId, publishInstagramContent, uploadIGReelContent } from "../provider.strategies/instagram.strategy";
 import { IReviewBucket } from "../shared/types/common.types";
 import { FACEBOOK, INSTAGRAM } from "../shared/utils/constants";
 import { getPages } from "./shared.service";
+import { 
+    checkReelUploadStatus, 
+    initializeReelUpload, 
+    publishReel, 
+    uploadHostedReel 
+} from "../provider.strategies/facebook.strategy";
+import { 
+    checkIGContainerStatus, 
+    fetchIGAccountId, 
+    publishInstagramContent, 
+    uploadIGReelContent 
+} from "../provider.strategies/instagram.strategy";
 
 
 // Instagram -- reel
 
-export async function uploadIGReel(content: IReviewBucket, access_token: string): Promise<{name:string,status: string,id:string }> {
+export async function uploadIGReel(
+    content: IReviewBucket, 
+    access_token: string
+): Promise<{name:string,status: string,id:string }> {
     try {
 
         const url = await getS3PublicUrl(content.files[0].key)

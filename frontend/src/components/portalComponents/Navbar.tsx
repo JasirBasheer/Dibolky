@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrency } from '@/redux/slices/portal.slice';
 import axios from '@/utils/axios';
+import { RootState } from '@/types/common.types';
 
 interface NavbarProps {
   animation: boolean;
@@ -16,7 +17,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ animation }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isCurrecyBarOpen, setIsCurrecyBarOpen] = useState(false);
-  const currency = useSelector((state: any) => state.portal)
+  const currency = useSelector((state: RootState) => state.portal)
   const dispatch = useDispatch()
 
   const navItems = [
@@ -44,7 +45,7 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
     { code: 'INR', symbol: '₹', name: 'Rupees' },
     { code: 'AED', symbol: 'د.', name: 'Dirham' },
   ];
-  const symbols: any = {
+  const symbols: Record<string,string> = {
     INR: "₹",
     USD: "$",
     AED: "د."

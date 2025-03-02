@@ -5,7 +5,9 @@ import { IMetaAccount, IReviewBucket, IReelUploadStatus } from "../shared/types/
 import { CONTENT_TYPE } from "../shared/utils/constants";
 
 
-export async function createFacebookOAuthURL(redirectUri: string): Promise<string> {
+export async function createFacebookOAuthURL(
+    redirectUri: string
+): Promise<string> {
     const baseUrl = 'https://www.facebook.com/dialog/oauth';
     const params = new URLSearchParams({
         client_id: META_CLIENTID,
@@ -27,7 +29,9 @@ export async function createFacebookOAuthURL(redirectUri: string): Promise<strin
 }
 
 
-export async function getMetaPagesDetails(access_token: string): Promise<IMetaAccount[]> {
+export async function getMetaPagesDetails(
+    access_token: string
+): Promise<IMetaAccount[]> {
     try {
         const pagesUrl = `https://graph.facebook.com/${META_API_VERSION}/me/accounts?access_token=${access_token}`;
         const response = await fetch(pagesUrl);
@@ -57,7 +61,10 @@ export async function getMetaPagesDetails(access_token: string): Promise<IMetaAc
 }
 
 
-export async function handleFacebookUpload(content: IReviewBucket, access_token: string): Promise<{name:string,status: string,id:string } > {
+export async function handleFacebookUpload(
+    content: IReviewBucket, 
+    access_token: string
+): Promise<{name:string,status: string,id:string } > {
     switch (content.contentType) {
         case CONTENT_TYPE.REEL:
             return await uploadFacebookReel(access_token, content, content.caption)
@@ -72,7 +79,10 @@ export async function handleFacebookUpload(content: IReviewBucket, access_token:
 
 
 // Reel init
-export async function initializeReelUpload(pageId: string, pageAccessToken: string): Promise<{video_id?:string;video_url:string;upload_url:string}> {
+export async function initializeReelUpload(
+    pageId: string, 
+    pageAccessToken: string
+): Promise<{video_id?:string;video_url:string;upload_url:string}> {
     try {
         const inititUrl = `https://graph.facebook.com/${META_API_VERSION}/${pageId}/video_reels`;
 
@@ -99,7 +109,11 @@ export async function initializeReelUpload(pageId: string, pageAccessToken: stri
 }
 
 
-export async function uploadHostedReel(videoId: string, url: string, pageAccessToken: string): Promise<{success:boolean;message:string,video_id:string}> {
+export async function uploadHostedReel(
+    videoId: string, 
+    url: string, 
+    pageAccessToken: string
+): Promise<{success:boolean;message:string,video_id:string}> {
     try {
 
         const uploadUrl = `https://rupload.facebook.com/video-upload/v22.0/${videoId}`;
@@ -131,7 +145,10 @@ export async function uploadHostedReel(videoId: string, url: string, pageAccessT
     }
 }
 
-export async function checkReelUploadStatus(videoId: string, pageAccessToken: string): Promise<IReelUploadStatus> {
+export async function checkReelUploadStatus(
+    videoId: string, 
+    pageAccessToken: string
+): Promise<IReelUploadStatus> {
     
     const statusCheckUrl = `https://graph.facebook.com/v22.0/${videoId}?fields=status&access_token=${pageAccessToken}`;
     const interval = 30_000; 
@@ -193,7 +210,12 @@ export async function checkReelUploadStatus(videoId: string, pageAccessToken: st
 
 
 
-export async function publishReel(pageId:string,videoId:string,pageAccessToken:string,captions:string):Promise<{success:boolean;message:string;post_id:string}> {
+export async function publishReel(
+    pageId:string,
+    videoId:string,
+    pageAccessToken:string,
+    captions:string
+):Promise<{success:boolean;message:string;post_id:string}> {
     try {
         const finishUploadUrl = `https://graph.facebook.com/v22.0/${pageId}/video_reels?access_token=${pageAccessToken}&video_id=${videoId}&upload_phase=finish&video_state=PUBLISHED&description=${encodeURIComponent(captions)}`;
         const response = await fetch(finishUploadUrl, {
@@ -201,7 +223,6 @@ export async function publishReel(pageId:string,videoId:string,pageAccessToken:s
         });
 
         const data = await response.json();
-
         if (!response.ok) throw new Error(`Error: ${data.error.message}`);
         console.log("Video published successfully:", data);
         return data

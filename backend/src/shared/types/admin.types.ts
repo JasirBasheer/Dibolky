@@ -24,30 +24,6 @@ export interface planDetails {
     menu: IMenuCategory | string[]
 }
 
-interface IMenu {
-    smm?:ISubMenu;
-    marketing?:ISubMenu;
-  }
-
-
-interface ISubMenu {
-    label: string;
-    icon: string;
-    subItems: IMenuItem[];
-}
-interface IMenuItem {
-    label: string;
-    icon: string;
-    path: string[];
-}
-
-
-
-
-
-
-
-
 
 export interface IPlan extends Document {
     id?: number;

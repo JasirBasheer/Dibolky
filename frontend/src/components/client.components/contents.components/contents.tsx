@@ -5,12 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import axios from '@/utils/axios';
 import { message } from 'antd';
+import { IReviewBucket, RootState } from '@/types/common.types';
 
 
 
 const ClientContentComponent = () => {
   const [bucketItems, setBucketItems] = useState([]);
-  const details = useSelector((state:any) => state.client);
+  const details = useSelector((state:RootState) => state.client);
   const [onReview,setOnReview] = useState([])
 
 
@@ -21,7 +22,7 @@ const ClientContentComponent = () => {
       
       if (res.status === 200) {
         setBucketItems(Array.isArray(res.data.reviewBucket) ? res.data.reviewBucket : [])
-        const filteredOnReviewContents = res.data.reviewBucket.filter((item: any) => item.status != "Approved" && item.status !="Rejected");
+        const filteredOnReviewContents = res.data.reviewBucket.filter((item: {status:string}) => item.status != "Approved" && item.status !="Rejected");
         setOnReview(filteredOnReviewContents)
       }
 
@@ -33,10 +34,10 @@ const ClientContentComponent = () => {
 
 
 
-  const handleApproveContent = async (id: string) => {
+  const handleApproveContent = async (contentId: string) => {
     try {
       message.loading('Uploading content')
-      await axios.get(`/api/client/approve-content/${id}/${details.id}`)
+      await axios.get(`/api/client/approve-content/${contentId}/${details.id}`)
       fetchUserReviewBucket()
       message.success('Content approved successfully')
     } catch (error) {
@@ -45,9 +46,9 @@ const ClientContentComponent = () => {
     }
   }
 
-  const handleRejectContent = async (id) => {
+  const handleRejectContent = async (contentId:string) => {
     try {
-      await axios.get(`/api/client/reject-content/${id}`)
+      await axios.get(`/api/client/reject-content/${contentId}`)
       fetchUserReviewBucket()
       alert('Content rejected successfully')
     } catch (error) {
@@ -85,7 +86,7 @@ const ClientContentComponent = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {onReview.map((item) => (
+                  {onReview.map((item :IReviewBucket) => (
                     item.status && (
                       <div
                         key={item._id}
@@ -93,11 +94,7 @@ const ClientContentComponent = () => {
                       >
                         <div className="flex items-center gap-4">
                           <div className="w-24 h-24 bg-blue-50 rounded-lg overflow-hidden">
-                            <video
-                              src={item.url}
-                              className="w-full h-full object-cover"
-                              controls
-                            />
+                        
                           </div>
                           <div>
                             <h3 className="font-medium text-gray-800">{item.caption}</h3>
@@ -106,7 +103,7 @@ const ClientContentComponent = () => {
                         </div>
                         <div className="flex gap-2">
                           <Button
-                            onClick={() => handleApproveContent(item._id)}
+                            onClick={() => handleApproveContent(item._id as string)}
                             variant="outline"
                             className="border-green-300 hover:bg-green-50"
                           >
@@ -114,7 +111,7 @@ const ClientContentComponent = () => {
                             Approve
                           </Button>
                           <Button
-                            onClick={() => handleRejectContent(item._id)}
+                            onClick={() => handleRejectContent(item._id as string)}
                             variant="outline"
                             className="border-red-300 hover:bg-red-50"
                           >

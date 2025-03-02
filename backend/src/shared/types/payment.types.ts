@@ -1,16 +1,17 @@
 export interface IRazorpayOrder {
-    amount: number;
-    amount_due: number;
-    amount_paid: number;
-    attempts: number;
-    created_at: number;
-    currency: string;
-    entity: string;
-    id: string;
-    notes?: Record<string, string | number | null>; 
-    offer_id: string | null;
-    receipt: string | null;
-    status: string;
+  razorpay_payment_id?:string;
+  amount: number;
+  amount_due: number;
+  amount_paid: number;
+  attempts: number;
+  created_at: number;
+  currency: string;
+  entity: string;
+  id: string;
+  notes?: Record<string, string | number | null>; 
+  offer_id: string | null;
+  receipt: string | null;
+  status: string;
 }
 
 export interface IUserPlan {

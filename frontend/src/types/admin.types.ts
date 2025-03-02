@@ -1,0 +1,103 @@
+export interface PlanConsumer {
+    name: string;
+    organizationName: string;
+    validity: string | Date; 
+    industry: string;
+  }
+  
+export interface IAdminPlan {
+    _id: string;
+    title: string;
+    description: string;
+    price: number;
+    validity: string;
+    features: string[];
+    menu: string[];
+    isActive: boolean;
+    planConsumers: PlanConsumer[];
+  }
+
+
+
+export interface ISubItem {
+    label: string;
+    icon: string;
+    path: string[];
+}
+
+export interface IMenuItems {
+    label: string;
+    icon: string;
+    subItems: ISubItem[];
+}
+
+export interface IPlan {
+    _id?:string;
+    id?: number;
+    title: string;
+    price: number;
+    description?:string;
+    features: string[];
+    validity: string;
+    totalProjects?: number;
+    totalManagers?: number;
+    menu?: {
+        smm?: IMenuItems;
+        crm?: IMenuItems;
+        accounting?: IMenuItems;
+    };
+    __v?: number;
+    isActive:boolean;
+}
+
+
+
+export interface IPlans {
+    [key: string]: IPlan[]; 
+}
+
+
+
+interface Address {
+    city: string;
+    country: string;
+}
+
+interface Details {
+    address: Address;
+    _id: string;
+    orgId: string;
+    planId: string;
+    validity: string; 
+    organizationName: string;
+    name: string;
+    email: string;
+    industry: string;
+    contactNumber: number;
+    logo: string;
+    password: string;
+    remainingClients: number;
+    isBlocked: boolean;
+    planPurchasedRate: number;
+    currency: string;
+    __v: number;
+    createdAt:string;
+    updatedAt:string
+}
+
+export interface Transactions {
+    orgId: string;
+    planId?: string
+    userId?: string;
+    email: string;
+    transactionId: string;
+    paymentGateway: string;
+    amount: number;
+    description: string;
+    currency: string;
+}
+
+export interface IAdminClientData {
+    details: Details;
+    transactions: Transactions[];
+}

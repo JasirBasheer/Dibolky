@@ -4,7 +4,6 @@ import { IEntityService } from '../../services/Interface/IEntityService';
 import { inject, injectable } from 'tsyringe';
 import { CountryToCurrency, getPriceConversionFunc } from '../../shared/utils/currency-conversion.utils';
 import {
-    CustomError,
     findCountryByIp,
     HTTPStatusCodes,
     NotFoundError,
@@ -13,7 +12,7 @@ import {
 } from 'mern.common';
 import { IChatService } from '../../services/Interface/IChatService';
 import s3Client from '../../config/aws-s3.config';
-import { AWS_S3_BUCKET_NAME, AWS_S3_BUCKET_REGION } from '../../config/env';
+import { AWS_S3_BUCKET_NAME } from '../../config/env';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { v4 as uuidv4 } from 'uuid';
@@ -267,7 +266,7 @@ export default class EntityController implements IEntityController {
         next: NextFunction
     ): Promise<void> {
         if(!req.details)throw new NotFoundError("Details Not Fount")
-        const { userId } = req.body
+        const { userId } = req.params
         const chats = await this.chatService.getChats(req.details.orgId as string, userId)
         SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
     }

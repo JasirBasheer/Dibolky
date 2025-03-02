@@ -20,7 +20,6 @@ import { AddressType, IAgency, IAgencyTenant } from '../../shared/types/agency.t
 import { IInfluencer } from '../../shared/types/influencer.types';
 import { connectTenantDB } from '../../config/db';
 import { IFiles, IMenuCategory, IMetadata, IPlatforms, IReviewBucket } from '../../shared/types/common.types';
-import { Types } from 'mongoose';
 
 @injectable()
 export default class EntityService implements IEntityService {

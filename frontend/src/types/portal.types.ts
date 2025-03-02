@@ -1,3 +1,7 @@
+import { LucideProps } from "lucide-react";
+import { ComponentType, ReactNode } from "react";
+import { IPlan } from "./admin.types";
+
 export interface Plan {
     _id: string;
     id: number;
@@ -7,6 +11,7 @@ export interface Plan {
     validity: string;
     features: string[];
 }
+  
 
 export interface FormData {
     firstName: string;
@@ -20,7 +25,15 @@ export interface FormData {
     country: string;
     industry: string;
     validity:number;
+}
 
+export interface IStripeDetails extends FormData{
+    name:string;
+    plan:IPlan;
+    platform:string;
+    amount:number;
+    currency:string;
+    description:string;
 }
 export interface ValidationError {
     [key: string]: string;
@@ -28,7 +41,7 @@ export interface ValidationError {
 
 
 export interface InputFieldProps {
-    icon: any;
+    icon: ReactNode | ComponentType<LucideProps>; 
     name: keyof FormData;
     label: string;
     type?: string;
@@ -65,7 +78,7 @@ export type ValidationErrors = {
 }
 
 export interface InputFieldProps {
-    icon: any;
+    icon: ReactNode | ComponentType<LucideProps>; 
     name: keyof IFormData;
     label: string;
     type?: string;

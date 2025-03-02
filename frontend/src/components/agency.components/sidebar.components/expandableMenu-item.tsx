@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { ComponentType, ReactNode, useMemo } from 'react';
 import SubMenuItem from './subMenu-item';
 import {
     LayoutDashboard, Users, BarChart, FileText, Settings,
@@ -6,11 +6,13 @@ import {
     GalleryVertical, CalendarDays, Send,
     ChartNoAxesCombined, ChartBarStacked,
     MessageSquareText, Building2, UserCircle, Shield,
-    ChevronDown
+    ChevronDown,
+    LucideProps,
+    LucideIcon
 } from 'lucide-react';
 
 
-const icons: any = {
+const icons:Record<string, LucideIcon>  = {
     LayoutDashboard: LayoutDashboard,
     Users: Users,
     BarChart: BarChart,
@@ -44,7 +46,7 @@ interface MenuItemProps {
 interface ExpandableMenuItemProps extends MenuItemProps {
     isOpen: boolean;
     subItems: Array<{
-        icon: string;
+        icon: ReactNode | ComponentType<LucideProps> | string;
         label: string;
         path: string[];
         adminPaths?: string[];
@@ -92,7 +94,7 @@ const ExpandableMenuItem: React.FC<ExpandableMenuItemProps> = ({
                     {subItems?.map((item, index) => (
                         <SubMenuItem
                             key={index}
-                            icon={icons[item.icon]}
+                            icon={icons[item.icon as string]}
                             label={item.label}
                             path={item.path}
                             isActive={item.path.includes(currentPath || '')}

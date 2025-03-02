@@ -20,7 +20,6 @@ import AdminLayout from './pages/admin.pages/Layout '
 import AgencyContent from './pages/agency.pages/Content'
 import ClientDashboard from './pages/client.pages/client.dashboard'
 import ClientContent from './pages/client.pages/client.content'
-import ClientProjects from './pages/client.pages/client.projects'
 import AgencyMessages from './pages/agency.pages/message'
 import ClientMessages from './pages/client.pages/client.message'
 import AgencyProject from './pages/agency.pages/projects'
@@ -109,7 +108,6 @@ function ClientRoutes() {
       <Route path='/' element={<ProtectedRoute role={"Client"} ><ClientLayout /></ProtectedRoute>} >
         <Route index element={<ClientDashboard />} />
         <Route path='contents' element={<ClientContent />} />
-        <Route path='projects' element={<ClientProjects />} />
         <Route path='message' element={<ClientMessages />} />
       </Route>
 

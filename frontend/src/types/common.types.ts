@@ -1,5 +1,6 @@
 import store from "@/redux/store";
-import React from "react";
+import { LucideProps } from "lucide-react";
+import React, { ComponentType, ReactNode } from "react";
 
 export interface NavbarProps  {
     isOpen: boolean;
@@ -85,15 +86,15 @@ export interface Seen {
 
 export interface IMessage {
     _id?:string;
-    chatId: string;
-    type: 'text' | 'common';
+    chatId?: string;
+    type?: 'text' | 'common';
     senderId?: string;
     senderName?: string;
-    text: string;
+    text?: string;
     fileUrl?: string;
-    seen: Seen[];
-    createdAt: string;
-    updatedAt: string;
+    seen?: Seen[];
+    createdAt?: string;
+    updatedAt?: string;
   }
 
 
@@ -102,3 +103,22 @@ export interface IMessage {
     type?: string;
     name?: string;
   }
+
+
+  export interface MenuItemType {
+    icon: ReactNode | ComponentType<LucideProps> | string;
+    label: string;
+    path: string[];
+    subItems?: MenuItemType[];
+  };
+  
+  
+ export interface APIError {
+    response?: {
+      data?: {
+        error?: string;
+      };
+    };
+    message?: string;
+  }
+  

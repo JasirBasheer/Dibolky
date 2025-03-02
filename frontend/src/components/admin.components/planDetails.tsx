@@ -14,6 +14,7 @@ import {
 import axios from '@/utils/axios';
 import Skeleton from 'react-loading-skeleton';
 import { message } from 'antd';
+import { IAdminPlan, PlanConsumer } from '@/types/admin.types';
 
 interface PlanDetailsProps {
   setIsPlanDetails: Dispatch<SetStateAction<boolean>>;
@@ -22,10 +23,11 @@ interface PlanDetailsProps {
 }
 
 const PlanDetails = ({ setIsPlanDetails, planId, entity }: PlanDetailsProps) => {
-  const [details, setDetails] = useState<any>({});
+  const [details, setDetails] = useState<IAdminPlan>();
   const [activeTab, setActiveTab] = useState('about');
   const [loading, setLoading] = useState(true);
 
+  console.log("detailssss",details)
   const fetchPlanDetails = async () => {
     try {
       setLoading(true);
@@ -133,8 +135,8 @@ const PlanDetails = ({ setIsPlanDetails, planId, entity }: PlanDetailsProps) => 
       <div className="bg-gray-50 rounded-lg p-6 ">
         <div className="flex justify-between items-start mb-4">
           <div className="space-y-2">
-            <h3 className="text-xl font-semibold">{details.title}</h3>
-            <p className="text-gray-600 text-sm">{details.description}</p>
+            <h3 className="text-xl font-semibold">{details?.title}</h3>
+            <p className="text-gray-600 text-sm">{details?.description}</p>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -149,7 +151,7 @@ const PlanDetails = ({ setIsPlanDetails, planId, entity }: PlanDetailsProps) => 
               </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer" onClick={()=>handleBlock(entity,planId)}>
                 <Ban className="mr-2 h-4 w-4" /> 
-                {details.isActive ? "Block plan":"Unblock plan"}
+                {details?.isActive ? "Block plan":"Unblock plan"}
               </DropdownMenuItem>
               
               <DropdownMenuItem className="cursor-pointer text-red-600">
@@ -169,13 +171,13 @@ const PlanDetails = ({ setIsPlanDetails, planId, entity }: PlanDetailsProps) => 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-white p-4 rounded-lg shadow-sm">
                 <div className="text-sm text-gray-600">Price</div>
-                <div className="text-xl font-semibold">${details.price}</div>
-                <div className="text-sm text-gray-500">per {details.validity}</div>
+                <div className="text-xl font-semibold">${details?.price}</div>
+                <div className="text-sm text-gray-500">per {details?.validity}</div>
               </div>
               <div className="bg-white p-4 rounded-lg shadow-sm">
                 <div className="text-sm text-gray-600 mb-2">Features</div>
                 <div className="space-y-2">
-                  {details.features?.map((feature: string, index: number) => (
+                  {details?.features?.map((feature: string, index: number) => (
                     <div key={index} className="text-sm flex items-center gap-2">
                       <div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
                       {feature}
@@ -189,7 +191,7 @@ const PlanDetails = ({ setIsPlanDetails, planId, entity }: PlanDetailsProps) => 
           <div>
             <h4 className="font-medium mb-3">Available Modules</h4>
             <div className="flex flex-wrap gap-2">
-              {details.menu?.map((item: string, index: number) => (
+              {details?.menu?.map((item: string, index: number) => (
                 <Badge key={index} variant="secondary" className="capitalize px-3 py-1">
                   {item}
                 </Badge>
@@ -209,7 +211,7 @@ const PlanDetails = ({ setIsPlanDetails, planId, entity }: PlanDetailsProps) => 
       </div>
 
       <div className="space-y-4">
-        {details.planConsumers?.map((consumer: any, index: number) => (
+        {details?.planConsumers?.map((consumer: PlanConsumer, index: number) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 20 }}

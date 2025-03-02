@@ -1,7 +1,14 @@
-import { Request, Response, NextFunction } from "express";
-import { connectTenantDB, getTenantConnection } from "../config/db";
 import { Connection } from "mongoose";
 import { NotFoundError } from "mern.common";
+import { 
+  connectTenantDB, 
+  getTenantConnection
+} from "../config/db";
+import { 
+  Request, 
+  Response, 
+  NextFunction 
+} from "express";
 
 
 declare global {
@@ -12,7 +19,11 @@ declare global {
     }
   }
 
-export const TenantMiddleWare = async (req: Request, res: Response, next: NextFunction) => {
+export const TenantMiddleWare = async (
+  req: Request, 
+  res: Response, 
+  next: NextFunction
+) => {
     try {
        if(!req.details)throw new NotFoundError("Details Not Fount")
         let path = req.path.slice(1)
@@ -22,7 +33,6 @@ export const TenantMiddleWare = async (req: Request, res: Response, next: NextFu
         }else{
           req.tenantDb = getTenantConnection(req.details.orgId as string)
         } 
-
         next();
     } catch (error) {
         next(error)

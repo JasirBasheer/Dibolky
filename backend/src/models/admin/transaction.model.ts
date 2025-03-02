@@ -2,14 +2,14 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface ITransaction extends Document {
     orgId: string;
-    planId?:string
-    userId?:string;
+    planId?: string
+    userId?: string;
     email: string;
-    transactionId:string;
-    paymentGateway:string;
-    amount:number;
-    description:string;
-    currency:string;
+    transactionId: string;
+    paymentGateway: string;
+    amount: number;
+    description: string;
+    currency: string;
 }
 
 export const transactionSchema: Schema<ITransaction> = new Schema({
@@ -21,28 +21,28 @@ export const transactionSchema: Schema<ITransaction> = new Schema({
         type: String,
         required: true,
     },
-    userId:{type:String},
+    userId: { type: String },
     planId: {
         type: String,
     },
-    paymentGateway:{
-        type:String,
-        default:"razorpay"
+    paymentGateway: {
+        type: String,
+        default: "razorpay"
     },
-    transactionId:{
-        type:String
+    transactionId: {
+        type: String
     },
-    amount:{
-        type:Number,
-        required:true
+    amount: {
+        type: Number,
+        required: true
     },
-    description:{
-        type:String,
-        required:true
+    description: {
+        type: String,
+        required: true
     },
-    currency:{
-        type:String,
-        required:true
+    currency: {
+        type: String,
+        required: true
     }
 });
 

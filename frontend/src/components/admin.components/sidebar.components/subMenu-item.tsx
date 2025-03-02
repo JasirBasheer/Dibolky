@@ -1,9 +1,10 @@
-import React from 'react';
+import { LucideProps } from 'lucide-react';
+import React, { ComponentType, ReactNode } from 'react';
 import {  useNavigate } from 'react-router-dom';
 
 
 interface SubItemProps {
-  icon: any;
+  icon: ReactNode | ComponentType<LucideProps>;
   label: string;
   path: string[];
   isActive: boolean;

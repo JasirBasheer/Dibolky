@@ -1,3 +1,4 @@
+import { IAdminClientData, Transactions } from "@/types/admin.types";
 import { CheckCheck, X } from "lucide-react";
 import { Key } from "react";
 
@@ -5,14 +6,10 @@ const AdminClientDetails = ({
   client,
   setIsClicked
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  client: any;
+  client: IAdminClientData;
   setIsClicked: (value: boolean) => void;
 }) => {
   if (!client) return null;
-  console.log(client)
-  console.log("client")
-  console.log("client")
   return (
     <div
       className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
@@ -85,13 +82,13 @@ const AdminClientDetails = ({
                   <div>
                     <label className="text-sm text-gray-500">Client Since</label>
                     <p className="font-medium">
-                      {new Date(client.details.joinDate).toLocaleDateString()}
+                      {new Date(client.details.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                   <div>
                     <label className="text-sm text-gray-500">Last Updated</label>
                     <p className="font-medium">
-                      {new Date(client.details.lastUpdate).toLocaleDateString()}
+                      {new Date(client.details.updatedAt).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
@@ -102,7 +99,7 @@ const AdminClientDetails = ({
                   <h3 className="text-lg font-medium mb-3">Payment History</h3>
 
                   <div className="grid grid-cols-1 gap-4 ">
-                    {client.transactions.map((item: any, index: Key | null | undefined) => {
+                    {client.transactions.map((item: Transactions, index: Key | null | undefined) => {
                       return (
                         <div key={index}>
                           <hr className="mb-1" />

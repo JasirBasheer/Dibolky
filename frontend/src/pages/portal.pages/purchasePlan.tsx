@@ -1,16 +1,23 @@
+import 'react-loading-skeleton/dist/skeleton.css'
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { User, Mail, Phone, Building2, MapPin, Globe, Lock, ArrowRight, Check, CheckCircle2 } from 'lucide-react';
-import Navbar from '../../components/portalComponents/Navbar';
-import axios from '../../utils/axios';
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import { message } from "antd";
+import { handleRazorpayPayment } from '../../helpers/portal.helpers/razporpay';
 import { FormData, Plan, ValidationError } from '../../types/portal.types';
 import { renderInputField } from '../../components/portalComponents/Input';
-import { handleRazorpayPayment } from '../../helpers/portal.helpers/razporpay';
 import { handleStripePayment } from '@/helpers/portal.helpers/stripe';
+import Navbar from '../../components/portalComponents/Navbar';
+import { RootState } from '@/types/common.types';
+import Skeleton from 'react-loading-skeleton'
 import { useSelector } from 'react-redux';
+import axios from '../../utils/axios';
+import { message } from "antd";
+import { 
+    User, Mail, 
+    Phone, Building2, 
+    MapPin, Globe, 
+    Lock, ArrowRight, 
+    Check, CheckCircle2 
+} from 'lucide-react';
 
 
 const PurchasePlan: React.FC = () => {
@@ -22,7 +29,7 @@ const PurchasePlan: React.FC = () => {
     const [loading, setLoading] = useState(true)
     const [next, setNext] = useState(false)
     const navigate = useNavigate()
-    const currency = useSelector((state: any) => state.portal)
+    const currency = useSelector((state: RootState) => state.portal)
 
     const [formData, setFormData] = useState<FormData>({
         firstName: '', lastName: '', email: '', password: '',

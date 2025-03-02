@@ -42,10 +42,17 @@ export const ForgotPassword = ({ role }: { role: string }) => {
       setTimeout(() => {
         navigate(`/${role.toLowerCase()}/login`)
       }, 5000);
-    } catch (error: any) {
-       message.error(error.response.data.error || "An unexpected error occurred");
-   
-    } finally {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        message.error(error.message || "An unexpected error occurred");
+      } else if (typeof error === "object" && error !== null && "response" in error) {
+        const err = error as { response: { data: { error: string } } };
+        message.error(err.response.data.error || "An unexpected error occurred");
+      } else {
+        message.error("An unexpected error occurred");
+      }
+    }
+    finally {
       setIsLoading(false);
     }
   };
@@ -126,14 +133,21 @@ export const ResetPassword = ({ role }: { role: string }) => {
         message.success('Login to continue')
         navigate(`/${role.toLowerCase()}/login`)
       }, 200)
-    } catch (error: any) {
-      message.error(error.response.data.error || 'An unexpected error occurred');
-      if (error.response?.data.error == "Token expired Please Try Again") {
-        setTimeout(() => {
-          navigate(`/${role.toLowerCase()}/forgot-password`)
-        }, 2000)
+    } catch (error: unknown) {
+      if (error && typeof error === "object" && "response" in error) {
+        const err = error as { response: { data: { error: string } } };
+        message.error(err.response.data.error || "An unexpected error occurred");
+
+        if (err.response.data.error === "Token expired Please Try Again") {
+          setTimeout(() => {
+            navigate(`/${role.toLowerCase()}/forgot-password`);
+          }, 2000);
+        }
+      } else {
+        message.error("An unexpected error occurred");
       }
-    } finally {
+    }
+    finally {
       setIsLoading(false);
     }
   }

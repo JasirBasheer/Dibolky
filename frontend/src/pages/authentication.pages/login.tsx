@@ -70,10 +70,17 @@ const Login = ({ role }: LoginProps) => {
    
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      setIsLoading(false)
-      message.error(error.response.data.error)
+    } catch (error: unknown) {
+      setIsLoading(false);
+      if (
+        error instanceof Error &&  typeof error === "object" && "response" in error && typeof error.response === "object" && error.response !== null && "data" in error.response &&
+         typeof error.response.data === "object" && error.response.data !== null && "error" in error.response.data && typeof error.response.data.error === "string"
+      ) {
+        message.error(error.response.data.error);
+      } else {
+        message.error("Unexpected error occurred");
+      }
+    
     }
 
 

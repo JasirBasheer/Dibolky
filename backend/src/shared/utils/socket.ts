@@ -1,13 +1,15 @@
+import { Server as HTTPServer } from "http";
+import { Server as HTTPSServer } from "https";
 import { Server } from 'socket.io';
-import { getSecretRoomId } from './util';
 import { container } from 'tsyringe';
 import { IChatService } from '../../services/Interface/IChatService';
 import mongoose from 'mongoose';
+import { IChat } from "../types/chat.types";
 
 
 const chatService = container.resolve<IChatService>('ChatService')
 
-const initializeSocket = (server: any) => {
+const initializeSocket = (server: HTTPServer | HTTPSServer) => {
     const io = new Server(server, {
         cors: {
             origin: "http://localhost:5173"
@@ -43,7 +45,7 @@ const initializeSocket = (server: any) => {
                 };
         
                 await chatService.sendMessage(messageData, orgId, chatId);
-                const chat = await chatService.getChat(orgId,chatId)
+                const chat = await chatService.getChat(orgId,chatId) as IChat
 
                 io.to(roomId).emit("new-message-received", { newMessage: messageData,chat_id:chatId,participants:chat?.participants });
                

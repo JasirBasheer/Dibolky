@@ -18,13 +18,19 @@ export interface IFilesMetaData {
     contentType:string
 }
 
+export interface IFile {
+    id:string;
+    file:File
+    type:string;
+
+}
+
 
 export interface IFiles{
     fileName:string;
     contentType:string;
     key:string;
     uploadedAt:string;
-
 }
 
 export interface IMetadata{
@@ -34,14 +40,65 @@ export interface IMetadata{
     tags?:string[]
 }
 
-export interface IPlatfroms{
-    platfrom:string;
-    scheduledDate:string;
+export interface IPlatforms{
+    platform:string;
+    scheduledDate?:string | Date;
 }
 
 export interface IContentData{
     files:IFiles[];
     metadata:IMetadata;
-    platforms:IPlatfroms[];
+    platforms:IPlatforms[];
     contentType:string;
 }
+
+
+
+  
+  export interface IMetaAccount{
+    pageId:string;
+    pageName:string;
+    pageImage:string;
+  }
+
+
+  export interface IReviewBucket {
+    _id?:string;
+    user_id?: string;
+    orgId?: string;
+    files?: IFiles[];
+    status?: string;
+    platforms?: IPlatforms[];
+    title?: string;
+    contentType?:string;
+    caption?: string;
+    tags?: string[];
+    isPublished?: boolean;
+    feedBack?: string;
+}
+
+export interface Seen {
+    userId: string;
+    seenAt: string;
+  }
+
+
+export interface IMessage {
+    _id?:string;
+    chatId: string;
+    type: 'text' | 'common';
+    senderId?: string;
+    senderName?: string;
+    text: string;
+    fileUrl?: string;
+    seen: Seen[];
+    createdAt: string;
+    updatedAt: string;
+  }
+
+
+  export interface IParticipant {
+    userId: string;
+    type?: string;
+    name?: string;
+  }

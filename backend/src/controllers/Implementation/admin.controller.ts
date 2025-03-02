@@ -40,9 +40,10 @@ export default class AdminController implements IAdminController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const details = await this.adminService.verifyAdmin(req.details._id)
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const details = await this.adminService.verifyAdmin(req.details._id as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.VERIFIED, { details, role: "Admin" })
-        } catch (error: any) {
+        } catch (error) {
             next(error)
         }
     }

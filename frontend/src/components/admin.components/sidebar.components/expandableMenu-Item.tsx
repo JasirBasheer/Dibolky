@@ -10,7 +10,7 @@ import {
   } from 'lucide-react';
 import { useSelector } from 'react-redux';
   
-  let icons: any = {
+const icons:any  = {
     LayoutDashboard: LayoutDashboard,
     Users: Users,
     BarChart: BarChart,

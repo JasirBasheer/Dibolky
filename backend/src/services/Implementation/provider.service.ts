@@ -5,8 +5,11 @@ import { getMetaPagesDetails, handleFacebookUpload } from "../../provider.strate
 import { exchangeForLongLivedToken, handleInstagramUpload } from "../../provider.strategies/instagram.strategy";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
-import { IReviewBucket } from "../../shared/types/agency.types";
+import { IAgencyTenant } from "../../shared/types/agency.types";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
+import { IMetaAccount, IPlatforms, IReviewBucket, ISocialMediaUploadResponse } from "../../shared/types/common.types";
+import { IClientTenant } from "../../shared/types/client.types";
+import { IInfluncerTenant } from "../../shared/types/influencer.types";
 
 
 @injectable()
@@ -25,17 +28,18 @@ export default class ProviderService implements IProviderService {
         this.agencyTenantRepository = agencyTenantRepository
     }
 
+    
 
 
     async handleSocialMediaUploads(
-        content: any,
-        user: any,
+        content: IReviewBucket,
+        user: IClientTenant | IAgencyTenant | IInfluncerTenant | null,
         isCron: boolean
-    ): Promise<any> {
+    ): Promise<ISocialMediaUploadResponse[]> {
 
         if (!user) throw new Error('user does not exists')
 
-        const uploadPromises = content.platforms.map(async (platform: any) => {
+        const uploadPromises = content.platforms.map(async (platform: IPlatforms) => {
             if (platform.scheduledDate != "" && !isCron) return null;
 
             let access_token;
@@ -45,49 +49,44 @@ export default class ProviderService implements IProviderService {
             try {
                 switch (platform.platform) {
                     case INSTAGRAM:
-                        access_token = user?.socialMedia_credentials?.instagram.accessToken;
+                        access_token = user?.socialMedia_credentials?.instagram?.accessToken;
                         if (!access_token) throw new Error('Instagram access token not found');
-                        return response = await handleInstagramUpload(content, access_token, user);
+                        return response = await handleInstagramUpload(content, access_token);
 
                     case FACEBOOK:
-                        access_token = user?.socialMedia_credentials?.facebook.accessToken;
+                        access_token = user?.socialMedia_credentials?.facebook?.accessToken;
                         if (!access_token) throw new Error('FaceBook access token not found');
-                        return response = await handleFacebookUpload(content, access_token, user);
+                        return response = await handleFacebookUpload(content, access_token);
 
                     default:
                         throw new Error(`Unsupported platform: ${platform}`);
                 }
-            } catch (error: any) {
-                return {
-                    platform,
-                    status: 'error',
-                    error: error.message || 'Unknown error occurred'
-                };
-            }
-
-
+            } catch (error: unknown) {
+                 throw error  
+            };
         });
 
 
         const results = await Promise.all(uploadPromises);
-        const validResults: any = results.filter(result => result !== null);
+        const validResults: ISocialMediaUploadResponse[] = results.filter(
+            (result): result is ISocialMediaUploadResponse => result !== null
+        );
 
-        if (validResults.length == 0) return results
+        if (validResults.length == 0) return validResults
         console.log('Upload Results:', results);
 
-        const successfulUploads = results.filter(result => result.status === 'success');
+        const successfulUploads = results.filter(result => result!.status === 'success');
         if (successfulUploads.length === 0) {
-            throw new Error('All uploads failed: ' +
-                results.map(r => `${r.platform}: ${r.error}`).join(', '));
+            throw new Error('All uploads failed');
         }
 
-        return results
+        return validResults
 
     }
 
     async getMetaPagesDetails(
         access_token: string
-    ): Promise<any> {
+    ): Promise<IMetaAccount[]> {
         return await getMetaPagesDetails(access_token)
     }
 
@@ -121,13 +120,13 @@ export default class ProviderService implements IProviderService {
             let longLivingAccessToken:string = token
             switch (platform) {
                 case 'agency':
-                    if(provider = INSTAGRAM){
+                    if(provider == INSTAGRAM || provider == FACEBOOK ){
                         longLivingAccessToken = await exchangeForLongLivedToken(token)
                     }
                     await this.agencyTenantRepository.setSocialMediaTokens(orgId, provider, longLivingAccessToken)
                     break;
                 case 'client':
-                    if(provider = INSTAGRAM){
+                    if(provider == INSTAGRAM || provider == FACEBOOK){
                         longLivingAccessToken = await exchangeForLongLivedToken(token)
                     }
                     await this.clientTenantRepository.setSocialMediaTokens(orgId, user_id, provider, longLivingAccessToken)

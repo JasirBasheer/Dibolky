@@ -7,6 +7,7 @@ export interface IProject extends Document {
     dead_line: Date;
     category: string;
     status: string
+    createdAt?:string|number;
 }
 
 export const projectSchema: Schema<IProject> = new mongoose.Schema({

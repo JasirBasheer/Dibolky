@@ -14,7 +14,7 @@ export const savePlatformTokenApi = async(
 }
 
 export const InitiateS3BatchUpload = async(
-    filesMetadata:IFilesMetaData
+    filesMetadata:IFilesMetaData[]
 ) =>{ 
     return await api.post('/api/entities/initiate-s3-batch-upload', {
         files: filesMetadata

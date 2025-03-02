@@ -16,33 +16,36 @@ export default class ClientController implements IClientController {
 
     async getClient(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const details = await this.clientService.verifyClient(req.details._id)
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const details = await this.clientService.verifyClient(req.details._id as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details, role: "Client" })
-        } catch (error: any) {
-            next(error)
+        } catch (error: unknown) {
+            next(error);
         }
     }
 
     async getClientDetails(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const details = await this.clientService.getClientDetails(req.details.orgId, req.details.email)
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const details = await this.clientService.getClientDetails(req.details.orgId as string, req.details.email as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { client: details })
 
-        } catch (error: any) {
-            next(error)
+        } catch (error: unknown) {
+            next(error);
         }
     }
 
     async getOwner(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const owners = await this.clientService.getOwners(req.details.orgId)
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const owners = await this.clientService.getOwners(req.details.orgId as string)
             if (!owners) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { owners })
 
-        } catch (error: any) {
-            next(error)
+        } catch (error: unknown) {
+            next(error);
         }
     }
 

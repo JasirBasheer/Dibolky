@@ -1,5 +1,7 @@
+import { CustomError } from "mern.common";
 import { META_API_VERSION, META_CLIENTID } from "../config/env";
 import { uploadFacebookReel } from "../media.service/reel-handler.service";
+import { IMetaAccount, IReviewBucket, IReelUploadStatus } from "../shared/types/common.types";
 import { CONTENT_TYPE } from "../shared/utils/constants";
 
 
@@ -25,7 +27,7 @@ export async function createFacebookOAuthURL(redirectUri: string): Promise<strin
 }
 
 
-export async function getMetaPagesDetails(access_token: string): Promise<any[]> {
+export async function getMetaPagesDetails(access_token: string): Promise<IMetaAccount[]> {
     try {
         const pagesUrl = `https://graph.facebook.com/${META_API_VERSION}/me/accounts?access_token=${access_token}`;
         const response = await fetch(pagesUrl);
@@ -35,7 +37,7 @@ export async function getMetaPagesDetails(access_token: string): Promise<any[]> 
         console.log("pages",pages,"data",data)
 
         return await Promise.all(
-            pages.map(async (page: any) => {
+            pages.map(async (page: { id: string; name: string; }) => {
                 const pageDetailsUrl = `https://graph.facebook.com/${META_API_VERSION}/${page.id}?fields=picture&access_token=${access_token}`;
                 const pageDetailsResponse = await fetch(pageDetailsUrl);
                 const pageDetailsData = await pageDetailsResponse.json();
@@ -55,18 +57,22 @@ export async function getMetaPagesDetails(access_token: string): Promise<any[]> 
 }
 
 
-export async function handleFacebookUpload(content: any, access_token: string, client:any): Promise<any> {
+export async function handleFacebookUpload(content: IReviewBucket, access_token: string): Promise<{name:string,status: string,id:string } > {
     switch (content.contentType) {
         case CONTENT_TYPE.REEL:
-            return await uploadFacebookReel(access_token, content, content.caption, client)
+            return await uploadFacebookReel(access_token, content, content.caption)
         case CONTENT_TYPE.VIDEO:
+            return await uploadFacebookReel(access_token, content, content.caption)
+        default:
+            return await uploadFacebookReel(access_token, content, content.caption)
+            
     }
 }
 
 
 
 // Reel init
-export async function initializeReelUpload(pageId: string, pageAccessToken: string): Promise<any> {
+export async function initializeReelUpload(pageId: string, pageAccessToken: string): Promise<{video_id?:string;video_url:string;upload_url:string}> {
     try {
         const inititUrl = `https://graph.facebook.com/${META_API_VERSION}/${pageId}/video_reels`;
 
@@ -82,18 +88,18 @@ export async function initializeReelUpload(pageId: string, pageAccessToken: stri
         });
 
         const initResponse = await response.json();
+        if (!response.ok) throw new CustomError(`Error: ${initResponse.error.message}`,500);
 
-        if (!response.ok) throw new Error(`Error: ${initResponse.error.message}`);
-
+        console.log(initResponse,"initResponse")
         return initResponse
     } catch (error) {
-        console.error("Error during upload start:", error);
+        throw error
     }
 
 }
 
 
-export async function uploadHostedReel(videoId: any, url: string, pageAccessToken: string): Promise<any> {
+export async function uploadHostedReel(videoId: string, url: string, pageAccessToken: string): Promise<{success:boolean;message:string,video_id:string}> {
     try {
 
         const uploadUrl = `https://rupload.facebook.com/video-upload/v22.0/${videoId}`;
@@ -114,15 +120,18 @@ export async function uploadHostedReel(videoId: any, url: string, pageAccessToke
         console.log(data,'data fron facebook')
 
         if (!response.ok) throw new Error(`Error: ${data.error.message}`);
+        console.log("UploadHostedReel",data)
         return data
+
 
     } catch (error) {
         console.error("Error uploading hosted file:", error);
+        throw error
 
     }
 }
 
-export async function checkReelUploadStatus(videoId: string, pageAccessToken: string): Promise<any> {
+export async function checkReelUploadStatus(videoId: string, pageAccessToken: string): Promise<IReelUploadStatus> {
     
     const statusCheckUrl = `https://graph.facebook.com/v22.0/${videoId}?fields=status&access_token=${pageAccessToken}`;
     const interval = 30_000; 
@@ -184,7 +193,7 @@ export async function checkReelUploadStatus(videoId: string, pageAccessToken: st
 
 
 
-export async function publishReel(pageId:string,videoId:string,pageAccessToken:string,captions:string):Promise<any> {
+export async function publishReel(pageId:string,videoId:string,pageAccessToken:string,captions:string):Promise<{success:boolean;message:string;post_id:string}> {
     try {
         const finishUploadUrl = `https://graph.facebook.com/v22.0/${pageId}/video_reels?access_token=${pageAccessToken}&video_id=${videoId}&upload_phase=finish&video_state=PUBLISHED&description=${encodeURIComponent(captions)}`;
         const response = await fetch(finishUploadUrl, {
@@ -198,5 +207,6 @@ export async function publishReel(pageId:string,videoId:string,pageAccessToken:s
         return data
     } catch (error) {
         console.error("Error completing video upload:", error);
+        throw error
     }
 }

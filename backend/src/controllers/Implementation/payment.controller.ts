@@ -5,12 +5,12 @@ import { IPaymentService } from '../../services/Interface/IPaymentService';
 import { stripe } from '../../config/stripe';
 import Stripe from 'stripe';
 import { IEntityService } from '../../services/Interface/IEntityService';
-import { STRIPE_WEBHOOK_SECRET } from '../../config/env';
 import { 
     HTTPStatusCodes, 
     ResponseMessage, 
     SendResponse 
 } from 'mern.common';
+import { IUserDetails } from '../../shared/types/payment.types';
 
 @injectable()
 /** Implementation of Payment Controller */
@@ -45,9 +45,9 @@ export default class PaymentController implements IPaymentController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const { amount }: { amount: string } = req.body
+            const { amount , currency }: { amount: number, currency:string } = req.body
 
-            const response = await this.paymentService.razorpay({ amount })
+            const response = await this.paymentService.razorpay({ amount, currency})
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.CREATED, { data: response })
         } catch (error) {
             console.error('Error creating company:', error);
@@ -73,7 +73,7 @@ export default class PaymentController implements IPaymentController {
             const { details, success_url, cancel_url } = req.body
 
             const session = await this.paymentService.stripe(details, success_url, cancel_url)
-            res.json({ url: session.url })
+            res.json({ url: session })
         } catch (error) {
             next(error)
         }
@@ -92,26 +92,11 @@ export default class PaymentController implements IPaymentController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        const sig = req.headers['stripe-signature'] as string;
-        let event: Stripe.Event;
         try {
+            const sig = req.headers['stripe-signature'] as string;
+            const response = await this.paymentService.stripeWebhook(req.body,sig)
+            if(response)SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.CREATED)
             
-            event = stripe.webhooks.constructEvent(req.body, sig, "whsec_cae33044573115c56711a0bacaf0e229d72fbadd3301a0fc3f8bafe6c4093fe3");
-
-            if (event.type == 'checkout.session.completed') {
-                const session = event.data.object as Stripe.Checkout.Session;
-                const metadata = session.metadata || {};
-
-                await this.entityService.registerAgency(
-                    metadata.organizationName, metadata.name, metadata.email,
-                    { city: metadata.city, country: metadata.country, }, metadata.website,
-                    metadata.industry, Number(metadata.phone), metadata.logo || "",
-                    metadata.password, JSON.parse(metadata.plan)._id, Number(metadata.validity),
-                    Number(metadata.amount), "2342saf", "Stripe", metadata.description, metadata.currency
-                )
-                SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.CREATED)
-            }
-
         } catch (error) {
             next(error)
         }

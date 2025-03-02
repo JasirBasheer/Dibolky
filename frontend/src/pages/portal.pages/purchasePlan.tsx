@@ -104,7 +104,6 @@ const PurchasePlan: React.FC = () => {
             await handleRazorpayPayment(formData, plan, platform, navigate, currency.selectedCurrency);
         } else if (paymentMethod == 'stripe') {
            const response = await handleStripePayment(formData,plan,platform,currency.selectedCurrency)
-           console.log(response)
            if(response.url)window.location.href = response.url
         }
     };

@@ -16,7 +16,7 @@ export class ProjectRepository extends BaseRepository<IProject> implements IProj
     constructor(
         @inject('project_model') schema: Schema
     ) {
-        super(null as any);
+        super(null as unknown as Model<IProject>);
         this.projectSchema = schema;
     }
 
@@ -51,7 +51,7 @@ export class ProjectRepository extends BaseRepository<IProject> implements IProj
 
     async fetchAllProjects(
         orgId: string
-    ): Promise<Partial<IProject[]> | null> {
+    ): Promise<IProject[]> {
         const model = await this.getModel(orgId);
         return await model.find({});
     }

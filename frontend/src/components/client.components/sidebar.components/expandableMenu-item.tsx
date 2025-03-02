@@ -8,9 +8,8 @@ import {
     MessageSquareText, Building2, UserCircle, Shield,
     ChevronDown
   } from 'lucide-react';
-import { useSelector } from 'react-redux';
   
-  let icons: any = {
+const icons :any  = {
     LayoutDashboard: LayoutDashboard,
     Users: Users,
     BarChart: BarChart,
@@ -61,8 +60,7 @@ const ExpandableMenuItem: React.FC<ExpandableMenuItemProps> = ({
     subItems, 
     activeSubPath 
 }) => {
-    const userDetails = useSelector((state: any) => state.user);
-    const Icon = icons[iconName];
+    const Icon = icons[iconName as string];
 
     const isActive = subItems?.some(item => {
         return item.path.includes(activeSubPath || '');

@@ -1,10 +1,9 @@
-import mongoose, { Model, Schema } from "mongoose";
+import mongoose, { Model, Schema, Types } from "mongoose";
 import { IChatRepository } from "../Interface/IChatRepository";
-import { IChat } from "../../shared/types/chat.types";
-import { BaseRepository } from "mern.common";
+import { IChat, IChatDetails, IGroupDetails, Participant } from "../../shared/types/chat.types";
+import { BaseRepository, NotFoundError } from "mern.common";
 import { inject, injectable } from "tsyringe";
 import { connectTenantDB } from "../../config/db";
-import { NotFoundError } from "rxjs";
 
 @injectable()
 export default class ChatRepository extends BaseRepository<IChat> implements IChatRepository {
@@ -15,7 +14,7 @@ export default class ChatRepository extends BaseRepository<IChat> implements ICh
     constructor(
         @inject('chat_model') schema: Schema
     ) {
-        super(null as any);
+        super(null as unknown as Model<IChat>);
         this.chatSchema = schema;
     }
 
@@ -61,10 +60,9 @@ export default class ChatRepository extends BaseRepository<IChat> implements ICh
         return await model.findOne({ _id: chatId })
     }
 
-
     async createNewChat(
         orgId: string,
-        details: any
+        details: IChatDetails
     ): Promise<IChat | null> {
         const model = await this.getModel(orgId);
 
@@ -98,7 +96,7 @@ export default class ChatRepository extends BaseRepository<IChat> implements ICh
 
     async createNewGroup(
         orgId: string,
-        newGroupDetails: any,
+        newGroupDetails:Partial<IChat> ,
     ): Promise<IChat> {
         const model = await this.getModel(orgId);
         const newGroup = new model(newGroupDetails)
@@ -109,15 +107,16 @@ export default class ChatRepository extends BaseRepository<IChat> implements ICh
     async addMember(
         orgId: string,
         chatId: string,
-        memberDetails: any
+        memberDetails: Participant
     ): Promise<IChat> {
         const model = await this.getModel(orgId);
 
         const chat = await model.findOne({ _id: chatId })
         if (!chat) throw new NotFoundError('Chat not found')
-        chat.participants.push(memberDetails)
+        chat.participants = chat.participants || [];
+        chat.participants.push(memberDetails);
         return await chat.save()
-        }
+    }
 
 
     async findChatByMembers(

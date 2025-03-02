@@ -1,10 +1,10 @@
-import { BaseRepository } from "mern.common";
+import { BaseRepository, CustomError } from "mern.common";
 import { inject, injectable } from "tsyringe";
-import { IReviewBucket } from "../../shared/types/agency.types";
 import { Model } from "mongoose";
 import { Schema } from "mongoose";
 import { connectTenantDB } from "../../config/db";
 import { IContentRepository } from "../Interface/IContentRepository";
+import { IReviewBucket } from "../../shared/types/common.types";
 
 @injectable()
 export class ContentRepository extends BaseRepository<IReviewBucket> implements IContentRepository {
@@ -15,7 +15,7 @@ export class ContentRepository extends BaseRepository<IReviewBucket> implements 
     constructor(
         @inject('review_bucket_model') schema: Schema
     ) {
-        super(null as any);
+        super(null as unknown as Model<IReviewBucket>);
         this.reviewBucketSchema = schema;
     }
 
@@ -37,9 +37,11 @@ export class ContentRepository extends BaseRepository<IReviewBucket> implements 
 
     async saveContent(
         details: Partial<IReviewBucket>
-    ): Promise<IReviewBucket | null> {
+    ): Promise<IReviewBucket> {
         const model = await this.getModel(details.orgId!);
-        return await model.create(details);
+        const createdContent = await model.create(details);
+        if(!createdContent)throw new CustomError("failed to create content",500)
+        return createdContent
     }
 
     async getContentById(
@@ -64,7 +66,7 @@ export class ContentRepository extends BaseRepository<IReviewBucket> implements 
         status: string
     ): Promise<IReviewBucket | null> {
         const model = await this.getModel(orgId);
-        return await model.findByIdAndDelete(
+        return await model.findByIdAndUpdate(
             { _id: contentId },
             { $set: { status } }
         );

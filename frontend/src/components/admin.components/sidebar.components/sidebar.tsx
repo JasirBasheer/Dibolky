@@ -10,7 +10,7 @@ import {
 import ExpandableMenuItem from './expandableMenu-Item';
 import MenuItem from './menu-item';
 
-let icons: any = {
+const icons :any = {
   LayoutDashboard: LayoutDashboard,
   Users: Users,
   BarChart: BarChart,

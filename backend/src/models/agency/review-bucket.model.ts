@@ -1,5 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
-import { IReviewBucket } from '../../shared/types/agency.types';
+import { IReviewBucket } from '../../shared/types/common.types';
+
+
 
 
 export const ReviewBucketSchema: Schema<IReviewBucket> = new mongoose.Schema({
@@ -11,15 +13,19 @@ export const ReviewBucketSchema: Schema<IReviewBucket> = new mongoose.Schema({
         type: String,
         required: true
     },
-    files: {
-        type: Object,
-        required: true
-    },
+    files: [
+        {
+            fileName: { type: String, required: true },
+            contentType: { type: String, required: true },
+            key: { type: String, required: true },
+            uploadedAt: { type: String, required: true },
+        }
+    ],
     status: {
         type: String,
         default: "Pending"
     },
-    metaAccountId:{
+    metaAccountId: {
         type: String,
     },
     platforms: [
@@ -40,8 +46,8 @@ export const ReviewBucketSchema: Schema<IReviewBucket> = new mongoose.Schema({
             }
         },
     ],
-    contentType:{
-        type:String,
+    contentType: {
+        type: String,
     },
     title: {
         type: String
@@ -68,7 +74,7 @@ ReviewBucketSchema.methods.changePlatformPublishStatus = async function (
     platform: string,
     value: boolean
 ): Promise<void> {
-    const platformEntry = this.platforms.find((p: any) => p.platform === platform);
+    const platformEntry = this.platforms.find((p: { platform: string }) => p.platform === platform);
 
     if (platformEntry) {
         platformEntry.isPublished = value;

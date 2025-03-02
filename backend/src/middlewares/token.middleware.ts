@@ -6,6 +6,10 @@ import { IAdminService } from "../services/Interface/IAdminService";
 import { IClientService } from "../services/Interface/IClientService";
 import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../config/env";
 import { isTokenBlacklisted } from "../config/redis";
+import { IClient } from "../shared/types/client.types";
+import { IAgency } from "../shared/types/agency.types";
+import { IAdmin } from "../shared/types/admin.types";
+import { ITokenDetails } from "../shared/types/common.types";
 
 const agencyService = container.resolve<IAgencyService>("AgencyService");
 const adminService = container.resolve<IAdminService>("AdminService");
@@ -14,15 +18,15 @@ const clientService = container.resolve<IClientService>("ClientService");
 declare global {
     namespace Express {
         interface Request {
-            details?: any;
-            tokenDetails?: any;
+            details?: IAdmin | IAgency | IClient | null;
+            tokenDetails?: ITokenDetails;
         }
     }
 }
 
 
 
-export const TokenMiddleWare = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+export const TokenMiddleWare = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         let token = req.cookies.accessToken ?? null
         let refreshToken = req.cookies.refreshToken ?? null
@@ -53,6 +57,8 @@ export const TokenMiddleWare = async (req: Request, res: Response, next: NextFun
             ownerDetails = await adminService.verifyAdmin(tokenDetails.id)
         } else if (tokenDetails.role == "Client") {
             ownerDetails = await clientService.verifyClient(tokenDetails.id)
+        }else{
+            ownerDetails = await clientService.verifyClient(tokenDetails.id)
         }
         
 
@@ -65,7 +71,7 @@ export const TokenMiddleWare = async (req: Request, res: Response, next: NextFun
         ownerDetails = ownerDetails?.toObject();
         ownerDetails.role = tokenDetails.role
         req.details = ownerDetails
-        req.tokenDetails = tokenDetails
+        req.tokenDetails = tokenDetails as ITokenDetails
 
         next();
     } catch (error) {

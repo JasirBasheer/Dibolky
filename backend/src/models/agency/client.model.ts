@@ -83,9 +83,6 @@ export const clientSchema: Schema<IClientTenant> = new mongoose.Schema({
       }
     }
   },
-  services: {
-    type: Object,
-  },
   menu: {
     type: Object,
     required: true

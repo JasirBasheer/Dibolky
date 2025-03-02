@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { X} from 'lucide-react';
+import { X } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,14 +7,14 @@ import { Label } from "@/components/ui/label";
 import { message } from 'antd';
 import axios from '@/utils/axios';
 
-const PRESET_PERMISSION = ['smm','crm','accounting','marketing'];
+const PRESET_PERMISSION = ['smm', 'crm', 'accounting', 'marketing'];
 
 interface AddDepartmentProps {
   setIsAddDepartmentClicked: Dispatch<SetStateAction<boolean>>;
 }
 
 const AddDepartment = ({ setIsAddDepartmentClicked }: AddDepartmentProps) => {
-  const [department,setDepartment] = useState<string>("")  
+  const [department, setDepartment] = useState<string>("")
   const [permissions, setPermissions] = useState<string[]>([]);
 
 
@@ -22,43 +22,48 @@ const AddDepartment = ({ setIsAddDepartmentClicked }: AddDepartmentProps) => {
     if (permissions.includes(permission)) {
       setPermissions(permissions.filter(item => item !== permission));
     } else {
-        setPermissions([...permissions, permission]);
+      setPermissions([...permissions, permission]);
     }
   };
-  
+
 
 
 
   const handleAddDepartment = async () => {
     try {
-      if(department.trim()==""){  
+      if (department.trim() == "") {
         message.warning('Enter valid informantions')
-        return 
-      } 
-     const res = await axios.post('/api/entities/create-department', {department,permissions})
-      if(res.status == 200){
+        return
+      }
+      const res = await axios.post('/api/entities/create-department', { department, permissions })
+      if (res.status == 200) {
         message.success("Plan successfully created")
         setIsAddDepartmentClicked(false)
       }
-    } catch (error:any) {
-      console.log(error)
-      message.error(error.message || 'Unexpected error occured while creating plan')
-    }
+    } catch (error: unknown) {
+      console.log(error);
+    
+      if (error instanceof Error) {
+        message.error(error.message);
+      } else {
+        message.error("Unexpected error occurred while creating plan");
+      }
+    }    
   }
 
 
 
   return (
     <div className="fixed inset-[-3rem] bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 "
-    onClick={()=> setIsAddDepartmentClicked(false)}
+      onClick={() => setIsAddDepartmentClicked(false)}
     >
       <Card className="w-full max-w-3xl "
-              onClick={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className=" p-4 flex items-center justify-between">
           <h2 className="text-2xl font-semibold sm:ml-0 ml-5 ">Create Department</h2>
           <Button variant="ghost" size="icon" className="rounded-full"
-          onClick={()=> setIsAddDepartmentClicked(false)}
+            onClick={() => setIsAddDepartmentClicked(false)}
           >
             <X className="h-5 w-5" />
           </Button>
@@ -81,9 +86,9 @@ const AddDepartment = ({ setIsAddDepartmentClicked }: AddDepartmentProps) => {
             </div>
 
             <div>
-            <Label htmlFor="title">Permissions</Label>
+              <Label htmlFor="title">Permissions</Label>
               <div className="grid grid-cols-2 gap-6">
-               <div className="space-y-4">
+                <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-2">
                     {PRESET_PERMISSION.map((permission) => (
                       <Button

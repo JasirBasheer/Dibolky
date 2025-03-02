@@ -1,7 +1,10 @@
+import { getS3PublicUrl } from "../config/aws-s3.config";
 import { META_API_VERSION, META_CLIENTID, META_SECRETID } from "../config/env";
 import { uploadIGPost } from "../media.service/post-handler.service";
 import { uploadIGReel } from "../media.service/reel-handler.service";
+import { IReviewBucket } from "../shared/types/common.types";
 import { CONTENT_TYPE } from "../shared/utils/constants";
+import { VIDEO_EXTENSIONS } from "../shared/utils/video-dimensions.utils";
 
 
 export async function createInstagramOAuthURL(redirectUri: string): Promise<string> {
@@ -23,7 +26,7 @@ export async function createInstagramOAuthURL(redirectUri: string): Promise<stri
     return `${baseUrl}?${params.toString()}`;
 }
 
-export async function exchangeForLongLivedToken(shortLivedToken: string): Promise<any> {
+export async function exchangeForLongLivedToken(shortLivedToken: string): Promise<string> {
     const baseUrl = `https://graph.facebook.com/${META_API_VERSION}/oauth/access_token`
     const params = new URLSearchParams({
         grant_type: 'fb_exchange_token',
@@ -42,14 +45,14 @@ export async function exchangeForLongLivedToken(shortLivedToken: string): Promis
 
         const data = await response.json();
         return data.access_token
-    } catch (error: any) {
-        throw new Error(`Error exchanging token: ${error.message}`);
+    } catch (error: unknown) {
+        throw new Error(`Error exchanging token: ${error instanceof Error ? error.message : String(error)}`);
     }
 }
 
 
 
-export async function fetchIGAccountId(pageId: string, accessToken: string): Promise<any> {
+export async function fetchIGAccountId(pageId: string, accessToken: string): Promise<{isBusiness:boolean;id:string}> {
     const url = `https://graph.facebook.com/${META_API_VERSION}/${pageId}?fields=instagram_business_account&access_token=${accessToken}`;
     
     try {
@@ -77,22 +80,24 @@ export async function fetchIGAccountId(pageId: string, accessToken: string): Pro
 
 
 
-export async function handleInstagramUpload(content: any, access_token: string, client:any): Promise<any> {
+export async function handleInstagramUpload(content: IReviewBucket, access_token: string): Promise<{ name: string, status: string, id: string }> {
     try {
-
         switch (content.contentType) {
             case CONTENT_TYPE.POST:
-                return await uploadIGPost(content, access_token, client)
+                return await uploadIGPost(content, access_token)
             case CONTENT_TYPE.VIDEO:
-                return null
+                // return null
             case CONTENT_TYPE.REEL:
                 console.log('entereing to rell')
-                return await uploadIGReel(content, access_token, client)
+                return await uploadIGReel(content, access_token)
             case CONTENT_TYPE.STORY:
-                return null
+                // return null
+            default :
+                return await uploadIGPost(content, access_token)
+
         }
-    } catch (error: any) {
-        throw error;
+    } catch (error) {
+        throw error
     }
 
 }
@@ -135,7 +140,7 @@ export async function createInstaPostContainer(accountId: string, access_token: 
         }
 
         return data.id;
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error creating Instagram container:', error);
         throw error;
     }
@@ -146,9 +151,9 @@ export async function createInstaPostContainer(accountId: string, access_token: 
 
 
 
-export async function createInstaCarousel(businessId:string,access_token:string,containerIds:string[]): Promise<any> {
+export async function createInstaCarousel(businessId:string,access_token:string,containerIds:string[]): Promise<string> {
     try { 
-        const containerIdsString =containerIds.join(',')
+        const containerIdsString = containerIds.join(',')
         const url = `https://graph.facebook.com/${META_API_VERSION}/${businessId}/media`
         const params = new URLSearchParams({
             media_type:'CAROUSEL',
@@ -159,10 +164,11 @@ export async function createInstaCarousel(businessId:string,access_token:string,
 
         const response = await fetch(`${url}?${params}`, { method: 'POST' });
         const data = await response.json();
+        console.log("dataaaaaaaaaaaaaa",data)
         if(!data)throw new Error('No Instagram business account found');
         return data.id
         
-    } catch (error: any) {
+    } catch (error: unknown) {
         throw error
     }
 }
@@ -171,18 +177,56 @@ export async function createInstaCarousel(businessId:string,access_token:string,
 
 
 
+export async function uploadSinglePost(businessId:string,access_token:string,content:IReviewBucket): Promise<string> {
+    try { 
+        const url = `https://graph.facebook.com/${META_API_VERSION}/${businessId}/media`;
+        let params;
+        const contentUrl = await getS3PublicUrl(content.files[0].key)
+        const contentExtension = content.files[0].fileName.split('.').pop()
+        if(VIDEO_EXTENSIONS.includes("."+contentExtension as string)){
+            console.log('entered to video ')
+            params = new URLSearchParams({
+                video_url: contentUrl, 
+                media_type: 'REELS', 
+                access_token: access_token,
+                caption:content.caption,
+            });   
+        }else{
+            console.log('entered to photo ')
+
+            params = new URLSearchParams({
+                image_url: contentUrl, 
+                media_type: 'IMAGE', 
+                access_token: access_token,
+                caption:content.caption,
+            });
+        }
+
+        const response = await fetch(`${url}?${params}`, { method: 'POST' });
+        const data = await response.json();
+        console.log(data)
+        if(!data)throw new Error('No Instagram business account found');
+        return data.id
+        
+    } catch (error: unknown) {
+        throw error
+    }
+}
+
+
+
+
 // Reel 
-export async function uploadIGReelContent(accessToken: string, pageId: string, contentUrl: string, caption: string): Promise<any> {
+export async function uploadIGReelContent(accessToken: string, pageId: string, contentUrl: string, caption: string): Promise<{id:string ; error?:string}> {
     const url: string = `https://graph.facebook.com/${META_API_VERSION}/${pageId}/media?media_type=REELS&video_url=${contentUrl}&caption=${caption}&share_to_feed=true&thumb_offset=10&access_token=${accessToken}`;
     const publishResponse = await fetch(url, { method: 'POST' });
     const data = await publishResponse.json();
-
     if (data) return data
     throw new Error('No Instagram business account found');
 }
 
 
-export async function checkIGContainerStatus(accessToken: string, containerId: string): Promise<any> {
+export async function checkIGContainerStatus(accessToken: string, containerId: string): Promise<{status_code:string;id:string}> {
     console.log("containerId",containerId)
     const url = `https://graph.facebook.com/${META_API_VERSION}/${containerId}?fields=status_code&access_token=${accessToken}`;
 
@@ -204,14 +248,12 @@ export async function checkIGContainerStatus(accessToken: string, containerId: s
 }
 
 
-export async function publishInstagramContent(accessToken: string, businessId: string, creationId: string): Promise<any> {
+export async function publishInstagramContent(accessToken: string, businessId: string, creationId: string): Promise<{id:string}> {
     const url = `https://graph.facebook.com/${META_API_VERSION}/${businessId}/media_publish?creation_id=${creationId}&access_token=${accessToken}`;
     const publishResponse = await fetch(url, { method: 'POST' });
     const data = await publishResponse.json();
-    console.log(data)
-
     if (data && !data.error) return data;
-    // throw new Error('Media not ready after maximum attempts');
+    throw new Error('Media not ready after maximum attempts');
 }
 
 

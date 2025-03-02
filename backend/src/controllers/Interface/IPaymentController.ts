@@ -6,7 +6,7 @@ import {
 
 /** Interface for Payment Controller */
 export interface IPaymentController {
-    razorpay(req: Request, res: Response, next: NextFunction): Promise<any>
-    stripe(req: Request, res: Response, next: NextFunction): Promise<any>
-    stripeWebhook(req: Request, res: Response, next: NextFunction): Promise<any>
+    razorpay(req: Request, res: Response, next: NextFunction): Promise<void>
+    stripe(req: Request, res: Response, next: NextFunction): Promise<void>
+    stripeWebhook(req: Request, res: Response, next: NextFunction): Promise<void>
 }

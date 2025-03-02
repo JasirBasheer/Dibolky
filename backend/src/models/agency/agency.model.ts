@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { IAgency, IOwnerDetailsSchema } from '../../shared/types/agency.types';
+import { IAgency, IAgencyTenant } from '../../shared/types/agency.types';
 
 
 const agencySchema: Schema<IAgency> = new mongoose.Schema({
@@ -73,7 +73,7 @@ export default mongoose.model<IAgency>('Agency', agencySchema);
 
 
 
-export const ownerDetailsSchema = new Schema<IOwnerDetailsSchema>({
+export const ownerDetailsSchema = new Schema<IAgencyTenant>({
     ownerId: {
         type: String,
         required: false,

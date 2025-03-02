@@ -1,32 +1,19 @@
-import { getS3ViewUrl } from "../config/aws-s3.config";
+import { NotFoundError } from "mern.common";
+import { getS3PublicUrl, getS3ViewUrl } from "../config/aws-s3.config";
 import { checkReelUploadStatus, initializeReelUpload, publishReel, uploadHostedReel } from "../provider.strategies/facebook.strategy";
 import { checkIGContainerStatus, fetchIGAccountId, publishInstagramContent, uploadIGReelContent } from "../provider.strategies/instagram.strategy";
+import { IReviewBucket } from "../shared/types/common.types";
 import { FACEBOOK, INSTAGRAM } from "../shared/utils/constants";
 import { getPages } from "./shared.service";
 
 
 // Instagram -- reel
 
-export async function uploadIGReel(content: any, access_token: string, client: any): Promise<any> {
+export async function uploadIGReel(content: IReviewBucket, access_token: string): Promise<{name:string,status: string,id:string }> {
     try {
 
-        // const pages = await getPages(access_token);
-        // let pageId;
-
-        // if (!Array.isArray(pages.data)) {
-        //     console.error("Error: pages is not an array", pages);
-        // } else if (!client?.socialMedia_credentials?.facebook?.userName) {
-        //     console.error("Error: Facebook username is missing", client?.socialMedia_credentials?.facebook);
-        // } else {
-        //     pageId = pages.data.find((item: any) => item.name === client.socialMedia_credentials.facebook.userName)?.id;
-
-        // }
-
-        const url = await getS3ViewUrl(content.files[0].key)
-
-        console.log("url",url)
+        const url = await getS3PublicUrl(content.files[0].key)
         const instagramAccountId = await fetchIGAccountId(content.metaAccountId, access_token);
-        console.log("instagramAccountId",instagramAccountId)
 
         const containerData = await uploadIGReelContent(access_token, instagramAccountId.id, url, content.caption)
         if (containerData.error) throw new Error(`Container creation failed: ${JSON.stringify(containerData.error)}`);
@@ -37,13 +24,13 @@ export async function uploadIGReel(content: any, access_token: string, client: a
             return {
                 name: INSTAGRAM,
                 status: 'success',
-                id: content._id
+                id: content._id as string
             }
+        }else{
+            throw new Error("Failed to publish Instagram Reel");
         }
-
-    } catch (error: any) {
-        console.error('Reel upload error:', error);
-        throw new Error(`Failed to upload reel: ${error.message}`);
+    } catch (error: unknown) {
+        throw new Error(`Failed to upload reel`);
     }
 }
 
@@ -52,43 +39,35 @@ export async function uploadIGReel(content: any, access_token: string, client: a
 
 export async function uploadFacebookReel(
     accessToken: string,
-    content: any,
-    caption: string,
-    client: any
-): Promise<any> {
+    content: IReviewBucket,
+    caption: string
+): Promise<{name:string,status: string,id:string }> {
     try {
 
         const pages = await getPages(accessToken);
-        let page;
-
-        if (!Array.isArray(pages.data)) {
-            console.error("Error: pages is not an array", pages);
-        } else if (!client?.socialMedia_credentials?.facebook?.userName) {
-            console.error("Error: Facebook username is missing", client?.socialMedia_credentials?.facebook);
-        } else {
-            page = pages.data.find((item: any) => item.name == client.socialMedia_credentials.facebook.userName)
-        }
-
-        const pageId = page.id
+        const page= pages.data.find((item: { id: string }) => item.id == content.metaAccountId)
+        if(!page)throw new NotFoundError("Meta page not found")
+        const pageId = content.metaAccountId
         const pageAccessToken = page.access_token;
 
-
-
         const initResponse = await initializeReelUpload(pageId, pageAccessToken)
+        const url = await getS3ViewUrl(content.files[0].key)
 
-        await uploadHostedReel(initResponse.video_id, content.url[0], pageAccessToken)
-        console.log('entered status check ');
-        await checkReelUploadStatus(initResponse.video_id, pageAccessToken)
-        console.log('checkouted from status check ');
-        const publishRespone = await publishReel(pageId, initResponse.video_id, pageAccessToken, caption)
+        await uploadHostedReel(initResponse.video_id as string, url, pageAccessToken)
+        await checkReelUploadStatus(initResponse.video_id as string, pageAccessToken)
+        const publishRespone = await publishReel(pageId, initResponse.video_id as string, pageAccessToken, caption)
 
-        console.log('published from response', publishRespone)
-        return {
-            name: FACEBOOK,
-            status: 'success',
-            id: content._id
-        };;
-    } catch (error: any) {
+        if (publishRespone) {
+            return {
+                name: FACEBOOK,
+                status: 'success',
+                id: content._id as string
+            };
+        }else{
+            throw new Error("Failed to publish Instagram Reel");
+        }
+   
+    } catch (error: unknown) {
         throw error;
     }
 

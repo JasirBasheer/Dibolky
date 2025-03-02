@@ -1,24 +1,23 @@
 import { useEffect, useState } from 'react';
 import { CreditCard, ExternalLink, Zap } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/types/common.types';
 import { getConnectSocailMediaUrlApi } from '@/services/common/get.services';
 import { savePlatformTokenApi } from '@/services/common/post.services';
 import { message } from 'antd';
+import { setUser } from '@/redux/slices/userSlice';
 
 const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState('social-integrations');
   const user = useSelector((state: RootState) => state.user);
   const [required, setRequired] = useState<string[]>([]);
+  const dispatch = useDispatch()
+
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const tab = searchParams.get('tab');
-    const required = searchParams.get("required")?.split(",") || []
-    if(required.length>0){
-      setRequired(required)
-      message.warning('Please connect the required platforms')
-    }
+   
 
     if (tab) setActiveTab(tab);
 
@@ -29,9 +28,14 @@ const SettingsPage = () => {
       if (token) {
         handleCallback(token, provider).then(() => {
           window.history.replaceState({}, "", `${window.location.pathname}?tab=social-integrations&`);
-
+          // window.location.reload()
         })
       }
+    }
+    const required = searchParams.get("required")?.split(",") || []
+    if (required.length > 0) {
+      setRequired(required)
+      message.warning('Please connect the required platforms')
     }
   }, []);
 
@@ -50,6 +54,11 @@ const SettingsPage = () => {
         token);
 
       if (response) {
+        if (provider == "instagram") {
+          dispatch(setUser({ instagramAccessToken: token }))
+        } else if (provider == "facebook") {
+          dispatch(setUser({ facebookAccessToken: token }))
+        }
         message.success(`${provider} connected successfully`)
         return response;
       } else {

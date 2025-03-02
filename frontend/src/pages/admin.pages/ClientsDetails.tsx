@@ -1,4 +1,5 @@
 import { CheckCheck, X } from "lucide-react";
+import { Key } from "react";
 
 const AdminClientDetails = ({
   client,
@@ -54,7 +55,7 @@ const AdminClientDetails = ({
                   <div>
                     <label className="text-sm text-gray-500">Industry</label>
                     <div className="flex items-center gap-2">
-                     {client.details.industry}
+                      {client.details.industry}
                     </div>
                   </div>
                 </div>
@@ -96,47 +97,47 @@ const AdminClientDetails = ({
                 </div>
               </div>
 
-              {client.transactions.length>0 && (
+              {client.transactions.length > 0 && (
                 <div>
-                <h3 className="text-lg font-medium mb-3">Payment History</h3>
-              
-                <div className="grid grid-cols-1 gap-4 ">
-                {client.transactions.map((item,index)=>{
-                  return(
-                    <div key={index}>
-                    <hr className="mb-1"/>
+                  <h3 className="text-lg font-medium mb-3">Payment History</h3>
 
-                    <div className="flex  justify-between">
-                      <div>
+                  <div className="grid grid-cols-1 gap-4 ">
+                    {client.transactions.map((item: any, index: Key | null | undefined) => {
+                      return (
+                        <div key={index}>
+                          <hr className="mb-1" />
 
-                    <label className="text-sm text-gray-500">Description</label>
-                    <p className="font-medium">
-                      {item.description}
-                    </p>
-                      </div>
-                    <div className="">
-                    <label className="text-sm text-gray-500">Amount</label>
-                    <p className="font-medium">
-                      $ {item.amount} 
-                    </p>
-                    </div>
-                    {item.amount && (
-                       <div>
-                       <label className="text-sm text-gray-500">Status</label>
-                       <div className="w-full flex items-center justify-center">
-                       <CheckCheck className="w-4 text-green-700 text-center"/>
+                          <div className="flex  justify-between">
+                            <div>
 
-                       </div>
-                       </div>
-                    )}
+                              <label className="text-sm text-gray-500">Description</label>
+                              <p className="font-medium">
+                                {item.description}
+                              </p>
+                            </div>
+                            <div className="">
+                              <label className="text-sm text-gray-500">Amount</label>
+                              <p className="font-medium">
+                                $ {item.amount}
+                              </p>
+                            </div>
+                            {item.amount && (
+                              <div>
+                                <label className="text-sm text-gray-500">Status</label>
+                                <div className="w-full flex items-center justify-center">
+                                  <CheckCheck className="w-4 text-green-700 text-center" />
+
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          <hr className="mt-3 mb-1" />
+                        </div>
+
+                      )
+                    })}
                   </div>
-                    <hr  className="mt-3 mb-1"/>
-            </div>
-                    
-                  )
-                })}
-            </div>
-              </div>
+                </div>
               )}
 
             </div>

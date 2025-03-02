@@ -26,6 +26,13 @@ router.use(TokenMiddleWare)
 router.use(TenantMiddleWare)
 
 
+// router.use(permissionGate(["Company", "agency"]))
+router.get('/owner', (req, res, next) => entityController.getOwner(req, res, next))
+router.get('/projects', (req, res, next) => entityController.getAllProjects(req, res, next))
+router.get('/get-tasks', (req, res, next) => entityController.getAllProjects(req, res, next))
+
+
+
 router.use(permissionGate(["agency", "Client", "influencer"]))
 router.post('/approve-content', (req, res, next) => providerController.processContentApproval(req, res, next))
 router.get('/get-review-bucket/:user_id', (req, res, next) => entityController.fetchContents(req, res, next))
@@ -44,11 +51,6 @@ router.post('/create-group', (req, res, next) => entityController.createGroup(re
 
 
 
-
-router.use(permissionGate(["Company", "agency"]))
-router.get('/owner', (req, res, next) => entityController.getOwner(req, res, next))
-router.get('/projects', (req, res, next) => entityController.getAllProjects(req, res, next))
-router.get('/get-tasks', (req, res, next) => entityController.getAllProjects(req, res, next))
 
 
 

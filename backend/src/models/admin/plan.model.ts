@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
-import { IMenuItems, IPlan, ISubItem } from '../../shared/types/admin.types';
+import { IPlan } from '../../shared/types/admin.types';
+import { IMenuItems, ISubItem } from '../../shared/types/common.types';
 
 const subItemSchema = new Schema<ISubItem>({
     label: { type: String, required: true },

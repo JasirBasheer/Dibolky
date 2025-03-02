@@ -14,16 +14,6 @@ import {
 
 
 
-declare global {
-    namespace Express {
-        interface Request {
-            files?: any,
-            formData: any
-        }
-    }
-}
-
-
 
 @injectable()
 export default class AgencyController implements IAgencyController {
@@ -46,30 +36,30 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const details = await this.agencyService.verifyOwner(req.details._id)
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const details = await this.agencyService.verifyOwner(req.details._id as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details, role: "agency" })
-        } catch (error: any) {
-            next(error)
+        } catch (error: unknown) {
+            next(error);
         }
     }
 
 
     async getAgencyOwnerDetails(
-        req: Request,   
+        req: Request,
         res: Response,
         next: NextFunction
     ): Promise<void> {
         try {
-            const details = await this.agencyService.getAgencyOwnerDetails(req.details.orgId)
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const details = await this.agencyService.getAgencyOwnerDetails(req.details.orgId as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })
-        } catch (error: any) {
-            next(error)
+        } catch (error: unknown) {
+            next(error);
         }
     }
-
-
 
 
 
@@ -79,13 +69,15 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+
             const { orgId, name, email, industry, services, menu } = req.body
             const isClientExists = await this.clientService.getClientInMainDb(email)
             if (isClientExists) throw new ConflictError("Client with this email is already exists in the main database")
-            await this.agencyService.createClient(orgId, name, email, industry, services, menu, req.details.organizationName)
+            await this.agencyService.createClient(orgId, name, email, industry, services, menu, req.details.organizationName as string)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
-        } catch (error: any) {
-            next(error)
+        } catch (error: unknown) {
+            next(error);
         }
     }
 
@@ -99,13 +91,14 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const orgId = req.details.orgId
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+
+            const orgId = req.details.orgId as string
             const clients = await this.agencyService.getAllClients(orgId)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { clients })
 
-        } catch (error) {
-            next(error)
-
+        } catch (error: unknown) {
+            next(error);
         }
     }
 
@@ -116,12 +109,12 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const { id } = req.params
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const { id } = req.params            
             const details = await this.agencyService.getClient(req.details.orgId as string, id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })
-        } catch (error) {
-            next(error)
-
+        } catch (error: unknown) {
+            next(error);
         }
     }
 
@@ -132,17 +125,16 @@ export default class AgencyController implements IAgencyController {
     ): Promise<void> {
         try {
             const { selectedContentType, selectedPlatforms, id, files, caption } = req.body;
-            
+            if(!req.details)throw new NotFoundError("Details Not Fount")
             if (!files) {
                 res.status(400).json({ error: 'No file uploaded' });
                 return;
             }
 
-            const result = await this.agencyService.saveContentToDb(id, req.details.orgId, files, JSON.parse(selectedPlatforms), selectedContentType, caption)
+            const result = await this.agencyService.saveContentToDb(id, req.details.orgId as string, files, JSON.parse(selectedPlatforms), selectedContentType, caption)
             if (result) SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS);
-        } catch (error) {
-            next(error)
-
+        } catch (error: unknown) {
+            next(error);
         }
     }
 
@@ -153,11 +145,12 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const users = await this.agencyService.getAllClients(req.details.orgId as string)
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const users = await this.agencyService.getAllAvailableClients(req.details.orgId as string)
             if (!users) throw new CustomError('Error while fetch available users', 500)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { users })
-        } catch (error) {
-            next(error)
+        } catch (error: unknown) {
+            next(error);
         }
     }
 
@@ -168,10 +161,11 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const projects = await this.agencyService.getProjectsCount(req.details.orgId)
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const projects = await this.agencyService.getProjectsCount(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects })
-        } catch (error) {
-            next(error)
+        } catch (error: unknown) {
+            next(error);
         }
     }
 
@@ -181,10 +175,11 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const clients = await this.agencyService.getClientsCount(req.details.orgId)
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const clients = await this.agencyService.getClientsCount(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { clients })
-        } catch (error) {
-            next(error)
+        } catch (error: unknown) {
+            next(error);
         }
     }
 
@@ -194,11 +189,12 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
+            if(!req.details)throw new NotFoundError("Details Not Fount")
             const { projectId, status } = req.body
-            const result = await this.agencyService.editProjectStatus(req.details.orgId, projectId, status)
+            const result = await this.agencyService.editProjectStatus(req.details.orgId as string, projectId, status)
             if (result) SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-        } catch (error) {
-            next(error)
+        } catch (error: unknown) {
+            next(error);
         }
     }
 
@@ -208,10 +204,11 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const initialSetUp = await this.agencyService.getInitialSetUp(req.details.orgId)
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const initialSetUp = await this.agencyService.getInitialSetUp(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { initialSetUp })
-        } catch (error) {
-            next(error)
+        } catch (error: unknown) {
+            next(error);
         }
     }
 }

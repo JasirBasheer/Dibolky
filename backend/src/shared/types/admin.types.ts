@@ -1,8 +1,12 @@
 import mongoose, { Document } from "mongoose";
+import { IMenuCategory, IMenuItems } from "./common.types";
 
 
 
 export interface IAdmin extends Document {
+    role?:string;
+    orgId?:string;
+    organizationName?:string;
     name: string;
     email: string;
     password: string;
@@ -17,7 +21,7 @@ export interface planDetails {
     price: number;
     validity: string,
     features: string[];
-    menu: any
+    menu: IMenuCategory | string[]
 }
 
 interface IMenu {
@@ -44,20 +48,6 @@ interface IMenuItem {
 
 
 
-
-
-
-export interface ISubItem {
-    label: string;
-    icon: string;
-    path: string[];
-}
-
-export interface IMenuItems {
-    label: string;
-    icon: string;
-    subItems: ISubItem[];
-}
 
 export interface IPlan extends Document {
     id?: number;

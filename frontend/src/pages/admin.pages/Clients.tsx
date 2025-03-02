@@ -4,10 +4,11 @@ import axios from '../../utils/axios'
 import AdminClientDetails from './ClientsDetails'
 
 const AdminClients = () => {
-  const [clients, setClients] = useState<any>({ Agency: [], Company: [] })
   const [isClicked, setIsClicked] = useState<boolean>(false)
-  const [client, setClient] = useState<any>({})
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [clients, setClients] = useState({ Agency: [], Company: [] })
+  const [client, setClient] = useState({})
+  
   const fetchClients = async () => {
     try {
       const response = await axios.get('/api/admin/recent-clients')
@@ -53,7 +54,7 @@ const AdminClients = () => {
             </div>
 
             <div className="w-full">
-              {clients.Agency.map((item: any, index: number) => {
+              {clients.Agency.map((item: { _id: string; name: string }, index: number) => {
                 return (
                   <div key={index} className="w-full min-h-12 flex mb-2 px-4 bg-slate-50  transition-all duration-500 rounded-md hover:shadow-md cursor-pointer items-center text-sm"
                     onClick={() => viewClient(item._id, "Agency")}

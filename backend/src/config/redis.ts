@@ -13,7 +13,8 @@ redisClient.on('error', (err) => {
     console.log('Redis Client Error:', err);
 });
 
-export const blacklistToken = async (tokenDetials: any,token:string): Promise<void> => {
+export const blacklistToken = async (tokenDetials: {id:string,role:string,iat:number,exp:number},token:string): Promise<void> => {
+    console.log(tokenDetials)
     try {
         const ttl = tokenDetials.exp - Math.floor(Date.now() / 1000);
         if (ttl <= 0) {

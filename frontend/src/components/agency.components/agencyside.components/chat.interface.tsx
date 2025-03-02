@@ -15,7 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-// import { Badge } from '@/components/ui/badge';
+import { IMessage, IParticipant } from '@/types/common.types';
 
 
 
@@ -48,9 +48,9 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
     socket.current.emit('set-up', { orgId, userId })
 
     socket.current.on('new-message-received', ({ newMessage, chat_id, participants }) => {
-      const isParticipant = participants.some((item) => item.userId == userId)
+      const isParticipant = participants.some((item: { userId: string }) => item.userId == userId)
       if (isParticipant && chatId == chat_id) {
-        setMessage((prev) => [...prev, newMessage])
+        setMessage((prev: any) => [...prev, newMessage])
       }
     })
 
@@ -65,7 +65,7 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
   }, [userId, chatId, orgId])
 
   const handleChange = (value: string, key: string) => {
-    setNewMessage((prev) => ({
+    setNewMessage((prev: any) => ({
       ...prev,
       [key]: value
     }));
@@ -119,7 +119,7 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
           <div>
             <h2 className="font-medium text-slate-800">
               {chatDetails.name ||
-                chatDetails.participants?.find((item) => item?.userId != userId)?.name ||
+                chatDetails.participants?.find((item: { userId: string; }) => item?.userId != userId)?.name ||
                 "Unknown"
               }
             </h2>
@@ -133,7 +133,7 @@ const ChatInterface = ({ userId, orgId, chatId, userName }: { userId: string, or
 
       <div ref={messageContainerRef}
         className="flex-1 overflow-y-auto p-6 space-y-4">
-        {messages.map((msg: any, index) => {
+        {messages.map((msg: IMessage, index: React.Key | null | undefined) => {
           return (
             msg.type === 'common' ? (
               <div key={index} className="flex items-center justify-center p-2">
@@ -235,9 +235,9 @@ interface ChatDetailsProps {
 const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, userId, onAddMember, orgId }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestedMembers, setSuggestedMembers] = useState([]);
-  const [currentParticipants, setCurrentParticipants] = useState<any>(details.participants || [])
+  const [currentParticipants, setCurrentParticipants] = useState<IParticipant[]>(details.participants || [])
   const [filteredSuggestions,setFilteredSuggestions] = useState<any>([])
-  const user = currentParticipants.find((item) => item.userId == userId)
+  const user = currentParticipants.find((item: { userId: string; }) => item.userId == userId)
 
   const fetchAvailableUsers = async () => {
     const res = await axios.get("/api/agency/availabe-users")
@@ -255,8 +255,8 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, 
     socket.emit('set-up', { orgId, userId })
 
     socket.on('new-member-added', ({ member }) => {
-      const isParticipant = details.participants.some((item) => item.userId == userId)
-      if (isParticipant) setCurrentParticipants(prev => [...prev, member])
+      const isParticipant = details.participants.some((item: { userId: string; }) => item.userId == userId)
+      if (isParticipant) setCurrentParticipants((prev: IParticipant[]) => [...prev, member])
     })
 
 
@@ -267,7 +267,7 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, 
 
   useEffect(()=>{
   if(suggestedMembers.length == 0)return 
-  const members = suggestedMembers.filter((member) => !currentParticipants.some((p) => p.userId === member?._id)).filter((member) => member.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  const members = suggestedMembers.filter((member :{_id:string}) => !currentParticipants.some((p: { userId: string; }) => p.userId === member?._id)).filter((member:{name:string}) => member.name.toLowerCase().includes(searchTerm.toLowerCase()))
   setFilteredSuggestions(members)
   fetchAvailableUsers()
   },[suggestedMembers,currentParticipants])
@@ -313,7 +313,7 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, 
                     <h3 className="text-sm font-medium">Participants ({currentParticipants.length})</h3>
                   </div>
                   <div className="space-y-2">
-                    {currentParticipants.map((participant: any) => (
+                    {currentParticipants.map((participant: IParticipant) => (
                       <div
                         key={participant.userId}
                         className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 transition-colors"
@@ -403,7 +403,7 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, 
 
                   <ScrollArea className="h-48 mt-2 border rounded-md p-2">
                     {filteredSuggestions.length > 0 ? (
-                      filteredSuggestions.map((member: any) => (
+                      filteredSuggestions.map((member:{_id:string,name:string,type:string,}) => (
                         <div key={member._id} className="flex items-center justify-between py-2">
                           <div className="flex items-center gap-3">
                             <Avatar className="h-8 w-8">

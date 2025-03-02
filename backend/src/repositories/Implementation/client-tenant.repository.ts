@@ -1,10 +1,9 @@
 import { Model, Schema } from "mongoose";
 import { inject, injectable } from "tsyringe";
-import { BaseRepository } from "mern.common";
+import { BaseRepository, CustomError, NotFoundError } from "mern.common";
 import { IClientTenantRepository } from "../Interface/IClientTenantRepository";
 import { IClientTenant, User } from "../../shared/types/client.types";
 import { connectTenantDB } from "../../config/db";
-import { NotFoundError } from "rxjs";
 
 
 
@@ -17,7 +16,7 @@ export class ClientTenantRepository extends BaseRepository<IClientTenant> implem
     constructor(
         @inject('client_tenant_model') schema: Schema
     ) {
-        super(null as any);
+        super(null as unknown as Model<IClientTenant>);
         this.clientSchema = schema;
     }
 
@@ -36,12 +35,14 @@ export class ClientTenantRepository extends BaseRepository<IClientTenant> implem
 
     async createClient(
         orgId: string,
-        details: any
-    ): Promise<IClientTenant | void> {
+        details: Partial<IClientTenant>
+    ): Promise<IClientTenant> {
         const model = await this.getModel(orgId);
 
         const newClient = new model(details)
-        return await newClient.save()
+        const createdClient = await newClient.save()
+        if(!createdClient)throw new CustomError("An unexpected error occured while creating client please try again later.",500)
+        return createdClient
     }
 
     async getAllClients(
@@ -71,18 +72,7 @@ export class ClientTenantRepository extends BaseRepository<IClientTenant> implem
         if (!details) throw new NotFoundError('Client not found')
         return await details.setSocialMediaToken!(provider, token);
     }
-    async setSocialMediaUserNames(
-        orgId: string,
-        client_id: string,
-        provider: string,
-        username: string
-    ): Promise<void> {
-        const model = await this.getModel(orgId);
-
-        const details = await model.findOne({ _id: client_id })
-        if (!details) throw new NotFoundError('Client not found')
-        return await details.setSocialMediaUserName!(provider, username);
-    }
+ 
 
     async getClientDetailsByMail(
         orgId: string,

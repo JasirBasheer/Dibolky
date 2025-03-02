@@ -1,4 +1,4 @@
-import { IAgency, IOwnerDetailsSchema, IReviewBucket } from "../../shared/types/agency.types";
+import { IAgency, IAgencyTenant } from "../../shared/types/agency.types";
 import { createClientMailData } from "../../shared/utils/mail.datas";
 import bcrypt from 'bcrypt'
 import { IAgencyService } from "../Interface/IAgencyService";
@@ -12,6 +12,9 @@ import { IClientTenantRepository } from "../../repositories/Interface/IClientTen
 import { IClient, IClientTenant } from "../../shared/types/client.types";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
+import { IFiles, IPlatforms, IReviewBucket } from "../../shared/types/common.types";
+import { IAvailableClients, ServicesData } from "../../shared/types/chat.types";
+import { IProject } from "../../models/agency/project.model";
 
 @injectable()
 export default class AgencyService implements IAgencyService {
@@ -61,7 +64,7 @@ export default class AgencyService implements IAgencyService {
         orgId: string
     ): Promise<object> {
         const projects = await this.projectRepository.fetchAllProjects(orgId)
-        const weaklyProjects = projects?.filter((project: any) => new Date(project.createdAt).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
+        const weaklyProjects = projects?.filter((project: IProject) => new Date(project.createdAt!).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000) || []
         return {
             count: projects?.length || 0,
             lastWeekCount: weaklyProjects?.length || 0
@@ -72,7 +75,7 @@ export default class AgencyService implements IAgencyService {
         orgId: string
     ): Promise<object> {
         const clients = await this.clientTenantRepository.getAllClients(orgId)
-        const weaklyClients = clients.filter((client: any) => new Date(client.createdAt).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
+        const weaklyClients = clients.filter((client:IClientTenant) => new Date(client.createdAt!).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
         return {
             count: clients.length || 0,
             lastWeekCount: weaklyClients.length || 0
@@ -82,8 +85,17 @@ export default class AgencyService implements IAgencyService {
 
     async getAllAvailableClients(
         orgId: string
-    ): Promise<IClientTenant[]> {
-        return await this.clientTenantRepository.getAllClients(orgId)
+    ): Promise<IAvailableClients[]> {
+        const clients = await this.clientTenantRepository.getAllClients(orgId)
+        return clients.map((client:IClientTenant)=>{
+            return {
+                _id:client._id as string ,
+                name:client.name ?? "user",
+                email:client.email ?? "user@gmail.com",
+                type:"client",
+
+            }
+        }) ??[]
     }
 
 
@@ -96,7 +108,7 @@ export default class AgencyService implements IAgencyService {
 
     async getAgencyOwnerDetails(
         orgId: string
-    ): Promise<IOwnerDetailsSchema | null> {
+    ): Promise<IAgencyTenant | null> {
         let AgencyOwners =  await this.agencyTenantRepository.getOwners(orgId)
         if(!AgencyOwners)throw new NotFoundError("Agency not found , Please try again")
         return AgencyOwners[0] 
@@ -107,10 +119,10 @@ export default class AgencyService implements IAgencyService {
         name: string,
         email: string,
         industry: string,
-        services: any,
+        services: ServicesData,
         menu: string[],
         organizationName: string
-    ): Promise<IClient | void> {
+    ): Promise<IClientTenant | null> {
         const client = await this.clientRepository.findClientWithMail(email)
         if (client && client.orgId == orgId) throw new ConflictError('Client already exists with this email')
         const Agency = await this.agencyRepository.findAgencyWithOrgId(orgId)
@@ -127,25 +139,23 @@ export default class AgencyService implements IAgencyService {
         }
         let newMenu = createNewMenuForClient(menu)
 
-        const createdClient: any = await this.clientTenantRepository.createClient(orgId, { ...clientDetails, menu: newMenu })
+        const createdClient: IClientTenant  = await this.clientTenantRepository.createClient(orgId, { ...clientDetails, menu: newMenu })
 
         for (let item in services) {
             const { serviceName, serviceDetails } = services[item];
             const { deadline, ...details } = serviceDetails;
-            await this.projectRepository.createProject(createdClient.orgId, createdClient._id, createdClient.name, serviceName, details, item, new Date(deadline))
+            await this.projectRepository.createProject(createdClient.orgId as string, createdClient._id as string, createdClient.name as string, serviceName as string, details, item, new Date(deadline))
         }
 
 
-        if (createdClient) {
-            const c = await this.clientRepository.createClient(clientDetails)
-            console.log("client created in main db", c)
-        }
+        if (createdClient) await this.clientRepository.createClient(clientDetails as IClient)
+        
         const data = createClientMailData(email, name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(), organizationName, password)
         sendMail(
             email,
             `Welcome to ${Agency.organizationName}! Excited to Partner with You`,
             data,
-            (error: any, info: any) => {
+            (error: unknown, info: {response:string}) => {
                 if (error) {
                     console.error("Failed to send email:", error);
                 } else {
@@ -175,8 +185,8 @@ export default class AgencyService implements IAgencyService {
     async saveContentToDb(
         client_id: string,
         orgId: string,
-        files: any,
-        platforms: any,
+        files: IFiles[],
+        platforms: IPlatforms[],
         contentType: string,
         caption: string
     ): Promise<IReviewBucket | null> {
@@ -207,7 +217,7 @@ export default class AgencyService implements IAgencyService {
         orgId: string,
         projectId: string,
         status: string
-    ): Promise<any> {
+    ): Promise<IProject | null> {
         return await this.projectRepository.editProjectStatus(orgId, projectId, status)
     }
 

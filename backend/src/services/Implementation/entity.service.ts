@@ -5,18 +5,22 @@ import { IPlanRepository } from '../../repositories/Interface/IPlanRepository';
 import { ownerDetailsSchema } from '../../models/agency/agency.model';
 import { addMonthsToDate } from '../../shared/utils/date-utils';
 import {
+    CustomError,
     hashPassword,
 } from 'mern.common';
-import {  IAgencyOwner } from '../../shared/types/agency.types';
 import { ITransactionRepository } from '../../repositories/Interface/ITransactionRepository';
 import { IPlan } from '../../shared/types/admin.types';
 import { IProject } from '../../models/agency/project.model';
 import { IProjectRepository } from '../../repositories/Interface/IProjectRepository';
-import { IOwnerDetailsSchema } from '../../shared/types/influencer.types';
 import { IClientTenantRepository } from '../../repositories/Interface/IClientTenantRepository';
 import { IContentRepository } from '../../repositories/Interface/IContentRepository';
 import { IAgencyTenantRepository } from '../../repositories/Interface/IAgencyTenantRepository';
 import { getS3ViewUrl } from '../../config/aws-s3.config';
+import { AddressType, IAgency, IAgencyTenant } from '../../shared/types/agency.types';
+import { IInfluencer } from '../../shared/types/influencer.types';
+import { connectTenantDB } from '../../config/db';
+import { IFiles, IMenuCategory, IMetadata, IPlatforms, IReviewBucket } from '../../shared/types/common.types';
+import { Types } from 'mongoose';
 
 @injectable()
 export default class EntityService implements IEntityService {
@@ -49,7 +53,7 @@ export default class EntityService implements IEntityService {
 
 
     async getAllPlans()
-    : Promise<Record<string,Array<any>> | null> {
+    : Promise<Record<string,IPlan[]>> {
         let agencyPlans = await this.planRepository.getAgencyPlans()
         let influencerPlans = await this.planRepository.getInfluencerPlans()
         return {
@@ -58,9 +62,9 @@ export default class EntityService implements IEntityService {
         }
     }
 
-    async getPlan(plans: any, plan_id: string, platform: string): Promise<Partial<IPlan> | null>{
-        const plan = plans[platform].find((elem: any) => elem._id.toString() === plan_id.toString());
-        if (!plan) return null
+    async getPlan(plans:Record<string,IPlan[]>, plan_id: string, platform: string): Promise<Partial<IPlan>>{
+        const plan = plans[platform].find((elem) => elem._id as string == plan_id.toString());
+        if (!plan) throw new CustomError("Plan not found",500) 
         return plan
         }
 
@@ -88,14 +92,14 @@ export default class EntityService implements IEntityService {
 
     async registerAgency(
         organizationName: string, name: string, 
-        email: string, address: any, 
+        email: string, address: AddressType, 
         websiteUrl: string, industry: string,
         contactNumber: number, logo: string, 
         password: string, planId: string, 
         validity: number, planPurchasedRate: number,
         transactionId: string, paymentGateway: string, 
         description: string, currency: string
-    ): Promise<Partial<IAgencyOwner> | null> {
+    ): Promise<Partial<IAgency> | null> {
 
         const hashedPassword = await hashPassword(password)
         let orgId = organizationName.replace(/\s+/g, "") + Math.floor(Math.random() * 1000000);
@@ -131,14 +135,14 @@ export default class EntityService implements IEntityService {
 
     async createInfluencer(
         organizationName: string, name: string, 
-        email: string, address: any, 
+        email: string, address: AddressType, 
         websiteUrl: string, industry: string,
         contactNumber: number, logo: string, 
         password: string, planId: string, 
         validity: number, planPurchasedRate: number,
         transactionId: string, paymentGateway: string, 
         description: string, currency: string
-    ): Promise<Partial<IOwnerDetailsSchema> | null> {
+    ): Promise<Partial<IInfluencer> | null> {
 
         const hashedPassword = await hashPassword(password)
         let orgId = name.replace(/\s+/g, "") + Math.floor(Math.random() * 1000000);
@@ -168,21 +172,23 @@ export default class EntityService implements IEntityService {
 
     async getAgencyMenu(
         planId: string
-    ): Promise<any> {
+    ): Promise<IMenuCategory> {
         const plan = await this.planRepository.getAgencyPlan(planId)
-        return plan?.menu
-
+        if(!plan) throw new CustomError("Plan not found",500)
+        return plan.menu as IMenuCategory
     }
 
-    async getClientMenu(orgId:string,client_id:string): Promise<any> {
+    async getClientMenu(orgId:string,client_id:string): Promise<IMenuCategory> {
         const client = await this.clientTenantRepository.getClientById(orgId,client_id)
+        if(!client || !client.menu)throw new CustomError("Client menu not found",500)
         return client?.menu
     }
 
 
     async getOwner(
-        tenantDb: any
-    ): Promise<any> {
+        orgId: string
+    ): Promise<IAgencyTenant[]> {
+        const tenantDb = await connectTenantDB(orgId)
         const ownerDetailModel = tenantDb.model('OwnerDetail', ownerDetailsSchema);
         return await this.entityRepository.fetchOwnerDetails(ownerDetailModel)
     }
@@ -190,12 +196,12 @@ export default class EntityService implements IEntityService {
     async saveContent(
         orgId:string,
         platform:string,
-        platforms:any,
+        platforms:IPlatforms[],
         user_id:string,
-        files:any,
-        metadata:any,
+        files:IFiles[],
+        metadata:IMetadata,
         contentType:string
-    ):Promise<any>{
+    ):Promise<IReviewBucket>{
         let detials;
         if(platform == "agency"){
             const ownerDetials = await this.agencyTenantRepository.getOwners(orgId)
@@ -224,8 +230,7 @@ export default class EntityService implements IEntityService {
                 metaAccountId: metadata.metaAccountId,contentType
                 }
         }
-       const content = this.contentRepository.saveContent(detials)
-       return content
+       return this.contentRepository.saveContent(detials)
     }
 
 
@@ -238,8 +243,10 @@ export default class EntityService implements IEntityService {
     async fetchContents(
         orgId: string,
         user_id: string
-    ): Promise<any>{
-        return await this.contentRepository.getContentsByUserId(orgId, user_id)
+    ): Promise<IReviewBucket[] >{
+        const contents = await this.contentRepository.getContentsByUserId(orgId, user_id)
+        if(!contents || contents.length == 0)throw new CustomError("Contents not found",500)
+        return contents
     }
 
 }

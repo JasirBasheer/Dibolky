@@ -4,8 +4,10 @@ import { IEntityService } from '../../services/Interface/IEntityService';
 import { inject, injectable } from 'tsyringe';
 import { CountryToCurrency, getPriceConversionFunc } from '../../shared/utils/currency-conversion.utils';
 import {
+    CustomError,
     findCountryByIp,
     HTTPStatusCodes,
+    NotFoundError,
     ResponseMessage,
     SendResponse
 } from 'mern.common';
@@ -15,6 +17,7 @@ import { AWS_S3_BUCKET_NAME, AWS_S3_BUCKET_REGION } from '../../config/env';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { v4 as uuidv4 } from 'uuid';
+import { IPlan } from '../../shared/types/admin.types';
 
 
 @injectable()
@@ -78,11 +81,11 @@ export default class EntityController implements IEntityController {
             let PriceConverisonFunc = getPriceConversionFunc(userCountry)
 
             const convertedPlans = {
-                Agency: plans?.Agency.map((item: any) => ({
+                Agency: plans?.Agency.map((item: IPlan) => ({
                     ...item.toObject(),
                     price: PriceConverisonFunc(item.price as number)
                 })),
-                Influencer: plans?.Influencer.map((item: any) => ({
+                Influencer: plans?.Influencer.map((item: IPlan) => ({
                     ...item.toObject(),
                     price: PriceConverisonFunc(item.price as number)
                 }))
@@ -112,7 +115,7 @@ export default class EntityController implements IEntityController {
             const { id, platform } = req.body
             const userCountry = req.cookies.userCountry
             const plans = await this.entityService.getAllPlans()
-            const plan = await this.entityService.getPlan(plans, id, platform)
+            const plan = await this.entityService.getPlan(plans, id, platform);
             if (!plan) return SendResponse(res, HTTPStatusCodes.BAD_REQUEST, ResponseMessage.BAD_REQUEST, { message: "Platform or Plan not found please try again" })
             let PriceConverisonFunc = getPriceConversionFunc(userCountry)
             const convertedPlanPrice = PriceConverisonFunc(plan.price as number)
@@ -176,6 +179,7 @@ export default class EntityController implements IEntityController {
         next: NextFunction
     ): Promise<void> {
         try {
+            if(!req.details)throw new NotFoundError("Details Not Fount")
             const { role, planId } = req.params;
             let menu;
 
@@ -184,7 +188,7 @@ export default class EntityController implements IEntityController {
                 menu = await this.entityService.getAgencyMenu(planId);
             }else if(role === "agency-client"){
                 console.log(req.details.orgId,planId,"tehireaserfamsdjfklasdjflkasjfasdkl")
-                menu = await this.entityService.getClientMenu(req.details.orgId,planId);
+                menu = await this.entityService.getClientMenu(req.details.orgId as string,planId);
             }else if (role === "Admin") {
                 menu = {
                     clients: {
@@ -207,8 +211,8 @@ export default class EntityController implements IEntityController {
                 return SendResponse(res, HTTPStatusCodes.BAD_REQUEST, "Invalid role provided")
             }
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { menu })
-        } catch (error: any) {
-            next(error)
+        } catch (error: unknown) {
+            next(error);
         }
     }
 
@@ -246,9 +250,11 @@ export default class EntityController implements IEntityController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        try {
+        try {           
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            console.log('laskdfjsd',req.details.orgId)
+            const ownerDetails = await this.entityService.getOwner(req.details.orgId as string)
 
-            const ownerDetails = await this.entityService.getOwner(req.tenantDb)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { ownerDetails: ownerDetails[0] })
         } catch (error) {
 
@@ -260,8 +266,9 @@ export default class EntityController implements IEntityController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
+        if(!req.details)throw new NotFoundError("Details Not Fount")
         const { userId } = req.body
-        const chats = await this.chatService.getChats(req.details.orgId, userId)
+        const chats = await this.chatService.getChats(req.details.orgId as string, userId)
         SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
     }
 
@@ -271,9 +278,9 @@ export default class EntityController implements IEntityController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
+        if(!req.details)throw new NotFoundError("Details Not Fount")
         const { chatId } = req.body
-        console.log(chatId);
-        const chats = await this.chatService.getChat(req.details.orgId, chatId)
+        const chats = await this.chatService.getChat(req.details.orgId as string, chatId)
         SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
     }
 
@@ -292,8 +299,9 @@ export default class EntityController implements IEntityController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
+        if(!req.details)throw new NotFoundError("Details Not Fount")
         const { details, userId } = req.body
-        const createdGroup = await this.chatService.createGroup(req.details?.orgId, userId, details)
+        const createdGroup = await this.chatService.createGroup(req.details?.orgId as string, userId, details)
         console.log(createdGroup);
         SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { group: createdGroup })
 
@@ -306,7 +314,8 @@ export default class EntityController implements IEntityController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const projects = await this.entityService.fetchAllProjects(req.details.orgId)
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const projects = await this.entityService.fetchAllProjects(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects })
         } catch (error) {
             next(error)
@@ -322,7 +331,7 @@ export default class EntityController implements IEntityController {
             const { files } = req.body;
     
             const filesInfo = await Promise.all(
-                files.map(async (file: any) => {
+                files.map(async (file: { fileName: string; fileType: string; id: string }) => {
                     const key = `test/${uuidv4()}-${file.fileName}`;
     
                     const command = new PutObjectCommand({
@@ -356,9 +365,10 @@ export default class EntityController implements IEntityController {
         next:NextFunction
     ):Promise<void>{
         try {
+            if(!req.details)throw new NotFoundError("Details Not Fount")
             const {platform ,user_id} = req.params
             const { files, platforms, metadata, contentType } = req.body
-            await this.entityService.saveContent(req.details.orgId,platform,platforms,user_id,files,metadata,contentType)
+            await this.entityService.saveContent(req.details.orgId as string,platform,platforms,user_id,files,metadata,contentType)
             
             SendResponse(res,HTTPStatusCodes.CREATED,ResponseMessage.CREATED)           
         } catch (error) {
@@ -388,8 +398,9 @@ export default class EntityController implements IEntityController {
         next:NextFunction
     ):Promise<void>{
         try {
+            if(!req.details)throw new NotFoundError("Details Not Fount")
             const { user_id } = req.params
-            const reviewBucket = await this.entityService.fetchContents(req.details.orgId, user_id)
+            const reviewBucket = await this.entityService.fetchContents(req.details.orgId as string, user_id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { reviewBucket })
 
         } catch (error) {

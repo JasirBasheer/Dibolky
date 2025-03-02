@@ -1,4 +1,5 @@
 import { Document, Types } from "mongoose";
+import { IMenuCategory } from "./common.types";
 
 export interface IClientTenant extends Document {
     orgId?: string;
@@ -7,10 +8,10 @@ export interface IClientTenant extends Document {
     industry?: string;
     password?: string;
     socialMedia_credentials?: credentials;
-    services?: any;
-    menu?: any;
+    menu?: IMenuCategory;
     isSocialMediaInitialized: boolean,
     isPaymentInitialized: boolean,
+    createdAt?:string | number;
     setSocialMediaToken?: (provider: string, token: string) => Promise<void>;
     setSocialMediaUserName?: (provider: string, username: string) => Promise<void>;
 
@@ -30,7 +31,9 @@ interface platform {
 }
 
 export interface IClient extends Document {
+    role?:string;
     orgId: string;
+    organizationName?:string;
     name: string;
     email: string;
     industry: string;

@@ -65,7 +65,7 @@ export default class AdminService implements IAdminService {
         plan_id: string,
         platform: string
     ): Promise<IPlan | null> {
-        const plan = plans[platform]?.find((elem: any) => elem._id.toString() === plan_id.toString()) || null;
+        const plan = plans[platform]?.find((elem: IPlan) => elem._id as string === plan_id.toString()) || null;
         if (!plan) return null
         return plan
     }
@@ -114,7 +114,7 @@ export default class AdminService implements IAdminService {
         details: planDetails
     ): Promise<void> {
         let createdPlan;
-        let menu = createNewPlanMenu(details.menu)
+        let menu = createNewPlanMenu(details.menu as string[])
         details.menu = menu
         if (entity == "Agency") {
             createdPlan = await this.planRepository.createAgencyPlan(details)
@@ -129,7 +129,7 @@ export default class AdminService implements IAdminService {
         details: planDetails
     ): Promise<void> {
         let editedPlan;
-        let menu = createNewPlanMenu(details.menu)
+        let menu = createNewPlanMenu(details.menu as string[])
         details.menu = menu
         if (entity == "Agency") {
             editedPlan = await this.planRepository.editAgencyPlan(details)

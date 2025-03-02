@@ -3,8 +3,10 @@ import { IAuthenticationService } from "../Interface/IAuthenticationService";
 import { inject, injectable } from "tsyringe";
 import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepository";
 import { IAdminRepository } from "../../repositories/Interface/IAdminRepository";
-import { generateToken, hashPassword, NotFoundError, sendMail, verifyToken } from "mern.common";
+import { CustomError, generateToken, hashPassword, NotFoundError, sendMail, verifyToken } from "mern.common";
 import { JWT_RESET_PASSWORD_SECRET } from "../../config/env";
+import { IAdmin } from "../../shared/types/admin.types";
+import { IAgency } from "../../shared/types/agency.types";
 
 @injectable()
 export default class AuthenticationService implements IAuthenticationService {
@@ -36,7 +38,7 @@ export default class AuthenticationService implements IAuthenticationService {
         let resetToken = await generateToken(jwtSecret,{id:details._id?.toString() || '', role:role})
         let data = createForgotPasswordData(details.name, email, `http://localhost:5173/${role.toLowerCase()}/reset-password/${resetToken}`)
         sendMail(email, "Forgot Password", data,
-            (err:any,info:any)=>{
+            (err:unknown,info:unknown)=>{
                 if(err){
                     console.log("Error sending mail to user")
                 }else{
@@ -51,16 +53,21 @@ export default class AuthenticationService implements IAuthenticationService {
     async changePassword(
         token: string, 
         password: string
-    ): Promise<any> {
+    ): Promise<IAgency | IAdmin> {
         if(!JWT_RESET_PASSWORD_SECRET)throw new NotFoundError("Jwt reset password key is not found")
         let jwtSecret = JWT_RESET_PASSWORD_SECRET 
+        let changedPassword;
         const isValid = await verifyToken(jwtSecret,token)
         let hashedPassword = await hashPassword(password) || 'password'
         if (isValid.role == "agency") {
-            return await this.agencyRepository.changePassword(isValid.id, hashedPassword)
+            changedPassword =  await this.agencyRepository.changePassword(isValid.id, hashedPassword)
         }else if (isValid.role == "Admin") {
-            return await this.adminRepository.changePassword(isValid.id, hashedPassword)
+            changedPassword =  await this.adminRepository.changePassword(isValid.id, hashedPassword)
+        }else{
+            changedPassword =  await this.adminRepository.changePassword(isValid.id, hashedPassword)
         }
+        if(!changedPassword)throw new CustomError("Error while Changing password",500)
+        return changedPassword
     }
 
 }

@@ -1,13 +1,12 @@
 import { inject, injectable } from "tsyringe";
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { IClientService } from "../Interface/IClientService";
-import { NotFoundError, UnauthorizedError, comparePassword } from "mern.common";
-import { exchangeForLongLivedToken } from "../../provider.strategies/instagram.strategy";
+import { CustomError, NotFoundError, UnauthorizedError, comparePassword } from "mern.common";
 import { IClient, IClientTenant } from "../../shared/types/client.types";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
-import { IOwnerDetailsSchema } from "../../shared/types/agency.types";
+import { IAgencyTenant } from "../../shared/types/agency.types";
 
 @injectable()
 export default class ClientService implements IClientService {
@@ -57,27 +56,27 @@ export default class ClientService implements IClientService {
     return await this.clientTenantRepository.getClientDetailsByMail(orgId, email)
   }
 
+  async getClientTenantDetailsById(
+    orgId: string,
+    client_id: string
+  ): Promise<IClientTenant | null> {
+    return await this.clientTenantRepository.getClientById(orgId, client_id)
+  }
+
+
   async getOwners(
     orgId: string
-  ): Promise<IOwnerDetailsSchema[] | null> {
+  ): Promise<IAgencyTenant[] | null> {
     return await this.agencyTenantRepository.getOwners(orgId)
   }
 
 
-  async setSocialMediaUserNames(
-    orgId: string,
-    client_id: string,
-    provider: string,
-    username: string
-  ): Promise<void> {
-    return await this.clientTenantRepository.setSocialMediaUserNames(orgId, client_id, provider, username)
-  }
-
 
   async getClientInMainDb(
     email: string
-  ): Promise<any> {
-    return await this.clientRepository.findClientWithMail(email)
+  ): Promise<IClient | null> {
+    const client = await this.clientRepository.findClientWithMail(email)
+    return client
   }
 
 }

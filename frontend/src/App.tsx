@@ -1,4 +1,3 @@
-import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from './pages/portal.pages/home'
 import PurchasePlan from './pages/portal.pages/purchasePlan'
@@ -22,7 +21,6 @@ import AgencyContent from './pages/agency.pages/Content'
 import ClientDashboard from './pages/client.pages/client.dashboard'
 import ClientContent from './pages/client.pages/client.content'
 import ClientProjects from './pages/client.pages/client.projects'
-import AgencyEmployees from './pages/agency.pages/Employees'
 import AgencyMessages from './pages/agency.pages/message'
 import ClientMessages from './pages/client.pages/client.message'
 import AgencyProject from './pages/agency.pages/projects'
@@ -81,7 +79,6 @@ function AgencyRoutes() {
         <Route path='create-client' element={<CreateClient />} />
         <Route path='contents' element={<AgencyContent />} />
         <Route path='leads' element={<AgencyLeads />} />
-        <Route path='employees' element={<AgencyEmployees />} />
         <Route path='messages' element={<AgencyMessages />} />
         <Route path='projects' element={<AgencyProject />} />
         <Route path='settings' element={<SettingsPage />} />

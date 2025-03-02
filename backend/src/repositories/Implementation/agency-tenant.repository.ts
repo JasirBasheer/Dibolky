@@ -2,33 +2,33 @@ import mongoose, { Model, Schema } from "mongoose";
 import { BaseRepository, NotFoundError } from "mern.common";
 import { inject, injectable } from "tsyringe";
 import { connectTenantDB } from "../../config/db";
-import { IAgency, IOwnerDetailsSchema } from "../../shared/types/agency.types";
+import {  IAgencyTenant } from "../../shared/types/agency.types";
 import { IAgencyTenantRepository } from "../Interface/IAgencyTenantRepository";
 
 @injectable()
-export default class AgencyTenantRepository extends BaseRepository<IOwnerDetailsSchema> implements IAgencyTenantRepository {
+export default class AgencyTenantRepository extends BaseRepository<IAgencyTenant> implements IAgencyTenantRepository {
     private chatSchema: Schema;
     private modelName = 'ownerdetails';
-    private models: Map<string, Model<IOwnerDetailsSchema>> = new Map();
+    private models: Map<string, Model<IAgencyTenant>> = new Map();
 
     constructor(
         @inject('agency_tenant_model') schema: Schema
     ) {
-        super(null as any);
+        super(null as unknown as Model<IAgencyTenant>);
         this.chatSchema = schema;
     }
 
 
     private async getModel(
         orgId: string
-    ): Promise<Model<IOwnerDetailsSchema>> {
+    ): Promise<Model<IAgencyTenant>> {
         if (this.models.has(orgId)) {
             return this.models.get(orgId)!
         }
         const connection = await connectTenantDB(orgId);
         if (!connection) throw new Error('Connection not found');
 
-        let model: Model<IOwnerDetailsSchema> = connection.model<IOwnerDetailsSchema>(this.modelName, this.chatSchema);
+        let model: Model<IAgencyTenant> = connection.model<IAgencyTenant>(this.modelName, this.chatSchema);
         this.models.set(orgId, model);
         return model;
     }
@@ -43,13 +43,14 @@ export default class AgencyTenantRepository extends BaseRepository<IOwnerDetails
         const details = await model.find({})
         if (!details) throw new NotFoundError('Agency not found')
         const agency = details[0]
+    console.log(agency,provider,token)
         return await agency.setSocialMediaToken!(provider, token);
     }
 
 
     async getOwners(
         orgId: string, 
-    ): Promise<IOwnerDetailsSchema[] | null> {
+    ): Promise<IAgencyTenant[] | null> {
         const model = await this.getModel(orgId);
 
         const owners = await model.find({})

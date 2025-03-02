@@ -14,7 +14,7 @@ export default class MessageRepository extends BaseRepository<IMessage> implemen
     constructor(
         @inject('message_model') schema: Schema
     ) {
-        super(null as any);
+        super(null as unknown as Model<IMessage>);
         this.messageSchema = schema;
     }
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import axios from "../../../utils/axios";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +5,7 @@ import { message } from "antd";
 import { useSelector } from "react-redux";
 import { X } from "lucide-react";
 import { SERVICES } from "../../../utils/services";
+import { RootState } from "@/types/common.types";
 
 const CreateClient = () => {
   const [name, setName] = useState("jasir");
@@ -13,7 +13,7 @@ const CreateClient = () => {
   const [email, setEmail] = useState("jasirbinbasheerpp@gmail.com");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const orgId = useSelector((state: any) => state?.agency?.orgId);
+  const orgId = useSelector((state: RootState) => state?.agency?.orgId);
 
   const [servicesPreview, setServicesPreview] = useState<string[]>([]);
   const [selectedService, setSelectedService] = useState<string | null>(null);
@@ -86,7 +86,7 @@ const CreateClient = () => {
         navigate("/agency/clients");
         return;
       }
-    } catch (error: any) {
+    } catch (error:any) {
       console.log(error);
       message.error(error.response?.data?.error || "Failed to create client");
     } finally {
@@ -236,7 +236,7 @@ const ServiceModal = ({
         </button>
 
         <div className="grid grid-cols-2 gap-4">
-          {SERVICES[selectedService].inputs.map((item: any) => (
+          {SERVICES[selectedService].inputs.map((item:any) => (
             <div key={item.name} className="col-span-2">
               <label htmlFor={item.name} className="block text-sm font-medium text-gray-700 mb-1">
                 {item.label}

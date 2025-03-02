@@ -2,12 +2,12 @@ import { inject, injectable } from 'tsyringe';
 import { IChatService } from '../Interface/IChatService';
 import { IChatRepository } from '../../repositories/Interface/IChatRepository';
 import { ownerDetailsSchema } from '../../models/agency/agency.model';
-import { CustomError } from 'mern.common';
+import { CustomError, NotFoundError } from 'mern.common';
 import { IMessageRepository } from '../../repositories/Interface/IMessageRepository';
-import { IChat, IMessage } from '../../shared/types/chat.types';
+import { IChat, IGroupDetails, IMessage, Participant } from '../../shared/types/chat.types';
 import { IEntityRepository } from '../../repositories/Interface/IEntityRepository';
-import { IAgencyOwner } from '../../shared/types/agency.types';
-import { NotFoundError } from 'rxjs';
+import { IAgency, IAgencyTenant } from '../../shared/types/agency.types';
+import { Connection, Model, Types } from 'mongoose';
 
 @injectable()
 export default class ChatService implements IChatService {
@@ -67,14 +67,14 @@ export default class ChatService implements IChatService {
     async getChats(
         orgId: string,
         userId: string
-    ): Promise<IChat[] | null> {
+    ): Promise<object[] | null> {
         try {
             const chats = await this.chatRepository.fetchChats(orgId, userId)
-            const plainChats = chats!.map((chat: { toObject: () => any; }) => chat.toObject());
+            const plainChats = chats!.map((chat: { toObject: () => IChat; }) => chat.toObject());
 
-            return await Promise.all(plainChats.map(async (item: any) => {
-                const chatMessages = await this.messageRepository.fetchChatMessages(orgId, item._id);
-                const sortedMessages = chatMessages.sort((a: any, b: any) => {
+            return await Promise.all(plainChats.map(async (item: IChat) => {
+                const chatMessages = await this.messageRepository.fetchChatMessages(orgId, item._id as string);
+                const sortedMessages = chatMessages.sort((a: IMessage, b: IMessage) => {
                     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
                 });
                 return {
@@ -89,11 +89,13 @@ export default class ChatService implements IChatService {
     }
 
     async findOwnerDetails(
-        tenantDb: any
-    ): Promise<IAgencyOwner | null> {
+        tenantDb: Connection
+    ): Promise<IAgencyTenant> {
         try {
-            const ownerModel = await tenantDb.model("OwnerDetail", ownerDetailsSchema);
-            return await this.entityRepository.fetchOwnerDetails(ownerModel)
+            const ownerModel = tenantDb.model("OwnerDetail", ownerDetailsSchema);
+            const details =  await this.entityRepository.fetchOwnerDetails(ownerModel)
+            if(!details)throw new CustomError("owner Details not found",500)
+            return details[0]
         } catch (error) {
             throw new CustomError("Error while fetching chats", 500)
         }
@@ -111,7 +113,7 @@ export default class ChatService implements IChatService {
             const plainChat = chat.toObject();
             const messages = await this.messageRepository.fetchChatMessages(orgId, chatId);
             const sortedMessages = messages.length > 0 ?
-                messages.sort((a: any, b: any) => {
+                messages.sort((a: IMessage, b: IMessage) => {
                     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
                 }) :
                 [];
@@ -131,16 +133,18 @@ export default class ChatService implements IChatService {
     async createGroup(
         orgId: string,
         userId: string,
-        details: any
+        details: IGroupDetails
     ): Promise<IChat | null> {
         try {
-            const participants = details.members.map((member: { _id: any; type: any; name: any; }) => ({
-                userId: member._id,
-                type: member.type || null,
-                name: member.name || null
-            }))
 
-            const newGroupDetails = { name: details.groupName, participants }
+            const participants = details.members.map((member: Participant) => ({
+                userId: new Types.ObjectId(member._id),
+                type: member.type || "",
+                name: member.name || ""
+              }));
+              
+
+            const newGroupDetails:Partial<IChat>  = { name: details.groupName, participants }
             return await this.chatRepository.createNewGroup(orgId, newGroupDetails)
         } catch (error) {
             throw new CustomError("Error while fetching creating group", 500)
@@ -150,7 +154,7 @@ export default class ChatService implements IChatService {
     async addMember(
         orgId: string,
         chatId: string,
-        memberDetails: any
+        memberDetails: Participant
     ): Promise<IChat | null> {
         try {
             return await this.chatRepository.addMember(orgId, chatId, memberDetails)

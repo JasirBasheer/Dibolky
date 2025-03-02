@@ -27,9 +27,12 @@ export interface IInfluencer extends Document {
 }
 
 
-export interface IOwnerDetailsSchema {
+export interface IInfluncerTenant {
     ownerId?: string; 
     orgId?: string; 
+    organizationName?: string;
+    name?: string;
+    email?: string;
     paymentCredentials?: {
         razorpay?: {
             key_id?: string;

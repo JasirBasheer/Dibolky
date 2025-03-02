@@ -1,4 +1,4 @@
-import { IAgency, IReviewBucket } from '../../shared/types/agency.types';
+import { IAgency } from '../../shared/types/agency.types';
 import { IAgencyRepository } from '../Interface/IAgencyRepository';
 import { BaseRepository, NotFoundError } from 'mern.common';
 import { Model } from 'mongoose';

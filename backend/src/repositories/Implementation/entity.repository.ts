@@ -1,16 +1,18 @@
 import { connectTenantDB } from "../../config/db";
 import Agency, { ownerDetailsSchema } from "../../models/agency/agency.model";
 import { IEntityRepository } from "../Interface/IEntityRepository";
-import { IAgency, IAgencyOwner } from "../../shared/types/agency.types";
-import { IInfluencer, IOwnerDetailsSchema } from "../../shared/types/influencer.types";
+import { IAgency, IAgencyTenant } from "../../shared/types/agency.types";
+import { IInfluencer } from "../../shared/types/influencer.types";
 import Influencer from "../../models/influencer/influencer.model";
+import {  Model } from "mongoose";
+import { CustomError } from "mern.common";
 
 
 export default class EntityRepository implements IEntityRepository {
 
     async createAgency(
         new_agency: object
-    ): Promise<Partial<IAgencyOwner> | null> {
+    ): Promise<Partial<IAgency> | null> {
         const agency = new Agency(new_agency)
         return await agency.save()
     }
@@ -42,7 +44,7 @@ export default class EntityRepository implements IEntityRepository {
     async saveDetailsInAgencyDb(
         new_agency: object, 
         orgId: string
-    ): Promise<any> {
+    ): Promise<IAgencyTenant> {
         const db = await connectTenantDB(orgId)
         const AgencyModel = db.model('OwnerDetail', ownerDetailsSchema)
         const agency = new AgencyModel(new_agency)
@@ -52,14 +54,16 @@ export default class EntityRepository implements IEntityRepository {
     async saveDetailsInfluencerDb(
         influencer_id: string, 
         orgId: string
-    ): Promise<any> {
+    ): Promise<Partial<IInfluencer>> {
         const db = await connectTenantDB(orgId)
         const InfluencerModel = db.model('OwnerDetail', ownerDetailsSchema)
         const influencer = new InfluencerModel({
             ownerId: influencer_id,
             orgId: orgId
         })
-        return await influencer.save()
+        const newInfluencer =  await influencer.save()
+        if(!newInfluencer)throw new CustomError("Error while creating influencer",500)
+        return newInfluencer as Partial<IInfluencer>
     }   
 
 
@@ -72,8 +76,7 @@ export default class EntityRepository implements IEntityRepository {
     }
 
 
-    async fetchOwnerDetails(tenantDb: any): Promise<any> {
-        console.log('reached hereeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+    async fetchOwnerDetails(tenantDb: Model<IAgencyTenant>): Promise<IAgencyTenant[]> {
         return await tenantDb.find({})
     }
 

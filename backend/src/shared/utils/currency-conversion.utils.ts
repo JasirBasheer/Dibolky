@@ -1,7 +1,8 @@
-export const CountryToCurrency : any = {
+export const CountryToCurrency: Record<string, string> = {
     IN: "INR",
     US: "USD",
-}
+};
+
 
 export const convertUSDtoINR = (usdPrice: number): number => {
     const exchangeRate = 87.11;

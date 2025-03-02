@@ -1,3 +1,5 @@
+import { IMenuCategory } from "../types/common.types";
+
 const smm = {
     smm: {
         label: "SMM",
@@ -117,7 +119,7 @@ const accounting = {
 
 
 
-const clientBaseMenu: any = {
+const clientBaseMenu: Record<string,IMenuCategory> = {
     "Digital Marketing": smm,
     "Social Media Marketing": smm,
     "Content Creation": smm,
@@ -128,7 +130,7 @@ const clientBaseMenu: any = {
     "Google Ads and PPC": marketing,
 };
 
-const planBaseMenu: any = {
+const planBaseMenu: Record<string,IMenuCategory> = {
     "SMM": smm,
     "MARKETING": marketing,
     "CRM": crm,
@@ -138,13 +140,11 @@ const planBaseMenu: any = {
 
 
 export const createNewMenuForClient = (selectedKeys: string[]) => {
-    console.log(selectedKeys)
-    const result: any = {};
+    const result: IMenuCategory = {};
     const seen = new Set();
 
     selectedKeys.forEach(key => {
         const menu = clientBaseMenu[key];
-
         const menuKey = Object.keys(menu)[0];
 
         if (!seen.has(menuKey)) {
@@ -160,23 +160,18 @@ export const createNewMenuForClient = (selectedKeys: string[]) => {
 
 export const createNewPlanMenu = (selectedKeys: string[]) => {
     console.log(selectedKeys)
-    const result: any = {};
+    const result: IMenuCategory = {};
     const seen = new Set();
 
     selectedKeys.forEach(key => {
         const menu = planBaseMenu[key];
-
         const menuKey = Object.keys(menu)[0];
-
-        console.log(menu)
-        console.log(menuKey,)
 
         if (!seen.has(menuKey)) {
             seen.add(menuKey);
             result[menuKey] = menu[menuKey];
         }
     });
-    console.log(result);
 
     return result;
 };

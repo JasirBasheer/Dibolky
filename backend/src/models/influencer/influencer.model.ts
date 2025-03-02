@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { IInfluencer, IOwnerDetailsSchema } from '../../shared/types/influencer.types';
+import { IInfluencer, IInfluncerTenant } from '../../shared/types/influencer.types';
 
 
 const influencerSchema: Schema<IInfluencer> = new mongoose.Schema({
@@ -73,7 +73,7 @@ export default mongoose.model<IInfluencer>('Influencer', influencerSchema);
 
 
 
-export const ownerDetailsSchema = new Schema<IOwnerDetailsSchema>({
+export const ownerDetailsSchema = new Schema<IInfluncerTenant>({
     ownerId: {
         type: String,
         required: false,

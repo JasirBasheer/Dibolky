@@ -10,6 +10,7 @@ import { blacklistToken } from '../../config/redis';
 import {
     createTokens,
     HTTPStatusCodes,
+    NotFoundError,
     ResponseMessage,
     SendResponse
 } from 'mern.common';
@@ -80,7 +81,7 @@ export default class AuthenticationController implements IAuthenticationControll
             res.cookie('accessToken', tokens.accessToken, { httpOnly: false, secure: false, maxAge: 2 * 60 * 1000 });
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             next(error);
         }
     }
@@ -99,13 +100,14 @@ export default class AuthenticationController implements IAuthenticationControll
         next: NextFunction
     ): Promise<void> {
         try {
+            if(!req.tokenDetails)throw new NotFoundError("Details Not Fount")
             let token: string = req.cookies.accessToken ?? null
             await blacklistToken(req.tokenDetails, token)
 
             res.clearCookie('accessToken')
             res.clearCookie('refreshToken')
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-        } catch (error: any) {
+        } catch (error: unknown) {
             next(error);
         }
     }
@@ -128,7 +130,7 @@ export default class AuthenticationController implements IAuthenticationControll
 
             await this.authenticationService.resetPassword(email, role)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-        } catch (error: any) {
+        } catch (error: unknown) {
             next(error);
         }
     }
@@ -152,7 +154,7 @@ export default class AuthenticationController implements IAuthenticationControll
 
             await this.authenticationService.changePassword(token, newPassword)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-        } catch (error: any) {
+        } catch (error: unknown) {
             next(error);
         }
     }

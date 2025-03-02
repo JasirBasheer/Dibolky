@@ -1,36 +1,17 @@
 import { Document } from 'mongoose';
 
-interface AddressType {
-    street: string;
-    city: string;
-    state: string;
-    country: string;
-    zipCode: string;
-}
-
-export interface IAgencyBase {
-    orgId: string;
-    organizationName: string;
-    name: string;
-    email: string;
-    address: AddressType;
-    websiteUrl: string;
-    industry: string;
-    password?: string;
-    contactNumber: number;
-    planId: string;
-    validity: string;
-    logo: string;
-    remainingClients?: number;
-    isBlocked: boolean;
-    planPurchasedRate: number;
-    currency?: string;
-    
+export interface AddressType {
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    zipCode?: string;
 }
 
 
 
 export interface IAgency extends Document {
+    role?:string;
     orgId: string;
     organizationName: string;
     name: string;
@@ -50,7 +31,7 @@ export interface IAgency extends Document {
 }
 
 
-export interface IOwnerDetailsSchema extends Document {
+export interface IAgencyTenant extends Document {
     ownerId?: string; 
     orgId?: string; 
     planId?: string;
@@ -95,49 +76,4 @@ export interface IOwnerDetailsSchema extends Document {
 
 
 
-export interface IAgencyOwner extends Document {
-    orgId: string;
-    planId: string;
-    validity?: string;
-    organizationName: string;
-    name: string;
-    email?: string;
-    address?: AddressType;
-    websiteUrl?:string | null ;
-    industry?: string;
-    contactNumber?: number;
-    logo?: string;
-    password?: string;
-    remainingProjects?: number;
-    remainingClients?: number;
-    isBlocked?: boolean;
-    planPurchasedRate?: number
-}
 
-
-
-
-
-interface IPlatforms {
-    platform: string;
-    scheduledDate: string;
-    isPublished?: boolean;
-    isRescheduled?: boolean;
-}
-
-
-export interface IReviewBucket extends Document {
-    user_id?: string;
-    orgId: string;
-    files: object;
-    status: string;
-    metaAccountId:string;
-    platforms: IPlatforms[];
-    title: string;
-    contentType:string;
-    caption: string;
-    tags: string[];
-    isPublished?: boolean;
-    feedBack: string;
-    changePlatformPublishStatus(platform: string, value: boolean): Promise<void>;
-}

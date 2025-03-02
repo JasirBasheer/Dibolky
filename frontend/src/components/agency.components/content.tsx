@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Upload, Instagram, Facebook, Send, PlusCircle, Image, Video, Check, X, ArrowUpRight, Calendar, Twitter, Linkedin, Film, Home } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Upload, Instagram, Facebook, Image, Check, X, ArrowUpRight, Calendar, Film, } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import axios from '@/utils/axios';
 import { message } from 'antd';
-import { IContentData, RootState } from '@/types/common.types';
+import { IContentData, IFile, IFiles, IMetaAccount, IPlatforms, IReviewBucket, RootState } from '@/types/common.types';
 import { useNavigate } from 'react-router-dom';
 import InstagramAccountModal from '@/components/common.components/instagram.acccounts.list';
 import { InitiateS3BatchUpload, saveContentApi } from '@/services/common/post.services';
@@ -25,12 +25,6 @@ const PLATFORMS = [
 ];
 
 
-type PlatformItem = {
-  platform: string;
-  scheduledDate: string | Date;
-};
-
-
 const CONTENT_TYPES = [
   {
     name: 'Post',
@@ -44,42 +38,41 @@ const CONTENT_TYPES = [
   }
 ];
 
+
+
 const AgencyClientContent = () => {
-  const [selectedPlatforms, setSelectedPlatforms] = useState([]);
+  const [selectedPlatforms, setSelectedPlatforms] = useState<IPlatforms[]>([]);
   const [selectedContentType, setSelectedContentType] = useState<string>("");
-  const [uploadedFile, setUploadedFile] = useState<any>([]);
-  const [reviewBucket, setReviewBucket] = useState<any>([]);
-  const [isScheduled, setIsScheduled] = useState(false);
-  const [caption, setCaption] = useState("")
+  const [uploadedFile, setUploadedFile] = useState<File[]>([]);
+  const [reviewBucket, setReviewBucket] = useState<IContentData[]>([]);
+  const [isScheduled, setIsScheduled] = useState<boolean>(false);
+  const [caption, setCaption] = useState<string>("")
   const user = useSelector((state: RootState) => state.user);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState("");
-  const [accounts, setAccounts] = useState<any>([])
+  const [accounts, setAccounts] = useState<IMetaAccount[]>([])
   const [contentUrls, setContentUrls] = useState<Record<string, string>>({})
   const navigate = useNavigate()
 
 
 
-  const handlePlatformToggle = (platform) => {
-    setSelectedPlatforms(prev =>
-      prev.some(p => p.platform === platform)
-        ? prev.filter(p => p.platform != platform)
-        : [...prev, { platform, scheduledDate: '' }]
-    )
-  }
-
-
-  const handleSchedule = (date) => {
-    setSelectedPlatforms(prev =>
-      prev.map(item => ({
-        ...item,
-        scheduledDate: date
-      }))
+  const handlePlatformToggle = (platform: string) => {
+    setSelectedPlatforms(prev => prev.some(p => p.platform === platform) ? prev.filter(p => p.platform !== platform)
+      : [...prev, { platform: platform, scheduledDate: '' }]
     );
   };
 
-  const handleFileUpload = (event) => {
-    let file = [...event.target.files]
+
+
+  const handleSchedule = (date: string) => {
+    setSelectedPlatforms(prev => prev.map(item => ({
+      ...item, scheduledDate: date
+    }))
+    );
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let file = Array.from(event.target.files || []);
     if (file.length > 4) {
       file = file.splice(0, 4)
       message.warning("Since post limit is 4 , only selected the first 4 images")
@@ -105,8 +98,6 @@ const AgencyClientContent = () => {
         }
       }
     }
-    console.log(urlMap)
-
     setContentUrls(urlMap);
   };
 
@@ -125,7 +116,7 @@ const AgencyClientContent = () => {
   const handleApproveContent = async (content_id: string) => {
     try {
       message.loading('Uploading content')
-      await axios.post(`/api/entities/approve-content`,{content_id, platform:user.user_id == "" ? "agency" : "client", user_id:user.user_id == "" ? user.ownerId : user.user_id})
+      await axios.post(`/api/entities/approve-content`, { content_id, platform: user.user_id == "" ? "agency" : "client", user_id: user.user_id == "" ? user.ownerId : user.user_id })
       fetchUserReviewBucket()
       message.success('Content approved successfully')
     } catch (error) {
@@ -157,7 +148,7 @@ const AgencyClientContent = () => {
 
 
     const requiredPlatforms: string[] = []
-    for (const item of selectedPlatforms as PlatformItem[]) {
+    for (const item of selectedPlatforms as IPlatforms[]) {
       if (item.platform == 'instagram' && user.instagramAccessToken == "") {
         requiredPlatforms.push('instagram')
       } else if (item.platform == 'facebook' && user.facebookAccessToken == "") {
@@ -172,7 +163,7 @@ const AgencyClientContent = () => {
     }
 
 
-    if (selectedPlatforms.some((p: PlatformItem) => ['instagram', 'facebook'].includes(p.platform)) && !selectedAccount) {
+    if (selectedPlatforms.some((p: IPlatforms) => ['instagram', 'facebook'].includes(p.platform)) && !selectedAccount) {
       const response = await axios.get(`/api/entities/get-meta-pages/${!user.facebookAccessToken ? user.instagramAccessToken : user.facebookAccessToken}`)
       console.log(response.data)
       setAccounts(response?.data?.pages)
@@ -190,7 +181,7 @@ const AgencyClientContent = () => {
         };
       });
 
-      const filesMetadata = files.map((file: any) => ({
+      const filesMetadata = files.map((file: IFile) => ({
         id: file.id,
         fileName: file.file.name,
         fileType: file.file.type,
@@ -203,7 +194,7 @@ const AgencyClientContent = () => {
       const uploadedFiles = [];
 
       for (const fileObj of files) {
-        const uploadInfo = uploadInfos.find((info: any) => info.fileId === fileObj.id);
+        const uploadInfo = uploadInfos.find((info: { fileId: string }) => info.fileId === fileObj.id);
 
         if (!uploadInfo) {
           console.error(`No upload information found for file ${fileObj.id}`);
@@ -244,7 +235,7 @@ const AgencyClientContent = () => {
           isScheduled: isScheduled,
         },
         platforms: selectedPlatforms,
-        contentType:selectedContentType
+        contentType: selectedContentType
       };
 
       console.log(contentData);
@@ -274,9 +265,9 @@ const AgencyClientContent = () => {
   }
 
   useEffect(() => {
-    if(user.ownerId!="" || user.user_id!="")
-    fetchUserReviewBucket()
-  }, [user.ownerId,user.user_id])
+    if (user.ownerId != "" || user.user_id != "")
+      fetchUserReviewBucket()
+  }, [user.ownerId, user.user_id])
 
 
   useEffect(() => {
@@ -321,7 +312,7 @@ const AgencyClientContent = () => {
                       <Button
                         key={platform.name}
                         variant={selectedPlatforms.some(p => p.platform === platform.name) ? "default" : "outline"}
-                        onClick={() => handlePlatformToggle(platform.name)}
+                        onClick={() => handlePlatformToggle(platform?.name as string)}
                         className={`flex items-center gap-2 px-4 py-2 transition-all ${selectedPlatforms.some(p => p.platform === platform.name)
                           ? 'bg-blue-600 text-white hover:bg-blue-700'
                           : 'hover:border-blue-300'
@@ -413,7 +404,6 @@ const AgencyClientContent = () => {
                         type="checkbox"
                         checked={isScheduled}
                         onChange={(e) => {
-                          handleSchedule(e)
                           setIsScheduled(e.target.checked)
                           handleSchedule("")
                         }}
@@ -461,7 +451,7 @@ const AgencyClientContent = () => {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {reviewBucket.map((item) => (
+                    {reviewBucket.map((item: IReviewBucket) => (
                       item.status !== "Approved" && (
                         <div
                           key={item._id}
@@ -469,7 +459,7 @@ const AgencyClientContent = () => {
                         >
                           <div className="flex items-center gap-4">
                             <div className="media-slider">
-                              {item.files.map((file: any) => {
+                              {item.files!.map((file: IFiles) => {
                                 console.log(file.key, contentUrls[file.key], file.contentType);
                                 return (
                                   <div key={file.key} className="media-item">
@@ -490,7 +480,7 @@ const AgencyClientContent = () => {
                           </div>
                           <div className="flex gap-2">
                             <Button
-                              onClick={() => handleApproveContent(item._id)}
+                              onClick={() => handleApproveContent(item?._id as string)}
                               variant="outline"
                               className="border-green-300 hover:bg-green-50"
                             >
@@ -498,7 +488,7 @@ const AgencyClientContent = () => {
                               Approve
                             </Button>
                             <Button
-                              onClick={() => handleRejectContent(item._id)}
+                              onClick={() => handleRejectContent(item?._id as string)}
                               variant="outline"
                               className="border-red-300 hover:bg-red-50"
                             >

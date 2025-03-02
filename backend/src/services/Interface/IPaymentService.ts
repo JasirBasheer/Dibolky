@@ -1,6 +1,7 @@
+import { IRazorpayOrder, IUserDetails } from "../../shared/types/payment.types";
 
 export interface IPaymentService {
-    razorpay(details: any):Promise<any>;
-    stripe(details: any,success_url:string,cancel_url:string):Promise<any>;
-
+    razorpay(details: {amount : number ; currency:string}): Promise<IRazorpayOrder>;
+    stripe(details: IUserDetails,success_url:string,cancel_url:string):Promise<string>;
+    stripeWebhook(details: Buffer | string,sig:string):Promise<boolean>;
 }

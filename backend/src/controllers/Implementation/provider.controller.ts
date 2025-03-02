@@ -8,17 +8,9 @@ import { FACEBOOK, INSTAGRAM } from "../../shared/utils/constants";
 import { IClientService } from "../../services/Interface/IClientService";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
 import { createFacebookOAuthURL } from "../../provider.strategies/facebook.strategy";
-import { IOwnerDetailsSchema } from "../../shared/types/agency.types";
+import { IReviewBucket } from "../../shared/types/common.types";
 
 
-declare global {
-    namespace Express {
-        interface Request {
-            files?: any,
-            formData: any
-        }
-    }
-}
 
 
 
@@ -46,19 +38,21 @@ export default class ProviderController implements IProviderController {
         next: NextFunction
     ): Promise<void> {
         try {
+            if(!req.details)throw new NotFoundError("Details Not Fount")
             const { content_id, user_id, platform } = req.body
-            const content: any = await this.providerService.getContentById(req.details.orgId, content_id)
+            const content: IReviewBucket | null = await this.providerService.getContentById(req.details.orgId as string, content_id)
             let user;
             if(platform == 'agency'){
-                user = await this.agencyService.getAgencyOwnerDetails(req.details.orgId)
+                user = await this.agencyService.getAgencyOwnerDetails(req.details.orgId as string)
+            }else{
+                user = await this.agencyService.getAgencyOwnerDetails(req.details.orgId as string)
             }
             if (!content) throw new Error('content does not exists')
 
             const response = await this.providerService.handleSocialMediaUploads(content, user, false)
 
             if (response) {
-                console.log(response)
-                await this.providerService.updateContentStatus(req.details.orgId, content_id, "Approved")
+                await this.providerService.updateContentStatus(req.details.orgId as string, content_id, "Approved")
             }
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
         } catch (error) {
@@ -112,10 +106,11 @@ export default class ProviderController implements IProviderController {
         next: NextFunction
     ): Promise<void> {
         try {
+            if(!req.details)throw new NotFoundError("Details Not Fount")
             const { platform, provider, user_id } = req.params
             const { token } = req.body
 
-            await this.providerService.saveSocialMediaToken(req.details.orgId,platform,user_id,provider,token)
+            await this.providerService.saveSocialMediaToken(req.details.orgId as string,platform,user_id,provider,token)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
         } catch (error) {
             console.error('Error saving social platform token:', error)

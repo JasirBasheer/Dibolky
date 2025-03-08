@@ -18,36 +18,60 @@ const initializeSocket = (server: HTTPServer | HTTPSServer) => {
 
     const activeUsers = new Map();
     io.on("connection", (socket) => {
-
         socket.on("set-up", ({ orgId, userId }) => {
-            activeUsers.set(userId, {
-                socketId: socket.id,
-                orgId
-            });
+            if (!activeUsers.get(orgId)) {
+                activeUsers.set(orgId, [userId]);
+            } else {
+                const users = activeUsers.get(orgId);
+                if (!users.includes(userId)) {
+                    users.push(userId);
+                }
+            }
+            
             const orgRoom = `org_${orgId}`;
             socket.join(orgRoom);
+            io.to(orgRoom).emit("active-users", {users:activeUsers.get(orgId)});
+        });
+
+        socket.on("set-member-offline", ({ userId, orgId }) => {
+            const users = activeUsers.get(orgId);
+            if (users) {
+                const updatedUsers = users.filter((id:{id:string}) => id !== userId);
+                if (updatedUsers.length > 0) {
+                    activeUsers.set(orgId, updatedUsers);
+                } else {
+                    activeUsers.delete(orgId); 
+                }
+        
+                const orgRoom = `org_${orgId}`;
+                io.to(orgRoom).emit("active-users", { users: updatedUsers });
+            }
         });
 
         
-        socket.on("send-message", async ({ orgId, chatId, userId, userName, message }) => {
+
+        
+        socket.on("send-message", async ({ orgId, chatId, userId, userName,profile, message }) => {
             try {
                 const roomId = `org_${orgId}`;
-                console.log(orgId, chatId, userId, userName, message);
 
                 const messageData = {
                     senderId: new mongoose.Types.ObjectId(userId),
                     senderName: userName,
+                    profile,
                     text: message.text,
                     type:message.type,
+                    key:message.key,
+                    contentType:message.contentType,
                     seen: [],
                     createdAt: new Date(),
                     updatedAt: new Date()
                 };
+                console.log(messageData)
         
-                await chatService.sendMessage(messageData, orgId, chatId);
+                const createdMessage = await chatService.sendMessage(messageData, orgId, chatId);
                 const chat = await chatService.getChat(orgId,chatId) as IChat
-
-                io.to(roomId).emit("new-message-received", { newMessage: messageData,chat_id:chatId,participants:chat?.participants });
+                io.to(roomId).emit("new-message-received", { newMessage: createdMessage,chat_id:chatId,participants:chat?.participants });
                
             } catch (error) {
                 console.error("Error sending message:", error);
@@ -56,15 +80,41 @@ const initializeSocket = (server: HTTPServer | HTTPSServer) => {
         });
 
 
-        socket.on("create-chat", async ({ userId, targetUserId, orgId, userName, targetUserName }) => {
+        socket.on("delete-message",async({orgId,chatId,messageId}) =>{
+            const roomId = `org_${orgId}`;
+            io.to(roomId).emit("message-deleted", { chatId,messageId });
+            await chatService.deleteMessage(orgId,messageId);
+        })
+
+
+        socket.on("remove-member",async({orgId,chatId,memberId}) =>{
+            const roomId = `org_${orgId}`;
+            await chatService.removeMember(orgId,chatId,memberId)
+            io.to(roomId).emit("member-removed", { chatId,memberId });
+
+        })
+
+
+        socket.on("set-seen", async ({ orgId, chatId, userId, userName  }) => {
+            try {
+                const roomId = `org_${orgId}`;
+                await chatService.setSeenMessage(orgId, chatId, userId, userName)
+                io.to(roomId).emit("seen", { chatId });
+            } catch (error) {
+                console.error("Error sending message:", error);
+                socket.emit("messageError", { error: "Failed to send message" });
+            }
+        });
+
+
+        socket.on("create-chat", async ({ userId, targetUserId, orgId, userName, targetUserName,targetUserProfile,userProfile }) => {
             const roomId = `org_${orgId}`;
             const isChatExists = await chatService.findChatByMembers(orgId,userId,targetUserId)
             if(isChatExists){
             io.to(roomId).emit('new-chat-created', { newChat:isChatExists });
-            console.log(isChatExists);
             return 
             }
-            const newChat = await chatService.createChat(userId, targetUserId, orgId, userName, targetUserName)
+            const newChat = await chatService.createChat(userId, targetUserId, orgId, userName, targetUserName,targetUserProfile,userProfile)
             if (newChat) io.to(roomId).emit('new-chat-created', { newChat });
         })
 
@@ -72,10 +122,9 @@ const initializeSocket = (server: HTTPServer | HTTPSServer) => {
             io.emit('group-created', ({ group }))
         });
 
-        socket.on('add-member',async ({chatId, orgId, userId, userName, type, admin})=>{
+        socket.on('add-member',async ({chatId, orgId, userId, userName, type, admin,targetUserProfile})=>{
             const roomId = `org_${orgId}`;
-            const memberDetails = {userId,name:userName,type}
-            console.log("memberDetails",memberDetails);
+            const memberDetails = {userId,name:userName,type,profile:targetUserProfile}
 
       
             const createdMember = await chatService.addMember(orgId,chatId,memberDetails)

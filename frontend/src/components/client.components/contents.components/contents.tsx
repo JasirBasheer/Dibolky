@@ -11,13 +11,13 @@ import { IReviewBucket, RootState } from '@/types/common.types';
 
 const ClientContentComponent = () => {
   const [bucketItems, setBucketItems] = useState([]);
-  const details = useSelector((state:RootState) => state.client);
+  const user = useSelector((state:RootState) => state.user);
   const [onReview,setOnReview] = useState([])
 
 
   const fetchUserReviewBucket = async () => {
     try {
-      const res = await axios.get(`/api/client/get-review-bucket/${details.id}`)
+      const res = await axios.get(`/api/client/get-review-bucket/${user.user_id}`)
 
       
       if (res.status === 200) {
@@ -37,7 +37,7 @@ const ClientContentComponent = () => {
   const handleApproveContent = async (contentId: string) => {
     try {
       message.loading('Uploading content')
-      await axios.get(`/api/client/approve-content/${contentId}/${details.id}`)
+      await axios.get(`/api/client/approve-content/${contentId}/${user.user_id}`)
       fetchUserReviewBucket()
       message.success('Content approved successfully')
     } catch (error) {
@@ -60,7 +60,7 @@ const ClientContentComponent = () => {
 
 
   useEffect(() => {
-    if (details?.id) {
+    if (user?.id) {
       fetchUserReviewBucket()
     }
   }, [])

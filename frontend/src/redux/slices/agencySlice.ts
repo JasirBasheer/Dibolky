@@ -2,7 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 interface IAgency {
-    id: string;
+    user_id: string;
+    main_id: string;
     orgId: string;
     organizationName: string;
     ownerName: string;
@@ -18,7 +19,8 @@ interface IAgency {
 }
 
 const initialState: IAgency = {
-    id: "",
+    user_id:"",
+    main_id: "",
     orgId: "",
     organizationName: "",
     ownerName: "",

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from '../../utils/axios';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { Link, useNavigate } from 'react-router-dom';
 import { message } from "antd";
 import { validateEmail, validatePassword } from '../../validation/agencyValidation';
@@ -26,15 +27,21 @@ const Login = ({ role }: LoginProps) => {
   const passwordRef = useRef<HTMLInputElement>(null)
   const [searchParams] = useSearchParams();
   const isNewlyCreatedAccount = searchParams.get('new')
+  const [token, setToken] = useState<string>("");
 
 
-  useEffect(()=>{
-    if(isNewlyCreatedAccount){
+
+  useEffect(() => {
+    if (isNewlyCreatedAccount) {
       message.success("Account successfully created")
       message.success("Login to continue")
-     }
-  },[])
+    }
+  }, [])
 
+
+  const onVerify = (token: string) => {
+    setToken(token);
+  };
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -67,27 +74,27 @@ const Login = ({ role }: LoginProps) => {
         }
         const url = roleRedirects[role as keyof typeof roleRedirects]
         navigate(url)
-   
+
       }
 
     } catch (error: unknown) {
       setIsLoading(false);
       if (
-        error instanceof Error &&  typeof error === "object" && "response" in error && typeof error.response === "object" && error.response !== null && "data" in error.response &&
-         typeof error.response.data === "object" && error.response.data !== null && "error" in error.response.data && typeof error.response.data.error === "string"
+        error instanceof Error && typeof error === "object" && "response" in error && typeof error.response === "object" && error.response !== null && "data" in error.response &&
+        typeof error.response.data === "object" && error.response.data !== null && "error" in error.response.data && typeof error.response.data.error === "string"
       ) {
         message.error(error.response.data.error);
       } else {
         message.error("Unexpected error occurred");
       }
-    
+
     }
 
 
   };
   return (
     <div className="flex justify-center items-center h-screen bg-gray-50">
-      <div className="sm:w-[35rem] flex sm:h-[29rem] w-full h-full rounded-lg shadow-xl bg-white">
+      <div className="sm:w-[35rem] flex sm:h-[34rem] w-full h-full rounded-lg shadow-xl bg-white">
         <div className="flex-1 sm:p-9 sm:pl-[4.4rem]   sm:pt-14 p-9 pt-[7rem]  ">
           <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
             <h2 className="text-3xl font-bold text-black mb-3 ">Welcome Back .</h2>
@@ -129,7 +136,13 @@ const Login = ({ role }: LoginProps) => {
               <div className="flex py-2 items-center">
                 <p className='text-black text-[0.8rem] cursor-pointer '><Link to={`/${role.toLocaleLowerCase()}/forgot-password`}>Forget password ?</Link></p>
               </div>
+              <HCaptcha
+                sitekey="10000000-ffff-ffff-ffff-000000000001"
+                onVerify={onVerify}
+              />
+
               <button
+                disabled={token == ""}
                 type="submit"
                 className="w-full h-[3rem] flex items-center justify-center bg-blue-600 text-white rounded-md py-2 px-4 hover:bg-blue-700 transition duration-200 mt-6"
               >

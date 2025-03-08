@@ -23,4 +23,6 @@ export interface IEntityController {
     saveContent(req:Request,res:Response,next:NextFunction):Promise<void>
     getS3ViewUrl(req:Request,res:Response,next:NextFunction):Promise<void>
     fetchContents(req:Request,res:Response,next:NextFunction):Promise<void>
+    getUploadS3Url(req:Request,res:Response,next:NextFunction):Promise<void>
+    updateProfile(req:Request,res:Response,next:NextFunction):Promise<void>
 }

@@ -7,6 +7,14 @@ const agencySchema: Schema<IAgency> = new mongoose.Schema({
         type: String,
         required: true
     },
+    profile:{
+        type: String,
+        default:""
+    },
+    bio:{
+        type: String,
+        default:""
+    },
     planId: {
         type: String,
         required: true
@@ -74,13 +82,21 @@ export default mongoose.model<IAgency>('Agency', agencySchema);
 
 
 export const ownerDetailsSchema = new Schema<IAgencyTenant>({
-    ownerId: {
+    main_id: {
         type: String,
         required: false,
     },
     orgId: {
         type: String,
         required: false,
+    },
+    profile:{
+        type: String,
+        default:""
+    },
+    bio:{
+        type: String,
+        default:""
     },
     planId: {
         type: String,

@@ -1,4 +1,4 @@
-import { IContentData, IFilesMetaData } from "@/types/common.types";
+import { IContentData, IFilesMetaData, IUpdateProfile } from "@/types/common.types";
 import api from "@/utils/axios";
 
 export const savePlatformTokenApi = async( 
@@ -22,7 +22,6 @@ export const InitiateS3BatchUpload = async(
 }
 
 
-
 export const saveContentApi = async(
     platform:string,
     user_id:string,
@@ -32,3 +31,43 @@ export const saveContentApi = async(
         contentData
     );
 }
+
+
+
+export const updateProfileApi = async(
+    role:string,
+    details:IUpdateProfile,
+) =>{ 
+    console.log(details,role)
+    return await api.post(`/api/entities/update-profile`, {role,details});
+}
+
+
+export const getUploadUrlApi = async(
+    file:object
+) =>{ 
+    return await api.post(`/api/entities/get-s3Upload-url`, {file});
+}
+
+
+export const getSignedUrlApi = async(
+    key:string
+) =>{ 
+    return await api.post(`/api/entities/get-signedUrl`, {key});
+}
+
+
+export const approveContentApi = async(
+    content_id:string,
+    platform:string,
+    user_id:string
+) =>{
+    return await api.post(`/api/entities/approve-content`, { content_id, platform, user_id})
+}
+
+export const fetchChatsApi = async(
+    chatId:string,
+) =>{
+    return await api.post(`/api/entities/chats`, { chatId })
+}
+

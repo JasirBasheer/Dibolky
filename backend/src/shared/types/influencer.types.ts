@@ -28,8 +28,10 @@ export interface IInfluencer extends Document {
 
 
 export interface IInfluncerTenant {
-    ownerId?: string; 
+    main_id?: string; 
     orgId?: string; 
+    profile:string;
+    bio:string;
     organizationName?: string;
     name?: string;
     email?: string;

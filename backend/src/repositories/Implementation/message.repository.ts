@@ -1,9 +1,9 @@
-import { Model, Schema } from "mongoose";
+import { Model, Schema, Types } from "mongoose";
 import { IMessage } from "../../shared/types/chat.types";
 import { IMessageRepository } from "../Interface/IMessageRepository";
 import { connectTenantDB } from "../../config/db";
 import { inject, injectable } from "tsyringe";
-import { BaseRepository } from "mern.common";
+import { BaseRepository, CustomError } from "mern.common";
 
 @injectable()
 export default class MessageRepository extends BaseRepository<IMessage> implements IMessageRepository {
@@ -45,6 +45,27 @@ export default class MessageRepository extends BaseRepository<IMessage> implemen
         return await message.save();
     }
 
+    async deleteMessage(
+        orgId: string, 
+        messageId: string
+    ): Promise<IMessage | null>{
+        const model = await this.getModel(orgId)
+        const result = await model.findOneAndUpdate(
+            { _id: messageId },
+            { 
+                $set: {
+                    type: "deleted",
+                    text: "",
+                    fileUrl: ""
+                }
+            },
+            { new: true }
+        )
+        
+        return result
+    }
+
+
 
     async fetchMessages(
         orgId: string
@@ -59,6 +80,16 @@ export default class MessageRepository extends BaseRepository<IMessage> implemen
     ): Promise<IMessage[]> {
         const model = await this.getModel(orgId);
         return await model.find({ chatId })
+    }
+    
+    async getMessageById(
+        orgId: string,
+        messageId: string
+    ): Promise<IMessage> {
+        const model = await this.getModel(orgId);
+        const message = await model.findOne({ _id:messageId })
+        if(!message)throw new CustomError("Message not found",500)
+        return message
     }
 
     async fetchChatByChatId(
@@ -79,6 +110,18 @@ export default class MessageRepository extends BaseRepository<IMessage> implemen
         return await newCommonMessage.save()
     }
 
+    async setSeenMessage(
+        orgId:string,
+        messageId:string,
+        details:{userId:Types.ObjectId,userName:string,seenAt:Date}
+    ): Promise<void>{
+        const model = await this.getModel(orgId);
+        const message = await model.findOne({_id:messageId})
+        if(!message)throw new CustomError("Message not found",500)
+        if (!message.seen) message.seen = [];
+        message?.seen.push(details)
+        await message.save()
+    }
 
 
 }

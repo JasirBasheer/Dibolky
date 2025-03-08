@@ -4,6 +4,7 @@ import { IEntityService } from '../../services/Interface/IEntityService';
 import { inject, injectable } from 'tsyringe';
 import { CountryToCurrency, getPriceConversionFunc } from '../../shared/utils/currency-conversion.utils';
 import {
+    CustomError,
     findCountryByIp,
     HTTPStatusCodes,
     NotFoundError,
@@ -152,7 +153,7 @@ export default class EntityController implements IEntityController {
     }
 
 
-    async createInfluencer(req: Request, res: Response, next: NextFunction): Promise<void>{
+    async createInfluencer(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, paymentGateway, description, currency } = req.body.details
             const { transaction_id } = req.body
@@ -178,17 +179,17 @@ export default class EntityController implements IEntityController {
         next: NextFunction
     ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
+            if (!req.details) throw new NotFoundError("request details not found")
             const { role, planId } = req.params;
             let menu;
 
 
-            if (role === "agency" ) {
+            if (role === "agency") {
                 menu = await this.entityService.getAgencyMenu(planId);
-            }else if(role === "agency-client"){
-                console.log(req.details.orgId,planId,"tehireaserfamsdjfklasdjflkasjfasdkl")
-                menu = await this.entityService.getClientMenu(req.details.orgId as string,planId);
-            }else if (role === "Admin") {
+            } else if (role === "agency-client") {
+                console.log(req.details.orgId, planId, "tehireaserfamsdjfklasdjflkasjfasdkl")
+                menu = await this.entityService.getClientMenu(req.details.orgId as string, planId);
+            } else if (role === "Admin") {
                 menu = {
                     clients: {
                         label: 'All Clients',
@@ -249,9 +250,9 @@ export default class EntityController implements IEntityController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        try {           
-            if(!req.details)throw new NotFoundError("Details Not Fount")
-            console.log('laskdfjsd',req.details.orgId)
+        try {
+            if (!req.details) throw new NotFoundError("request details not found")
+            console.log('laskdfjsd', req.details.orgId)
             const ownerDetails = await this.entityService.getOwner(req.details.orgId as string)
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { ownerDetails: ownerDetails[0] })
@@ -265,7 +266,7 @@ export default class EntityController implements IEntityController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        if(!req.details)throw new NotFoundError("Details Not Fount")
+        if (!req.details) throw new NotFoundError("request details not found")
         const { userId } = req.params
         const chats = await this.chatService.getChats(req.details.orgId as string, userId)
         SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
@@ -277,7 +278,7 @@ export default class EntityController implements IEntityController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        if(!req.details)throw new NotFoundError("Details Not Fount")
+        if (!req.details) throw new NotFoundError("request details not found")
         const { chatId } = req.body
         const chats = await this.chatService.getChat(req.details.orgId as string, chatId)
         SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
@@ -298,7 +299,7 @@ export default class EntityController implements IEntityController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        if(!req.details)throw new NotFoundError("Details Not Fount")
+        if (!req.details) throw new NotFoundError("request details not found")
         const { details, userId } = req.body
         const createdGroup = await this.chatService.createGroup(req.details?.orgId as string, userId, details)
         console.log(createdGroup);
@@ -308,40 +309,41 @@ export default class EntityController implements IEntityController {
 
 
     async getAllProjects(
-        req: Request, 
-        res: Response, 
+        req: Request,
+        res: Response,
         next: NextFunction
     ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
-            const projects = await this.entityService.fetchAllProjects(req.details.orgId as string)
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects })
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { page } = req.params
+            const projects = await this.entityService.fetchAllProjects(req.details.orgId as string,Number(page))
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects:projects?.projects,totalPages:projects?.totalPages })
         } catch (error) {
             next(error)
         }
     }
 
     async initiateS3BatchUpload(
-        req: Request, 
-        res: Response, 
+        req: Request,
+        res: Response,
         next: NextFunction
     ): Promise<void> {
         try {
             const { files } = req.body;
-    
+
             const filesInfo = await Promise.all(
                 files.map(async (file: { fileName: string; fileType: string; id: string }) => {
                     const key = `test/${uuidv4()}-${file.fileName}`;
-    
+
                     const command = new PutObjectCommand({
                         Bucket: AWS_S3_BUCKET_NAME,
                         Key: key,
                         ContentType: file.fileType,
-                        ContentDisposition: 'inline', 
+                        ContentDisposition: 'inline',
                     });
-    
+
                     const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-    
+
                     return {
                         fileId: file.id,
                         key,
@@ -350,7 +352,7 @@ export default class EntityController implements IEntityController {
                     };
                 })
             );
-    
+
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { filesInfo });
         } catch (error) {
             next(error);
@@ -358,18 +360,51 @@ export default class EntityController implements IEntityController {
     }
 
 
-    async saveContent(
-        req:Request,
-        res:Response,
-        next:NextFunction
-    ):Promise<void>{
+    async getUploadS3Url(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
-            const {platform ,user_id} = req.params
+            const { file } = req.body;
+            console.log(file)
+
+            const key = `test/${uuidv4()}-${file.fileName}`;
+
+            const command = new PutObjectCommand({
+                Bucket: AWS_S3_BUCKET_NAME,
+                Key: key,
+                ContentType: file.fileType,
+                ContentDisposition: 'inline',
+            });
+
+            const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+
+            const s3file = {
+                key,
+                url,
+                contentType: file.fileType,
+            };
+
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { s3file });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+
+    async saveContent(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { platform, user_id } = req.params
             const { files, platforms, metadata, contentType } = req.body
-            await this.entityService.saveContent(req.details.orgId as string,platform,platforms,user_id,files,metadata,contentType)
-            
-            SendResponse(res,HTTPStatusCodes.CREATED,ResponseMessage.CREATED)           
+            await this.entityService.saveContent(req.details.orgId as string, platform, platforms, user_id, files, metadata, contentType)
+
+            SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
         } catch (error) {
             next(error)
         }
@@ -377,14 +412,14 @@ export default class EntityController implements IEntityController {
 
 
     async getS3ViewUrl(
-        req:Request,
-        res:Response,
-        next:NextFunction
-    ):Promise<void>{
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
         try {
-            const {key} = req.body
+            const { key } = req.body
             const signedUrl = await this.entityService.getS3ViewUrl(key)
-            
+
             res.json({ signedUrl });
         } catch (error) {
             next(error)
@@ -392,12 +427,12 @@ export default class EntityController implements IEntityController {
     }
 
     async fetchContents(
-        req:Request,
-        res:Response,
-        next:NextFunction
-    ):Promise<void>{
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
+            if (!req.details) throw new NotFoundError("request details not found")
             const { user_id } = req.params
             const reviewBucket = await this.entityService.fetchContents(req.details.orgId as string, user_id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { reviewBucket })
@@ -406,6 +441,23 @@ export default class EntityController implements IEntityController {
             next(error)
         }
     }
+
+
+    async updateProfile(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { role, details } = req.body
+            const updatedProfile = await this.entityService.updateProfile(req.details.orgId as string, role, req.details?.role as string, details)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details: updatedProfile })
+        } catch (error) {
+            next(error)
+        }
+    }
+
 
 
 }

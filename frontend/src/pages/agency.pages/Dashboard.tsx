@@ -9,7 +9,7 @@ const Dashboard = () => {
   const user = useSelector((state:RootState)=>state.user)
 
    useEffect(() => {
-    if (user.user_id && user.user_id !== "") {
+    if (user.user_id && user.role !== "agency") {
       setIsAgencyDashboard(false)
     }else{
       setIsAgencyDashboard(true)

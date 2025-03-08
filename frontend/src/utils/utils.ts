@@ -1,7 +1,7 @@
 export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 
-export function formatDate(date: string) {
+export function formatDateTime(date: string) {
     const createdAt = new Date(date);
     
     if (isNaN(createdAt.getTime())) {
@@ -15,6 +15,22 @@ export function formatDate(date: string) {
         hour12: true,
     });
 }
+
+export function formatDate(date: string) {
+    const createdAt = new Date(date);
+    
+    if (isNaN(createdAt.getTime())) {
+        console.error('Invalid date input:', date);
+        return date;
+    }
+    
+    return createdAt.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    });
+}
+
 
 
 

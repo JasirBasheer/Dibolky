@@ -8,7 +8,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import createSocketConnection from "@/utils/socket"
-import { IChatUser } from "@/types/chat.types"
+import { IAvailabeUser, IChatUser } from "@/types/chat.types"
+import { getSignedUrlApi } from "@/services/common/post.services"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 
 interface MenuListModalProps {
   setShowMenuListModal: (show: boolean) => void
@@ -16,54 +18,74 @@ interface MenuListModalProps {
   role: string;
   orgId:string;
   userName:string;
+  profile:string;
 }
 
-export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userName }: MenuListModalProps) => {
+
+
+export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userName,profile }: MenuListModalProps) => {
   
   const [groupName, setGroupName] = useState("")
-  const [availableUsers, setAvailableUsers] = useState([])
+  const [availableUsers, setAvailableUsers] = useState<IAvailabeUser[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [selectedMembers, setSelectedMembers] = useState<IChatUser[]>([])
 
   const filteredUsers = availableUsers.filter(
-    (user:IChatUser) =>
+    (user:IAvailabeUser) =>
       user.name && user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       !selectedMembers.some((member) => member._id === user._id),
   )
 
   const fetchAvailableUsers = async () => {
-    const res = await axios.get("/api/agency/availabe-users")
-    console.log(res.data.users)
-    setAvailableUsers(res.data.users || [])
+    const res = await axios.get("/api/agency/availabe-users");
+    const users = res.data.users || [];
+    console.log(users)
+
+    const usersWithUrls = await Promise.all(
+      users.map(async (member:IAvailabeUser) => {
+        let profileUrl = null;
+        if (member?.profile) {
+          const response = await getSignedUrlApi(member?.profile);
+          profileUrl = response.data.signedUrl
+        }
+        return { ...member, profileUrl };
+      })
+    );
+    
+    setAvailableUsers(usersWithUrls);
+
   }
+
+  
+
+
 
   useEffect(() => {
     fetchAvailableUsers()
   }, [])
 
-  const addMember = (user: IChatUser) => {
+  const addMember = (user: IAvailabeUser) => {
     setSelectedMembers([...selectedMembers, user])
     setSearchTerm("")
     setShowSuggestions(false)
   }
 
-  const removeMember = (userId: string) => {
-    setSelectedMembers(
-      selectedMembers.filter((member: IChatUser) => member._id !== undefined && member._id != userId)
-    );
-      }
+
 
   const handleCreateGroup = async () => {
     try {
+      if((selectedMembers.length + 1)<2){
+        message.error('3 members atleast need to create group')
+        return 
+      }
       const socket = createSocketConnection()
       socket.emit('set-up',{orgId,userId})
       const details = {
-        members: [...selectedMembers, { _id: userId, name: userName, type: role }],
+        members: [...selectedMembers, { _id: userId, name: userName, type: role,profile }],
         groupName,
       }
       const res = await axios.post("/api/entities/create-group", { details, userId })
-      console.log(res.data.group);
     
     
       if(res){
@@ -85,13 +107,14 @@ export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userN
     
   }
 
-  const handleCreateChat = async(targetUserId:string,targetUserName:string) =>{
+  const handleCreateChat = async(targetUserId:string,targetUserName:string,targetUserProfile:string) =>{
     try {
       const socket = createSocketConnection()
       socket.emit('set-up',{orgId,userId})
-      console.log(orgId,userId);
+      console.log(orgId,userId,"oneeee");
+      console.log(profile,targetUserProfile,"one")
  
-      socket.emit("create-chat",({userId,targetUserId,orgId,userName,targetUserName}))
+      socket.emit("create-chat",({userId,targetUserId,orgId,userName,targetUserName,targetUserProfile,userProfile:profile}))
       
     } catch (error) {
       console.log(error)
@@ -119,19 +142,27 @@ export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userN
             </TabsList>
             <TabsContent value="newChat">
               <div className="mt-6 space-y-4">
-                {availableUsers.map((user:IChatUser) => (
+                {availableUsers.map((user:IAvailabeUser) =>  (
                   <div
                     key={user._id}
                     className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-100 transition-colors"
-                    onClick={()=>handleCreateChat(user._id as string,user.name)}
+                    onClick={()=>handleCreateChat(user._id as string,user.name,user.profile || "")}
                   >
-                    <UserCircle className="text-slate-400" size={24} />
+           
+                    <Avatar className="h-16 w-16 border-4 border-background">
+                        <AvatarImage src={String(user?.profileUrl)} 
+                        className="h-full w-full object-cover"
+                        alt={user.name} />
+                        <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+
                     <div>
                       <p className="text-sm font-medium text-slate-800">{user.name}</p>
                       <p className="text-xs text-slate-500">{}</p>
                     </div>
                   </div>
-                ))}
+                  )
+                )}
               </div>
             </TabsContent>
             <TabsContent value="createGroup">
@@ -164,9 +195,9 @@ export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userN
                       {showSuggestions && searchTerm && (
                         <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-48 overflow-auto">
                           {filteredUsers.length > 0 ? (
-                            filteredUsers.map((user:IChatUser) => (
+                            filteredUsers.map((user:IAvailabeUser) => (
                               <div
-                                key={user.id}
+                                key={user._id}
                                 className="p-2 hover:bg-gray-100 cursor-pointer"
                                 onClick={() => addMember(user)}
                               >

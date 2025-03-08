@@ -180,8 +180,8 @@ export default class AdminController implements IAdminController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const { entity, id }: { entity: string, id: string } = req.body
-            await this.adminService.changePlanStatus(entity, id)
+            const { entity, plan_id }: { entity: string, plan_id: string } = req.body
+            await this.adminService.changePlanStatus(entity, plan_id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
 
         } catch (error) {

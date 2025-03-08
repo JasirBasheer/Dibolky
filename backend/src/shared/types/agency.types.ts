@@ -17,6 +17,8 @@ export interface IAgency extends Document {
     name: string;
     email: string;
     address: AddressType;
+    profile?:string;
+    bio?:string
     websiteUrl: string;
     industry: string;
     password?: string;
@@ -32,9 +34,11 @@ export interface IAgency extends Document {
 
 
 export interface IAgencyTenant extends Document {
-    ownerId?: string; 
+    main_id?: string; 
     orgId?: string; 
     planId?: string;
+    profile?:string;
+    bio?:string
     organizationName?: string;
     name?: string;
     email?: string;

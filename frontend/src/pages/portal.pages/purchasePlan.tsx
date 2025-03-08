@@ -11,13 +11,14 @@ import Skeleton from 'react-loading-skeleton'
 import { useSelector } from 'react-redux';
 import axios from '../../utils/axios';
 import { message } from "antd";
-import { 
-    User, Mail, 
-    Phone, Building2, 
-    MapPin, Globe, 
-    Lock, ArrowRight, 
-    Check, CheckCircle2 
+import {
+    User, Mail,
+    Phone, Building2,
+    MapPin, Globe,
+    Lock, ArrowRight,
+    Check, CheckCircle2
 } from 'lucide-react';
+import { IPlan } from '@/types/admin.types';
 
 
 const PurchasePlan: React.FC = () => {
@@ -90,14 +91,14 @@ const PurchasePlan: React.FC = () => {
         fetchPlanDetails()
     }, [currency])
 
-    const fetchPlanDetails = async()=>{
+    const fetchPlanDetails = async () => {
         try {
             setLoading(true);
-           const response = await axios.post(`/api/entities/get-plan`, { id, platform })
-           setPlan(response.data.plan)
+            const response = await axios.post(`/api/entities/get-plan`, { id, platform })
+            setPlan(response.data.plan)
         } catch (error) {
             console.log(error)
-        }finally{
+        } finally {
             setLoading(false)
         }
     }
@@ -108,10 +109,10 @@ const PurchasePlan: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         if (paymentMethod == 'razorpay') {
-            await handleRazorpayPayment(formData, plan, platform, navigate, currency.selectedCurrency);
+            await handleRazorpayPayment(formData, plan as IPlan, platform, navigate, currency.selectedCurrency);
         } else if (paymentMethod == 'stripe') {
-           const response = await handleStripePayment(formData,plan,platform,currency.selectedCurrency)
-           if(response.url)window.location.href = response.url
+            const response = await handleStripePayment(formData, plan as IPlan, platform, currency.selectedCurrency)
+            if (response.url) window.location.href = response.url
         }
     };
 

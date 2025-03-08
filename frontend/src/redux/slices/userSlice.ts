@@ -6,6 +6,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 const initialState: ReduxIUser = {
   user_id: "",
   role: "",
+  profile:"",
+  bio:"",
   planId: "",
   orgId: "",
   facebookAccessToken: "",
@@ -13,7 +15,7 @@ const initialState: ReduxIUser = {
   email: "",
   name: "",
   organizationName: "",
-  ownerId:"",
+  main_id:"",
 };
 
 

@@ -19,7 +19,10 @@ import { getS3ViewUrl } from '../../config/aws-s3.config';
 import { AddressType, IAgency, IAgencyTenant } from '../../shared/types/agency.types';
 import { IInfluencer } from '../../shared/types/influencer.types';
 import { connectTenantDB } from '../../config/db';
-import { IFiles, IMenuCategory, IMetadata, IPlatforms, IReviewBucket } from '../../shared/types/common.types';
+import { IFiles, IMenuCategory, IMetadata, IPlatforms, IReviewBucket, IUpdateProfile } from '../../shared/types/common.types';
+import { IClientTenant } from '../../shared/types/client.types';
+import { IAgencyRepository } from '../../repositories/Interface/IAgencyRepository';
+import { IClientRepository } from '../../repositories/Interface/IClientRepository';
 
 @injectable()
 export default class EntityService implements IEntityService {
@@ -28,8 +31,10 @@ export default class EntityService implements IEntityService {
     private transactionRepository: ITransactionRepository;
     private projectRepository: IProjectRepository;
     private clientTenantRepository: IClientTenantRepository;
+    private clientRepository: IClientRepository;
     private contentRepository: IContentRepository;
     private agencyTenantRepository: IAgencyTenantRepository;
+    private agencyRepository: IAgencyRepository;
 
     constructor(
         @inject('EntityRepository') entityRepository: IEntityRepository,
@@ -37,8 +42,10 @@ export default class EntityService implements IEntityService {
         @inject('TransactionRepository') transactionRepository: ITransactionRepository,
         @inject('ProjectRepository') projectRepository: IProjectRepository,
         @inject('ClientTenantRepository') clientTenantRepository: IClientTenantRepository,
+        @inject('ClientRepository') clientRepository: IClientRepository,
         @inject('ContentRepository') contentRepository: IContentRepository,
         @inject('AgencyTenantRepository') agencyTenantRepository: IAgencyTenantRepository,
+        @inject('AgencyRepository') agencyRepository: IAgencyRepository,
 
     ) {
         this.entityRepository = entityRepository
@@ -48,6 +55,8 @@ export default class EntityService implements IEntityService {
         this.clientTenantRepository = clientTenantRepository
         this.contentRepository = contentRepository
         this.agencyTenantRepository = agencyTenantRepository
+        this.agencyRepository = agencyRepository
+        this.clientRepository = clientRepository
     }
 
 
@@ -67,8 +76,8 @@ export default class EntityService implements IEntityService {
         return plan
         }
 
-    async fetchAllProjects(orgId:string):Promise<Partial<IProject[]> | null> {
-        return await this.projectRepository.fetchAllProjects(orgId)
+    async fetchAllProjects(orgId:string,page?:number):Promise<{projects:IProject[],totalPages:number} | null> {
+        return await this.projectRepository.fetchAllProjects(orgId,page)
     }
         
 
@@ -113,7 +122,7 @@ export default class EntityService implements IEntityService {
         const ownerDetails = await this.entityRepository.createAgency(newAgency);
         
         const newTenantAgency = {
-            ownerId: ownerDetails?._id,orgId,
+            main_id: ownerDetails?._id,orgId,
             planId, organizationName, name,
             email
         };
@@ -244,9 +253,28 @@ export default class EntityService implements IEntityService {
         user_id: string
     ): Promise<IReviewBucket[] >{
         const contents = await this.contentRepository.getContentsByUserId(orgId, user_id)
-        if(!contents || contents.length == 0)throw new CustomError("Contents not found",500)
-        return contents
+        return contents ?? []
     }
+
+    async updateProfile(
+        orgId: string,
+        role: string, 
+        requestRole:string,
+        details: IUpdateProfile
+    ): Promise<IAgencyTenant | IClientTenant>{
+        let updatedProfile;
+        console.log(role,requestRole)
+        if(role == "agency" ){
+            await this.agencyRepository.updateProfile(orgId,details)
+            updatedProfile = await this.agencyTenantRepository.updateProfile(orgId,details)
+        }else if(role == "client" && requestRole == "agency" || requestRole == "client"){
+            await this.clientRepository.updateProfile(details)
+            updatedProfile = await this.clientTenantRepository.updateProfile(orgId,details)            
+        }
+        if(!updatedProfile)throw new CustomError("An unexpected error occured while updating profile , try again later.",500)
+        return updatedProfile
+    }
+    
 
 }
 

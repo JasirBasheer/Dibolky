@@ -10,7 +10,7 @@ export const messageSchema = new Schema<IMessage>({
   },
   type: {
     type: String,
-    enum: ['text', 'common'],
+    enum: ['text', 'common','deleted'],
     default: 'text'
   },
   senderId: {
@@ -26,11 +26,16 @@ export const messageSchema = new Schema<IMessage>({
       return this.type !== 'common';
     }
   },
+  profile:{
+    type:String,
+  },
   text: {
     type: String,
-    required: true
   },
-  fileUrl: {
+  key: {
+    type: String
+  },
+  contentType: {
     type: String
   },
   seen: [{
@@ -38,6 +43,9 @@ export const messageSchema = new Schema<IMessage>({
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User'
+    },
+    userName:{
+      type:String
     },
     seenAt: {
       type: Date,
@@ -63,6 +71,9 @@ export const chatSchema = new Schema<IChat>({
     },
     name: {
       type: String
+    },
+    profile:{
+      type:String
     }
   }]
 }, { timestamps: true });

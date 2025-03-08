@@ -125,3 +125,11 @@ export interface IMetadata{
 }
 
 
+
+export interface IUpdateProfile{
+    tenant_id?:string,
+    main_id?:string,
+    profile: string,
+    name:string,
+    bio:string,
+}

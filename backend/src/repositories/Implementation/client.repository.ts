@@ -3,6 +3,7 @@ import { IClient } from "../../shared/types/client.types";
 import { IClientRepository } from "../Interface/IClientRepository";
 import { Model } from "mongoose";
 import { inject, injectable } from "tsyringe";
+import { IUpdateProfile } from "../../shared/types/common.types";
 
 @injectable()
 export default class ClientRepository extends BaseRepository<IClient> implements IClientRepository {
@@ -29,6 +30,21 @@ export default class ClientRepository extends BaseRepository<IClient> implements
     ): Promise<IClient | null> {
         return await this.create(newClient)
     }
+
+    async updateProfile(
+        details:IUpdateProfile
+    ):Promise<IClient | null>{
+        return await this.update(
+            { _id: details.main_id },
+            {
+                profile: details.profile,
+                name: details.name,
+                bio: details.bio
+            },
+            { new: true }
+        )
+    }
+    
 
 }
 

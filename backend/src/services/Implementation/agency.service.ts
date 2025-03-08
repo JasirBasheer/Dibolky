@@ -63,10 +63,10 @@ export default class AgencyService implements IAgencyService {
     async getProjectsCount(
         orgId: string
     ): Promise<object> {
-        const projects = await this.projectRepository.fetchAllProjects(orgId)
-        const weaklyProjects = projects?.filter((project: IProject) => new Date(project.createdAt!).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000) || []
+        const data = await this.projectRepository.fetchAllProjects(orgId)
+        const weaklyProjects = data.projects?.filter((project: IProject) => new Date(project.createdAt!).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000) || []
         return {
-            count: projects?.length || 0,
+            count: data?.projects.length || 0,
             lastWeekCount: weaklyProjects?.length || 0
         }
     }
@@ -92,6 +92,7 @@ export default class AgencyService implements IAgencyService {
                 _id:client._id as string ,
                 name:client.name ?? "user",
                 email:client.email ?? "user@gmail.com",
+                profile:client.profile,
                 type:"client",
 
             }
@@ -139,7 +140,9 @@ export default class AgencyService implements IAgencyService {
         }
         let newMenu = createNewMenuForClient(menu)
 
-        const createdClient: IClientTenant  = await this.clientTenantRepository.createClient(orgId, { ...clientDetails, menu: newMenu })
+        const mainDbCreatedClient = await this.clientRepository.createClient(clientDetails as IClient)
+        if(!mainDbCreatedClient)throw new CustomError("An unexpected error occured while creating client,Please try again later.",500)
+        const createdClient: IClientTenant  = await this.clientTenantRepository.createClient(orgId, { ...clientDetails, menu: newMenu,main_id:String(mainDbCreatedClient._id) })
 
         for (let item in services) {
             const { serviceName, serviceDetails } = services[item];
@@ -148,7 +151,6 @@ export default class AgencyService implements IAgencyService {
         }
 
 
-        if (createdClient) await this.clientRepository.createClient(clientDetails as IClient)
         
         const data = createClientMailData(email, name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(), organizationName, password)
         sendMail(

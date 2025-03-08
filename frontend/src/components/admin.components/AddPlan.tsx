@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { message } from 'antd';
-import axios from '@/utils/axios';
+import { createPlanApi } from '@/services/admin/post.services';
 
 const PRESET_MENUS = ['SMM','CRM','ACCOUNTING','MARKETING'];
 
@@ -59,8 +59,8 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
         features,
         menu:selectedMenus
       }
-
-      const res = await axios.post('/api/admin/create-plan', {entity:formData.entity,details})
+                        
+      const res = await createPlanApi(formData.entity,details)
       if(res.status == 200){
         message.success("Plan successfully created")
         setIsAddPlan(false)

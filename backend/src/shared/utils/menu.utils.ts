@@ -128,6 +128,7 @@ const clientBaseMenu: Record<string,IMenuCategory> = {
     "Mixed Reality Videos": smm,
     "Search Engine Optimization": marketing,
     "Google Ads and PPC": marketing,
+    "Campaign Strategies": marketing,
 };
 
 const planBaseMenu: Record<string,IMenuCategory> = {
@@ -142,6 +143,7 @@ const planBaseMenu: Record<string,IMenuCategory> = {
 export const createNewMenuForClient = (selectedKeys: string[]) => {
     const result: IMenuCategory = {};
     const seen = new Set();
+    console.log(selectedKeys)
 
     selectedKeys.forEach(key => {
         const menu = clientBaseMenu[key];

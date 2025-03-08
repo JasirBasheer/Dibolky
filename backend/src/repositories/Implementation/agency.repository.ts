@@ -4,6 +4,7 @@ import { BaseRepository, NotFoundError } from 'mern.common';
 import { Model } from 'mongoose';
 import { inject, injectable } from 'tsyringe';
 import agencyModel from '../../models/agency/agency.model';
+import { IUpdateProfile } from '../../shared/types/common.types';
 
 
 @injectable()
@@ -49,6 +50,22 @@ export class AgencyRepository extends BaseRepository<IAgency> implements IAgency
     ): Promise<IAgency[] | null> {
         return await agencyModel.find({ planId: plan_id }).lean();
     }
+
+    async updateProfile(
+        orgId: string,
+        details: IUpdateProfile
+    ): Promise<IAgency | null> {
+        return await this.update(
+            { orgId: orgId },
+            {
+                profile: details.profile,
+                name: details.name,
+                bio: details.bio
+            },
+            { new: true }
+        );
+    }
+
 
 }
 

@@ -74,13 +74,21 @@ export default mongoose.model<IInfluencer>('Influencer', influencerSchema);
 
 
 export const ownerDetailsSchema = new Schema<IInfluncerTenant>({
-    ownerId: {
+    main_id: {
         type: String,
         required: false,
     },
     orgId: {
         type: String,
         required: false,
+    },
+    profile:{
+        type: String,
+        default:""
+    },
+    bio:{
+        type: String,
+        default:""
     },
     paymentCredentials: {
         razorpay: {

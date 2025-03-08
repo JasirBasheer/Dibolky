@@ -50,10 +50,26 @@ export class ProjectRepository extends BaseRepository<IProject> implements IProj
     }
 
     async fetchAllProjects(
-        orgId: string
-    ): Promise<IProject[]> {
+        orgId: string,
+        page?:number
+    ): Promise<{projects:IProject[],totalPages:number}> {
         const model = await this.getModel(orgId);
-        return await model.find({});
+        let projects;
+        const limit = 10
+        const totalCount = await model.countDocuments({});
+        const totalPages = Math.ceil(totalCount / limit);
+    
+        if(page){
+            const skip = (page - 1) * limit;
+            projects = await model.find({})
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 }); 
+            
+        }else{
+            projects = await model.find({});
+        }
+        return {projects,totalPages}
     }
 
     async editProjectStatus(

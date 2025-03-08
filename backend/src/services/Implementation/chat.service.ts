@@ -7,7 +7,8 @@ import { IMessageRepository } from '../../repositories/Interface/IMessageReposit
 import { IChat, IGroupDetails, IMessage, Participant } from '../../shared/types/chat.types';
 import { IEntityRepository } from '../../repositories/Interface/IEntityRepository';
 import { IAgency, IAgencyTenant } from '../../shared/types/agency.types';
-import { Connection, Model, Types } from 'mongoose';
+import mongoose, { Connection, Model, Types } from 'mongoose';
+import { deleteS3Object } from '../../config/aws-s3.config';
 
 @injectable()
 export default class ChatService implements IChatService {
@@ -32,12 +33,14 @@ export default class ChatService implements IChatService {
         targetUserId: string,
         orgId: string,
         userName: string,
-        targetUserName: string
+        targetUserName: string,
+        targetUserProfile:string,
+        userProfile:string
     ): Promise<IChat | null> {
         try {
             const details = {
                 userId, userName,
-                targetUserId, targetUserName
+                targetUserId, targetUserName,targetUserProfile,userProfile
             }
             let newChat = await this.chatRepository.createNewChat(orgId, details);
             if (!newChat) throw new CustomError("Error while create new chat", 500)
@@ -63,6 +66,38 @@ export default class ChatService implements IChatService {
         }
     }
 
+    async removeMember(
+        orgId:string,
+        chatId:string,
+        memberId:string
+    ):Promise<IChat | null>{
+        try {
+            console.log(orgId,chatId,memberId)
+            return await this.chatRepository.removeMember(orgId, chatId, memberId);
+        } catch (error) {
+            throw new CustomError("Error while sending message", 500)
+        }
+    }
+    
+
+
+    async deleteMessage(
+        orgId:string,
+        messageId:string,
+    ): Promise<IMessage | null>{
+        try {
+            const message = await this.messageRepository.getMessageById(orgId,messageId)
+            if(message.key && message.key!=""){
+                await deleteS3Object(message.key as string)
+            }
+
+            const deletedMessage = await this.messageRepository.deleteMessage(orgId,messageId)
+            if(!deletedMessage) throw new CustomError("Error while deleting message",500)
+            return deletedMessage
+        } catch (error) {
+            throw new CustomError("Error while deleting message",500)
+        }
+    }
 
     async getChats(
         orgId: string,
@@ -140,6 +175,7 @@ export default class ChatService implements IChatService {
             const participants = details.members.map((member: Participant) => ({
                 userId: new Types.ObjectId(member._id),
                 type: member.type || "",
+                profile:member.profile || "",
                 name: member.name || ""
               }));
               
@@ -185,6 +221,30 @@ export default class ChatService implements IChatService {
             return await this.chatRepository.findChatByMembers(orgId, userId, targetUserId)
         } catch (error) {
             throw new CustomError("Error while creating common message", 500)
+        }
+    }
+
+    async setSeenMessage(
+        orgId:string, 
+        chatId:string, 
+        userId:string, 
+        userName:string
+    ):Promise<void>{
+        try {
+            const messages = await this.messageRepository.fetchChatMessages(orgId,chatId)
+            for(const message of messages){
+                if(!message.seen.some((user) => String(user.userId) == userId)){
+                    const details = {
+                        userId: new Types.ObjectId(userId),
+                        userName,
+                        seenAt:Date.now()
+                    }
+                    await this.messageRepository.setSeenMessage(orgId,message._id as string,details) 
+                }
+                    
+            }
+        } catch (error) {
+            throw new CustomError("Error while setting seen message", 500)
         }
     }
 

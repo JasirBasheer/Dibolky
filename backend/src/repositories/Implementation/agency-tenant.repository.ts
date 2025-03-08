@@ -1,9 +1,10 @@
-import mongoose, { Model, Schema } from "mongoose";
+import mongoose, { Model, Schema, Types } from "mongoose";
 import { BaseRepository, NotFoundError } from "mern.common";
 import { inject, injectable } from "tsyringe";
 import { connectTenantDB } from "../../config/db";
 import {  IAgencyTenant } from "../../shared/types/agency.types";
 import { IAgencyTenantRepository } from "../Interface/IAgencyTenantRepository";
+import { IUpdateProfile } from "../../shared/types/common.types";
 
 @injectable()
 export default class AgencyTenantRepository extends BaseRepository<IAgencyTenant> implements IAgencyTenantRepository {
@@ -56,6 +57,24 @@ export default class AgencyTenantRepository extends BaseRepository<IAgencyTenant
         const owners = await model.find({})
         if (!owners) throw new NotFoundError('Agency owners not found')
         return owners
+    }
+
+
+    async updateProfile(
+        orgId:string,
+        details:IUpdateProfile
+    ):Promise<IAgencyTenant | null>{
+        const model = await this.getModel(orgId);
+        return await model.findOneAndUpdate(
+            { orgId: orgId },
+            {
+                profile: details.profile,
+                name: details.name,
+                bio: details.bio
+            },
+            { new: true }
+        );
+
     }
 
 }

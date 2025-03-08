@@ -4,8 +4,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { message } from 'antd';
-import axios from '@/utils/axios';
 
 const PRESET_PERMISSION = ['smm', 'crm', 'accounting', 'marketing'];
 
@@ -14,7 +12,6 @@ interface AddDepartmentProps {
 }
 
 const AddDepartment = ({ setIsAddDepartmentClicked }: AddDepartmentProps) => {
-  const [department, setDepartment] = useState<string>("")
   const [permissions, setPermissions] = useState<string[]>([]);
 
 
@@ -26,30 +23,6 @@ const AddDepartment = ({ setIsAddDepartmentClicked }: AddDepartmentProps) => {
     }
   };
 
-
-
-
-  const handleAddDepartment = async () => {
-    try {
-      if (department.trim() == "") {
-        message.warning('Enter valid informantions')
-        return
-      }
-      const res = await axios.post('/api/entities/create-department', { department, permissions })
-      if (res.status == 200) {
-        message.success("Plan successfully created")
-        setIsAddDepartmentClicked(false)
-      }
-    } catch (error: unknown) {
-      console.log(error);
-    
-      if (error instanceof Error) {
-        message.error(error.message);
-      } else {
-        message.error("Unexpected error occurred while creating plan");
-      }
-    }    
-  }
 
 
 
@@ -78,7 +51,7 @@ const AddDepartment = ({ setIsAddDepartmentClicked }: AddDepartmentProps) => {
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2 ml-1">
                     <Label htmlFor="title">Department Name</Label>
-                    <Input id="title" placeholder="Enter plan title" onChange={(e) => setDepartment(e.target.value)} />
+                    <Input id="title" placeholder="Enter plan title" />
                   </div>
                 </div>
 
@@ -111,7 +84,6 @@ const AddDepartment = ({ setIsAddDepartmentClicked }: AddDepartmentProps) => {
             <Button variant="outline" onClick={() => setIsAddDepartmentClicked(false)}
             >Cancel</Button>
             <Button
-              onClick={handleAddDepartment}
               disabled={permissions.length === 0}
             >
               Create Department

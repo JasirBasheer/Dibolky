@@ -3,8 +3,11 @@ import { IMenuCategory } from "./common.types";
 
 export interface IClientTenant extends Document {
     orgId?: string;
+    main_id?:string;
     name?: string;
     email?: string;
+    profile?:string;
+    bio?:string;
     industry?: string;
     password?: string;
     socialMedia_credentials?: credentials;

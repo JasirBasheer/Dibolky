@@ -57,7 +57,7 @@ export class ContentRepository extends BaseRepository<IReviewBucket> implements 
         user_id: string
     ): Promise<IReviewBucket[] | null> {
         const model = await this.getModel(orgId);
-        return await model.find({ user_id: user_id });
+        return await model.find({ user_id: user_id }) || []
     }
 
     async changeContentStatus(

@@ -49,25 +49,20 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
   const location = useLocation();
   const [activeMenus, setActiveMenus] = useState<Record<string, boolean>>({});
   const user = useSelector((state: RootState) => state.user);
+  const selectedUser = localStorage.getItem('selectedClient') as string
 
-
-  const { data: menu, isLoading, refetch } = useQuery({
-    queryKey: ["get-agency-menu"],
+  const { data: menu, isLoading } = useQuery({
+    queryKey: ["get-agency-menu", user.role, user.user_id], 
     queryFn: () => {
-      return fetchAgencyMenuApi(user.role, user.role == "agency" ? user.planId : user.user_id)
+      return fetchAgencyMenuApi(user.role, user.role === "agency" ? user.planId : selectedUser);
     },
+    enabled: !!user.role && ((user.role === "agency" && !!user.planId) || (user.role !== "agency" && !!user.user_id)),
     select: (data) => data?.data.menu || {},
-  })
+    retry: true,
+  });
 
 
-
-
-
-  useEffect(() => {
-    if (user.role != "") {
-      refetch();
-    }
-  }, [user.name]);
+  
 
   const menuSkeletons = Array(2).fill(0).map((_, index) => (
     <div key={index} >
@@ -86,11 +81,9 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
   useEffect(() => {
 
     const currentPath = location.pathname;
-    console.log(currentPath)
-
 
     if (menu) {
-      Object.entries(menu as Record<string, MenuItemType>).forEach(([key, menuItem]) => {
+      Object?.entries(menu as Record<string, MenuItemType>)?.forEach(([key, menuItem]) => {
         if (menuItem && menuItem.subItems) {
           if (menuItem.subItems.some((item) => item.path.includes(currentPath))) {
             setActiveMenus((prev) => ({
@@ -147,7 +140,7 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
               path={[`/projects`]}
               isActive={currentPath === `/projects`}
             />
-            {Object.entries(menu as Record<string, MenuItemType>).map(([key, menuItem]) =>
+            {Object?.entries(menu as Record<string, MenuItemType>)?.map(([key, menuItem]) =>
               !menuItem.subItems ? (
                 <MenuItem
                   key={key}

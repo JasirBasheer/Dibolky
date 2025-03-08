@@ -8,8 +8,9 @@ import { message } from 'antd';
 import { IContentData, IFile, IFiles, IMetaAccount, IPlatforms, IReviewBucket, RootState } from '@/types/common.types';
 import { useNavigate } from 'react-router-dom';
 import InstagramAccountModal from '@/components/common.components/instagram.acccounts.list';
-import { InitiateS3BatchUpload, saveContentApi } from '@/services/common/post.services';
-import { getContentsApi } from '@/services/common/get.services';
+import { approveContentApi, getSignedUrlApi, InitiateS3BatchUpload, saveContentApi } from '@/services/common/post.services';
+import { getContentsApi, getMetaPages } from '@/services/common/get.services';
+import { rejectContentApi } from '@/services/client/get.services';
 
 const PLATFORMS = [
   {
@@ -48,6 +49,7 @@ const AgencyClientContent = () => {
   const [isScheduled, setIsScheduled] = useState<boolean>(false);
   const [caption, setCaption] = useState<string>("")
   const user = useSelector((state: RootState) => state.user);
+  const agency = useSelector((state: RootState) => state.agency);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState("");
   const [accounts, setAccounts] = useState<IMetaAccount[]>([])
@@ -90,7 +92,7 @@ const AgencyClientContent = () => {
     for (const item of reviewBucket) {
       for (const file of item.files) {
         try {
-          const response = await axios.post(`/api/entities/get-signedUrl`, { key: file.key });
+          const response = await getSignedUrlApi(file.key)
           urlMap[file.key] = response.data.signedUrl;
         } catch (error) {
           console.error(`Error fetching URL for ${file.key}:`, error);
@@ -103,7 +105,8 @@ const AgencyClientContent = () => {
 
   const fetchUserReviewBucket = async () => {
     try {
-      const res = await getContentsApi(user.user_id == "" ? user.ownerId : user.user_id)
+      const res = await getContentsApi(user.user_id)
+      console.log(res)
       if (res.status === 200) {
         setReviewBucket(Array.isArray(res.data.reviewBucket) ? res.data.reviewBucket : [])
       }
@@ -116,7 +119,7 @@ const AgencyClientContent = () => {
   const handleApproveContent = async (content_id: string) => {
     try {
       message.loading('Uploading content')
-      await axios.post(`/api/entities/approve-content`, { content_id, platform: user.user_id == "" ? "agency" : "client", user_id: user.user_id == "" ? user.ownerId : user.user_id })
+      await approveContentApi(content_id,user.user_id == agency.user_id ? "agency" : "client",user.user_id == agency.user_id ? user.main_id : user.user_id)
       fetchUserReviewBucket()
       message.success('Content approved successfully')
     } catch (error) {
@@ -127,7 +130,7 @@ const AgencyClientContent = () => {
 
   const handleRejectContent = async (content_id: string) => {
     try {
-      await axios.get(`/api/client/reject-content/${content_id}`)
+      await rejectContentApi(content_id)
       fetchUserReviewBucket()
       alert('Content rejected successfully')
     } catch (error) {
@@ -164,8 +167,8 @@ const AgencyClientContent = () => {
 
 
     if (selectedPlatforms.some((p: IPlatforms) => ['instagram', 'facebook'].includes(p.platform)) && !selectedAccount) {
-      const response = await axios.get(`/api/entities/get-meta-pages/${!user.facebookAccessToken ? user.instagramAccessToken : user.facebookAccessToken}`)
-      console.log(response.data)
+      
+      const response = await getMetaPages(!user.facebookAccessToken ? user.instagramAccessToken : user.facebookAccessToken)
       setAccounts(response?.data?.pages)
       setModalOpen(true)
       return
@@ -265,9 +268,9 @@ const AgencyClientContent = () => {
   }
 
   useEffect(() => {
-    if (user.ownerId != "" || user.user_id != "")
+    if (user.main_id != "" || user.user_id != "")
       fetchUserReviewBucket()
-  }, [user.ownerId, user.user_id])
+  }, [user.main_id, user.user_id])
 
 
   useEffect(() => {

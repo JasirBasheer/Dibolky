@@ -1,16 +1,19 @@
+import { Socket } from "socket.io-client";
+
 export interface Seen {
     userId: string;
-    seenAt: Date | string;
+    userName:string;
+    seenAt: Date | string | number;
   }
 
 export interface IMessage {
     _id?:string;
     chatId?: string;  
-    type: 'text' | 'common';
+    type: 'text' | 'common' |'deleted';
     senderId?: string; 
     senderName?: string;
     text: string;
-    fileUrl?: string;
+    key?: string;
     seen: Seen[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
@@ -22,7 +25,12 @@ export interface IChatUser {
     id: string;
     orgId: string;
     name: string;
+    profile?:string;
   }
+
+export interface ISocketRef{
+  current:Socket
+}
 
 export interface ChatItemProps {
   name: string;
@@ -31,6 +39,11 @@ export interface ChatItemProps {
   isGroup?: boolean;
   messages: IMessage[];
   userId: string;
+  socket: ISocketRef | null;
+  chat_id:string;
+  isMemberActive?:boolean;
+  activeMemberCount?:number;
+  participants?:Participant[];
 }
 
 export interface Participant {
@@ -38,6 +51,8 @@ export interface Participant {
     userId?: string ;
     type?: string;
     name?: string;
+    profile?:string;
+    profileUrl?:string;
 }
 
 export interface IChat {
@@ -47,12 +62,31 @@ export interface IChat {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     messages?:IMessage[];
+    lastMessage?:IMessage;
     seen?:Seen[];
   }
   
 export interface IChatUser{
-  _id?:string,
-  id:string,
-  name:string,
-  email:string
+  _id?:string;
+  id:string;
+  name:string;
+  email:string;
+  type?:string,
+  profile?:string,
+  profileUrl?:string
+}
+
+export interface IAvailabeUser{
+_id:string,
+user_id?:string,
+name:string,
+email:string,
+type:string,
+profile:string,
+profileUrl?:string
+}
+
+
+export interface EmojiClickData {
+  native: string;
 }

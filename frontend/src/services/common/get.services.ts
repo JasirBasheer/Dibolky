@@ -4,8 +4,8 @@ export const getOwnerId = () => {
     return api.get('/api/entities/owner')
 }
 
-export const getAllProjects = (pages: number, page: number) => {
-    return api.get('/api/entities/projects')
+export const getAllProjects = (page: number) => {
+    return api.get(`/api/entities/projects/${page}`)
 }
 
 export const getConnectSocailMediaUrlApi = async(endpoint: string) => {
@@ -24,5 +24,6 @@ export const fetchAllChatsApi = async(userId :string) =>{
     return await api.get(`/api/entities/get-chats/${userId}`)
 }
 
-
-
+export const getMetaPages = async(token :string) =>{
+    return await api.get(`/api/entities/get-meta-pages/${token}`)
+}

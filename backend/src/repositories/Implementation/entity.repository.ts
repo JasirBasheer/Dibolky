@@ -58,7 +58,7 @@ export default class EntityRepository implements IEntityRepository {
         const db = await connectTenantDB(orgId)
         const InfluencerModel = db.model('OwnerDetail', ownerDetailsSchema)
         const influencer = new InfluencerModel({
-            ownerId: influencer_id,
+            main_id: influencer_id,
             orgId: orgId
         })
         const newInfluencer =  await influencer.save()

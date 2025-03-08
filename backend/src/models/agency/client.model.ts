@@ -27,9 +27,21 @@ export default mongoose.model<IClient>('Client', Client);
 
 
 export const clientSchema: Schema<IClientTenant> = new mongoose.Schema({
+  main_id:{
+    type:String,
+    required:true
+  },
   orgId: {
     type: String,
     required: true
+  },
+  profile: {
+    type: String,
+    default: ""
+  },
+  bio: {
+    type: String,
+    default: ""
   },
   name: {
     type: String,
@@ -89,12 +101,12 @@ export const clientSchema: Schema<IClientTenant> = new mongoose.Schema({
   },
   isSocialMediaInitialized: {
     type: Boolean,
-    default : false
-},
-isPaymentInitialized: {
+    default: false
+  },
+  isPaymentInitialized: {
     type: Boolean,
-    default : false
-}
+    default: false
+  }
 }, { timestamps: true });
 
 

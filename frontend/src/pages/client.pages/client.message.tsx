@@ -1,24 +1,18 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Chat from '../common.pages/Chat';
+import { RootState } from '@/types/common.types';
 
-interface ClientState {
-  client: {
-    id: string;
-    orgId: string;
-    name: string;
-  };
-}
 
 const ClientMessages: React.FC = () => {
-  const client = useSelector((state: ClientState) => state.client);
+  const client = useSelector((state: RootState) => state.user);
   console.log(client);
   
-  if (!client?.id || !client?.orgId) {
+  if (!client?.user_id || !client?.orgId) {
     return <div>Loading...</div>;
   }
 
-  return <Chat user={client} ownerId={client.id} isAdmin={false} />;
+  return <Chat user={client} ownerId={client.ownerId} isAdmin={false} />;
 };
 
 export default ClientMessages;

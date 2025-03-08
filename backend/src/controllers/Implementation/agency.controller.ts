@@ -72,8 +72,6 @@ export default class AgencyController implements IAgencyController {
             if(!req.details)throw new NotFoundError("Details Not Fount")
 
             const { orgId, name, email, industry, services, menu } = req.body
-            const isClientExists = await this.clientService.getClientInMainDb(email)
-            if (isClientExists) throw new ConflictError("Client with this email is already exists in the main database")
             await this.agencyService.createClient(orgId, name, email, industry, services, menu, req.details.organizationName as string)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
         } catch (error: unknown) {

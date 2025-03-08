@@ -13,7 +13,7 @@ export interface IAdminService {
   //plan-management
   createPlan(entity: string, details: planDetails): Promise<void>
   editPlan(entity: string, details: planDetails): Promise<void>
-  changePlanStatus(entity: string, id: string): Promise<void>
+  changePlanStatus(entity: string, plan_id: string): Promise<void>
   getPlanDetails(entity: string, plan_id: string): Promise<object>
 
 }

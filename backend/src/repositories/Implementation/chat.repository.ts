@@ -1,7 +1,7 @@
 import mongoose, { Model, Schema, Types } from "mongoose";
 import { IChatRepository } from "../Interface/IChatRepository";
 import { IChat, IChatDetails, IGroupDetails, Participant } from "../../shared/types/chat.types";
-import { BaseRepository, NotFoundError } from "mern.common";
+import { BaseRepository, CustomError, NotFoundError } from "mern.common";
 import { inject, injectable } from "tsyringe";
 import { connectTenantDB } from "../../config/db";
 
@@ -68,13 +68,28 @@ export default class ChatRepository extends BaseRepository<IChat> implements ICh
 
         const chat = new model({
             participants: [
-                { userId: new mongoose.Types.ObjectId(details.userId), name: details.userName },
-                { userId: new mongoose.Types.ObjectId(details.targetUserId), name: details.targetUserName }
+                { userId: new mongoose.Types.ObjectId(details.userId), name: details.userName, profile:details.userProfile },
+                { userId: new mongoose.Types.ObjectId(details.targetUserId), name: details.targetUserName, profile:details.targetUserProfile }
             ],
             messages: []
         });
         return await chat.save();
     }
+
+    async removeMember(
+        orgId:string, 
+        chatId:string, 
+        memberId:string
+    ):Promise<IChat | null>{
+        const model = await this.getModel(orgId)
+        const chat = await model.findOne({_id:chatId})
+        if(!chat)throw new CustomError("chat not found",500)
+        chat.participants = chat.participants?.filter(
+            (member) => String(member.userId) !== String(memberId)
+        );
+        return await chat?.save() 
+    }
+    
 
 
 
@@ -136,5 +151,7 @@ export default class ChatRepository extends BaseRepository<IChat> implements ICh
             }
         });
     }
+
+
 
 }

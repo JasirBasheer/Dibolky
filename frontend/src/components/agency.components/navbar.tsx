@@ -30,19 +30,22 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false)
   const dispatch: AppDispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
+  const agency = useSelector((state: RootState) => state.agency);
   const navigate = useNavigate()
 
 
 
   useEffect(() => {
-    const selectedClient = localStorage.getItem('selectedClient')
-    if (selectedClient) {
-      dispatch(setUser({ user_id: selectedClient, role: "agency-client" }))
+    if (!agency?.user_id) return;
+    
+    const selectedClient = localStorage.getItem('selectedClient');
+    if (selectedClient && selectedClient !== agency?.user_id) {
+      dispatch(setUser({ user_id: selectedClient, role: "agency-client" }));
     } else {
-      dispatch(setUser({ user_id: "", role: "agency" }))
+      dispatch(setUser({ user_id: agency.user_id, role: "agency" }));
+      localStorage.setItem('selectedClient',agency.user_id)
     }
-  }, [dispatch])
-
+  }, [dispatch, agency.user_id]);
 
   const { data: clients, isLoading: isClientsLoading } = useQuery({
     queryKey: ["get-nav-clients"],
@@ -70,26 +73,33 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
 
   const fetchSelectedUser = async () => {
     try {
+       const selectedClient = localStorage.getItem('selectedClient')
       let response;
       let role = 'agency-client'
-      if (user.user_id == "") {
+      console.log(user.user_id, agency.user_id)
+      if (selectedClient === agency?.user_id) {
         response = await fetchAgencyOwnerDetailsApi()
         role = 'agency'
         if (!response.data) return null
       } else {
-        response = await fetchClientApi(user.user_id)
+        response = await fetchClientApi(selectedClient as string)
+        console.log(response.data, "userdata")
         if (!response.data) return null
       }
+      const details = response.data.details || {};
       dispatch(setUser({
-        name: response.data.details.name,
-        email: response.data.details.email,
-        orgId: response.data.details.orgId,
-        planId: response.data.details.planId,
-        organizationName: response.data.details.organizationName,
-        facebookAccessToken: response.data.details?.socialMedia_credentials?.facebook?.accessToken || "",
-        instagramAccessToken: response.data.details?.socialMedia_credentials?.instagram?.accessToken || "",
-        role,ownerId:response.data.details?._id || ""
-      }))
+        name: details.name,
+        email: details.email,
+        orgId: details.orgId,
+        planId: details.planId,
+        organizationName: details.organizationName,
+        facebookAccessToken: details?.socialMedia_credentials?.facebook?.accessToken || "",
+        instagramAccessToken: details?.socialMedia_credentials?.instagram?.accessToken || "",
+        profile: details.profile || "",
+        bio: details.bio || "",
+        role: role,
+        main_id: details.main_id || "",
+      }));
     } catch (error: unknown) {
       if (error instanceof Error) {
         message.error(error.message);
@@ -101,22 +111,26 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
 
 
   const handleSelect = (user_id: string) => {
-    setIsProfileOpen(false)
-    const userId = user_id === "default" ? "" : user_id;
-    dispatch(setUser({ user_id: userId }))
-    dispatch(setUser({ role: userId == "" ? "agency" : "agency-client" }))
-    localStorage.setItem('selectedClient', userId)
-    navigate('/agency')
-  }
+    if (!user_id) return;
+    
+    setIsProfileOpen(false);
+    localStorage.setItem('selectedClient', user_id);
+    dispatch(setUser({
+      user_id: user_id,
+      role: user_id === agency?.user_id ? "agency" : "agency-client"
+    }));
+    navigate('/agency');
+  };
 
 
   useEffect(() => {
-    fetchSelectedUser()
-  }, [user.user_id,
-      user.role,
-      user.facebookAccessToken,
-      user.instagramAccessToken
-    ])
+    if (user?.user_id) {
+      fetchSelectedUser();
+    }
+  }, [user?.user_id]);
+
+
+
 
   return (
     <div className='relative grid grid-cols-12 min-h-[4.5rem]'>
@@ -129,17 +143,17 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
             <Skeleton width={100} height={30} />
           ) : (<Select
             onValueChange={handleSelect}
-            value={user.user_id || "default"}
+            value={user?.user_id}
           >
             <SelectTrigger className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm appearance-none focus:outline-none bg-white cursor-pointer shadow-sm hover:border-blue-400">
-              <SelectValue placeholder="Owner" />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="default" className="px-2 py-1 min-w-[11rem]">
+                <SelectItem value={agency?.user_id} className="px-2 py-1 min-w-[11rem]">
                   Owner
                 </SelectItem>
-                {clients.map((client: NavClient) => (
+                {clients?.map((client: NavClient) => (
                   <SelectItem
                     key={client._id}
                     value={client._id}

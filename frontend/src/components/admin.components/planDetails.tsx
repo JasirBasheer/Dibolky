@@ -11,10 +11,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import axios from '@/utils/axios';
 import Skeleton from 'react-loading-skeleton';
 import { message } from 'antd';
 import { IAdminPlan, PlanConsumer } from '@/types/admin.types';
+import { getPlanDetailsApi } from '@/services/admin/get.services';
+import { changePlanStatusApi } from '@/services/admin/post.services';
 
 interface PlanDetailsProps {
   setIsPlanDetails: Dispatch<SetStateAction<boolean>>;
@@ -31,9 +32,9 @@ const PlanDetails = ({ setIsPlanDetails, planId, entity }: PlanDetailsProps) => 
   const fetchPlanDetails = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`/api/admin/get-plan/${entity}/${planId}`);
+      const res = await getPlanDetailsApi(entity,planId)
       const menu: string[] = [];
-      for (let m in res.data.details.menu) {
+      for (const m in res.data.details.menu) {
         menu.push(m);
       }
       res.data.details.menu = menu;
@@ -49,8 +50,8 @@ const PlanDetails = ({ setIsPlanDetails, planId, entity }: PlanDetailsProps) => 
     fetchPlanDetails();
   }, []);
 
-  const handleBlock = async(entity:string,id:string) => {
-   const res =  await axios.post('/api/admin/change-plan-status',{entity,id})
+  const handleBlock = async(entity:string,plan_id:string) => {
+   const res =  await changePlanStatusApi(entity,plan_id)
    console.log(res)
    if(res.status == 200){
     message.success("Plan status changed successfully")

@@ -87,11 +87,12 @@ export interface Seen {
 export interface IMessage {
     _id?:string;
     chatId?: string;
-    type?: 'text' | 'common';
+    type?: 'text' | 'common' | 'deleted';
     senderId?: string;
     senderName?: string;
     text?: string;
-    fileUrl?: string;
+    key?: string;
+    contentType?:string;
     seen?: Seen[];
     createdAt?: string;
     updatedAt?: string;
@@ -99,9 +100,11 @@ export interface IMessage {
 
 
   export interface IParticipant {
-    userId: string;
+    userId?: string;
     type?: string;
     name?: string;
+    profile?:string;
+    profileUrl?:string;
   }
 
 
@@ -122,3 +125,51 @@ export interface IMessage {
     message?: string;
   }
   
+
+
+export interface IUpdateProfile{
+  tenant_id?:string,
+  profile: string,
+  name:string,
+  bio:string,
+}
+
+export interface ITableProps<T> {
+  columns: { key: keyof T; label: string; render?: (item: T) => React.ReactNode }[];
+  data: T[];
+  onClick?: (item: T) => void;
+}
+
+
+
+export interface IColumn<T>  {
+  key: keyof T;
+  label: string;
+  render?: (item: T) => React.ReactNode;
+};
+
+export interface IDataItem  {
+  name: string;
+  category: string;
+  client: { client_name: string };
+  status: string;
+  deadline: string;
+};
+
+
+
+export interface IAgencyProjects {
+  _id: string;
+  service_name: string;
+  category: string;
+  client: { client_name: string,client_id:string };
+  status: string;
+  dead_line: string | number | Date;
+  service_details: Record<string, string>;
+}
+
+export interface IProject extends Omit<IAgencyProjects, '_id' | 'serviceName' | 'deadLine'> {
+  id: string;
+  name: string;
+  deadline: string;
+}

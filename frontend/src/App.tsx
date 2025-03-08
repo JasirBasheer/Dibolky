@@ -24,6 +24,7 @@ import AgencyMessages from './pages/agency.pages/message'
 import ClientMessages from './pages/client.pages/client.message'
 import AgencyProject from './pages/agency.pages/projects'
 import SettingsPage from './components/agency.components/settings'
+import Inbox from './components/common.components/inbox'
 
 
 const App = () => {
@@ -81,7 +82,9 @@ function AgencyRoutes() {
         <Route path='messages' element={<AgencyMessages />} />
         <Route path='projects' element={<AgencyProject />} />
         <Route path='settings' element={<SettingsPage />} />
+        <Route path='inbox' element={<Inbox />} />
       </Route>
+      
 
       <Route path='/login' element={<UnProtectedRoute role={"agency"}><Login role={"agency"} /></UnProtectedRoute>} />
       <Route path='/forgot-password' element={<ForgotPassword role={"agency"} />} />

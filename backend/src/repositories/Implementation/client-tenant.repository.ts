@@ -4,6 +4,7 @@ import { BaseRepository, CustomError, NotFoundError } from "mern.common";
 import { IClientTenantRepository } from "../Interface/IClientTenantRepository";
 import { IClientTenant, User } from "../../shared/types/client.types";
 import { connectTenantDB } from "../../config/db";
+import { IUpdateProfile } from "../../shared/types/common.types";
 
 
 
@@ -89,6 +90,23 @@ export class ClientTenantRepository extends BaseRepository<IClientTenant> implem
             orgId: 0,
             'socialMedia_credentials': 0,
         });
+    }
+
+    async updateProfile(
+        orgId:string,
+        details:IUpdateProfile
+    ): Promise<IClientTenant | null>{
+        const model = await this.getModel(orgId);
+        
+        return await model.findOneAndUpdate(
+            { _id: details.tenant_id },
+            {
+                profile: details.profile,
+                name: details.name,
+                bio: details.bio
+            },
+            { new: true }
+        )
     }
 
 

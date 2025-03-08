@@ -52,7 +52,6 @@ const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
   const userDetails = useSelector((state: RootState) => state.user);
   const [isLoading, setIsLoading] = useState(true)
 
-  console.log("menuu",menu)
 
   const fetchMenus = async () => {
     try {

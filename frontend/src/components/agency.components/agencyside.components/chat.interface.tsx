@@ -36,6 +36,7 @@ import Skeleton from 'react-loading-skeleton';
 import MediaDisplay from '@/components/common.components/media-display';
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
+import { fetchAvailableUsersApi } from '@/services/agency/get.services';
 
 
 
@@ -620,7 +621,7 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ setShowChatDetails, details, 
 
 
   const fetchAvailableUsers = async () => {
-    const res = await axios.get("/api/agency/availabe-users")
+    const res = await fetchAvailableUsersApi()
     const users = res.data.users || []
 
     const updatedAvailableUsers: IAvailabeUser[] = await Promise.all(

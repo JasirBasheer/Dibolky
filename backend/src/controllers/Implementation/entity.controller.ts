@@ -2,22 +2,21 @@ import { NextFunction, Request, Response } from 'express';
 import { IEntityController } from '../Interface/IEntityController';
 import { IEntityService } from '../../services/Interface/IEntityService';
 import { inject, injectable } from 'tsyringe';
-import { CountryToCurrency, getPriceConversionFunc } from '../../shared/utils/currency-conversion.utils';
+import { IChatService } from '../../services/Interface/IChatService';
+import s3Client from '../../config/aws.config';
+import { AWS_S3_BUCKET_NAME } from '../../config/env.config';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { v4 as uuidv4 } from 'uuid';
+import { IPlan } from '../../types/admin.types';
+import { CountryToCurrency, getPriceConversionFunc } from '../../utils/currency-conversion.utils';
 import {
-    CustomError,
     findCountryByIp,
     HTTPStatusCodes,
     NotFoundError,
     ResponseMessage,
     SendResponse
 } from 'mern.common';
-import { IChatService } from '../../services/Interface/IChatService';
-import s3Client from '../../config/aws-s3.config';
-import { AWS_S3_BUCKET_NAME } from '../../config/env';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { v4 as uuidv4 } from 'uuid';
-import { IPlan } from '../../shared/types/admin.types';
 
 
 @injectable()
@@ -252,12 +251,11 @@ export default class EntityController implements IEntityController {
     ): Promise<void> {
         try {
             if (!req.details) throw new NotFoundError("request details not found")
-            console.log('laskdfjsd', req.details.orgId)
             const ownerDetails = await this.entityService.getOwner(req.details.orgId as string)
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { ownerDetails: ownerDetails[0] })
         } catch (error) {
-
+            next(error);
         }
     }
 
@@ -266,10 +264,15 @@ export default class EntityController implements IEntityController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        if (!req.details) throw new NotFoundError("request details not found")
-        const { userId } = req.params
-        const chats = await this.chatService.getChats(req.details.orgId as string, userId)
-        SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
+        try {
+
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { userId } = req.params
+            const chats = await this.chatService.getChats(req.details.orgId as string, userId)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
+        } catch (error) {
+            next(error);
+        }
     }
 
 
@@ -278,10 +281,15 @@ export default class EntityController implements IEntityController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        if (!req.details) throw new NotFoundError("request details not found")
-        const { chatId } = req.body
-        const chats = await this.chatService.getChat(req.details.orgId as string, chatId)
-        SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
+        try {
+
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { chatId } = req.body
+            const chats = await this.chatService.getChat(req.details.orgId as string, chatId)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
+        } catch (error) {
+            next(error);
+        }
     }
 
     async getMessages(
@@ -299,11 +307,17 @@ export default class EntityController implements IEntityController {
         res: Response,
         next: NextFunction
     ): Promise<void> {
-        if (!req.details) throw new NotFoundError("request details not found")
-        const { details, userId } = req.body
-        const createdGroup = await this.chatService.createGroup(req.details?.orgId as string, userId, details)
-        console.log(createdGroup);
-        SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { group: createdGroup })
+        try {
+
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { details, userId } = req.body
+            const createdGroup = await this.chatService.createGroup(req.details?.orgId as string, userId, details)
+            console.log(createdGroup);
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { group: createdGroup })
+        } catch (error) {
+            next(error);
+
+        }
 
     }
 
@@ -316,8 +330,8 @@ export default class EntityController implements IEntityController {
         try {
             if (!req.details) throw new NotFoundError("request details not found")
             const { page } = req.params
-            const projects = await this.entityService.fetchAllProjects(req.details.orgId as string,Number(page))
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects:projects?.projects,totalPages:projects?.totalPages })
+            const projects = await this.entityService.fetchAllProjects(req.details.orgId as string, Number(page))
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects: projects?.projects, totalPages: projects?.totalPages })
         } catch (error) {
             next(error)
         }
@@ -453,6 +467,40 @@ export default class EntityController implements IEntityController {
             const { role, details } = req.body
             const updatedProfile = await this.entityService.updateProfile(req.details.orgId as string, role, req.details?.role as string, details)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details: updatedProfile })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    async fetchAllScheduledContents(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { user_id } = req.params
+            const scheduledContents = await this.entityService.getScheduledContent(req.details.orgId as string, user_id)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { scheduledContents })
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    async getConnections(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { entity, user_id } = req.params
+            console.log
+            const connections = await this.entityService.getConnections(req.details.orgId as string, entity, user_id)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { connections })
         } catch (error) {
             next(error)
         }

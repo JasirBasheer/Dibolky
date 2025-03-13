@@ -12,7 +12,7 @@ const Layout = () => {
       <Navbar isOpen={isOpen} setIsOpen={setIsOpen}/>
       <div className="relative h-full flex lg:flex-row flex-col lg:justify-end ">
         <SideBar isOpen={isOpen} />
-        <div className="w-full bg-slate-100 overflow-y-auto h-full">
+        <div className="w-full bg-slate-100 dark:bg-black overflow-y-auto h-full">
       <Outlet/>
   </div>
       </div>

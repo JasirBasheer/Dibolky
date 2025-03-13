@@ -36,7 +36,7 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
+            if (!req.details) throw new NotFoundError("Details Not Fount")
             const details = await this.agencyService.verifyOwner(req.details._id as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details, role: "agency" })
@@ -52,7 +52,7 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
+            if (!req.details) throw new NotFoundError("Details Not Fount")
             const details = await this.agencyService.getAgencyOwnerDetails(req.details.orgId as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })
@@ -69,7 +69,7 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
+            if (!req.details) throw new NotFoundError("Details Not Fount")
 
             const { orgId, name, email, industry, services, menu } = req.body
             await this.agencyService.createClient(orgId, name, email, industry, services, menu, req.details.organizationName as string)
@@ -89,7 +89,7 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
+            if (!req.details) throw new NotFoundError("Details Not Fount")
 
             const orgId = req.details.orgId as string
             const clients = await this.agencyService.getAllClients(orgId)
@@ -107,8 +107,8 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
-            const { id } = req.params            
+            if (!req.details) throw new NotFoundError("Details Not Fount")
+            const { id } = req.params
             const details = await this.agencyService.getClient(req.details.orgId as string, id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })
         } catch (error: unknown) {
@@ -123,7 +123,7 @@ export default class AgencyController implements IAgencyController {
     ): Promise<void> {
         try {
             const { selectedContentType, selectedPlatforms, id, files, caption } = req.body;
-            if(!req.details)throw new NotFoundError("Details Not Fount")
+            if (!req.details) throw new NotFoundError("Details Not Fount")
             if (!files) {
                 res.status(400).json({ error: 'No file uploaded' });
                 return;
@@ -143,7 +143,7 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
+            if (!req.details) throw new NotFoundError("Details Not Fount")
             const users = await this.agencyService.getAllAvailableClients(req.details.orgId as string)
             if (!users) throw new CustomError('Error while fetch available users', 500)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { users })
@@ -159,7 +159,7 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
+            if (!req.details) throw new NotFoundError("Details Not Fount")
             const projects = await this.agencyService.getProjectsCount(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects })
         } catch (error: unknown) {
@@ -173,7 +173,7 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
+            if (!req.details) throw new NotFoundError("Details Not Fount")
             const clients = await this.agencyService.getClientsCount(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { clients })
         } catch (error: unknown) {
@@ -187,7 +187,7 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
+            if (!req.details) throw new NotFoundError("Details Not Fount")
             const { projectId, status } = req.body
             const result = await this.agencyService.editProjectStatus(req.details.orgId as string, projectId, status)
             if (result) SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
@@ -202,11 +202,42 @@ export default class AgencyController implements IAgencyController {
         next: NextFunction
     ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
+            if (!req.details) throw new NotFoundError("Details Not Fount")
             const initialSetUp = await this.agencyService.getInitialSetUp(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { initialSetUp })
         } catch (error: unknown) {
             next(error);
+        }
+    }
+
+
+    async IntegratePaymentGateWay(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { details, provider } = req.body
+            const gatewayDetails = await this.agencyService.integratePaymentGateWay(req.details.orgId as string, provider, details)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details: gatewayDetails, provider })
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async getPaymentIntegrationStatus(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            if (!req.details) throw new NotFoundError("request details not found")
+            const paymentIntegrationStatus = await this.agencyService.getPaymentIntegrationStatus(req.details.orgId as string)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { paymentIntegrationStatus })
+        } catch (error) {
+            next(error)
         }
     }
 }

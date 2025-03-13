@@ -1,5 +1,5 @@
-import { IAgencyTenant } from "../../shared/types/agency.types";
-import { IChat, IGroupDetails, IMessage, Participant } from "../../shared/types/chat.types";
+import { IAgencyTenant } from "../../types/agency.types";
+import { IChat, IGroupDetails, IMessage, Participant } from "../../types/chat.types";
 import { Connection } from "mongoose";
 
 export interface IChatService {

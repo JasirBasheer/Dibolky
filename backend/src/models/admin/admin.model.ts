@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { IAdmin } from '../../shared/types/admin.types';
+import { IAdmin } from '../../types/admin.types';
 
 
 const planSchema: Schema<IAdmin> = new Schema({

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { IAdminController } from '../Interface/IAdminController';
 import { inject, injectable } from 'tsyringe';
 import { IAdminService } from '../../services/Interface/IAdminService';
-import { planDetails } from '../../shared/types/admin.types';
+import { planDetails } from '../../types/admin.types';
 import {
     HTTPStatusCodes,
     NotFoundError,

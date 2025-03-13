@@ -30,27 +30,49 @@ router.use(TenantMiddleWare)
 router.get('/owner', (req, res, next) => entityController.getOwner(req, res, next))
 router.get('/get-tasks', (req, res, next) => entityController.getAllProjects(req, res, next))
 
-
-
+// needed permission inorder to enter to this parts
 router.use(permissionGate(["agency", "Client", "influencer"]))
+
+// get
 router.get('/projects/:page', (req, res, next) => entityController.getAllProjects(req, res, next))
 router.get('/get-chats/:userId', (req, res, next) => entityController.getChats(req, res, next))
-router.post('/approve-content', (req, res, next) => providerController.processContentApproval(req, res, next))
-router.get('/get-review-bucket/:user_id', (req, res, next) => entityController.fetchContents(req, res, next))
 router.get('/connect/:provider', (req, res, next) => providerController.connectSocialPlatforms(req, res, next))
 router.get('/get-meta-pages/:access_token', (req, res, next) => providerController.getMetaPagesDetails(req, res, next))
+router.get('/get-review-bucket/:user_id', (req, res, next) => entityController.fetchContents(req, res, next))
+router.get('/get-scheduled-contents/:user_id', (req, res, next) => entityController.fetchAllScheduledContents(req, res, next))
+router.get('/get-connections/:entity/:user_id', (req, res, next) => entityController.getConnections(req, res, next))
+
 router.get('/:role/:planId', (req, res, next) => entityController.getMenu(req, res, next));
-router.post('/save-platform-token/:platform/:provider/:user_id', (req, res, next) => providerController.saveSocialPlatformToken(req, res, next))
-router.post('/initiate-s3-batch-upload', (req, res, next) => entityController.initiateS3BatchUpload(req, res, next))
+
+
+
+
+
+// content
+router.post('/approve-content', (req, res, next) => providerController.processContentApproval(req, res, next))
+router.post('/reschedule-content', (req, res, next) => providerController.reScheduleContent(req, res, next))
 router.post('/content/save/:platform/:user_id', (req, res, next) => entityController.saveContent(req, res, next))
+router.post('/initiate-s3-batch-upload', (req, res, next) => entityController.initiateS3BatchUpload(req, res, next))
+
+router.post('/save-platform-token/:platform/:provider/:user_id', (req, res, next) => providerController.saveSocialPlatformToken(req, res, next))
+
+
+// aws s3
 router.post('/get-signedUrl', (req, res, next) => entityController.getS3ViewUrl(req, res, next))
 router.post('/get-s3Upload-url', (req, res, next) => entityController.getUploadS3Url(req, res, next))
 
+
+// chat
 router.post('/chats', (req, res, next) => entityController.getChat(req, res, next))
 router.post('/get-messages', (req, res, next) => entityController.getMessages(req, res, next))
 router.post('/create-group', (req, res, next) => entityController.createGroup(req, res, next))
-router.post('/update-profile',(req, res, next) => entityController.updateProfile(req, res, next))
 
+
+// settings
+router.post('/update-profile', (req, res, next) => entityController.updateProfile(req, res, next))
+
+
+// leads 
 
 
 

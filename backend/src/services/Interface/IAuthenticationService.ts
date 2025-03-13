@@ -1,5 +1,5 @@
-import { IAdmin } from "../../shared/types/admin.types";
-import { IAgency } from "../../shared/types/agency.types";
+import { IAdmin } from "../../types/admin.types";
+import { IAgency } from "../../types/agency.types";
 
 export interface IAuthenticationService {
     resetPassword(email: string, role: string): Promise<boolean | null>;

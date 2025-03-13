@@ -1,12 +1,12 @@
-import { createForgotPasswordData } from "../../shared/utils/mail.datas";
 import { IAuthenticationService } from "../Interface/IAuthenticationService";
 import { inject, injectable } from "tsyringe";
 import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepository";
 import { IAdminRepository } from "../../repositories/Interface/IAdminRepository";
 import { CustomError, generateToken, hashPassword, NotFoundError, sendMail, verifyToken } from "mern.common";
-import { JWT_RESET_PASSWORD_SECRET } from "../../config/env";
-import { IAdmin } from "../../shared/types/admin.types";
-import { IAgency } from "../../shared/types/agency.types";
+import { JWT_RESET_PASSWORD_SECRET } from "../../config/env.config";
+import { IAdmin } from "../../types/admin.types";
+import { IAgency } from "../../types/agency.types";
+import { createForgotPasswordData } from "../../utils/mail.datas";
 
 @injectable()
 export default class AuthenticationService implements IAuthenticationService {
@@ -27,7 +27,7 @@ export default class AuthenticationService implements IAuthenticationService {
         role: string
     ): Promise<boolean | null> {
         let details
-        if (role == "Agency") {
+        if (role == "agency") {
             details = await this.agencyRepository.findAgencyWithMail(email)
         }  else if (role == "Admin") {
             details = await this.adminRepository.findAdminWithMail(email)

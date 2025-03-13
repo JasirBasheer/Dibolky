@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import "./config/container"
+import "./config/tsyring.config"
 import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
@@ -8,11 +8,11 @@ import http from "http";
 import router from './routes/routes';
 import compression from 'compression';
 import cookieParser from 'cookie-parser'
-import { DB_URI, PORT } from "./config/env";
+import { DB_URI, PORT } from "./config/env.config";
 import { connectToMongoDB, errorHandler, limiter } from 'mern.common';
-import { clearErrorLogsJob, errorLogger, logStream } from "./shared/utils/logger";
 import { startScheduledPostsProcessor } from "./media.service/scheduled-posts.service";
-import initializeSocket from "./shared/utils/socket";
+import { clearErrorLogsJob, errorLogger } from "./utils/logger.utils";
+import initializeSocket from "./utils/socket.utils";
 
 dotenv.config();
 

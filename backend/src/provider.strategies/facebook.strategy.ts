@@ -1,8 +1,8 @@
 import { CustomError } from "mern.common";
-import { META_API_VERSION, META_CLIENTID } from "../config/env";
+import { META_API_VERSION, META_CLIENTID, META_SECRETID } from "../config/env.config";
 import { uploadFacebookReel } from "../media.service/reel-handler.service";
-import { IMetaAccount, IReviewBucket, IReelUploadStatus } from "../shared/types/common.types";
-import { CONTENT_TYPE } from "../shared/utils/constants";
+import { IMetaAccount, IReviewBucket, IReelUploadStatus } from "../types/common.types";
+import { CONTENT_TYPE } from "../utils/constants.utils";
 
 
 export async function createFacebookOAuthURL(
@@ -229,5 +229,25 @@ export async function publishReel(
     } catch (error) {
         console.error("Error completing video upload:", error);
         throw error
+    }
+}
+
+
+
+
+export async function getMetaAccessTokenStatus(
+    access_token: string, 
+): Promise<boolean> {
+    try {
+        const response = await fetch(`https://graph.facebook.com/debug_token?input_token=${access_token}&access_token=${META_CLIENTID}|${META_SECRETID}`, {
+            method: "GET"
+        });
+        
+        if (!response.ok) return false;
+        
+        const details = await response.json();
+        return details?.data?.is_valid ?? false;
+    } catch (error) {
+        return false;
     }
 }

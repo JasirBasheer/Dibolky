@@ -1,4 +1,4 @@
-import { IMessage } from "../../shared/types/chat.types";
+import { IMessage } from "../../types/chat.types";
 
 export interface IMessageRepository {
     createMessage(orgId: string, chatId: string, details: Partial<IMessage>): Promise<IMessage | null>;

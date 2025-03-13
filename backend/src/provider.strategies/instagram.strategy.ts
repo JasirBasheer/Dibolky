@@ -1,10 +1,11 @@
-import { getS3PublicUrl } from "../config/aws-s3.config";
-import { META_API_VERSION, META_CLIENTID, META_SECRETID } from "../config/env";
+import { META_API_VERSION, META_CLIENTID, META_SECRETID } from "../config/env.config";
 import { uploadIGPost } from "../media.service/post-handler.service";
 import { uploadIGReel } from "../media.service/reel-handler.service";
-import { IReviewBucket } from "../shared/types/common.types";
-import { CONTENT_TYPE } from "../shared/utils/constants";
-import { VIDEO_EXTENSIONS } from "../shared/utils/video-dimensions.utils";
+import { IReviewBucket } from "../types/common.types";
+import { getS3PublicUrl } from "../utils/aws.utils";
+import { CONTENT_TYPE } from "../utils/constants.utils";
+import { VIDEO_EXTENSIONS } from "../utils/video-dimensions.utils";
+
 
 
 export async function createInstagramOAuthURL(

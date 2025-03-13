@@ -1,9 +1,9 @@
 import { IProject } from "../../models/agency/project.model";
-import { IPlan } from "../../shared/types/admin.types";
-import { AddressType, IAgency, IAgencyTenant } from "../../shared/types/agency.types";
-import { IClientTenant } from "../../shared/types/client.types";
-import { IFiles, IMenuCategory, IMetadata, IPlatforms, IReviewBucket, IUpdateProfile } from "../../shared/types/common.types";
-import { IInfluencer } from "../../shared/types/influencer.types";
+import { IPlan } from "../../types/admin.types";
+import { AddressType, IAgency, IAgencyTenant } from "../../types/agency.types";
+import { IClientTenant } from "../../types/client.types";
+import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IReviewBucket, IUpdateProfile } from "../../types/common.types";
+import { IInfluencer } from "../../types/influencer.types";
 
 export interface IEntityService {
     getAllPlans(): Promise<Record<string, IPlan[]>>;
@@ -23,4 +23,6 @@ export interface IEntityService {
     getS3ViewUrl(key: string): Promise<string>
     fetchContents(orgId: string, user_id: string): Promise<IReviewBucket[]>
     updateProfile(orgId: string,role: string,requestRole:string,details: IUpdateProfile): Promise<IAgencyTenant | IClientTenant>
+    getScheduledContent(orgId:string, user_id: string):Promise<IReviewBucket[]>
+    getConnections(orgId:string ,entity:string, user_id:string):Promise<object[]>
 }

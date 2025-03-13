@@ -9,4 +9,5 @@ export interface IProviderController {
     saveSocialPlatformToken(req:Request,res:Response,next:NextFunction):Promise<void>
     connectSocialPlatforms(req: Request, res: Response, next: NextFunction): Promise<void>;
     getMetaPagesDetails(req: Request, res: Response, next: NextFunction): Promise<void>;
+    reScheduleContent(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

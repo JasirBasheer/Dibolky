@@ -22,6 +22,7 @@ router.get('/client/:id', (req, res, next) =>agencyController.getClient(req,res,
 router.get('/projects-count', (req, res, next) =>agencyController.getProjectsCount(req,res,next))
 router.get('/clients-count', (req, res, next) =>agencyController.getClientsCount(req,res,next))
 router.get('/get-initial-set-up', (req, res, next) =>agencyController.getInitialSetUp(req,res,next))
+router.get('/get-payment-integration-status', (req, res, next) => agencyController.getPaymentIntegrationStatus(req, res, next))
 
 
 // Patch requests
@@ -32,6 +33,7 @@ router.patch('/edit-project-status', (req, res, next) =>agencyController.editPro
 // Post requests
 router.post('/client', (req, res, next) =>agencyController.createClient(req,res,next))
 router.post('/upload',(req,res,next)=> agencyController.uploadContent(req,res,next))
+router.post('/integrate-payment-gateway', (req, res, next) => agencyController.IntegratePaymentGateWay(req, res, next))
 
 
 export default router

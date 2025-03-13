@@ -4,11 +4,11 @@ import { HTTPStatusCodes, NotFoundError, ResponseMessage, SendResponse } from "m
 import { IProviderController } from "../Interface/IProviderController";
 import { IProviderService } from "../../services/Interface/IProviderService";
 import { createInstagramOAuthURL } from "../../provider.strategies/instagram.strategy";
-import { FACEBOOK, INSTAGRAM } from "../../shared/utils/constants";
 import { IClientService } from "../../services/Interface/IClientService";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
 import { createFacebookOAuthURL } from "../../provider.strategies/facebook.strategy";
-import { IReviewBucket } from "../../shared/types/common.types";
+import { IReviewBucket } from "../../types/common.types";
+import { FACEBOOK, INSTAGRAM } from "../../utils/constants.utils";
 
 
 
@@ -114,6 +114,22 @@ export default class ProviderController implements IProviderController {
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
         } catch (error) {
             console.error('Error saving social platform token:', error)
+            next(error)
+        }
+    }
+
+
+    async reScheduleContent(
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ): Promise<void>{
+        try {
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const {content_id, date } = req.body
+            await this.providerService.reScheduleContent(req.details.orgId as string,content_id,date)
+        } catch (error) {
+            console.log('Error while reshceduling',error)
             next(error)
         }
     }

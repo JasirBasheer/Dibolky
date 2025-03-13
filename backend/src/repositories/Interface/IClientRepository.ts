@@ -1,5 +1,5 @@
-import { IClient } from "../../shared/types/client.types";
-import { IUpdateProfile } from "../../shared/types/common.types";
+import { IClient } from "../../types/client.types";
+import { IUpdateProfile } from "../../types/common.types";
 
 export interface IClientRepository {
   findClientWithMail(email: string): Promise<IClient | null>;

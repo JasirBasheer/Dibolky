@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { IReviewBucket } from '../../shared/types/common.types';
+import { IReviewBucket } from '../../types/common.types';
 
 
 

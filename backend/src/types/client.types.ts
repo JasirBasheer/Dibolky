@@ -29,7 +29,7 @@ interface credentials {
 
 interface platform {
     accessToken: string;
-    userName: string;
+    connectedAt: string;
 }
 
 export interface IClient extends Document {

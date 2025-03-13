@@ -1,15 +1,15 @@
 import { inject, injectable } from "tsyringe";
 import { IProviderService } from "../Interface/IProviderService";
-import { FACEBOOK, INSTAGRAM } from "../../shared/utils/constants";
 import { getMetaPagesDetails, handleFacebookUpload } from "../../provider.strategies/facebook.strategy";
 import { exchangeForLongLivedToken, handleInstagramUpload } from "../../provider.strategies/instagram.strategy";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
-import { IAgencyTenant } from "../../shared/types/agency.types";
+import { IAgencyTenant } from "../../types/agency.types";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
-import { IMetaAccount, IPlatforms, IReviewBucket, ISocialMediaUploadResponse } from "../../shared/types/common.types";
-import { IClientTenant } from "../../shared/types/client.types";
-import { IInfluncerTenant } from "../../shared/types/influencer.types";
+import { IMetaAccount, IPlatforms, IReviewBucket, ISocialMediaUploadResponse } from "../../types/common.types";
+import { IClientTenant } from "../../types/client.types";
+import { IInfluncerTenant } from "../../types/influencer.types";
+import { FACEBOOK, INSTAGRAM } from "../../utils/constants.utils";
 
 
 @injectable()
@@ -139,6 +139,15 @@ export default class ProviderService implements IProviderService {
             }
         }
 
+    }
+
+    
+    async reScheduleContent(
+        orgId:string,
+        content_id:string,
+        date:string
+    ):Promise<void>{
+        await this.contentRepository.reScheduleContent(orgId,content_id,date)
     }
 
 }

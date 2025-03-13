@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { IInfluencer, IInfluncerTenant } from '../../shared/types/influencer.types';
+import { IInfluencer, IInfluncerTenant } from '../../types/influencer.types';
 
 
 const influencerSchema: Schema<IInfluencer> = new mongoose.Schema({

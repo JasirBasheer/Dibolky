@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { IAgency, IAgencyTenant } from '../../shared/types/agency.types';
+import { IAgency, IAgencyTenant } from '../../types/agency.types';
 
 
 const agencySchema: Schema<IAgency> = new mongoose.Schema({
@@ -116,21 +116,25 @@ export const ownerDetailsSchema = new Schema<IAgencyTenant>({
     },
     paymentCredentials: {
         razorpay: {
-            key_id: {
+            secret_id: {
                 type: String,
                 required: false,
             },
-            key_secret: {
+            secret_key: {
                 type: String,
                 required: false,
             }
         },
         stripe: {
-            key_id: {
+            publish_key: {
                 type: String,
                 required: false,
             },
-            key_secret: {
+            secret_key: {
+                type: String,
+                required: false,
+            },
+            webhook_url: {
                 type: String,
                 required: false,
             }
@@ -141,24 +145,40 @@ export const ownerDetailsSchema = new Schema<IAgencyTenant>({
             accessToken: {
                 type: String,
                 required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
             }
         },
         facebook: {
             accessToken: {
                 type: String,
                 required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
             }
         },
         x: {
             accessToken: {
                 type: String,
                 required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
             }
         },
         tiktok: {
             accessToken: {
                 type: String,
                 required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
             }
         }
     },
@@ -177,9 +197,26 @@ export const ownerDetailsSchema = new Schema<IAgencyTenant>({
 ownerDetailsSchema.methods.setSocialMediaToken = async function(provider: string,token: string): Promise<void> {
     if (this.socialMedia_credentials.hasOwnProperty(provider)) {
       this.socialMedia_credentials[provider].accessToken = token;
+      this.socialMedia_credentials[provider].connectedAt = Date.now()
       await this.save();
     } else {
       throw new Error(`Unsupported social media provider: ${provider}`);
+    }
+};
+  
+ownerDetailsSchema.methods.integratePaymentGateway = async function(provider: string,key1:string,key2:string,webhookUrl?:string): Promise<void> {
+    if (this.paymentCredentials.hasOwnProperty(provider)) {
+        if(provider == "razorpay"){
+            this.paymentCredentials[provider].secret_id = key1;
+            this.paymentCredentials[provider].secret_key = key2;
+        }else{
+            this.paymentCredentials[provider].publish_key = key1;
+            this.paymentCredentials[provider].secret_key = key2; 
+            this.paymentCredentials[provider].webhook_url = webhookUrl; 
+        }
+      await this.save();
+    } else {
+      throw new Error(`Unsupported payment provider: ${provider}`);
     }
 };
   

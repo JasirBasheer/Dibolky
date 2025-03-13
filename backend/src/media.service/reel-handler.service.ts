@@ -1,8 +1,8 @@
 import { NotFoundError } from "mern.common";
-import { getS3PublicUrl, getS3ViewUrl } from "../config/aws-s3.config";
-import { IReviewBucket } from "../shared/types/common.types";
-import { FACEBOOK, INSTAGRAM } from "../shared/utils/constants";
 import { getPages } from "./shared.service";
+import { getS3PublicUrl, getS3ViewUrl } from "../utils/aws.utils";
+import { IReviewBucket } from "../types/common.types";
+import { FACEBOOK, INSTAGRAM } from "../utils/constants.utils";
 import { 
     checkReelUploadStatus, 
     initializeReelUpload, 

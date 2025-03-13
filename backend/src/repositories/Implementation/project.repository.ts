@@ -3,7 +3,7 @@ import { IProject } from "../../models/agency/project.model";
 import { BaseRepository } from "mern.common";
 import { IProjectRepository } from "../Interface/IProjectRepository";
 import { Model, Schema } from "mongoose";
-import { connectTenantDB } from "../../config/db";
+import { connectTenantDB } from "../../config/db.config";
 
 
 @injectable()

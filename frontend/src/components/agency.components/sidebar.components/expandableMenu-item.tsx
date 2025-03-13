@@ -77,7 +77,7 @@ const ExpandableMenuItem: React.FC<ExpandableMenuItemProps> = ({
     return (
         <>
             <div
-                className={`flex text-sm font-medium w-full min-h-[3.2rem] gap-2 items-center pl-9 cursor-pointer relative ${isOpen ? 'bg-gray-100' : 'hover:bg-gray-50'}
+                className={`flex text-sm font-medium w-full min-h-[3.2rem] gap-2 items-center pl-9 cursor-pointer relative ${isOpen ? 'bg-gray-100 dark:bg-[#ffffff1b]' : 'hover:bg-gray-50 dark:hover:bg-[#ffffff1b]'}
             ${isActive ? 'text-blue-600' : ''} transition-all duration-200`}
                 onClick={onClick}
             >
@@ -90,7 +90,7 @@ const ExpandableMenuItem: React.FC<ExpandableMenuItemProps> = ({
             <div
                 className={`overflow-hidden transition-all duration-200 ${isOpen ? 'max-h-[500px]' : 'max-h-0'}`}
             >
-                <div className="bg-gray-50 py-1">
+                <div className="bg-gray-50 dark:bg-transparent py-1">
                     {subItems?.map((item, index) => (
                         <SubMenuItem
                             key={index}

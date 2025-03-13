@@ -5,8 +5,8 @@ import { IAdminService } from '../../services/Interface/IAdminService';
 import { IAgencyService } from '../../services/Interface/IAgencyService';
 import { IAuthenticationService } from '../../services/Interface/IAuthenticationService';
 import { IClientService } from '../../services/Interface/IClientService';
-import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from '../../config/env';
-import { blacklistToken } from '../../config/redis';
+import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from '../../config/env.config';
+import { blacklistToken } from '../../config/redis.config';
 import {
     createTokens,
     HTTPStatusCodes,
@@ -159,7 +159,3 @@ export default class AuthenticationController implements IAuthenticationControll
         }
     }
 }
-
-
-
-

@@ -17,9 +17,9 @@ export const META_API_VERSION = process.env.META_API_VERSION as string
 
 // AWS S3 BUCKET
 export const AWS_S3_BUCKET_NAME = process.env.BUCKET_NAME as string
-export const AWS_S3_BUCKET_REGION = process.env.REGION as string
-export const AWS_S3_BUCKET_ACCESS_KEY = process.env.ACCESS_KEY as string
-export const AWS_S3_BUCKET_SECRET_KEY = process.env.SECRET_KEY as string
+export const AWS_REGION = process.env.REGION as string
+export const AWS_ACCESS_KEY = process.env.ACCESS_KEY as string
+export const AWS_SECRET_KEY = process.env.SECRET_KEY as string
 
 
 // STIRPE

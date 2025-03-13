@@ -12,10 +12,8 @@ interface LoginProps {
 }
 interface IRedirectionUrls {
   agency: string;
-  Company: string;
-  Employee: string;
-  Admin: string;
-  Client: string;
+  admin: string;
+  client: string;
 }
 
 const Login = ({ role }: LoginProps) => {
@@ -67,10 +65,8 @@ const Login = ({ role }: LoginProps) => {
         message.success('Successfully Logged in')
         const roleRedirects: IRedirectionUrls = {
           "agency": "/agency",
-          "Company": "/company/",
-          "Employee": "/employee",
-          "Admin": "/admin/",
-          "Client": "/client/",
+          "admin": "/admin/",
+          "client": "/client/",
         }
         const url = roleRedirects[role as keyof typeof roleRedirects]
         navigate(url)

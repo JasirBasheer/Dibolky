@@ -1,15 +1,13 @@
-import { ReactNode, useEffect, useState } from 'react'
 import axios from '../../utils/axios';
+import { ReactNode, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { ScaleLoader } from 'react-spinners';
 
 
 interface IRedirectionUrls {
   agency: string;
-  Company: string;
-  Employee: string;
-  Admin: string;
-  Client: string;
+  admin: string;
+  client: string;
 }
 
 
@@ -32,10 +30,8 @@ const UnProtectedRoute = ({ children, role }: { children: ReactNode, role: strin
 
           const roleRedirects: IRedirectionUrls = {
             "agency": '/agency',
-            "Company": '/company/',
-            "Employee": '/employee/',
-            "Admin": '/admin/',
-            "Client": "/client/",
+            "admin": '/admin/',
+            "client": "/client/",
 
           };
 

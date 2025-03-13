@@ -38,19 +38,16 @@ import { IProviderController } from "../controllers/Interface/IProviderControlle
 import ProviderController from "../controllers/Implementation/provider.controller";
 import { IProviderService } from "../services/Interface/IProviderService";
 import ProviderService from "../services/Implementation/provider.service";
-import Admin from "../models/admin/admin.model";
+import Admin from "../models/admin.model";
 import ChatRepository from "../repositories/Implementation/chat.repository";
 import { IChatRepository } from "../repositories/Interface/IChatRepository";
 import { IChatService } from "../services/Interface/IChatService";
 import ChatService from "../services/Implementation/chat.service";
-import agencyModel, { ownerDetailsSchema } from "../models/agency/agency.model";
-import { projectSchema } from "../models/agency/project.model";
+import agencyModel, { ownerDetailsSchema } from "../models/agency.model";
+import { projectSchema } from "../models/project.model";
 import { ProjectRepository } from "../repositories/Implementation/project.repository";
 import { IProjectRepository } from "../repositories/Interface/IProjectRepository";
-import Client,{ clientSchema } from "../models/agency/client.model";
-import { chatSchema, messageSchema } from "../models/chat/chat";
-import { ReviewBucketSchema } from "../models/agency/review-bucket.model";
-import { AgencyPlan } from "../models/admin/plan.model";
+import { chatSchema, messageSchema } from "../models/chat.model";
 import { IClientTenantRepository } from "../repositories/Interface/IClientTenantRepository";
 import { ClientTenantRepository } from "../repositories/Implementation/client-tenant.repository";
 import { IContentRepository } from "../repositories/Interface/IContentRepository";
@@ -61,7 +58,10 @@ import { ITransactionRepository } from "../repositories/Interface/ITransactionRe
 import TransactionRepository from "../repositories/Implementation/transaction.repository";
 import { IAgencyTenantRepository } from "../repositories/Interface/IAgencyTenantRepository";
 import AgencyTenantRepository from "../repositories/Implementation/agency-tenant.repository";
-import { transactionSchema } from "../models/admin/transaction.model";
+import { transactionSchema } from "../models/transaction.model";
+import { BucketSchema } from "../models/bucket.model";
+import { Client, clientSchema } from "../models/client.model";
+import { Plan } from "../models/plan.model";
 
 
 
@@ -74,10 +74,10 @@ container.register('project_model', { useValue: projectSchema });
 container.register('client_model', { useValue: Client });
 container.register('client_tenant_model', { useValue: clientSchema });
 container.register('chat_model', { useValue: chatSchema });
-container.register('review_bucket_model', { useValue: ReviewBucketSchema });
+container.register('review_bucket_model', { useValue: BucketSchema });
 container.register('transaction_model', { useValue: transactionSchema });
 container.register('message_model', { useValue: messageSchema });
-container.register('plan_model', { useValue: AgencyPlan });
+container.register('plan_model', { useValue: Plan });
 
 
 

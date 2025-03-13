@@ -1,5 +1,5 @@
 import { Model } from "mongoose";
-import { ITransaction } from "../../models/admin/transaction.model";
+import { ITransaction } from "../../models/transaction.model";
 import { IAgency, IAgencyTenant } from "../../types/agency.types";
 import { IInfluencer } from "../../types/influencer.types";
 

@@ -1,8 +1,8 @@
 import express from 'express';
 import { container } from 'tsyringe';
-import { TenantMiddleWare } from '../../middlewares/tenant.middleware';
-import { IClientController } from '../../controllers/Interface/IClientController';
-import { permissionGate } from '../../middlewares/permissionGate.middleware';
+import { TenantMiddleWare } from '../middlewares/tenant.middleware';
+import { IClientController } from '../controllers/Interface/IClientController';
+import { permissionGate } from '../middlewares/permissionGate.middleware';
 const router = express.Router()
 
 // Controllers

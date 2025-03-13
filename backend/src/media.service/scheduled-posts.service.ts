@@ -1,8 +1,8 @@
 import cron from 'node-cron';
 import { color } from 'console-log-colors';
-import Agencies from '../models/agency/agency.model';
+import Agencies from '../models/agency.model';
 import { connectTenantDB } from '../config/db.config';
-import { ReviewBucketSchema } from '../models/agency/review-bucket.model';
+import { BucketSchema } from '../models/bucket.model';
 import { container } from 'tsyringe';
 import { Types } from 'mongoose';
 import { IProviderService } from '../services/Interface/IProviderService';
@@ -12,7 +12,7 @@ import { IClientTenant } from '../types/client.types';
 import { IAgencyTenant } from '../types/agency.types';
 import {
     IPlatforms,
-    IReviewBucket,
+    IBucket,
     ISocialMediaUploadResponse
 } from '../types/common.types';
 
@@ -31,7 +31,7 @@ async function processAgencyScheduledPosts() {
 
         for (let agency of agencies) {
             let db = await connectTenantDB(agency.orgId)
-            const reviewBucket = db.model('reviewBucket', ReviewBucketSchema)
+            const reviewBucket = db.model('reviewBucket', BucketSchema)
             const scheduledContents = await reviewBucket.find({
                 status: "Approved",
                 isPublished: false
@@ -46,7 +46,7 @@ async function processAgencyScheduledPosts() {
             })
 
 
-            const filteredScheduledContents: (Partial<IReviewBucket> & Partial<{ platforms: IPlatforms[] }>)[] = filteredContents.map((content) => {
+            const filteredScheduledContents: (Partial<IBucket> & Partial<{ platforms: IPlatforms[] }>)[] = filteredContents.map((content) => {
                 const validPlatforms = content.platforms.filter((platform) => {
                     return !platform.isPublished && platform.scheduledDate !== '' && new Date(platform.scheduledDate).getTime() >= now.getTime() && new Date(platform.scheduledDate).getTime() <= endTime.getTime();
                 }) ?? [];
@@ -64,11 +64,11 @@ async function processAgencyScheduledPosts() {
                     if (!user) {
                         user = await agencyService.getAgencyOwnerDetails(agency.orgId)
                     }
-                    const result: ISocialMediaUploadResponse[] = await providerService.handleSocialMediaUploads(content as IReviewBucket, user, true)
+                    const result: ISocialMediaUploadResponse[] = await providerService.handleSocialMediaUploads(content as IBucket, user, true)
                     if (result) {
                         for (let platform of result) {
 
-                            const reviewBucket = db.model('reviewBucket', ReviewBucketSchema)
+                            const reviewBucket = db.model('reviewBucket', BucketSchema)
                             let content = await reviewBucket.findOne({ _id: new Types.ObjectId(platform.id) })
                             if (content) {
                                 await content.changePlatformPublishStatus(String(platform.name), true);

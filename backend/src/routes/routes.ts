@@ -1,11 +1,11 @@
 import "reflect-metadata";
 import express from 'express';
 import adminRoutes from './admin.routes'
-import agencyRoutes from './organizations/agency.routes'
+import agencyRoutes from './agency.routes'
 import paymentRoutes from './payment.routes'
 import authRoutes from './authentication.routes'
 import entityRoutes from './entity.routes'
-import clientRoutes from './organizations/client.routes'
+import clientRoutes from './client.routes'
 import { TokenMiddleWare } from '../middlewares/token.middleware';
 
 const router = express.Router();

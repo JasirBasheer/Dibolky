@@ -188,7 +188,7 @@ export default class EntityController implements IEntityController {
             } else if (role === "agency-client") {
                 console.log(req.details.orgId, planId, "tehireaserfamsdjfklasdjflkasjfasdkl")
                 menu = await this.entityService.getClientMenu(req.details.orgId as string, planId);
-            } else if (role === "Admin") {
+            } else if (role === "admin") {
                 menu = {
                     clients: {
                         label: 'All Clients',

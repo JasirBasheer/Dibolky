@@ -454,3 +454,259 @@
  Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T06:04:08.096Z"} ms 
  
 
+::1 - - [13/Mar/2025:10:54:40 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:10:54:40 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:10:54:49 +0000] "POST /api/auth/login" 500  
+ Error: {"message":"Invalid role specified","stack":"Error: Invalid role specified\n    at AuthenticationController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:73:27)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:16:12)\n    at AuthenticationController.login (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:50:16)\n    at /home/jasir/Dibolky/backend/src/routes/authentication.routes.ts:12:65\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-03-13T10:54:49.371Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:10:56:22 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:10:56:22 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:11:00:05 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:11:00:05 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:11:00:57 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:11:00:57 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:11:01:19 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:11:01:19 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:11:01:24 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:11:01:24 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:11:02:46 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:41:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:34:20)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-03-13T11:02:46.501Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:11:02:46 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:41:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:34:20)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-03-13T11:02:46.547Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:11:58:25 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:41:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:34:20)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-03-13T11:58:25.382Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:11:58:25 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:41:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:34:20)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-03-13T11:58:25.416Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:01:39 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:12:01:39 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:12:02:36 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:12:02:36 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:12:33:30 +0000] "GET /api/agency/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T12:33:30.986Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:33:31 +0000] "GET /api/agency/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T12:33:31.029Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:46:52 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:12:46:52 +0000] "GET /api/influencer/" 404  
+ Error: No error details ms 
+ 
+
+::1 - - [13/Mar/2025:12:47:14 +0000] "GET /api/admin/" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:11:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:7:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-03-13T12:47:14.344Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:47:14 +0000] "GET /api/admin/" 401  
+ Error: {"message":"Unauthorized access","stack":"Error: Unauthorized access\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:11:15\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:4:12)\n    at /home/jasir/Dibolky/backend/src/middlewares/permissionGate.middleware.ts:7:83\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-03-13T12:47:14.425Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:47:17 +0000] "POST /api/auth/login" 500  
+ Error: {"message":"Invalid role specified","stack":"Error: Invalid role specified\n    at AuthenticationController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:73:27)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:16:12)\n    at AuthenticationController.login (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:50:16)\n    at /home/jasir/Dibolky/backend/src/routes/authentication.routes.ts:12:65\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-03-13T12:47:17.331Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:47:18 +0000] "POST /api/auth/login" 500  
+ Error: {"message":"Invalid role specified","stack":"Error: Invalid role specified\n    at AuthenticationController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:73:27)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:16:12)\n    at AuthenticationController.login (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:50:16)\n    at /home/jasir/Dibolky/backend/src/routes/authentication.routes.ts:12:65\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-03-13T12:47:18.833Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:47:41 +0000] "POST /api/auth/login" 500  
+ Error: {"message":"Invalid role specified","stack":"Error: Invalid role specified\n    at AuthenticationController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:73:27)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:16:12)\n    at AuthenticationController.login (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:50:16)\n    at /home/jasir/Dibolky/backend/src/routes/authentication.routes.ts:12:65\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-03-13T12:47:41.180Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:47:41 +0000] "POST /api/auth/login" 500  
+ Error: {"message":"Invalid role specified","stack":"Error: Invalid role specified\n    at AuthenticationController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:73:27)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:16:12)\n    at AuthenticationController.login (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:50:16)\n    at /home/jasir/Dibolky/backend/src/routes/authentication.routes.ts:12:65\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-03-13T12:47:41.204Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:47:41 +0000] "POST /api/auth/login" 500  
+ Error: {"message":"Invalid role specified","stack":"Error: Invalid role specified\n    at AuthenticationController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:73:27)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:16:12)\n    at AuthenticationController.login (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:50:16)\n    at /home/jasir/Dibolky/backend/src/routes/authentication.routes.ts:12:65\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-03-13T12:47:41.373Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:47:41 +0000] "POST /api/auth/login" 500  
+ Error: {"message":"Invalid role specified","stack":"Error: Invalid role specified\n    at AuthenticationController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:73:27)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:16:12)\n    at AuthenticationController.login (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:50:16)\n    at /home/jasir/Dibolky/backend/src/routes/authentication.routes.ts:12:65\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-03-13T12:47:41.536Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:47:42 +0000] "POST /api/auth/login" 500  
+ Error: {"message":"Invalid role specified","stack":"Error: Invalid role specified\n    at AuthenticationController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:73:27)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:16:12)\n    at AuthenticationController.login (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:50:16)\n    at /home/jasir/Dibolky/backend/src/routes/authentication.routes.ts:12:65\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-03-13T12:47:42.874Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:47:43 +0000] "POST /api/auth/login" 500  
+ Error: {"message":"Invalid role specified","stack":"Error: Invalid role specified\n    at AuthenticationController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:73:27)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:16:12)\n    at AuthenticationController.login (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:50:16)\n    at /home/jasir/Dibolky/backend/src/routes/authentication.routes.ts:12:65\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-03-13T12:47:43.526Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:47:43 +0000] "POST /api/auth/login" 500  
+ Error: {"message":"Invalid role specified","stack":"Error: Invalid role specified\n    at AuthenticationController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:73:27)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:16:12)\n    at AuthenticationController.login (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:50:16)\n    at /home/jasir/Dibolky/backend/src/routes/authentication.routes.ts:12:65\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-03-13T12:47:43.828Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:47:44 +0000] "POST /api/auth/login" 500  
+ Error: {"message":"Invalid role specified","stack":"Error: Invalid role specified\n    at AuthenticationController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:73:27)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:16:12)\n    at AuthenticationController.login (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:50:16)\n    at /home/jasir/Dibolky/backend/src/routes/authentication.routes.ts:12:65\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-03-13T12:47:44.142Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:47:44 +0000] "POST /api/auth/login" 500  
+ Error: {"message":"Invalid role specified","stack":"Error: Invalid role specified\n    at AuthenticationController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:73:27)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:16:12)\n    at AuthenticationController.login (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:50:16)\n    at /home/jasir/Dibolky/backend/src/routes/authentication.routes.ts:12:65\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-03-13T12:47:44.367Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:47:44 +0000] "POST /api/auth/login" 500  
+ Error: {"message":"Invalid role specified","stack":"Error: Invalid role specified\n    at AuthenticationController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:73:27)\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:20:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:16:12)\n    at AuthenticationController.login (/home/jasir/Dibolky/backend/src/controllers/Implementation/authentication.controller.ts:50:16)\n    at /home/jasir/Dibolky/backend/src/routes/authentication.routes.ts:12:65\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/jasir/Dibolky/backend/node_modules/express/lib/router/route.js:119:3)","timestamp":"2025-03-13T12:47:44.907Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:48:42 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T12:48:42.301Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:48:42 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T12:48:42.372Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:49:26 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T12:49:26.684Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:49:26 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T12:49:26.770Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:49:32 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T12:49:32.258Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:49:32 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T12:49:32.317Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:57:01 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T12:57:01.331Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:57:01 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T12:57:01.418Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:57:08 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T12:57:08.110Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:57:08 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T12:57:08.178Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:58:18 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T12:58:18.055Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:12:58:18 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T12:58:18.120Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:13:01:13 +0000] "GET /api/agency/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T13:01:13.723Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:13:01:13 +0000] "GET /api/agency/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T13:01:13.823Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:13:12:45 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T13:12:45.217Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:13:12:45 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T13:12:45.302Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:13:12:50 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T13:12:50.441Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:13:12:50 +0000] "GET /api/admin/" 500  
+ Error: {"message":"Cannot set properties of undefined (setting 'role')","stack":"TypeError: Cannot set properties of undefined (setting 'role')\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:77:26\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T13:12:50.501Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:13:17:06 +0000] "GET /api/admin/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:42:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:35:20)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-03-13T13:17:06.311Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:13:17:06 +0000] "GET /api/admin/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:42:44\n    at Generator.next (<anonymous>)\n    at /home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:8:71\n    at new Promise (<anonymous>)\n    at __awaiter (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:4:12)\n    at TokenMiddleWare (/home/jasir/Dibolky/backend/src/middlewares/token.middleware.ts:35:20)\n    at Layer.handle [as handle_request] (/home/jasir/Dibolky/backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:328:13)\n    at /home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/home/jasir/Dibolky/backend/node_modules/express/lib/router/index.js:346:12)","timestamp":"2025-03-13T13:17:06.321Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:14:33:42 +0000] "POST /api/admin/create-plan" 500  
+ Error: {"message":"Plan validation failed: menu.accounting: Path `menu.accounting` is required., menu.crm: Path `menu.crm` is required., validity: `Yearly` is not a valid enum value for path `validity`.","stack":"ValidationError: Plan validation failed: menu.accounting: Path `menu.accounting` is required., menu.crm: Path `menu.crm` is required., validity: `Yearly` is not a valid enum value for path `validity`.\n    at model.Document.invalidate (/home/jasir/Dibolky/backend/node_modules/mongoose/lib/document.js:3334:32)\n    at /home/jasir/Dibolky/backend/node_modules/mongoose/lib/document.js:3095:17\n    at /home/jasir/Dibolky/backend/node_modules/mongoose/lib/schema/subdocument.js:267:14\n    at /home/jasir/Dibolky/backend/node_modules/mongoose/lib/schemaType.js:1407:9\n    at processTicksAndRejections (node:internal/process/task_queues:85:11)","timestamp":"2025-03-13T14:33:42.765Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:14:35:49 +0000] "POST /api/admin/create-plan" 500  
+ Error: {"message":"Plan validation failed: menu.accounting: Path `menu.accounting` is required.","stack":"ValidationError: Plan validation failed: menu.accounting: Path `menu.accounting` is required.\n    at model.Document.invalidate (/home/jasir/Dibolky/backend/node_modules/mongoose/lib/document.js:3334:32)\n    at /home/jasir/Dibolky/backend/node_modules/mongoose/lib/document.js:3095:17\n    at /home/jasir/Dibolky/backend/node_modules/mongoose/lib/schema/subdocument.js:267:14\n    at /home/jasir/Dibolky/backend/node_modules/mongoose/lib/schemaType.js:1407:9\n    at processTicksAndRejections (node:internal/process/task_queues:85:11)","timestamp":"2025-03-13T14:35:49.496Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:14:37:01 +0000] "POST /api/admin/create-plan" 500  
+ Error: {"message":"Error While creating Plan","stack":"Error: Error While creating Plan\n    at AdminService.<anonymous> (/home/jasir/Dibolky/backend/src/services/Implementation/admin.service.ts:119:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/services/Implementation/admin.service.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-13T14:37:01.673Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:15:00:07 +0000] "POST /api/payment/razorpay" 500  
+ Error: {"timestamp":"2025-03-13T15:00:07.974Z"} ms 
+ 
+
+::1 - - [13/Mar/2025:15:00:46 +0000] "POST /api/payment/razorpay" 500  
+ Error: {"timestamp":"2025-03-13T15:00:46.004Z"} ms 
+ 
+

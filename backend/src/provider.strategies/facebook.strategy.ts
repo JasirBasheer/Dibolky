@@ -1,7 +1,7 @@
 import { CustomError } from "mern.common";
 import { META_API_VERSION, META_CLIENTID, META_SECRETID } from "../config/env.config";
 import { uploadFacebookReel } from "../media.service/reel-handler.service";
-import { IMetaAccount, IReviewBucket, IReelUploadStatus } from "../types/common.types";
+import { IMetaAccount, IBucket, IReelUploadStatus } from "../types/common.types";
 import { CONTENT_TYPE } from "../utils/constants.utils";
 
 
@@ -62,7 +62,7 @@ export async function getMetaPagesDetails(
 
 
 export async function handleFacebookUpload(
-    content: IReviewBucket, 
+    content: IBucket, 
     access_token: string
 ): Promise<{name:string,status: string,id:string } > {
     switch (content.contentType) {

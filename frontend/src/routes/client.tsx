@@ -12,7 +12,11 @@ import { Route, Routes } from "react-router-dom";
 export default function ClientRoutes() {
     return (
       <Routes>
-        <Route path='/' element={<ProtectedRoute role={"client"} ><ClientLayout /></ProtectedRoute>} >
+        <Route path='/' element={
+          <ProtectedRoute role={"client"} >
+            <ClientLayout />
+          </ProtectedRoute>
+        } >
           <Route index element={<ClientDashboard />} />
           <Route path='contents' element={<ClientContent />} />
           <Route path='message' element={<ClientMessages />} />

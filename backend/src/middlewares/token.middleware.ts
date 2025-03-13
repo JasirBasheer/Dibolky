@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { generateToken, UnauthorizedError, verifyToken } from "mern.common";
+import { generateToken, NotFoundError, UnauthorizedError, verifyToken } from "mern.common";
 import { container } from "tsyringe";
 import { IAgencyService } from "../services/Interface/IAgencyService";
 import { IAdminService } from "../services/Interface/IAdminService";
@@ -10,6 +10,7 @@ import { IClient } from "../types/client.types";
 import { IAgency } from "../types/agency.types";
 import { IAdmin } from "../types/admin.types";
 import { ITokenDetails } from "../types/common.types";
+import { ROLES } from "../utils/constants.utils";
 
 // services
 const agencyService = container.resolve<IAgencyService>("AgencyService");
@@ -56,16 +57,25 @@ export const TokenMiddleWare = async (
         const tokenDetails = await verifyToken(accessTokenSecret, token ?? '')
 
         let ownerDetails
-        if (tokenDetails.role == 'agency') {
-            ownerDetails = await agencyService.verifyOwner(tokenDetails.id)
-        } else if (tokenDetails.role == 'Admin') {
-            ownerDetails = await adminService.verifyAdmin(tokenDetails.id)
-        } else if (tokenDetails.role == "Client") {
-            ownerDetails = await clientService.verifyClient(tokenDetails.id)
-        }else{
-            ownerDetails = await clientService.verifyClient(tokenDetails.id)
-        }
-        
+        switch (tokenDetails.role) {
+            case ROLES.ADMIN:
+                ownerDetails = await adminService.verifyAdmin(tokenDetails.id)
+            break;
+            case ROLES.AGENCY:
+                ownerDetails = await agencyService.verifyOwner(tokenDetails.id)
+            break;
+            case ROLES.CLIENT:
+                ownerDetails = await clientService.verifyClient(tokenDetails.id)
+            break;
+            case ROLES.INFLUENCER:
+                ownerDetails = await clientService.verifyClient(tokenDetails.id)
+            break;
+            case ROLES.MANAGER:
+                ownerDetails = await clientService.verifyClient(tokenDetails.id)
+            break;
+            default:
+                throw new NotFoundError("Role not found, try again later..")
+        }       
 
         if (ownerDetails?.isBlocked) throw new UnauthorizedError('Account is Blocked')
         const isTokenBlaclisted = await isTokenBlacklisted(token)

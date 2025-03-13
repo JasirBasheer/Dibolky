@@ -41,8 +41,9 @@ export default class AdminController implements IAdminController {
     ): Promise<void> {
         try {
             if(!req.details)throw new NotFoundError("Details Not Fount")
+            console.log("reached here") 
             const details = await this.adminService.verifyAdmin(req.details._id as string)
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.VERIFIED, { details, role: "Admin" })
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.VERIFIED, { details, role: "admin" })
         } catch (error) {
             next(error)
         }
@@ -133,9 +134,9 @@ export default class AdminController implements IAdminController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const { entity, details }: { entity: string, details: planDetails } = req.body
-            console.log(entity, details)
-            await this.adminService.createPlan(entity, details)
+            const { details }: { entity: string, details: planDetails } = req.body
+            console.log(details)
+            await this.adminService.createPlan(details)
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
         } catch (error) {

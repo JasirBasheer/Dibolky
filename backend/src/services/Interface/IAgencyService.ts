@@ -1,8 +1,8 @@
-import { IProject } from "../../models/agency/project.model";
+import { IProject } from "../../models/project.model";
 import { IAgency, IAgencyTenant } from "../../types/agency.types";
 import { IAvailableClients, ServicesData } from "../../types/chat.types";
 import { IClientTenant } from "../../types/client.types";
-import { IFiles, IIntegratePaymentType, IPlatforms, IReviewBucket } from "../../types/common.types";
+import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common.types";
 
 export interface IAgencyService {
     verifyOwner(agency_id: string): Promise<IAgency | null>;
@@ -14,9 +14,9 @@ export interface IAgencyService {
     createClient(orgId: string, name: string, email: string, industry: string, services: ServicesData, menu: string[], organizationName: string): Promise<IClientTenant | null>;
     getAllClients(orgId: string): Promise<IClientTenant[] | null>
     getClient(orgId: string, client_id: string): Promise<IClientTenant | null>
-    saveContentToDb(client_id: string, orgId: string, files: IFiles[], platforms: IPlatforms[], contentType: string, caption: string): Promise<IReviewBucket | null>
-    getContent(orgId: string, contentId: string): Promise<IReviewBucket | null>
-    changeContentStatus(orgId: string, contentId: string, status: string): Promise<IReviewBucket | null>
+    saveContentToDb(client_id: string, orgId: string, files: IFiles[], platforms: IPlatforms[], contentType: string, caption: string): Promise<IBucket | null>
+    getContent(orgId: string, contentId: string): Promise<IBucket | null>
+    changeContentStatus(orgId: string, contentId: string, status: string): Promise<IBucket | null>
     editProjectStatus(orgId: string, projectId: string, status: string): Promise<IProject | null>
     getInitialSetUp(orgId: string): Promise<object>;
     integratePaymentGateWay(orgId: string, provider: string, details: IIntegratePaymentType): Promise<IAgencyTenant>;

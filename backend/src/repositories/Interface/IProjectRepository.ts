@@ -1,5 +1,5 @@
 import { BaseRepository } from "mern.common";
-import { IProject } from "../../models/agency/project.model";
+import { IProject } from "../../models/project.model";
 
 
 export interface IProjectRepository extends BaseRepository<IProject> {

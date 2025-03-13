@@ -1,9 +1,9 @@
 import { connectTenantDB } from "../../config/db.config";
-import Agency, { ownerDetailsSchema } from "../../models/agency/agency.model";
+import Agency, { ownerDetailsSchema } from "../../models/agency.model";
 import { IEntityRepository } from "../Interface/IEntityRepository";
 import { IAgency, IAgencyTenant } from "../../types/agency.types";
 import { IInfluencer } from "../../types/influencer.types";
-import Influencer from "../../models/influencer/influencer.model";
+import Influencer from "../../models/influencer.model";
 import {  Model } from "mongoose";
 import { CustomError } from "mern.common";
 

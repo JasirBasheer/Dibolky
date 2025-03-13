@@ -14,6 +14,7 @@ import {
     ResponseMessage,
     SendResponse
 } from 'mern.common';
+import { ROLES } from '../../utils/constants.utils';
 
 @injectable()
 /** Implementation of Authentication Controller */
@@ -60,13 +61,21 @@ export default class AuthenticationController implements IAuthenticationControll
             let id;
 
             switch (role) {
-                case "Admin":
+                case ROLES.ADMIN:
                     id = await this.adminService.adminLoginHandler(email, password);
                     break;
-                case "agency":
+                case ROLES.AGENCY:
                     id = await this.agencyService.agencyLoginHandler(email, password);
                     break;
-                case "Client":
+                case ROLES.CLIENT:
+                    id = await this.clientService.clientLoginHandler(email, password);
+                    break;
+                case ROLES.INFLUENCER:
+                    // TODO: Implement influncer login feature.
+                    id = await this.clientService.clientLoginHandler(email, password);
+                    break;
+                case ROLES.MANAGER:
+                    // TODO: Implement influncer login feature.
                     id = await this.clientService.clientLoginHandler(email, password);
                     break;
                 default:

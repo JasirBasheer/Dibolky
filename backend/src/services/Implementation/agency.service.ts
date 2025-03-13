@@ -10,9 +10,9 @@ import { IClientTenantRepository } from "../../repositories/Interface/IClientTen
 import { IClient, IClientTenant } from "../../types/client.types";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
-import { IFiles, IIntegratePaymentType, IPlatforms, IReviewBucket } from "../../types/common.types";
+import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common.types";
 import { IAvailableClients, ServicesData } from "../../types/chat.types";
-import { IProject } from "../../models/agency/project.model";
+import { IProject } from "../../models/project.model";
 import { createNewMenuForClient } from "../../utils/menu.utils";
 import { createClientMailData } from "../../utils/mail.datas";
 
@@ -191,7 +191,7 @@ export default class AgencyService implements IAgencyService {
         platforms: IPlatforms[],
         contentType: string,
         caption: string
-    ): Promise<IReviewBucket | null> {
+    ): Promise<IBucket | null> {
         const details = { files, platforms, contentType, client_id, orgId, caption }
         return await this.contentRepository.saveContent(details)
     }
@@ -200,7 +200,7 @@ export default class AgencyService implements IAgencyService {
     async getContent(
         orgId: string,
         contentId: string
-    ): Promise<IReviewBucket | null> {
+    ): Promise<IBucket | null> {
         return await this.contentRepository.getContentById(orgId, contentId)
 
     }
@@ -209,7 +209,7 @@ export default class AgencyService implements IAgencyService {
         orgId: string,
         contentId: string,
         status: string
-    ): Promise<IReviewBucket | null> {
+    ): Promise<IBucket | null> {
         return await this.contentRepository.changeContentStatus(orgId, contentId, status)
     }
 

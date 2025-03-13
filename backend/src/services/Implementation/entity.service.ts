@@ -2,10 +2,10 @@ import { inject, injectable } from 'tsyringe';
 import { IEntityService } from '../Interface/IEntityService';
 import { IEntityRepository } from '../../repositories/Interface/IEntityRepository';
 import { IPlanRepository } from '../../repositories/Interface/IPlanRepository';
-import { ownerDetailsSchema } from '../../models/agency/agency.model';
+import { ownerDetailsSchema } from '../../models/agency.model';
 import { ITransactionRepository } from '../../repositories/Interface/ITransactionRepository';
 import { IPlan } from '../../types/admin.types';
-import { IProject } from '../../models/agency/project.model';
+import { IProject } from '../../models/project.model';
 import { IProjectRepository } from '../../repositories/Interface/IProjectRepository';
 import { IClientTenantRepository } from '../../repositories/Interface/IClientTenantRepository';
 import { IContentRepository } from '../../repositories/Interface/IContentRepository';
@@ -13,7 +13,7 @@ import { IAgencyTenantRepository } from '../../repositories/Interface/IAgencyTen
 import { AddressType, IAgency, IAgencyTenant } from '../../types/agency.types';
 import { IInfluencer } from '../../types/influencer.types';
 import { connectTenantDB } from '../../config/db.config';
-import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IReviewBucket, IUpdateProfile } from '../../types/common.types';
+import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IBucket, IUpdateProfile } from '../../types/common.types';
 import { IClientTenant } from '../../types/client.types';
 import { IAgencyRepository } from '../../repositories/Interface/IAgencyRepository';
 import { IClientRepository } from '../../repositories/Interface/IClientRepository';
@@ -213,7 +213,7 @@ export default class EntityService implements IEntityService {
         files: IFiles[],
         metadata: IMetadata,
         contentType: string
-    ): Promise<IReviewBucket> {
+    ): Promise<IBucket> {
         let detials;
         if (platform == "agency") {
             const ownerDetials = await this.agencyTenantRepository.getOwners(orgId)
@@ -255,7 +255,7 @@ export default class EntityService implements IEntityService {
     async fetchContents(
         orgId: string,
         user_id: string
-    ): Promise<IReviewBucket[]> {
+    ): Promise<IBucket[]> {
         const contents = await this.contentRepository.getContentsByUserId(orgId, user_id)
         return contents ?? []
     }
@@ -281,7 +281,7 @@ export default class EntityService implements IEntityService {
     async getScheduledContent(
         orgId: string,
         user_id: string
-    ): Promise<IReviewBucket[]> {
+    ): Promise<IBucket[]> {
         return await this.contentRepository.getAllScheduledContents(orgId, user_id)
     }
 

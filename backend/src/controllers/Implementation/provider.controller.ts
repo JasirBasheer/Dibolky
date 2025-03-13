@@ -7,7 +7,7 @@ import { createInstagramOAuthURL } from "../../provider.strategies/instagram.str
 import { IClientService } from "../../services/Interface/IClientService";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
 import { createFacebookOAuthURL } from "../../provider.strategies/facebook.strategy";
-import { IReviewBucket } from "../../types/common.types";
+import { IBucket } from "../../types/common.types";
 import { FACEBOOK, INSTAGRAM } from "../../utils/constants.utils";
 
 
@@ -40,7 +40,7 @@ export default class ProviderController implements IProviderController {
         try {
             if(!req.details)throw new NotFoundError("Details Not Fount")
             const { content_id, user_id, platform } = req.body
-            const content: IReviewBucket | null = await this.providerService.getContentById(req.details.orgId as string, content_id)
+            const content: IBucket | null = await this.providerService.getContentById(req.details.orgId as string, content_id)
             let user;
             if(platform == 'agency'){
                 user = await this.agencyService.getAgencyOwnerDetails(req.details.orgId as string)

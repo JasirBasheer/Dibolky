@@ -6,7 +6,7 @@ import { IClientTenantRepository } from "../../repositories/Interface/IClientTen
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
 import { IAgencyTenant } from "../../types/agency.types";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
-import { IMetaAccount, IPlatforms, IReviewBucket, ISocialMediaUploadResponse } from "../../types/common.types";
+import { IMetaAccount, IPlatforms, IBucket, ISocialMediaUploadResponse } from "../../types/common.types";
 import { IClientTenant } from "../../types/client.types";
 import { IInfluncerTenant } from "../../types/influencer.types";
 import { FACEBOOK, INSTAGRAM } from "../../utils/constants.utils";
@@ -32,7 +32,7 @@ export default class ProviderService implements IProviderService {
 
 
     async handleSocialMediaUploads(
-        content: IReviewBucket,
+        content: IBucket,
         user: IClientTenant | IAgencyTenant | IInfluncerTenant | null,
         isCron: boolean
     ): Promise<ISocialMediaUploadResponse[]> {
@@ -95,7 +95,7 @@ export default class ProviderService implements IProviderService {
         orgId: string,
         contentId: string,
         status: string
-    ): Promise<IReviewBucket | null> {
+    ): Promise<IBucket | null> {
         return await this.contentRepository.changeContentStatus(orgId, contentId, status)
     }
 
@@ -103,7 +103,7 @@ export default class ProviderService implements IProviderService {
     async getContentById(
         orgId: string,
         contentId: string
-    ): Promise<IReviewBucket | null> {
+    ): Promise<IBucket | null> {
         return await this.contentRepository.getContentById(orgId, contentId)
     }
 

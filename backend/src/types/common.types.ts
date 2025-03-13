@@ -33,7 +33,7 @@ export interface IFiles {
 }
 
 
-export interface IReviewBucket extends Document {
+export interface IBucket extends Document {
     user_id?: string;
     orgId: string;
     files: IFiles[];

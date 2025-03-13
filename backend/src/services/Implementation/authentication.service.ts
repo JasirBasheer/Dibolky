@@ -7,6 +7,7 @@ import { JWT_RESET_PASSWORD_SECRET } from "../../config/env.config";
 import { IAdmin } from "../../types/admin.types";
 import { IAgency } from "../../types/agency.types";
 import { createForgotPasswordData } from "../../utils/mail.datas";
+import { ROLES } from "../../utils/constants.utils";
 
 @injectable()
 export default class AuthenticationService implements IAuthenticationService {
@@ -27,11 +28,26 @@ export default class AuthenticationService implements IAuthenticationService {
         role: string
     ): Promise<boolean | null> {
         let details
-        if (role == "agency") {
-            details = await this.agencyRepository.findAgencyWithMail(email)
-        }  else if (role == "Admin") {
-            details = await this.adminRepository.findAdminWithMail(email)
+        switch (role) {
+            case ROLES.ADMIN:
+                details = await this.adminRepository.findAdminWithMail(email)
+                break;
+            case ROLES.AGENCY:
+                details = await this.agencyRepository.findAgencyWithMail(email)
+                break;
+            case ROLES.CLIENT:
+                details = await this.agencyRepository.findAgencyWithMail(email)
+                break;
+            case ROLES.INFLUENCER:
+                details = await this.agencyRepository.findAgencyWithMail(email)
+                break;
+            case ROLES.INFLUENCER:
+                details = await this.agencyRepository.findAgencyWithMail(email)
+                break; 
+            default:
+                throw new NotFoundError("Role not found please try again, later..")
         }
+
         if(!JWT_RESET_PASSWORD_SECRET)throw new NotFoundError("Jwt reset password key is not found")
         let jwtSecret = JWT_RESET_PASSWORD_SECRET 
         if (!details) throw new NotFoundError('Account not found');
@@ -59,12 +75,25 @@ export default class AuthenticationService implements IAuthenticationService {
         let changedPassword;
         const isValid = await verifyToken(jwtSecret,token)
         let hashedPassword = await hashPassword(password) || 'password'
-        if (isValid.role == "agency") {
-            changedPassword =  await this.agencyRepository.changePassword(isValid.id, hashedPassword)
-        }else if (isValid.role == "Admin") {
-            changedPassword =  await this.adminRepository.changePassword(isValid.id, hashedPassword)
-        }else{
-            changedPassword =  await this.adminRepository.changePassword(isValid.id, hashedPassword)
+
+        switch (isValid.role) {
+            case ROLES.ADMIN:
+                changedPassword =  await this.adminRepository.changePassword(isValid.id, hashedPassword)
+                break;
+            case ROLES.AGENCY:
+                changedPassword =  await this.agencyRepository.changePassword(isValid.id, hashedPassword)
+                break;
+            case ROLES.CLIENT:
+                changedPassword =  await this.adminRepository.changePassword(isValid.id, hashedPassword)
+                break;
+            case ROLES.INFLUENCER:
+                changedPassword =  await this.adminRepository.changePassword(isValid.id, hashedPassword)
+                break;
+            case ROLES.INFLUENCER:
+                changedPassword =  await this.adminRepository.changePassword(isValid.id, hashedPassword)
+                break; 
+            default:
+                throw new NotFoundError("Role not found please try again, later..")
         }
         if(!changedPassword)throw new CustomError("Error while Changing password",500)
         return changedPassword

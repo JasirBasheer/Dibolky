@@ -16,21 +16,24 @@ export interface IAdmin extends Document {
 
 export interface planDetails {
     _id?:mongoose.ObjectId,
-    title: string;
+    planName: string;
+    planType: string;
     description: string;
     price: number;
-    validity: string,
+    validity: string;
     features: string[];
-    menu: IMenuCategory | string[]
+    menu: IMenuCategory | string[];
 }
 
+export type validityType = "monthly" | "yearly" | "lifetime";
+export type planType = "agency" | "influencer";
 
 export interface IPlan extends Document {
-    id?: number;
-    title: string;
+    planName: string;
+    planType:planType;
     price: number;
     features: string[];
-    validity: string;
+    validity:  validityType;
     totalProjects?: number;
     totalManagers?: number;
     menu?: {
@@ -39,8 +42,8 @@ export interface IPlan extends Document {
         accounting?: IMenuItems;
     };
     isActive:boolean;
+    deactivationDate:Date
 }
-
 
 
 export interface Plans {

@@ -1,5 +1,4 @@
 import { inject, injectable } from 'tsyringe';
-import { AgencyPlan, InfluencerPlan, } from '../../models/admin/plan.model'
 import { IPlan, planDetails } from '../../types/admin.types'
 import { IPlanRepository } from '../Interface/IPlanRepository'
 import { Model } from 'mongoose';
@@ -21,33 +20,33 @@ export default class PlanRepository extends BaseRepository<IPlan> implements IPl
         async getAgencyPlan(
                 planId: string
         ): Promise<IPlan | null> {
-                return await AgencyPlan.findOne({ _id: planId }).lean();
+                return await this.findOne({ _id: planId });
         }
 
         async getInfluencerPlans()
                 : Promise<IPlan[] | null> {
-                return await InfluencerPlan.find({})
+                return await this.find({})
         }
 
         async getInfluencerPlan(
                 planId: string
         ): Promise<IPlan | null> {
-                return await InfluencerPlan.findOne({ _id: planId }).lean();
+                return await this.findOne({ _id: planId });
         }
 
 
 
-        async createAgencyPlan(
+        async createPlan(
                 details: planDetails
         ): Promise<Partial<IPlan> | null> {
-                const newPlan = new AgencyPlan(details);
+                const newPlan = new this.model(details);
                 return await newPlan.save();
         }
 
         async createInfluencerPlan(
                 details: planDetails
         ): Promise<Partial<IPlan> | null> {
-                const newPlan = new InfluencerPlan(details);
+                const newPlan = new this.model(details);
                 return await newPlan.save();
         }
 
@@ -56,7 +55,7 @@ export default class PlanRepository extends BaseRepository<IPlan> implements IPl
                 details: planDetails
         ): Promise<IPlan | null> {
                 const { _id, ...updateData } = details;
-                return await AgencyPlan.findByIdAndUpdate(_id, updateData, { new: true, runValidators: true });
+                return await this.model.findByIdAndUpdate(_id, updateData, { new: true, runValidators: true });
         }
 
 
@@ -64,7 +63,7 @@ export default class PlanRepository extends BaseRepository<IPlan> implements IPl
                 plan_id: string
         ): Promise<IPlan | null> {
                 const plan = await this.findOne({ _id: plan_id })
-                return await AgencyPlan.findByIdAndUpdate(plan_id, { isActive: !plan?.isActive }, { new: true });
+                return await this.model.findByIdAndUpdate(plan_id, { isActive: !plan?.isActive }, { new: true });
         }
 
 

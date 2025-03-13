@@ -9,6 +9,7 @@ import { CustomError, NotFoundError, UnauthorizedError } from 'mern.common';
 import { IAdmin, IPlan, planDetails, Plans } from '../../types/admin.types';
 import { ITransactionRepository } from '../../repositories/Interface/ITransactionRepository';
 import { createNewPlanMenu } from '../../utils/menu.utils';
+import { ROLES } from '../../utils/constants.utils';
 
 @injectable()
 export default class AdminService implements IAdminService {
@@ -81,14 +82,14 @@ export default class AdminService implements IAdminService {
 
 
     async getRecentClients()
-    : Promise<object> {
+        : Promise<object> {
         let agencies = await this.entityRepository.getAllRecentAgencyOwners()
         let result = { Agency: agencies }
         return result
     }
 
     async getClient(
-        client_id: string, 
+        client_id: string,
         role: string
     ): Promise<object> {
         let clientDetials;
@@ -103,24 +104,18 @@ export default class AdminService implements IAdminService {
 
 
     async getAllClients()
-    : Promise<object | null> {
+        : Promise<object | null> {
         let agencies = await this.entityRepository.getAllAgencyOwners()
         let result = { Agency: agencies }
         return result
     }
 
     async createPlan(
-        entity: string,
         details: planDetails
     ): Promise<void> {
-        let createdPlan;
         let menu = createNewPlanMenu(details.menu as string[])
         details.menu = menu
-        if (entity == "Agency") {
-            createdPlan = await this.planRepository.createAgencyPlan(details)
-        }else if(entity == "Influencer"){
-            createdPlan = await this.planRepository.createInfluencerPlan(details)
-        }
+        const createdPlan = await this.planRepository.createPlan(details)
         if (!createdPlan) throw new CustomError("Error While creating Plan", 500)
     }
 

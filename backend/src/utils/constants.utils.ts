@@ -1,7 +1,9 @@
 export const ROLES = {
-    AGENCY: "Agency",
-    COMPANY: "Company",
-    ADMIN: "Admin",
+    AGENCY: "agency",
+    ADMIN: "admin",
+    CLIENT:"client",
+    INFLUENCER:"influencer",
+    MANAGER:"manager"
 } as const;
 
 export const INSTAGRAM = 'instagram'

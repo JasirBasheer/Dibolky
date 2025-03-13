@@ -1,8 +1,8 @@
-import { IProject } from "../../models/agency/project.model";
+import { IProject } from "../../models/project.model";
 import { IPlan } from "../../types/admin.types";
 import { AddressType, IAgency, IAgencyTenant } from "../../types/agency.types";
 import { IClientTenant } from "../../types/client.types";
-import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IReviewBucket, IUpdateProfile } from "../../types/common.types";
+import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IBucket, IUpdateProfile } from "../../types/common.types";
 import { IInfluencer } from "../../types/influencer.types";
 
 export interface IEntityService {
@@ -19,10 +19,10 @@ export interface IEntityService {
     getAgencyMenu(planId: string): Promise<IMenuCategory>;
     getClientMenu(orgId: string, client_id: string): Promise<IMenuCategory>;
     getOwner(orgId: string): Promise<IAgencyTenant[]>
-    saveContent(orgId: string, platform: string, platforms: IPlatforms[], user_id: string, files: IFiles[], metadata: IMetadata, contentType: string): Promise<IReviewBucket>;
+    saveContent(orgId: string, platform: string, platforms: IPlatforms[], user_id: string, files: IFiles[], metadata: IMetadata, contentType: string): Promise<IBucket>;
     getS3ViewUrl(key: string): Promise<string>
-    fetchContents(orgId: string, user_id: string): Promise<IReviewBucket[]>
+    fetchContents(orgId: string, user_id: string): Promise<IBucket[]>
     updateProfile(orgId: string,role: string,requestRole:string,details: IUpdateProfile): Promise<IAgencyTenant | IClientTenant>
-    getScheduledContent(orgId:string, user_id: string):Promise<IReviewBucket[]>
+    getScheduledContent(orgId:string, user_id: string):Promise<IBucket[]>
     getConnections(orgId:string ,entity:string, user_id:string):Promise<object[]>
 }

@@ -23,7 +23,11 @@ import {
 export default function AgencyRoutes() {
   return (
     <Routes>
-      <Route path='/' element={<ProtectedRoute role={"agency"} ><Layout /></ProtectedRoute>} >
+      <Route path='/' element={
+        <ProtectedRoute role={"agency"} >
+          <Layout />
+        </ProtectedRoute>
+      } >
         <Route index element={<AgencyDashboard />} />
         <Route path='analytics' element={<AgencyAnalytics />} />
         <Route path='clients' element={<Clients />} />

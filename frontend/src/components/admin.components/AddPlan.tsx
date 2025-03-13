@@ -9,8 +9,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { message } from 'antd';
 import { createPlanApi } from '@/services/admin/post.services';
+import { memo } from 'react';
 
-const PRESET_MENUS = ['SMM','CRM','ACCOUNTING','MARKETING'];
+const PRESET_MENUS = ['SMM', 'CRM', 'ACCOUNTING', 'MARKETING'];
 
 interface AddPlanProps {
   setIsAddPlan: Dispatch<SetStateAction<boolean>>;
@@ -18,10 +19,11 @@ interface AddPlanProps {
 
 const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
   const [formData, setFormData] = useState({
-    title:"",price:0,description:"",
-    validity:"Monthly",entity:"Agency",
-    totalProjects:0,totalManagers:0 })
-    
+    planName: "", price: 0, description: "",
+    validity: "monthly", planType: "agency",
+    totalProjects: 0, totalManagers: 0
+  })
+
   const [features, setFeatures] = useState([]);
   const [selectedMenus, setSelectedMenus] = useState([]);
   const [newFeature, setNewFeature] = useState('');
@@ -41,7 +43,7 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
       setSelectedMenus([...selectedMenus, menuLabel]);
     }
   };
-  
+
 
   const removeFeature = (index) => {
     setFeatures(features.filter((_, i) => i !== index));
@@ -50,28 +52,28 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
 
   const handleCreatePlan = async () => {
     try {
-      if (features.length == 0 || selectedMenus.length == 0 ) {
+      if (features.length == 0 || selectedMenus.length == 0) {
         message.warning("Enter valid values for your new plan")
         return
       }
       const details = {
         ...formData,
         features,
-        menu:selectedMenus
+        menu: selectedMenus
       }
-                        
-      const res = await createPlanApi(formData.entity,details)
-      if(res.status == 200){
+
+      const res = await createPlanApi(details)
+      if (res.status == 200) {
         message.success("Plan successfully created")
         setIsAddPlan(false)
       }
-    } catch (error:unknown) {
+    } catch (error: unknown) {
       message.error(error instanceof Error ? error.message : 'Unexpected error occurred while creating plan');
     }
   }
 
   const handleChange = (
-    value:  string | number , name: string): void => {
+    value: string | number, name: string): void => {
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -82,15 +84,15 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
 
   return (
     <div className="fixed inset-[-3rem] bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 "
-    onClick={()=> setIsAddPlan(false)}
+      onClick={() => setIsAddPlan(false)}
     >
       <Card className="w-full max-w-3xl "
-              onClick={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className=" p-4 flex items-center justify-between">
           <h2 className="text-2xl font-semibold sm:ml-0 ml-5 ">Create Plan</h2>
           <Button variant="ghost" size="icon" className="rounded-full"
-          onClick={()=> setIsAddPlan(false)}
+            onClick={() => setIsAddPlan(false)}
           >
             <X className="h-5 w-5" />
           </Button>
@@ -106,11 +108,11 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
                   <Label className="text-sm ml-1">Entity Type</Label>
                   <RadioGroup defaultValue="agency" className="flex gap-4 mt-3 ml-1">
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="agency" id="agency" onClick={() => handleChange("Agency","entity")} defaultChecked />
+                      <RadioGroupItem value="agency" id="agency" onClick={() => handleChange("agency", "planType")} defaultChecked />
                       <Label htmlFor="agency">Agency</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="Influencer" id="influencer" onClick={() => handleChange("Influencer","entity")} />
+                      <RadioGroupItem value="Influencer" id="influencer" onClick={() => handleChange("influencer", "planType")} />
                       <Label htmlFor="influencer">Influencer</Label>
                     </div>
                   </RadioGroup>
@@ -119,7 +121,7 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2 ml-1">
                     <Label htmlFor="title">Title</Label>
-                    <Input id="title" placeholder="Enter plan title" onChange={(e) => handleChange(e.target.value, 'title')} />
+                    <Input id="title" placeholder="Enter plan title" onChange={(e) => handleChange(e.target.value, 'planName')} />
                   </div>
                   <div className="space-y-2 ml-1">
                     <Label htmlFor="price">Price</Label>
@@ -141,11 +143,11 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
                   <Label className="text-sm ml-1">Validity Period</Label>
                   <RadioGroup defaultValue="month" className="flex gap-4 mt-4 ml-1">
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="month" id="month"  onClick={() => handleChange("Monthly","validity")}  defaultChecked />
+                      <RadioGroupItem value="month" id="month" onClick={() => handleChange("Monthly", "validity")} defaultChecked />
                       <Label htmlFor="month">Monthly</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="year" id="year"  onClick={() => handleChange("Yearly","validity")} />
+                      <RadioGroupItem value="year" id="year" onClick={() => handleChange("Yearly", "validity")} />
                       <Label htmlFor="year">Yearly</Label>
                     </div>
                   </RadioGroup>
@@ -153,31 +155,31 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-6 ml-1">
-              {formData.entity === 'Agency' && (
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <FolderKanban className="h-4 w-4" />
-                  Total Projects
-                </Label>
-                <Input
-                  type="number"
-                  onChange={(e) => handleChange(Number(e.target.value),  'totalProjects')}
-                  placeholder="Enter project count"
-                />
-              </div>
+              {formData.planType === 'agency' && (
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <FolderKanban className="h-4 w-4" />
+                    Total Projects
+                  </Label>
+                  <Input
+                    type="number"
+                    onChange={(e) => handleChange(Number(e.target.value), 'totalProjects')}
+                    placeholder="Enter project count"
+                  />
+                </div>
               )}
-          {formData.entity === 'Influencer' && (
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <FolderKanban className="h-4 w-4" />
-                  Total Managers
-                </Label>
-                <Input
-                  type="number"
-                  onChange={(e) => handleChange(Number(e.target.value),  'totalManagers')}
-                  placeholder="Enter project count"
-                />
-              </div>
+              {formData.planType === 'influencer' && (
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <FolderKanban className="h-4 w-4" />
+                    Total Managers
+                  </Label>
+                  <Input
+                    type="number"
+                    onChange={(e) => handleChange(Number(e.target.value), 'totalManagers')}
+                    placeholder="Enter project count"
+                  />
+                </div>
               )}
 
             </div>
@@ -251,4 +253,4 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
   );
 };
 
-export default AddPlan;
+export default memo(AddPlan);

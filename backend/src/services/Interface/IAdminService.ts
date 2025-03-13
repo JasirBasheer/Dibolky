@@ -11,7 +11,7 @@ export interface IAdminService {
   getAllClients(): Promise<object | null>;
 
   //plan-management
-  createPlan(entity: string, details: planDetails): Promise<void>
+  createPlan(details: planDetails): Promise<void>
   editPlan(entity: string, details: planDetails): Promise<void>
   changePlanStatus(entity: string, plan_id: string): Promise<void>
   getPlanDetails(entity: string, plan_id: string): Promise<object>

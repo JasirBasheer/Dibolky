@@ -1,7 +1,7 @@
 import { META_API_VERSION, META_CLIENTID, META_SECRETID } from "../config/env.config";
 import { uploadIGPost } from "../media.service/post-handler.service";
 import { uploadIGReel } from "../media.service/reel-handler.service";
-import { IReviewBucket } from "../types/common.types";
+import { IBucket } from "../types/common.types";
 import { getS3PublicUrl } from "../utils/aws.utils";
 import { CONTENT_TYPE } from "../utils/constants.utils";
 import { VIDEO_EXTENSIONS } from "../utils/video-dimensions.utils";
@@ -89,7 +89,7 @@ export async function fetchIGAccountId(
 
 
 export async function handleInstagramUpload(
-    content: IReviewBucket, 
+    content: IBucket, 
     access_token: string
 ): Promise<{ name: string, status: string, id: string }> {
     try {
@@ -200,7 +200,7 @@ export async function createInstaCarousel(
 export async function uploadSinglePost(
     businessId:string,
     access_token:string,
-    content:IReviewBucket
+    content:IBucket
 ): Promise<string> {
     try { 
         const url = `https://graph.facebook.com/${META_API_VERSION}/${businessId}/media`;

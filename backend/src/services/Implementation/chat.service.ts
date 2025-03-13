@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { IChatService } from '../Interface/IChatService';
 import { IChatRepository } from '../../repositories/Interface/IChatRepository';
-import { ownerDetailsSchema } from '../../models/agency/agency.model';
+import { ownerDetailsSchema } from '../../models/agency.model';
 import { CustomError, NotFoundError } from 'mern.common';
 import { IMessageRepository } from '../../repositories/Interface/IMessageRepository';
 import { IChat, IGroupDetails, IMessage, Participant } from '../../types/chat.types';

@@ -1,7 +1,7 @@
 import { NotFoundError } from "mern.common";
 import { getPages } from "./shared.service";
 import { getS3PublicUrl, getS3ViewUrl } from "../utils/aws.utils";
-import { IReviewBucket } from "../types/common.types";
+import { IBucket } from "../types/common.types";
 import { FACEBOOK, INSTAGRAM } from "../utils/constants.utils";
 import { 
     checkReelUploadStatus, 
@@ -20,7 +20,7 @@ import {
 // Instagram -- reel
 
 export async function uploadIGReel(
-    content: IReviewBucket, 
+    content: IBucket, 
     access_token: string
 ): Promise<{name:string,status: string,id:string }> {
     try {
@@ -52,7 +52,7 @@ export async function uploadIGReel(
 
 export async function uploadFacebookReel(
     accessToken: string,
-    content: IReviewBucket,
+    content: IBucket,
     caption: string
 ): Promise<{name:string,status: string,id:string }> {
     try {

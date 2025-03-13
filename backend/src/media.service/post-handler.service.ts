@@ -1,4 +1,4 @@
-import { IReviewBucket } from "../types/common.types";
+import { IBucket } from "../types/common.types";
 import { getS3PublicUrl } from "../utils/aws.utils";
 import { INSTAGRAM } from "../utils/constants.utils";
 import { 
@@ -15,7 +15,7 @@ import {
 // Instagram - post
 
 export async function uploadIGPost(
-    content: IReviewBucket, 
+    content: IBucket, 
     access_token: string
 ): Promise<{ name: string, status: string, id: string }> {
     try {

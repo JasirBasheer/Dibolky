@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { IAgency, IAgencyTenant } from '../../types/agency.types';
+import { IAgency, IAgencyTenant } from '../types/agency.types';
 
 
 const agencySchema: Schema<IAgency> = new mongoose.Schema({

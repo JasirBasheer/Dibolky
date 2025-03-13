@@ -1,10 +1,10 @@
 import mongoose, { Schema } from 'mongoose';
-import { IReviewBucket } from '../../types/common.types';
+import { IBucket } from '../types/common.types';
 
 
 
 
-export const ReviewBucketSchema: Schema<IReviewBucket> = new mongoose.Schema({
+export const BucketSchema: Schema<IBucket> = new mongoose.Schema({
     user_id: {
         type: String,
         required: true
@@ -70,7 +70,7 @@ export const ReviewBucketSchema: Schema<IReviewBucket> = new mongoose.Schema({
 
 
 
-ReviewBucketSchema.methods.changePlatformPublishStatus = async function (
+BucketSchema.methods.changePlatformPublishStatus = async function (
     platform: string,
     value: boolean
 ): Promise<void> {

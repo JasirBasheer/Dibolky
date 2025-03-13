@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { AgencyPlan, InfluencerPlan, } from '../../models/admin/plan.model'
-import { IPlan, planDetails } from '../../shared/types/admin.types'
+import { IPlan, planDetails } from '../../types/admin.types'
 import { IPlanRepository } from '../Interface/IPlanRepository'
 import { Model } from 'mongoose';
 import { BaseRepository } from 'mern.common';

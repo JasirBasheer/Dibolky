@@ -23,7 +23,7 @@ const SubMenuItem: React.FC<SubItemProps> = ({icon: Icon,label,path,isActive,onC
   return (
     <div
       className={`flex text-sm font-medium w-full min-h-[2.8rem] gap-2 items-center pl-16 cursor-pointer transition-colors
-        ${isActive ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-100'}`} onClick={handleClick} >
+        ${isActive ? 'dark:bg-[#ffffff1b] bg-blue-50 text-blue-600' : 'hover:bg-gray-100 dark:bg-[#ffffff1b]'}`} onClick={handleClick} >
       <Icon className={`w-4 h-4 ${isActive ? 'text-blue-600' : ''}`} />
       <span>{label}</span>
     </div>

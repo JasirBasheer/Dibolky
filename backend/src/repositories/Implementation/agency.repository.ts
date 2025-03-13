@@ -1,10 +1,10 @@
-import { IAgency } from '../../shared/types/agency.types';
+import { IAgency } from '../../types/agency.types';
 import { IAgencyRepository } from '../Interface/IAgencyRepository';
 import { BaseRepository, NotFoundError } from 'mern.common';
 import { Model } from 'mongoose';
 import { inject, injectable } from 'tsyringe';
 import agencyModel from '../../models/agency/agency.model';
-import { IUpdateProfile } from '../../shared/types/common.types';
+import { IUpdateProfile } from '../../types/common.types';
 
 
 @injectable()

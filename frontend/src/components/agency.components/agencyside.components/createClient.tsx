@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { X } from "lucide-react";
 import { SERVICES } from "../../../utils/services";
 import { APIError, RootState } from "@/types/common.types";
+import { createClientApi } from "@/services/agency/post.services";
 
 const CreateClient = () => {
   const [name, setName] = useState("jasir");
@@ -72,14 +73,8 @@ const CreateClient = () => {
     try {
       console.log(selectedServices)
       setIsLoading(true);
-      const response = await axios.post("/api/agency/client", {
-        orgId,
-        name,
-        industry,
-        email,
-        services: selectedServices,
-        menu:servicesPreview
-      });
+      
+      const response = await createClientApi(orgId,name,industry,email,selectedService,servicesPreview)
 
       if (response.status === 201) {
         message.success("Client created successfully");

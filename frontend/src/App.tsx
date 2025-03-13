@@ -25,6 +25,7 @@ import ClientMessages from './pages/client.pages/client.message'
 import AgencyProject from './pages/agency.pages/projects'
 import SettingsPage from './components/agency.components/settings'
 import Inbox from './components/common.components/inbox'
+import AgencyCalendar from './pages/agency.pages/Calendar'
 
 
 const App = () => {
@@ -83,6 +84,7 @@ function AgencyRoutes() {
         <Route path='projects' element={<AgencyProject />} />
         <Route path='settings' element={<SettingsPage />} />
         <Route path='inbox' element={<Inbox />} />
+        <Route path='calendar' element={<AgencyCalendar />} />
       </Route>
       
 

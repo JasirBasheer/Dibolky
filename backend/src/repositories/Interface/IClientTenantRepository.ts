@@ -1,6 +1,6 @@
 import { IBaseRepository } from "mern.common";
-import { IClientTenant, User } from "../../shared/types/client.types";
-import { IUpdateProfile } from "../../shared/types/common.types";
+import { IClientTenant, User } from "../../types/client.types";
+import { IUpdateProfile } from "../../types/common.types";
 
 export interface IClientTenantRepository  {
   createClient(orgId: string, details: Partial<IClientTenant>): Promise<IClientTenant>;

@@ -1,9 +1,9 @@
 import mongoose, { Model, Schema, Types } from "mongoose";
 import { IChatRepository } from "../Interface/IChatRepository";
-import { IChat, IChatDetails, IGroupDetails, Participant } from "../../shared/types/chat.types";
+import { IChat, IChatDetails, IGroupDetails, Participant } from "../../types/chat.types";
 import { BaseRepository, CustomError, NotFoundError } from "mern.common";
 import { inject, injectable } from "tsyringe";
-import { connectTenantDB } from "../../config/db";
+import { connectTenantDB } from "../../config/db.config";
 
 @injectable()
 export default class ChatRepository extends BaseRepository<IChat> implements IChatRepository {

@@ -1,5 +1,5 @@
 import { IBaseRepository } from 'mern.common';
-import { IAdmin } from '../../shared/types/admin.types';
+import { IAdmin } from '../../types/admin.types';
 
 export interface IAdminRepository extends IBaseRepository<IAdmin> {
     findAdminWithMail(email: string): Promise<IAdmin | null>;

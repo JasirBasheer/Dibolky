@@ -1,6 +1,6 @@
-import { getS3PublicUrl } from "../config/aws-s3.config"
-import { IReviewBucket } from "../shared/types/common.types";
-import { INSTAGRAM } from "../shared/utils/constants"
+import { IReviewBucket } from "../types/common.types";
+import { getS3PublicUrl } from "../utils/aws.utils";
+import { INSTAGRAM } from "../utils/constants.utils";
 import { 
     checkIGContainerStatus, 
     createInstaCarousel, 

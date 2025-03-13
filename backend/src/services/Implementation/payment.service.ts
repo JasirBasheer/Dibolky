@@ -1,10 +1,10 @@
 import Stripe from "stripe";
-import { stripe } from "../../config/stripe";
-import { IRazorpayOrder, IUserDetails } from "../../shared/types/payment.types";
-import razorpayInstance from "../../shared/utils/razorpay";
+import { stripe } from "../../config/stripe.config";
+import { IRazorpayOrder, IUserDetails } from "../../types/payment.types";
 import { IPaymentService } from "../Interface/IPaymentService";
 import { inject, injectable } from "tsyringe";
 import { IEntityService } from "../Interface/IEntityService";
+import razorpayInstance from "../../config/razorpay.config";
 
 @injectable()
 export default class PaymentService implements IPaymentService {

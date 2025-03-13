@@ -1,20 +1,20 @@
-import { IAgency, IAgencyTenant } from "../../shared/types/agency.types";
-import { createClientMailData } from "../../shared/utils/mail.datas";
+import { IAgency, IAgencyTenant } from "../../types/agency.types";
 import bcrypt from 'bcrypt'
 import { IAgencyService } from "../Interface/IAgencyService";
 import { inject, injectable } from "tsyringe";
 import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepository";
 import { ConflictError, CustomError, generatePassword, hashPassword, NotFoundError, sendMail, UnauthorizedError } from "mern.common";
-import { createNewMenuForClient } from "../../shared/utils/menu.utils";
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { IProjectRepository } from "../../repositories/Interface/IProjectRepository";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
-import { IClient, IClientTenant } from "../../shared/types/client.types";
+import { IClient, IClientTenant } from "../../types/client.types";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
-import { IFiles, IPlatforms, IReviewBucket } from "../../shared/types/common.types";
-import { IAvailableClients, ServicesData } from "../../shared/types/chat.types";
+import { IFiles, IIntegratePaymentType, IPlatforms, IReviewBucket } from "../../types/common.types";
+import { IAvailableClients, ServicesData } from "../../types/chat.types";
 import { IProject } from "../../models/agency/project.model";
+import { createNewMenuForClient } from "../../utils/menu.utils";
+import { createClientMailData } from "../../utils/mail.datas";
 
 @injectable()
 export default class AgencyService implements IAgencyService {
@@ -75,7 +75,7 @@ export default class AgencyService implements IAgencyService {
         orgId: string
     ): Promise<object> {
         const clients = await this.clientTenantRepository.getAllClients(orgId)
-        const weaklyClients = clients.filter((client:IClientTenant) => new Date(client.createdAt!).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
+        const weaklyClients = clients.filter((client: IClientTenant) => new Date(client.createdAt!).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
         return {
             count: clients.length || 0,
             lastWeekCount: weaklyClients.length || 0
@@ -87,16 +87,16 @@ export default class AgencyService implements IAgencyService {
         orgId: string
     ): Promise<IAvailableClients[]> {
         const clients = await this.clientTenantRepository.getAllClients(orgId)
-        return clients.map((client:IClientTenant)=>{
+        return clients.map((client: IClientTenant) => {
             return {
-                _id:client._id as string ,
-                name:client.name ?? "user",
-                email:client.email ?? "user@gmail.com",
-                profile:client.profile,
-                type:"client",
+                _id: client._id as string,
+                name: client.name ?? "user",
+                email: client.email ?? "user@gmail.com",
+                profile: client.profile,
+                type: "client",
 
             }
-        }) ??[]
+        }) ?? []
     }
 
 
@@ -110,11 +110,11 @@ export default class AgencyService implements IAgencyService {
     async getAgencyOwnerDetails(
         orgId: string
     ): Promise<IAgencyTenant | null> {
-        let AgencyOwners =  await this.agencyTenantRepository.getOwners(orgId)
-        if(!AgencyOwners)throw new NotFoundError("Agency not found , Please try again")
-        return AgencyOwners[0] 
+        let AgencyOwners = await this.agencyTenantRepository.getOwners(orgId)
+        if (!AgencyOwners) throw new NotFoundError("Agency not found , Please try again")
+        return AgencyOwners[0]
     }
-    
+
     async createClient(
         orgId: string,
         name: string,
@@ -141,8 +141,8 @@ export default class AgencyService implements IAgencyService {
         let newMenu = createNewMenuForClient(menu)
 
         const mainDbCreatedClient = await this.clientRepository.createClient(clientDetails as IClient)
-        if(!mainDbCreatedClient)throw new CustomError("An unexpected error occured while creating client,Please try again later.",500)
-        const createdClient: IClientTenant  = await this.clientTenantRepository.createClient(orgId, { ...clientDetails, menu: newMenu,main_id:String(mainDbCreatedClient._id) })
+        if (!mainDbCreatedClient) throw new CustomError("An unexpected error occured while creating client,Please try again later.", 500)
+        const createdClient: IClientTenant = await this.clientTenantRepository.createClient(orgId, { ...clientDetails, menu: newMenu, main_id: String(mainDbCreatedClient._id) })
 
         for (let item in services) {
             const { serviceName, serviceDetails } = services[item];
@@ -151,13 +151,13 @@ export default class AgencyService implements IAgencyService {
         }
 
 
-        
+
         const data = createClientMailData(email, name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(), organizationName, password)
         sendMail(
             email,
             `Welcome to ${Agency.organizationName}! Excited to Partner with You`,
             data,
-            (error: unknown, info: {response:string}) => {
+            (error: unknown, info: { response: string }) => {
                 if (error) {
                     console.error("Failed to send email:", error);
                 } else {
@@ -231,6 +231,27 @@ export default class AgencyService implements IAgencyService {
         return {
             isSocialMediaInitialized: owners?.[0]?.isSocialMediaInitialized,
             isPaymentInitialized: owners?.[0]?.isPaymentInitialized
+        }
+    }
+
+    async integratePaymentGateWay(
+        orgId: string,
+        provider: string,
+        details: IIntegratePaymentType
+    ): Promise<IAgencyTenant> {
+        const integratedDetails = await this.agencyTenantRepository.integratePaymentGateWay(orgId, provider, details)
+        if (!integratedDetails) throw new CustomError("An unexpected error occured while integration paymentgatway", 500)
+        return integratedDetails
+    }
+
+    async getPaymentIntegrationStatus(
+        orgId: string
+    ): Promise<Record<string, boolean>>{
+        const owner = await this.agencyTenantRepository.getOwnerWithOrgId(orgId)
+        if(!owner)throw new CustomError("An unexpected error occured while fetching owner details, please try again later",500)
+        return {
+            isRazorpayIntegrated :!!owner.paymentCredentials?.razorpay?.secret_id ,
+            isStripeIntegrated : !!owner.paymentCredentials?.stripe?.secret_key
         }
     }
 

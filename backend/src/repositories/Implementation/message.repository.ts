@@ -1,7 +1,7 @@
 import { Model, Schema, Types } from "mongoose";
-import { IMessage } from "../../shared/types/chat.types";
+import { IMessage } from "../../types/chat.types";
 import { IMessageRepository } from "../Interface/IMessageRepository";
-import { connectTenantDB } from "../../config/db";
+import { connectTenantDB } from "../../config/db.config";
 import { inject, injectable } from "tsyringe";
 import { BaseRepository, CustomError } from "mern.common";
 

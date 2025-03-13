@@ -2,9 +2,9 @@ import { Server as HTTPServer } from "http";
 import { Server as HTTPSServer } from "https";
 import { Server } from 'socket.io';
 import { container } from 'tsyringe';
-import { IChatService } from '../../services/Interface/IChatService';
 import mongoose from 'mongoose';
 import { IChat } from "../types/chat.types";
+import { IChatService } from "../services/Interface/IChatService";
 
 
 const chatService = container.resolve<IChatService>('ChatService')

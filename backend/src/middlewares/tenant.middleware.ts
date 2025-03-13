@@ -3,7 +3,7 @@ import { NotFoundError } from "mern.common";
 import { 
   connectTenantDB, 
   getTenantConnection
-} from "../config/db";
+} from "../config/db.config";
 import { 
   Request, 
   Response, 

@@ -44,6 +44,7 @@ export interface IMetadata{
 export interface IPlatforms{
     platform:string;
     scheduledDate?:string | Date;
+    isRescheduled?:boolean
 }
 
 export interface IContentData{
@@ -78,6 +79,21 @@ export interface IContentData{
     feedBack?: string;
 }
 
+export interface ICalendarContent {
+  id: string;
+  title: string;
+  description: string;
+  date: Date;
+  time: string;
+  platform: string[];
+  contentType: string;
+  status: string;
+  isPublished: boolean;
+  isRescheduled: boolean;
+  mediaType: string;
+  mediaUrl: string
+  fileNames:string[]
+}
 export interface Seen {
     userId: string;
     seenAt: string;
@@ -172,4 +188,12 @@ export interface IProject extends Omit<IAgencyProjects, '_id' | 'serviceName' | 
   id: string;
   name: string;
   deadline: string;
+}
+
+
+
+export interface IIntegratePaymentType {
+  key1:string;
+  key2:string;
+  webhookUrl?:string
 }

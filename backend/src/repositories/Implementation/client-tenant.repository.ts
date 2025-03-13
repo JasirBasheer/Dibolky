@@ -2,9 +2,9 @@ import { Model, Schema } from "mongoose";
 import { inject, injectable } from "tsyringe";
 import { BaseRepository, CustomError, NotFoundError } from "mern.common";
 import { IClientTenantRepository } from "../Interface/IClientTenantRepository";
-import { IClientTenant, User } from "../../shared/types/client.types";
-import { connectTenantDB } from "../../config/db";
-import { IUpdateProfile } from "../../shared/types/common.types";
+import { IClientTenant, User } from "../../types/client.types";
+import { connectTenantDB } from "../../config/db.config";
+import { IUpdateProfile } from "../../types/common.types";
 
 
 

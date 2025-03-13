@@ -4,12 +4,12 @@ import { container } from "tsyringe";
 import { IAgencyService } from "../services/Interface/IAgencyService";
 import { IAdminService } from "../services/Interface/IAdminService";
 import { IClientService } from "../services/Interface/IClientService";
-import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../config/env";
-import { isTokenBlacklisted } from "../config/redis";
-import { IClient } from "../shared/types/client.types";
-import { IAgency } from "../shared/types/agency.types";
-import { IAdmin } from "../shared/types/admin.types";
-import { ITokenDetails } from "../shared/types/common.types";
+import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../config/env.config";
+import { isTokenBlacklisted } from "../config/redis.config";
+import { IClient } from "../types/client.types";
+import { IAgency } from "../types/agency.types";
+import { IAdmin } from "../types/admin.types";
+import { ITokenDetails } from "../types/common.types";
 
 // services
 const agencyService = container.resolve<IAgencyService>("AgencyService");

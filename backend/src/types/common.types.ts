@@ -133,3 +133,11 @@ export interface IUpdateProfile{
     name:string,
     bio:string,
 }
+
+
+
+export interface IIntegratePaymentType {
+    key1:string;
+    key2:string;
+    webhookUrl?:string
+  }

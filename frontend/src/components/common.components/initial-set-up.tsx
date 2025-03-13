@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 
 interface InitialSetUpProps {
-  onClose: (value: boolean) => void;
+  onClose: () => void;
   link:string;
   tutorialUrl:string;
 }
@@ -16,13 +16,13 @@ const InitialSetUp = ({ onClose,link,tutorialUrl }: InitialSetUpProps) => {
 
   function handleSkipForNow  () { 
     localStorage.setItem('skipInitialSetUp', 'true');
-    onClose(false)
+    onClose()
   }
   
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50"
-      onClick={() => onClose(false)}
+      onClick={() => onClose()}
     >
       <Card className="w-full max-w-3xl"
         onClick={(e) => e.stopPropagation()}
@@ -30,7 +30,7 @@ const InitialSetUp = ({ onClose,link,tutorialUrl }: InitialSetUpProps) => {
         <div className="p-4 flex items-center justify-between border-b">
           <h2 className="text-xl font-semibold">Quick Setup Guide</h2>
           <Button variant="ghost" size="icon" className="rounded-full"
-            onClick={() => onClose(false)}
+            onClick={() => onClose()}
           >
             <X className="h-5 w-5" />
           </Button>

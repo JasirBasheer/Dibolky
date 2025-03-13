@@ -2,9 +2,9 @@ import { BaseRepository, CustomError } from "mern.common";
 import { inject, injectable } from "tsyringe";
 import { Model } from "mongoose";
 import { Schema } from "mongoose";
-import { connectTenantDB } from "../../config/db";
+import { connectTenantDB } from "../../config/db.config";
 import { IContentRepository } from "../Interface/IContentRepository";
-import { IReviewBucket } from "../../shared/types/common.types";
+import { IReviewBucket } from "../../types/common.types";
 
 @injectable()
 export class ContentRepository extends BaseRepository<IReviewBucket> implements IContentRepository {
@@ -70,5 +70,31 @@ export class ContentRepository extends BaseRepository<IReviewBucket> implements 
             { _id: contentId },
             { $set: { status } }
         );
+    }
+
+    async getAllScheduledContents(
+        orgId: string, 
+        user_id: string
+    ): Promise<IReviewBucket[]>{
+        const model = await this.getModel(orgId)
+        return await model.find({
+            orgId,
+            user_id:user_id,
+            "platforms": { 
+            $elemMatch: { 
+              "scheduledDate": { $ne: "" } 
+            } 
+          }})
+    }
+
+    async reScheduleContent(
+        orgId:string,
+        content_id:string,
+        date:string
+    ):Promise<IReviewBucket>{
+        const model = await this.getModel(orgId)
+        const content = await model.findByIdAndDelete({_id: content_id}, { $set: { date: date } });
+        if(!content)throw new CustomError("An unexpected error occured while updating content",500)
+        return content
     }
 }

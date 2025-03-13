@@ -4,11 +4,11 @@ import { IChatRepository } from '../../repositories/Interface/IChatRepository';
 import { ownerDetailsSchema } from '../../models/agency/agency.model';
 import { CustomError, NotFoundError } from 'mern.common';
 import { IMessageRepository } from '../../repositories/Interface/IMessageRepository';
-import { IChat, IGroupDetails, IMessage, Participant } from '../../shared/types/chat.types';
+import { IChat, IGroupDetails, IMessage, Participant } from '../../types/chat.types';
 import { IEntityRepository } from '../../repositories/Interface/IEntityRepository';
-import { IAgency, IAgencyTenant } from '../../shared/types/agency.types';
+import { IAgency, IAgencyTenant } from '../../types/agency.types';
 import mongoose, { Connection, Model, Types } from 'mongoose';
-import { deleteS3Object } from '../../config/aws-s3.config';
+import { deleteS3Object } from '../../utils/aws.utils';
 
 @injectable()
 export default class ChatService implements IChatService {

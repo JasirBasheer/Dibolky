@@ -44,30 +44,31 @@ export interface IAgencyTenant extends Document {
     email?: string;
     paymentCredentials?: {
         razorpay?: {
-            key_id?: string;
-            key_secret?: string;
+            secret_id?: string;
+            secret_key?: string;
         };
         stripe?: {
-            key_id?: string;
-            key_secret?: string;
+            publish_key?: string;
+            secret_key?: string;
+            webhook_url?: string;
         };
     };
     socialMedia_credentials?: {
         instagram?: {
             accessToken?: string;
-            apiKey?: string;
+            connectedAt?: string;
         };
         facebook?: {
             accessToken?: string;
-            apiKey?: string;
+            connectedAt?: string;
         };
         x?: {
             accessToken?: string;
-            apiKey?: string;
+            connectedAt?: string;
         };
         tiktok?: {
             accessToken?: string;
-            apiKey?: string;
+            connectedAt?: string;
         };
     };
     createdAt?: Date;
@@ -75,6 +76,7 @@ export interface IAgencyTenant extends Document {
     isSocialMediaInitialized?:boolean;
     isPaymentInitialized?:boolean;
     setSocialMediaToken?(provider: string,token: string): Promise<void>;
+    integratePaymentGateway(provider: string,key1:string,key2:string,webhookUrl?:string): Promise<void>;
 }
 
 

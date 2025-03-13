@@ -6,9 +6,9 @@ import { IAgencyRepository } from '../../repositories/Interface/IAgencyRepositor
 import { inject, injectable } from 'tsyringe';
 import { IAdminService } from '../Interface/IAdminService';
 import { CustomError, NotFoundError, UnauthorizedError } from 'mern.common';
-import { IAdmin, IPlan, planDetails, Plans } from '../../shared/types/admin.types';
-import { createNewPlanMenu } from '../../shared/utils/menu.utils';
+import { IAdmin, IPlan, planDetails, Plans } from '../../types/admin.types';
 import { ITransactionRepository } from '../../repositories/Interface/ITransactionRepository';
+import { createNewPlanMenu } from '../../utils/menu.utils';
 
 @injectable()
 export default class AdminService implements IAdminService {

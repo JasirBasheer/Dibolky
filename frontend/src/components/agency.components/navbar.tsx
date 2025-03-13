@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 import { useNavigate } from 'react-router-dom';
-import { AlignLeft, Bell, X } from 'lucide-react'
+import { AlignLeft, Bell, Bolt, Moon, Sun, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { setUser } from '@/redux/slices/userSlice';
 import { useQuery } from '@tanstack/react-query';
@@ -22,28 +22,33 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '../ui/command';
+import { Button } from '../ui/button';
+import { useTheme } from '@/provider/theme.provider';
 
 
 
 
 const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
+  const { setTheme } = useTheme()
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false)
   const dispatch: AppDispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
   const agency = useSelector((state: RootState) => state.agency);
   const navigate = useNavigate()
+  const [isSortCutOpen, setIsSortCutOpen] = useState(false)
 
 
 
   useEffect(() => {
     if (!agency?.user_id) return;
-    
+
     const selectedClient = localStorage.getItem('selectedClient');
     if (selectedClient && selectedClient !== agency?.user_id) {
       dispatch(setUser({ user_id: selectedClient, role: "agency-client" }));
     } else {
       dispatch(setUser({ user_id: agency.user_id, role: "agency" }));
-      localStorage.setItem('selectedClient',agency.user_id)
+      localStorage.setItem('selectedClient', agency.user_id)
     }
   }, [dispatch, agency.user_id]);
 
@@ -73,7 +78,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
 
   const fetchSelectedUser = async () => {
     try {
-       const selectedClient = localStorage.getItem('selectedClient')
+      const selectedClient = localStorage.getItem('selectedClient')
       let response;
       let role = 'agency-client'
       console.log(user.user_id, agency.user_id)
@@ -112,7 +117,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
 
   const handleSelect = (user_id: string) => {
     if (!user_id) return;
-    
+
     setIsProfileOpen(false);
     localStorage.setItem('selectedClient', user_id);
     dispatch(setUser({
@@ -130,14 +135,108 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
   }, [user?.user_id]);
 
 
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        setIsSortCutOpen((open) => !open)
+      }else if(e.key == "d" &&  (e.metaKey || e.ctrlKey)){
+        e.preventDefault()
+        setIsSortCutOpen(false)
+        navigate('/agency')
+      }else if(e.key == "s" &&  (e.metaKey || e.ctrlKey)){
+        e.preventDefault()
+        setIsSortCutOpen(false)
+        navigate('/agency/settings')
+      }else if(e.key == "p" &&  (e.metaKey || e.ctrlKey)){
+        e.preventDefault()
+        setIsSortCutOpen(false)
+        navigate('/agency/projects')
+      }
+      
+    }
+    document.addEventListener("keydown", down)
+    return () => document.removeEventListener("keydown", down)
+  }, [])
+
 
 
   return (
     <div className='relative grid grid-cols-12 min-h-[4.5rem]'>
-      <div className="col-span-2 bg-white flex items-center justify-start pl-9 text-blue-600 text-2xl font-bold">Dibolky</div>
-      <div className="lg:col-span-7 col-span-6"></div>
-      <div className="lg:col-span-3 flex items-center lg:pl-12 gap-7">
+
+      <CommandDialog open={isSortCutOpen} onOpenChange={setIsSortCutOpen}>
+        <CommandInput placeholder="Type a command or search..." />
+        <CommandList>
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup heading="Suggestions">
+            <CommandItem onSelect={() => navigate('/agency') }>
+              <div className="flex justify-between w-full">
+                Dashboard
+              <div className=" items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium sm:flex">
+              <span className="text-xs w-4 h-4">⌘</span>D
+              </div> 
+            </div>
+            </CommandItem>
+            <CommandItem onSelect={() => navigate('/agency/projects') }>
+              <div className="flex justify-between w-full">
+              Projects
+              <div className=" items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium sm:flex">
+              <span className="text-xs w-4 h-4">⌘</span>p
+              </div> 
+            </div>
+            </CommandItem>
+            <CommandItem onSelect={() => navigate('/agency/settings') }>
+              <div className="flex justify-between w-full">
+              Settings
+              <div className=" items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium sm:flex">
+              <span className="text-xs w-4 h-4">⌘</span>S
+              </div> 
+            </div>
+            </CommandItem>
+            <CommandItem onSelect={() => navigate('/agency/settings?tab=social-integrations&') }>
+              <div className="flex justify-between w-full">
+              Create Connection
+          
+            </div>
+            </CommandItem>
+          </CommandGroup>
+          <CommandSeparator />
+
+          <CommandGroup heading="Theme">
+            <CommandItem onSelect={() => setTheme("light")}>
+              <Sun className="mr-1" style={{ height: "16px", width: "16px" }} />
+              <span>Light</span>
+            </CommandItem>
+
+            <CommandItem onSelect={() => setTheme("dark")}>
+              <Moon className="mr-1" style={{ height: "16px", width: "16px" }} />
+              Dark
+            </CommandItem>
+            <CommandItem onSelect={() => setTheme("system")}>
+              <Bolt className="mr-1" style={{ height: "16px", width: "16px" }} />
+              System
+            </CommandItem>
+
+          </CommandGroup>
+        </CommandList>
+
+      </CommandDialog>
+
+      <div className="col-span-2 flex items-center justify-start pl-9 text-blue-600 dark:text-blue-300 font-cantarell text-2xl font-bold">Dibolky</div>
+      <div className="lg:col-span-6 col-span-6"></div>
+      <div className="lg:col-span-4 flex items-center lg:pl-12 gap-7">
         <div className="lg:flex hidden gap-x-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsSortCutOpen(true)}
+            className="relative flex items-center justify-center h-9 w-24 bg-slate-50 dark:bg-[#ffffff2e]"
+          >
+            <div className=" items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium sm:flex">
+              <span className="text-xs w-4 h-4">⌘</span>K
+            </div>
+          </Button>
+
 
           {isClientsLoading ? (
             <Skeleton width={100} height={30} />
@@ -145,7 +244,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
             onValueChange={handleSelect}
             value={user?.user_id}
           >
-            <SelectTrigger className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm appearance-none focus:outline-none bg-white cursor-pointer shadow-sm hover:border-blue-400">
+            <SelectTrigger className="w-full px-3 py-2 border rounded-md text-sm appearance-none focus:outline-none cursor-pointer shadow-sm ">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

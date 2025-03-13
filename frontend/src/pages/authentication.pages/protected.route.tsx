@@ -11,8 +11,6 @@ import { setClient } from '@/redux/slices/clientSlice';
 
 interface IRedirectionUrls {
   agency: string;
-  Company: string;
-  Employee: string;
   Admin: string;
 }
 
@@ -55,7 +53,7 @@ const ProtectedRoute = ({ children, role }: { children: ReactNode, role: string 
             main_id: res.data.details?.main_id || ""
           }))
 
-        } else if (role == "Client" && response?.data.details.orgId && response?.data.details.email) {
+        } else if (role == "client" && response?.data.details.orgId && response?.data.details.email) {
           const res = await axios.get(`/api/client/get-client-details`);
           dispatch(setUser({
             name: res.data.client?.name || "",
@@ -78,9 +76,7 @@ const ProtectedRoute = ({ children, role }: { children: ReactNode, role: string 
 
         const roleRedirects: IRedirectionUrls = {
           "agency": '/agency',
-          "Company": '/company/',
-          "Employee": '/employee/',
-          "Admin": '/admin/'
+          "admin": '/admin/'
         };
 
         dispatch(setUser({ role: response.data.role, planId: response.data.details.planId }))

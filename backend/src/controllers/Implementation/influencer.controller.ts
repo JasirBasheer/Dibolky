@@ -27,7 +27,6 @@ export default class InfluencerController implements IInfluencerController {
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const details = await this.influencerService.verifyInfluencer(req.details._id as string)
             if (!details) throw new NotFoundError("Account Not found")
-                console.log(details,'details')
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details, role: "influencer" })
         } catch (error) {
             next(error)

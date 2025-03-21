@@ -35,26 +35,25 @@ const Plans = () => {
     }, [isAgency, plans]); 
 
     const handlePurchasePlan = (planId: string) => {
-        const platform = isAgency ? "Agency" : "Influencer";
-        navigate(`/purchase/${platform}/${planId}`);
+        navigate(`/purchase/${planId}`);
     };
 
     return (
-        <div className="grid grid-cols-12 bg-[#f9fafb] w-full min-h-screen py-8 gap-5">
+        <div className="grid grid-cols-12 light:bg-[#f9fafb] w-full min-h-screen py-8 gap-5 mt-32 max-w-7xl mx-auto" id='pricing'>
             <div className="col-span-12 flex items-center justify-center">
                 <div className="text-center">
-                    <h1 className="sm:text-4xl text-3xl font-semibold tracking-wide">
+                    <h1 className="sm:text-4xl text-3xl font-lazare font-bold tracking-wide text-foreground/90" >
                         Simple, Transparent Pricing
                     </h1>
-                    <p className="text-gray-600 text-md sm:text-lg max-w-3xl mt-2">
+                    <p className="text-gray-600 text-md font-lazare font-bold sm:text-lg max-w-3xl mt-2">
                         Choose the perfect plan for your platform's needs
                     </p>
                 </div>
             </div>
 
             <div className="col-span-12 flex items-center justify-center">
-                <div className="relative bg-white px-2 py-2 rounded-lg shadow-md">
-                    <div className="flex relative">
+                <div className="relative dark:bg-[#bdb5b5fb] bg-white px-2 py-2 rounded-lg shadow-md">
+                    <div className="flex relative font-lazare font-bold">
                         <button
                             className={`relative z-10 transition-colors duration-300 md:w-44 w-36 h-9 rounded-md ${isAgency ? "text-white" : "text-gray-700"
                                 }`}
@@ -69,25 +68,24 @@ const Plans = () => {
                         >
                             Influencer
                         </button>
-                        <div
-                            className={`absolute top-0 h-9 w-36 md:w-44 bg-blue-600 rounded-md transition-all duration-300 ${isAgency ? "left-0" : "left-[144px] md:left-44"
-                                }`}
-                        />
+                        <div 
+                        className={`absolute top-0 h-9 w-36 md:w-44 dark:bg-[#1f2b40] bg-[#1c1e21f3] rounded-md transition-all duration-300 ${isAgency ? "left-0" : "left-[144px] md:left-44"
+                                }`} />
                     </div>
                 </div>
             </div>
 
-            <div className="col-span-12 flex items-center justify-center px-4 md:px-10 lg:px-20">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-7 w-full">
+            <div className="col-span-12 flex items-center justify-center px-4 md:px-10 mt-10 lg:px-20">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-7 w-full font-lazare font-bold">
                     {sortedPlans.map((plan, i) => (
                         i<3 ? ( <div
-                            key={plan.id}
+                            key={i}
                             className={`relative ${i !== 1 ? "mt-0 md:mt-4" : ""}
-                                 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 flex flex-col`}
+                                 light:bg-white rounded-xl shadow-md dark:bg-[#1f2b40] hover:shadow-xl transition-all duration-300 p-6 flex flex-col`}
                                 >
                                 <div className="flex-grow">
-                                    <h2 className="text-2xl font-bold">{plan.title}</h2>
-                                    <p className="text-gray-500 mt-2">{plan.description}</p>
+                                    <h2 className="text-2xl font-bold">{plan.planName}</h2>
+                                    <p className="text-gray-500 mt-2">{plan.planDescription}</p>
                                     <div className="flex items-baseline mt-4">
                                         <span className="text-3xl font-bold">{currency.currencySymbol}{plan.price.toLocaleString()}</span>
                                         <span className="text-gray-500 ml-2">/{plan.validity}</span>
@@ -104,8 +102,8 @@ const Plans = () => {
                                 <button
                                     onClick={() => handlePurchasePlan(plan._id as string)}
                                     className={`w-full mt-6 h-14 rounded-md transition-all duration-300 ${i === 1
-                                        ? "bg-blue-600 text-white hover:bg-blue-700"
-                                        : "bg-gray-100 hover:bg-gray-200"
+                                        ? "dark:bg-[#38456683] bg-[#1c1e21f3] hover:bg-gray-200 dark:hover:text-white text-white hover:text-black"
+                                        : "dark:bg-[#384566c5]  bg-[#1c1e21f3] hover:bg-gray-200 dark:hover:text-white text-white hover:text-black"
                                         }`}
                                 >
                                     Purchase Plan

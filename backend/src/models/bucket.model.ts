@@ -4,7 +4,7 @@ import { IBucket } from '../types/common.types';
 
 
 
-export const BucketSchema: Schema<IBucket> = new mongoose.Schema({
+export const bucketSchema: Schema<IBucket> = new mongoose.Schema({
     user_id: {
         type: String,
         required: true
@@ -70,7 +70,7 @@ export const BucketSchema: Schema<IBucket> = new mongoose.Schema({
 
 
 
-BucketSchema.methods.changePlatformPublishStatus = async function (
+bucketSchema.methods.changePlatformPublishStatus = async function (
     platform: string,
     value: boolean
 ): Promise<void> {

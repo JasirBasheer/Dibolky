@@ -81,7 +81,7 @@ export default mongoose.model<IAgency>('Agency', agencySchema);
 
 
 
-export const ownerDetailsSchema = new Schema<IAgencyTenant>({
+export const agencyTenantSchema = new Schema<IAgencyTenant>({
     main_id: {
         type: String,
         required: false,
@@ -194,7 +194,7 @@ export const ownerDetailsSchema = new Schema<IAgencyTenant>({
 
 
 
-ownerDetailsSchema.methods.setSocialMediaToken = async function(provider: string,token: string): Promise<void> {
+agencyTenantSchema.methods.setSocialMediaToken = async function(provider: string,token: string): Promise<void> {
     if (this.socialMedia_credentials.hasOwnProperty(provider)) {
       this.socialMedia_credentials[provider].accessToken = token;
       this.socialMedia_credentials[provider].connectedAt = Date.now()
@@ -204,7 +204,7 @@ ownerDetailsSchema.methods.setSocialMediaToken = async function(provider: string
     }
 };
   
-ownerDetailsSchema.methods.integratePaymentGateway = async function(provider: string,key1:string,key2:string,webhookUrl?:string): Promise<void> {
+agencyTenantSchema.methods.integratePaymentGateway = async function(provider: string,key1:string,key2:string,webhookUrl?:string): Promise<void> {
     if (this.paymentCredentials.hasOwnProperty(provider)) {
         if(provider == "razorpay"){
             this.paymentCredentials[provider].secret_id = key1;

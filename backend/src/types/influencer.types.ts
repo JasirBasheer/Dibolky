@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 export interface AddressType {
     city: string;
@@ -7,7 +7,6 @@ export interface AddressType {
 
 
 export interface IInfluencer extends Document {
-    _id?: mongoose.Types.ObjectId | string;
     orgId: string;
     organizationName: string;
     name: string;
@@ -15,7 +14,7 @@ export interface IInfluencer extends Document {
     address: AddressType;
     websiteUrl: string;
     industry: string;
-    password?: string;
+    password: string;
     contactNumber: number;
     planId: string;
     validity: string;

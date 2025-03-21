@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import { IAdmin } from '../types/admin.types';
 
 
-const adminSchema: Schema<IAdmin> = new Schema({
+export const adminSchema: Schema<IAdmin> = new Schema({
     name: {
         type: String,
         required: true,
@@ -17,5 +17,4 @@ const adminSchema: Schema<IAdmin> = new Schema({
     }
 });
 
-const Admin = mongoose.model<IAdmin>('Admin', adminSchema);
-export default Admin
+export default mongoose.model<IAdmin>('Admin', adminSchema);

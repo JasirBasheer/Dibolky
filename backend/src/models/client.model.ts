@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { IClient, IClientTenant } from "../types/client.types";
 
 
-export const Client: Schema<IClient> = new mongoose.Schema({
+export const clientSchema: Schema<IClient> = new mongoose.Schema({
   orgId: {
     type: String,
     required: true
@@ -22,11 +22,11 @@ export const Client: Schema<IClient> = new mongoose.Schema({
 });
 
 
-export default mongoose.model<IClient>('Client', Client);
+export default mongoose.model<IClient>('Client', clientSchema);
 
 
 
-export const clientSchema: Schema<IClientTenant> = new mongoose.Schema({
+export const clientTenantSchema: Schema<IClientTenant> = new mongoose.Schema({
   main_id:{
     type:String,
     required:true
@@ -110,7 +110,7 @@ export const clientSchema: Schema<IClientTenant> = new mongoose.Schema({
 }, { timestamps: true });
 
 
-clientSchema.methods.setSocialMediaToken = async function (provider: string, token: string): Promise<void> {
+clientTenantSchema.methods.setSocialMediaToken = async function (provider: string, token: string): Promise<void> {
   if (this.socialMedia_credentials.hasOwnProperty(provider)) {
     this.socialMedia_credentials[provider].accessToken = token;
     await this.save();
@@ -121,11 +121,3 @@ clientSchema.methods.setSocialMediaToken = async function (provider: string, tok
 
 
 
-clientSchema.methods.setSocialMediaUserName = async function (provider: string, username: string): Promise<void> {
-  if (this.socialMedia_credentials.hasOwnProperty(provider)) {
-    this.socialMedia_credentials[provider].userName = username;
-    await this.save();
-  } else {
-    throw new Error(`Unsupported social media provider: ${provider}`);
-  }
-};

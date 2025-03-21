@@ -55,7 +55,7 @@ export default class AdminService implements IAdminService {
 
     async getAllPlans()
         : Promise<object> {
-        let agencyPlans = await this.planRepository.getAgencyPlans()
+        let agencyPlans = await this.planRepository.getPlans()
         return {
             Agency: agencyPlans
         }
@@ -71,13 +71,6 @@ export default class AdminService implements IAdminService {
         return plan
     }
 
-
-    async getAgencyMenu(
-        planId: string
-    ): Promise<object> {
-        const plan = await this.planRepository.getAgencyPlan(planId)
-        return plan!.menu as object
-    }
 
 
 
@@ -127,7 +120,7 @@ export default class AdminService implements IAdminService {
         let menu = createNewPlanMenu(details.menu as string[])
         details.menu = menu
         if (entity == "Agency") {
-            editedPlan = await this.planRepository.editAgencyPlan(details)
+            editedPlan = await this.planRepository.editPlan(details)
         }
         if (!editedPlan) throw new CustomError("Error While editing Plan", 500)
     }
@@ -138,7 +131,7 @@ export default class AdminService implements IAdminService {
     ): Promise<void> {
         let changedStatus;
         if (entity == "Agency") {
-            changedStatus = await this.planRepository.changeAgencyPlanStatus(plan_id)
+            changedStatus = await this.planRepository.changePlanStatus(plan_id)
         }
         if (!changedStatus) throw new CustomError("Error While changing Plan status", 500)
     }
@@ -149,7 +142,7 @@ export default class AdminService implements IAdminService {
     ): Promise<object> {
         let details;
         if (entity == "Agency") {
-            const planDetails = await this.planRepository.getAgencyPlan(plan_id)
+            const planDetails = await this.planRepository.getPlan(plan_id)
             const planConsumers = await this.agencyRepository.getAgencyPlanConsumers(plan_id)
             const consumers = Array.isArray(planConsumers)
                 ? planConsumers.map((item) => ({

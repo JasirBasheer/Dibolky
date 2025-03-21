@@ -5,8 +5,8 @@ import { Expand, Play } from 'lucide-react';
 
 const MediaDisplay = ({ url, contentType }: { url: string, contentType: string }) => {
   const [isOpen, setIsOpen] = useState(false);
-  console.log(url,contentType)
 
+  
   const isImage = contentType === "image";
   const isVideo = contentType === "video";
 

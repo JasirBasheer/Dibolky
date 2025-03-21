@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { handleRazorpayPayment } from '../../helpers/portal.helpers/razporpay';
 import { FormData, Plan, ValidationError } from '../../types/portal.types';
-import { renderInputField } from '../../components/portalComponents/Input';
+import { renderInputField } from '../../components/portal.components/Input';
 import { handleStripePayment } from '@/helpers/portal.helpers/stripe';
-import Navbar from '../../components/portalComponents/Navbar';
+import Navbar from '../../components/portal.components/Navbar';
 import { RootState } from '@/types/common.types';
 import Skeleton from 'react-loading-skeleton'
 import { useSelector } from 'react-redux';
@@ -22,8 +22,8 @@ import { IPlan } from '@/types/admin.types';
 
 
 const PurchasePlan: React.FC = () => {
-    const { id, platform } = useParams();
-    const [plan, setPlan] = useState<Plan | null>(null);
+    const { plan_id } = useParams();
+    const [plan, setPlan] = useState<IPlan | null>(null);
     const [currentStep, setCurrentStep] = useState<number>(0);
     const [paymentMethod, setPaymentMethod] = useState<string>("razorpay")
     const [errors, setErrors] = useState<ValidationError>({});
@@ -48,7 +48,7 @@ const PurchasePlan: React.FC = () => {
     }, [currency])
 
 
-    if (!id || !platform) {
+    if (!plan_id) {
         console.error("Missing URL parameters!");
         navigate('/');
         return
@@ -70,7 +70,7 @@ const PurchasePlan: React.FC = () => {
     }
 
     const validateMail = async (Mail: string): Promise<boolean> => {
-        const response = await axios.post('/api/entities/check-mail', { Mail, platform })
+        const response = await axios.post('/api/entities/check-mail', { Mail, platform:plan?.planType })
         return response.data.isExists
     }
 
@@ -94,7 +94,7 @@ const PurchasePlan: React.FC = () => {
     const fetchPlanDetails = async () => {
         try {
             setLoading(true);
-            const response = await axios.post(`/api/entities/get-plan`, { id, platform })
+            const response = await axios.post(`/api/entities/get-plan`, { plan_id })
             setPlan(response.data.plan)
         } catch (error) {
             console.log(error)
@@ -109,9 +109,9 @@ const PurchasePlan: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         if (paymentMethod == 'razorpay') {
-            await handleRazorpayPayment(formData, plan as IPlan, platform, navigate, currency.selectedCurrency);
+            await handleRazorpayPayment(formData, plan as IPlan, navigate, currency.selectedCurrency);
         } else if (paymentMethod == 'stripe') {
-            const response = await handleStripePayment(formData, plan as IPlan, platform, currency.selectedCurrency)
+            const response = await handleStripePayment(formData, plan as IPlan, currency.selectedCurrency)
             if (response.url) window.location.href = response.url
         }
     };
@@ -147,21 +147,21 @@ const PurchasePlan: React.FC = () => {
                 return (
                     <div className="space-y-4 animate-fadeIn">
                         <div className="text-center border-b pb-6">
-                            <h2 className="text-3xl font-bold text-gray-900">{plan?.title}
+                            <h2 className="text-3xl text-gray-900 font-lazare font-bold">{plan?.planName}
                             </h2>
                             <div className="mt-4">
-                                <span className="text-4xl font-bold text-blue-600">{currency.currencySymbol} {plan.price.toLocaleString()}</span>
-                                <span className="text-gray-600 ml-2">/ {plan.validity}</span>
+                                <span className="text-4xl  dark:text-white text-black font-lazare font-bold">{currency.currencySymbol} {plan.price.toLocaleString()}</span>
+                                <span className="text-gray-600 ml-2 font-lazare font-bold" >/ {plan.validity}</span>
                             </div>
                         </div>
 
                         <div className="pt-6">
-                            <p className="text-gray-600 text-center mb-6">{plan.description}</p>
+                            <p className="text-gray-500 text-center mb-6 font-lazare font-bold">{plan.planDescription}</p>
                             <div className="space-y-4">
                                 {plan.features?.map((feature, index) => (
-                                    <div key={index} className="flex items-center">
+                                    <div key={index} className="flex items-center font-lazare font-bold">
                                         <CheckCircle2 className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                                        <span className="text-gray-700">{feature}</span>
+                                        <span className="text-gray-700 ">{feature}</span>
                                     </div>
                                 ))}
                             </div>
@@ -313,8 +313,8 @@ const PurchasePlan: React.FC = () => {
                                     <div className="flex justify-end mt-8">
                                         <button
                                             onClick={() => setCurrentStep(1)}
-                                            className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg
-                                              hover:bg-blue-700 transition-colors duration-200 cursor-pointer"
+                                            className="flex items-center px-6 py-3 bg-[#202d42] text-white rounded-lg
+                                              hover:bg-[#202d42d8] transition-colors duration-200 cursor-pointer"
                                         >
                                             Get Started
                                             <ArrowRight className="ml-2 w-4 h-4" />
@@ -333,7 +333,7 @@ const PurchasePlan: React.FC = () => {
                                             {currentStep > 1 && (
                                                 <div
                                                     onClick={() => setCurrentStep(prev => prev - 1)}
-                                                    className="px-6 py-2 text-blue-600 hover:text-blue-700 cursor-pointer transition-colors duration-200"
+                                                    className="px-6 py-2 text-[#202d42] hover:text-[#202d42d2] cursor-pointer transition-colors duration-200"
                                                 >
                                                     Back
                                                 </div>
@@ -342,7 +342,7 @@ const PurchasePlan: React.FC = () => {
                                             {currentStep < 3 ? (
                                                 <button
                                                     onClick={event => { handleNext(event) }} disabled={!next}
-                                                    className={`ml-auto flex items-center px-6 py-3 ${next ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-400'} text-white rounded-lg transition-colors duration-200 ${!next ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                                                    className={`ml-auto flex items-center px-6 py-3 ${next ? 'bg-[#202d42] hover:bg-[#202d42ed]' : 'bg-[#202d42c3]'} text-white rounded-lg transition-colors duration-200 ${!next ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                                                     Continue
                                                     <ArrowRight className="ml-2 w-4 h-4" />
                                                 </button>

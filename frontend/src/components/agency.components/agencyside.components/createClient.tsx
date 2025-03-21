@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "../../../utils/axios";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import { useSelector } from "react-redux";
@@ -74,7 +73,7 @@ const CreateClient = () => {
       console.log(selectedServices)
       setIsLoading(true);
       
-      const response = await createClientApi(orgId,name,industry,email,selectedService,servicesPreview)
+      const response = await createClientApi(orgId,name,industry,email,selectedServices,servicesPreview)
 
       if (response.status === 201) {
         message.success("Client created successfully");

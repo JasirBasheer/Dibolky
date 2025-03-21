@@ -51,6 +51,7 @@ export default class EntityController implements IEntityController {
     ): Promise<void> {
         try {
             const { Mail, platform } = req.body
+            console.log(Mail,platform)
             const isExists = await this.entityService.IsMailExists(Mail, platform)
 
             if (isExists != null) return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.BAD_REQUEST, { isExists: isExists })
@@ -75,7 +76,7 @@ export default class EntityController implements IEntityController {
     ): Promise<void> {
         try {
             let userCountry = req.cookies?.userCountry
-            let plans = await this.entityService.getAllPlans()
+            const plans = await this.entityService.getAllPlans()
 
             let PriceConverisonFunc = getPriceConversionFunc(userCountry)
 
@@ -111,10 +112,9 @@ export default class EntityController implements IEntityController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const { id, platform } = req.body
+            const { plan_id } = req.body
             const userCountry = req.cookies.userCountry
-            const plans = await this.entityService.getAllPlans()
-            const plan = await this.entityService.getPlan(plans, id, platform);
+            const plan = await this.entityService.getPlan(plan_id);
             if (!plan) return SendResponse(res, HTTPStatusCodes.BAD_REQUEST, ResponseMessage.BAD_REQUEST, { message: "Platform or Plan not found please try again" })
             let PriceConverisonFunc = getPriceConversionFunc(userCountry)
             const convertedPlanPrice = PriceConverisonFunc(plan.price as number)
@@ -184,7 +184,7 @@ export default class EntityController implements IEntityController {
 
 
             if (role === "agency") {
-                menu = await this.entityService.getAgencyMenu(planId);
+                menu = await this.entityService.getMenu(planId);
             } else if (role === "agency-client") {
                 console.log(req.details.orgId, planId, "tehireaserfamsdjfklasdjflkasjfasdkl")
                 menu = await this.entityService.getClientMenu(req.details.orgId as string, planId);

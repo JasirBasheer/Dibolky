@@ -35,11 +35,11 @@ export class AgencyRepository extends BaseRepository<IAgency> implements IAgency
     }
 
     async changePassword(
-        agency_Id: string,
+        agency_id: string,
         password: string
     ): Promise<IAgency | null> {
         return this.update(
-            { _id: agency_Id },
+            { _id: agency_id },
             { $set: { password } },
             { new: true }
         );

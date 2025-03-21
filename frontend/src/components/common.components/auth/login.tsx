@@ -6,10 +6,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "@/utils/axios";
 import { validateEmail, validatePassword } from "@/validation/agencyValidation";
 
-interface LoginFormProps {
-  role: string;
-}
-const LoginForm = ({ role }: LoginFormProps) => {
+
+const LoginForm = ({ role }: { role: string }) => {
   const [email, setEmail] = useState("jasirbinbasheerpp@gmail.com");
   const [password, setPassword] = useState("Jasir@123");
   const [isLoading, setIsLoading] = useState(false);
@@ -45,18 +43,23 @@ const LoginForm = ({ role }: LoginFormProps) => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post("/api/auth/login", { email, password, role });
-      setIsLoading(false);
+      await axios.post("/api/auth/login", { email, password, role });
 
-      if (response?.status === 200) {
-        message.success("Successfully Logged in");
-        const roleRedirects = { agency: "/agency", admin: "/admin/", client: "/client/" };
-        navigate(roleRedirects[role as keyof typeof roleRedirects]);
-      }
+      message.success("Successfully Logged in");
+      const roleRedirects = { agency: "/agency", admin: "/admin/", client: "/client/", influencer: '/influencer/' };
+      navigate(roleRedirects[role as keyof typeof roleRedirects]);
+
     } catch (error: unknown) {
+      if (typeof error === "object" && error !== null && "response" in error) {
+        const errorResponse = error as { response: { data: { error: string } } };
+        message.error(errorResponse.response.data.error);
+      } else {
+        message.error("Unexpected error occurred");
+      }
+    } finally {
       setIsLoading(false);
-      message.error("Unexpected error occurred");
     }
+
   };
 
   return (

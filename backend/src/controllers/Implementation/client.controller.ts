@@ -23,7 +23,7 @@ export default class ClientController implements IClientController {
             if(!req.details)throw new NotFoundError("Details Not Fount")
             const details = await this.clientService.verifyClient(req.details._id as string)
             if (!details) throw new NotFoundError("Account Not found")
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details, role: "Client" })
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details, role: "client" })
         } catch (error: unknown) {
             next(error);
         }

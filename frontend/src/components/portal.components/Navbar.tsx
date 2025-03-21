@@ -21,9 +21,9 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
   const dispatch = useDispatch()
 
   const navItems = [
-    { label: 'Features', href: '/features' },
-    { label: 'Pricing', href: '/pricing' },
-    { label: 'Contact', href: '/contact' }
+    { label: 'Features', tag: '#features' },
+    { label: 'Pricing', tag: '#pricing' },
+    { label: 'Contact', tag: '#contact' }
   ];
 
   useGSAP(() => {
@@ -50,6 +50,18 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
     USD: "$",
     AED: "د."
   }
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, tag:string) => {
+    e.preventDefault();
+    const targetElement = document.querySelector(tag);
+      if (targetElement) {
+      targetElement.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+      window.history.pushState(null, tag);
+    }
+  };
 
   const handleSelect = (currency: string, symbol: string) => {
     Cookies.set('userCountry', currency)
@@ -79,19 +91,19 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
 
   return (
     <div className="relative z-50">
-      <nav className="w-full px-6 py-5 bg-white shadow-sm">
+      <nav className="w-full px-6 py-5 shadow-sm">
         <div className=" max-w-7xl mx-auto grid grid-cols-12 items-center gap-4">
           <div className={`${animation ? "sligeRight" : ""} col-span-6 md:col-span-8 flex items-center`}>
-            <a href="/" className="text-blue-600 text-2xl font-bold mr-8">
+            <a href="/" className="light:text-blue-600 text-2xl font-lazare font-bold mr-8">
               Dibolky
             </a>
 
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden md:flex items-center space-x-8 cursor-pointer">
               {navItems.map((item) => (
                 <a
                   key={item.label}
-                  href={item.href}
-                  className="text-gray-600 hover:text-gray-800 transition-colors duration-200"
+                  onClick={(e) => handleNavClick(e, item.tag)}
+                  className="text-gray-600 dark:text-white  transition-colors duration-200"
                 >
                   {item.label}
                 </a>
@@ -99,11 +111,13 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
             </div>
           </div>
 
+      
+
           <div className={`${animation ? "slideLeft" : ""} hidden md:flex col-span-4 items-center justify-end space-x-4`}>
             <div className="relative">
               <button
                 onClick={() => setIsCurrecyBarOpen(!isCurrecyBarOpen)}
-                className="flex items-center gap-1 px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors rounded-md"
+                className="flex items-center gap-1 px-3 py-2 dark:text-white text-gray-700  light:hover:text-blue-600 transition-colors rounded-md"
               >
                 <span className="font-medium">{currency.selectedCurrency}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform ${isCurrecyBarOpen ? 'rotate-180' : ''}`} />
@@ -117,17 +131,17 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -20, scale: 0.95 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="absolute right-0 mt-2 w-48   z-10  bg-white rounded-md shadow-lg border border-gray-200  overflow-y-auto p-4 text-sm"
+                    className="absolute right-0 mt-2 w-48   z-10  light:bg-white dark:bg-[#171e2d] bg-white border-gray-200 rounded-md shadow-lg border dark:border-[#29303a]   overflow-y-auto p-4 text-sm"
                   >
                     <ul className="py-1">
                       {currencies.map((currency) => (
                         <li key={currency.code}>
                           <button
                             onClick={() => handleSelect(currency.code, currency.symbol)}
-                            className="w-full px-4 py-2 text-left hover:bg-blue-50 text-gray-700 hover:text-blue-600 flex items-center justify-between"
+                            className="w-full px-4 py-2 text-left dark:hover:bg-[#1f242c98] hover:bg-blue-50 text-gray-700 hover:text-blue-600 flex items-center justify-between"
                           >
-                            <span>{currency.name}</span>
-                            <span className="text-gray-500">{currency.symbol}</span>
+                            <span className="dark:text-white text-gray-500">{currency.name}</span>
+                            <span className="dark:text-white text-gray-500">{currency.symbol}</span>
                           </button>
                         </li>
                       ))}
@@ -139,13 +153,13 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
 
             <a
               href="/login"
-              className="text-gray-600 hover:text-gray-800 transition-colors duration-200"
+              className="dark:text-white text-gray-700 transition-colors duration-200"
             >
               Login
             </a>
             <a
               href="/trial"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-[25rem] transition-colors duration-200"
+              className="dark:bg-[#202d42ea] bg-[#1c1e21f3] border border-[#8c9ab03f] light:bg-blue-600 text-white px-4 py-2 rounded-[25rem] transition-colors duration-200"
             >
               Start Free Trial
             </a>
@@ -174,8 +188,7 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
         <div className="grid grid-cols-1 gap-4 px-6 py-4">
           {navItems.map((item) => (
             <a key={item.label}
-              href={item.href}
-              className="text-gray-600 hover:text-gray-800 transition-colors duration-200"
+              className="light:text-gray-600   text-white hover:text-gray-800 transition-colors duration-200"
             >
               {item.label}
             </a>
@@ -184,13 +197,13 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
           <div className="grid grid-cols-1 gap-4 pt-4 border-t border-gray-100">
             <a
               href="/login"
-              className="text-gray-600 hover:text-gray-800 transition-colors duration-200"
+              className="text-gray-600 hover:text-gray-800  transition-colors duration-200"
             >
               Login
             </a>
             <a
               href="/trial"
-              className="text-center bg-blue-600 hover:bg-blue-700 rounded text-white px-4 py-2  transition-colors duration-200"
+              className="text-center bg-blue-600 rounded text-white px-4 py-2  transition-colors duration-200"
             >
               Start Free Trial
             </a>

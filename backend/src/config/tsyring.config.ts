@@ -38,12 +38,12 @@ import { IProviderController } from "../controllers/Interface/IProviderControlle
 import ProviderController from "../controllers/Implementation/provider.controller";
 import { IProviderService } from "../services/Interface/IProviderService";
 import ProviderService from "../services/Implementation/provider.service";
-import Admin from "../models/admin.model";
+import  adminSchema  from "../models/admin.model";
 import ChatRepository from "../repositories/Implementation/chat.repository";
 import { IChatRepository } from "../repositories/Interface/IChatRepository";
 import { IChatService } from "../services/Interface/IChatService";
 import ChatService from "../services/Implementation/chat.service";
-import agencyModel, { ownerDetailsSchema } from "../models/agency.model";
+import agencySchema, { agencyTenantSchema } from "../models/agency.model";
 import { projectSchema } from "../models/project.model";
 import { ProjectRepository } from "../repositories/Implementation/project.repository";
 import { IProjectRepository } from "../repositories/Interface/IProjectRepository";
@@ -59,25 +59,46 @@ import TransactionRepository from "../repositories/Implementation/transaction.re
 import { IAgencyTenantRepository } from "../repositories/Interface/IAgencyTenantRepository";
 import AgencyTenantRepository from "../repositories/Implementation/agency-tenant.repository";
 import { transactionSchema } from "../models/transaction.model";
-import { BucketSchema } from "../models/bucket.model";
-import { Client, clientSchema } from "../models/client.model";
+import { bucketSchema } from "../models/bucket.model";
+import clientSchema,{ clientTenantSchema } from "../models/client.model";
 import { Plan } from "../models/plan.model";
+import InfluencerController from "../controllers/Implementation/influencer.controller";
+import { IInfluencerController } from "../controllers/Interface/IInfluencerController";
+import { IInfluencerService } from "../services/Interface/IInfluencerService";
+import InfluencerService from "../services/Implementation/influencer.service";
+import { IInfluencerRepository } from "../repositories/Interface/IInfluencerRepository";
+import InfluencerRepository from "../repositories/Implementation/influencer.repository";
+import { IInfluencerTenantRepository } from "../repositories/Interface/IInfluencerTenantRepository";
+import InfluencerTenantRepository from "../repositories/Implementation/influencer-tenant.repository";
+import { IManagerController } from "../controllers/Interface/IManagerController";
+import ManagerController from "../controllers/Implementation/manager.controller";
+import { IManagerService } from "../services/Interface/IManagerService";
+import ManagerService from "../services/Implementation/manager.service";
+import { IManagerRepository } from "../repositories/Interface/IManagerRepository";
+import ManagerRepository from "../repositories/Implementation/manager.repository";
+import { IManagerTenantRepository } from "../repositories/Interface/IManagerTenantRepository";
+import ManagerTenantRepository from "../repositories/Implementation/manager-tenant.repository";
+import influencerSchema, { influencerTenantSchema } from "../models/influencer.model";
 
 
 
 
 //* Model Registeration
-container.register('admin_model', { useValue: Admin });
-container.register('agency_model', { useValue: agencyModel });
-container.register('agency_tenant_model', { useValue: ownerDetailsSchema });
+container.register('admin_model', { useValue: adminSchema });
+container.register('agency_model', { useValue: agencySchema });
+container.register('agency_tenant_model', { useValue: agencyTenantSchema });
 container.register('project_model', { useValue: projectSchema });
-container.register('client_model', { useValue: Client });
-container.register('client_tenant_model', { useValue: clientSchema });
+container.register('client_model', { useValue: clientSchema });
+container.register('client_tenant_model', { useValue: clientTenantSchema });
 container.register('chat_model', { useValue: chatSchema });
-container.register('review_bucket_model', { useValue: BucketSchema });
+container.register('review_bucket_model', { useValue: bucketSchema });
 container.register('transaction_model', { useValue: transactionSchema });
 container.register('message_model', { useValue: messageSchema });
 container.register('plan_model', { useValue: Plan });
+container.register('influencer_model', { useValue: influencerSchema });
+container.register('influencer_tenant_model', { useValue: influencerTenantSchema });
+container.register('manager_model', { useValue: Plan });
+container.register('manager_tenant_model', { useValue: Plan });
 
 
 
@@ -95,6 +116,11 @@ container.register<IContentRepository>('ContentRepository', { useClass: ContentR
 container.register<IMessageRepository>('MessageRepository', { useClass: MessageRepository });
 container.register<ITransactionRepository>('TransactionRepository', { useClass: TransactionRepository });
 container.register<IAgencyTenantRepository>('AgencyTenantRepository', { useClass: AgencyTenantRepository });
+container.register<IInfluencerRepository>('InfluencerRepository', { useClass: InfluencerRepository });
+container.register<IInfluencerTenantRepository>('InfluencerTenantRepository', { useClass: InfluencerTenantRepository });
+container.register<IInfluencerTenantRepository>('InfluencerTenantRepository', { useClass: InfluencerTenantRepository });
+container.register<IManagerRepository>('ManagerRepository', { useClass: ManagerRepository });
+container.register<IManagerTenantRepository>('ManagerTenantRepository', { useClass: ManagerTenantRepository });
 
 
 
@@ -107,6 +133,8 @@ container.register<IPaymentService>('PaymentService', { useClass: PaymentService
 container.register<IClientService>('ClientService', { useClass: ClientService });
 container.register<IProviderService>('ProviderService', { useClass: ProviderService });
 container.register<IChatService>('ChatService', { useClass: ChatService });
+container.register<IInfluencerService>('InfluencerService', { useClass: InfluencerService });
+container.register<IManagerService>('ManagerService', { useClass: ManagerService });
 
 
 
@@ -119,3 +147,5 @@ container.register<IClientController>('ClientController', { useClass: ClientCont
 container.register<IEntityController>('EntityController', { useClass: EntityController });
 container.register<IPaymentController>('PaymentController', { useClass: PaymentController });
 container.register<IProviderController>('ProviderController', { useClass: ProviderController });
+container.register<IInfluencerController>('InfluencerController', { useClass: InfluencerController });
+container.register<IManagerController>('ManagerController', { useClass: ManagerController });

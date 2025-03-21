@@ -14,15 +14,26 @@ export default class ClientRepository extends BaseRepository<IClient> implements
     }
 
     async findClientWithMail(
-        email: string
+        client_mail: string
     ): Promise<IClient | null> {
-        return await this.findOne({ email: email });
+        return await this.findOne({ email: client_mail });
     }
 
     async findClientWithId(
         client_id: string
     ): Promise<IClient | null> {
         return await this.findOne({ _id: client_id });
+    }
+
+    async changePassword(
+        client_id: string,
+        password: string
+    ): Promise<IClient | null> {
+        return this.update(
+            { _id: client_id },
+            { $set: { password } },
+            { new: true }
+        );
     }
 
     async createClient(
@@ -32,8 +43,8 @@ export default class ClientRepository extends BaseRepository<IClient> implements
     }
 
     async updateProfile(
-        details:IUpdateProfile
-    ):Promise<IClient | null>{
+        details: IUpdateProfile
+    ): Promise<IClient | null> {
         return await this.update(
             { _id: details.main_id },
             {
@@ -44,7 +55,7 @@ export default class ClientRepository extends BaseRepository<IClient> implements
             { new: true }
         )
     }
-    
+
 
 }
 

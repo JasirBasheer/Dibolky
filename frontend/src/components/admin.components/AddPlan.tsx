@@ -120,8 +120,8 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
 
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2 ml-1">
-                    <Label htmlFor="title">Title</Label>
-                    <Input id="title" placeholder="Enter plan title" onChange={(e) => handleChange(e.target.value, 'planName')} />
+                    <Label htmlFor="title">Name</Label>
+                    <Input id="title" placeholder="Enter plan name" onChange={(e) => handleChange(e.target.value, 'planName')} />
                   </div>
                   <div className="space-y-2 ml-1">
                     <Label htmlFor="price">Price</Label>
@@ -135,7 +135,7 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
                     id="description"
                     placeholder="Enter plan description"
                     className="h-24"
-                    onChange={(e) => handleChange(e.target.value, 'description')}
+                    onChange={(e) => handleChange(e.target.value, 'planDescription')}
                   />
                 </div>
 

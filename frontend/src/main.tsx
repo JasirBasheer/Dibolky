@@ -19,12 +19,11 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
-            <Toaster />
+          <Toaster />
           <ThemeProvider >
             <App />
           </ThemeProvider>
           <ShadcnToaster />
-
         </Provider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

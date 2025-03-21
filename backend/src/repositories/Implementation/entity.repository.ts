@@ -1,5 +1,5 @@
 import { connectTenantDB } from "../../config/db.config";
-import Agency, { ownerDetailsSchema } from "../../models/agency.model";
+import Agency, { agencyTenantSchema } from "../../models/agency.model";
 import { IEntityRepository } from "../Interface/IEntityRepository";
 import { IAgency, IAgencyTenant } from "../../types/agency.types";
 import { IInfluencer } from "../../types/influencer.types";
@@ -46,7 +46,7 @@ export default class EntityRepository implements IEntityRepository {
         orgId: string
     ): Promise<IAgencyTenant> {
         const db = await connectTenantDB(orgId)
-        const AgencyModel = db.model('OwnerDetail', ownerDetailsSchema)
+        const AgencyModel = db.model('OwnerDetail', agencyTenantSchema)
         const agency = new AgencyModel(new_agency)
         return await agency.save()
     }
@@ -56,14 +56,14 @@ export default class EntityRepository implements IEntityRepository {
         orgId: string
     ): Promise<Partial<IInfluencer>> {
         const db = await connectTenantDB(orgId)
-        const InfluencerModel = db.model('OwnerDetail', ownerDetailsSchema)
+        const InfluencerModel = db.model('OwnerDetail', agencyTenantSchema)
         const influencer = new InfluencerModel({
             main_id: influencer_id,
             orgId: orgId
         })
         const newInfluencer =  await influencer.save()
         if(!newInfluencer)throw new CustomError("Error while creating influencer",500)
-        return newInfluencer as Partial<IInfluencer>
+        return newInfluencer as unknown as Partial<IInfluencer>;
     }   
 
 

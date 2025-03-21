@@ -1,10 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+@font-face {
+  font-family: 'Lazare';
+  src: url("../src/assets/fonts/LazareGroteskTrial-Medium-BF647806db24482.otf") format('opentype');
+  font-weight: 700;
+  /* Bold */
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lazare';
+  src: url("../src/assets/fonts/LazareGroteskTrial-Regular.otf") format('opentype');
+  font-weight: 400;
+  /* Regular */
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
 @layer base {
   :root {
+    --font-lazare: 'Lazare', sans-serif;
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -29,16 +50,16 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --chart-6: 214,100%,97%;
+    --chart-6: 214, 100%, 97%;
 
     --radius: 0.5rem
   }
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 219 28% 13%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
+    --card: 219 28% 13%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
+    --popover: 219 28% 13%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 240 5.9% 10%;
@@ -46,7 +67,7 @@
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
+    --accent: 217 14% 22%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
@@ -58,13 +79,16 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --chart-6: 214,100%,97%;
+    --chart-6: 214, 100%, 97%;
+
   }
 }
+
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }

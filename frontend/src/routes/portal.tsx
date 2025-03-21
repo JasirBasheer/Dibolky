@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "@/pages/portal.pages/home";
-import PurchasePlan from "@/pages/portal.pages/purchasePlan";
+import PurchasePlan from "@/pages/portal.pages/purchase";
 import MainLoginPage from "@/pages/authentication.pages/mainLogin.page";
 
 export default function PortalRoutes() {
@@ -8,7 +8,7 @@ export default function PortalRoutes() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<MainLoginPage />} />
-        <Route path='/purchase/:platform/:id' element={<PurchasePlan />} />
+        <Route path='/purchase/:plan_id' element={<PurchasePlan />} />
       </Routes>
     )
   }

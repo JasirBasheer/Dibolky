@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { IEntityService } from '../Interface/IEntityService';
 import { IEntityRepository } from '../../repositories/Interface/IEntityRepository';
 import { IPlanRepository } from '../../repositories/Interface/IPlanRepository';
-import { ownerDetailsSchema } from '../../models/agency.model';
+import { agencyTenantSchema } from '../../models/agency.model';
 import { ITransactionRepository } from '../../repositories/Interface/ITransactionRepository';
 import { IPlan } from '../../types/admin.types';
 import { IProject } from '../../models/project.model';
@@ -22,6 +22,7 @@ import { addMonthsToDate } from '../../utils/date-utils';
 import {
     CustomError,
     hashPassword,
+    NotFoundError,
 } from 'mern.common';
 import { getMetaAccessTokenStatus } from '../../provider.strategies/facebook.strategy';
 
@@ -66,18 +67,17 @@ export default class EntityService implements IEntityService {
 
     async getAllPlans()
         : Promise<Record<string, IPlan[]>> {
-        let agencyPlans = await this.planRepository.getAgencyPlans()
-        let influencerPlans = await this.planRepository.getInfluencerPlans()
+        const plans = await this.planRepository.getPlans()
         return {
-            Agency: agencyPlans || [],
-            Influencer: influencerPlans || []
+            Agency: plans?.filter((plan)=> plan.planType == "agency") || [],
+            Influencer: plans?.filter((plan)=> plan.planType == "influencer") || []
         }
     }
 
-    async getPlan(plans: Record<string, IPlan[]>, plan_id: string, platform: string): Promise<Partial<IPlan>> {
-        const plan = plans[platform].find((elem) => elem._id as string == plan_id.toString());
-        if (!plan) throw new CustomError("Plan not found", 500)
-        return plan
+    async getPlan(plan_id: string): Promise<Partial<IPlan>> {
+        const plan = await this.planRepository.getPlan(plan_id)
+        if(!plan) throw new NotFoundError("plan not found")
+        return plan  
     }
 
     async fetchAllProjects(orgId: string, page?: number): Promise<{ projects: IProject[], totalPages: number } | null> {
@@ -89,11 +89,11 @@ export default class EntityService implements IEntityService {
         mail: string,
         platform: string
     ): Promise<boolean | null> {
-        if (platform == "Agency") {
+        if (platform == "agency") {
             const isExists = await this.entityRepository.isAgencyMailExists(mail)
             if (isExists) return true
             return false
-        } else if (platform == "Influencer") {
+        } else if (platform == "influencer") {
             const isExists = await this.entityRepository.isInfluencerMailExists(mail)
             if (isExists) return true
             return false
@@ -182,10 +182,10 @@ export default class EntityService implements IEntityService {
 
 
 
-    async getAgencyMenu(
+    async getMenu(
         planId: string
     ): Promise<IMenuCategory> {
-        const plan = await this.planRepository.getAgencyPlan(planId)
+        const plan = await this.planRepository.getPlan(planId)
         if (!plan) throw new CustomError("Plan not found", 500)
         return plan.menu as IMenuCategory
     }
@@ -201,7 +201,7 @@ export default class EntityService implements IEntityService {
         orgId: string
     ): Promise<IAgencyTenant[]> {
         const tenantDb = await connectTenantDB(orgId)
-        const ownerDetailModel = tenantDb.model('OwnerDetail', ownerDetailsSchema);
+        const ownerDetailModel = tenantDb.model('OwnerDetail', agencyTenantSchema);
         return await this.entityRepository.fetchOwnerDetails(ownerDetailModel)
     }
 
@@ -298,9 +298,9 @@ export default class EntityService implements IEntityService {
         }else{
             details = await this.clientTenantRepository.getClientById(orgId, user_id)
         }
-        if(details!.socialMedia_credentials?.facebook?.accessToken !=""){
-            let 
-                status = await getMetaAccessTokenStatus(details!.socialMedia_credentials?.facebook?.accessToken as string)
+        if(!details)throw new NotFoundError('User details not found please try again later..')
+        if(details.socialMedia_credentials?.facebook?.accessToken && details.socialMedia_credentials?.facebook?.accessToken !=""){
+            const status = await getMetaAccessTokenStatus(details!.socialMedia_credentials?.facebook?.accessToken as string)
          
             connections.push(
                 {platform:"facebook",
@@ -310,7 +310,8 @@ export default class EntityService implements IEntityService {
             )
         }
 
-        if(details!.socialMedia_credentials?.instagram?.accessToken !=""){
+
+        if(details.socialMedia_credentials?.instagram?.accessToken && details.socialMedia_credentials?.instagram?.accessToken !=""){
             const status = await getMetaAccessTokenStatus(details!.socialMedia_credentials?.instagram?.accessToken as string)
             connections.push(
                 {platform:"instagram",
@@ -319,7 +320,7 @@ export default class EntityService implements IEntityService {
                 }
             )
         }
-
+        console.log(connections,'connectionsssssss')
         return connections       
     }
 

@@ -31,6 +31,7 @@ export type planType = "agency" | "influencer";
 export interface IPlan extends Document {
     planName: string;
     planType:planType;
+    planDescription:string;
     price: number;
     features: string[];
     validity:  validityType;

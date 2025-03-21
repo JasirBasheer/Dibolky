@@ -72,6 +72,7 @@ export default class AgencyController implements IAgencyController {
             if (!req.details) throw new NotFoundError("Details Not Fount")
 
             const { orgId, name, email, industry, services, menu } = req.body
+            console.log(req.body,'bodyeee')
             await this.agencyService.createClient(orgId, name, email, industry, services, menu, req.details.organizationName as string)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
         } catch (error: unknown) {

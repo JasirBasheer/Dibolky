@@ -1,11 +1,8 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import LoginForm from '@/components/common.components/auth/login'
-interface LoginProps {
-  role: string;
-}
 
-const Login = ({ role }: LoginProps) => {
+const Login = ({ role }: {role:string}) => {
   return (
     <div className="flex justify-center items-center h-screen bg-gray-50">
       <div className="sm:w-[35rem] flex sm:h-[34rem] w-full h-full rounded-lg shadow-xl bg-white">

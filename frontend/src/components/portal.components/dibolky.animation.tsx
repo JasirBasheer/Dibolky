@@ -2,8 +2,11 @@
 
 import React, { forwardRef, useRef } from "react";
 
-import { cn } from "@/utils/shardcn.utils"; 
-import { AnimatedBeam } from "../common.components/animation.beam"; 
+import { cn } from "@/utils/shardcn.utils";
+import { AnimatedBeam } from "../magic.ui/animation.beam";
+import { Check } from "lucide-react";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const Circle = forwardRef<
   HTMLDivElement,
@@ -24,7 +27,7 @@ const Circle = forwardRef<
 
 Circle.displayName = "Circle";
 
-export function AnimatedBeamMultipleOutputDemo({
+export function AnimatedBeamMultipleOutput({
   className,
 }: {
   className?: string;
@@ -38,81 +41,144 @@ export function AnimatedBeamMultipleOutputDemo({
   const div6Ref = useRef<HTMLDivElement>(null);
   const div7Ref = useRef<HTMLDivElement>(null);
 
-  return (
-    <div
-      className={cn(
-        "relative flex h-[500px] w-full items-center justify-center overflow-hidden p-10",
-        className,
-      )}
-      ref={containerRef}
-    >
-      <div className="flex size-full max-w-lg flex-row items-stretch justify-between gap-10">
-        <div className="flex flex-col justify-center">
-          <Circle ref={div7Ref}>
-            <Icons.user />
-          </Circle>
-        </div>
-        <div className="flex flex-col justify-center">
-          <Circle ref={div6Ref} className="size-16">
-            <Icons.dibolky />
-          </Circle>
-        </div>
-        <div className="flex flex-col justify-center gap-2">
-          <Circle ref={div1Ref}>
-            <Icons.instagram />
-          </Circle>
-          <Circle ref={div2Ref}>
-            <Icons.facebook />
-          </Circle>
-          <Circle ref={div3Ref}>
-            <Icons.linkedin />
-          </Circle>
-          <Circle ref={div4Ref}>
-            <Icons.x />
-          </Circle>
-          <Circle ref={div5Ref}>
-            <Icons.tiktok />
-          </Circle>
-        </div>
-      </div>
+  const [isVisible, setIsVisible] = useState(false);
+  const animationContentRef = useRef(null);
 
-      {/* AnimatedBeams */}
-      <AnimatedBeam
-        containerRef={containerRef}
-        fromRef={div1Ref}
-        toRef={div6Ref}
-        duration={3}
-      />
-      <AnimatedBeam
-        containerRef={containerRef}
-        fromRef={div2Ref}
-        toRef={div6Ref}
-        duration={3}
-      />
-      <AnimatedBeam
-        containerRef={containerRef}
-        fromRef={div3Ref}
-        toRef={div6Ref}
-        duration={3}
-      />
-      <AnimatedBeam
-        containerRef={containerRef}
-        fromRef={div4Ref}
-        toRef={div6Ref}
-        duration={3}
-      />
-      <AnimatedBeam
-        containerRef={containerRef}
-        fromRef={div5Ref}
-        toRef={div6Ref}
-        duration={3}
-      />
-      <AnimatedBeam
-        containerRef={containerRef}
-        fromRef={div6Ref}
-        toRef={div7Ref}
-        duration={3}
-      />
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (animationContentRef.current) {
+      observer.observe(animationContentRef.current);
+    }
+
+    return () => {
+      if (animationContentRef.current) {
+        observer.unobserve(animationContentRef.current);
+      }
+    };
+  }, []);
+
+  const getAnimationClass = (index:number) => {
+    return `transition-all duration-700 ease-out transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
+      }`;
+  };
+
+  const getAnimationStyle = (index:number) => {
+    return {
+      transitionDelay: isVisible ? `${100 + (index * 100)}ms` : '0ms'
+    };
+  };
+
+
+  return (
+    <div className="container mx-auto max-w-6xl px-4 py-12">
+      <div className="flex w-full flex-col md:flex-row items-center gap-8">
+        <div
+          className={cn(
+            "relative flex h-[500px] w-full md:w-1/2 lg:w-3/5 items-center justify-center overflow-hidden p-4",
+            className,
+          )}
+          ref={containerRef}
+        >
+          <div className="flex size-full max-w-md flex-row items-stretch justify-between gap-6">
+            <div className="flex flex-col justify-center">
+              <Circle ref={div7Ref}>
+                <Icons.user />
+              </Circle>
+            </div>
+            <div className="flex flex-col justify-center">
+              <Circle ref={div6Ref} className="size-14">
+                <Icons.dibolky />
+              </Circle>
+            </div>
+            <div className="flex flex-col justify-center gap-2">
+              <Circle ref={div1Ref} className="size-10">
+                <Icons.instagram />
+              </Circle>
+              <Circle ref={div2Ref} className="size-10">
+                <Icons.facebook />
+              </Circle>
+              <Circle ref={div3Ref} className="size-10">
+                <Icons.linkedin />
+              </Circle>
+              <Circle ref={div4Ref} className="size-10">
+                <Icons.x />
+              </Circle>
+              <Circle ref={div5Ref} className="size-10">
+                <Icons.tiktok />
+              </Circle>
+            </div>
+          </div>
+
+          <AnimatedBeam containerRef={containerRef} fromRef={div1Ref} toRef={div6Ref} duration={3} />
+          <AnimatedBeam containerRef={containerRef} fromRef={div2Ref} toRef={div6Ref} duration={3} />
+          <AnimatedBeam containerRef={containerRef} fromRef={div3Ref} toRef={div6Ref} duration={3} />
+          <AnimatedBeam containerRef={containerRef} fromRef={div4Ref} toRef={div6Ref} duration={3} />
+          <AnimatedBeam containerRef={containerRef} fromRef={div5Ref} toRef={div6Ref} duration={3} />
+          <AnimatedBeam containerRef={containerRef} fromRef={div6Ref} toRef={div7Ref} duration={3} />
+        </div>
+
+        <div
+          ref={animationContentRef}
+          className="w-full md:w-1/2 px-6 space-y-6"
+        >
+          <h2
+            className={`text-3xl font-lazare font-bold tracking-tight text-foreground/90 ${getAnimationClass(0)}`}
+            style={getAnimationStyle(0)}
+          >
+            Seamless Uploads Across All Platforms
+          </h2>
+
+          <p
+            className={`text-lg text-muted-foreground font-lazare font-bold ${getAnimationClass(1)}`}
+            style={getAnimationStyle(1)}
+          >
+            Manage all your social media content from a single intuitive interface. Connect once, publish everywhere,
+            and save valuable time.
+          </p>
+
+          <div className="space-y-4 font-lazare font-bold text-foreground/90">
+            <div
+              className={`flex items-start gap-3 ${getAnimationClass(2)}`}
+              style={getAnimationStyle(2)}
+            >
+              <div className="rounded-full bg-primary/10 p-1">
+                <Check className="size-5 text-primary" />
+              </div>
+              <p>Publish to multiple platforms with a single click</p>
+            </div>
+
+            <div
+              className={`flex items-start gap-3 ${getAnimationClass(3)}`}
+              style={getAnimationStyle(3)}
+            >
+              <div className="rounded-full bg-primary/10 p-1">
+                <Check className="size-5 text-primary" />
+              </div>
+              <p>Schedule posts for optimal engagement times</p>
+            </div>
+
+            <div
+              className={`flex items-start gap-3 ${getAnimationClass(4)}`}
+              style={getAnimationStyle(4)}
+            >
+              <div className="rounded-full bg-primary/10 p-1">
+                <Check className="size-5 text-primary" />
+              </div>
+              <p>Track performance metrics across all channels</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }
@@ -120,7 +186,7 @@ export function AnimatedBeamMultipleOutputDemo({
 const Icons = {
   facebook: () => (
     <svg
-      width="100" 
+      width="100"
       height="100"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
@@ -210,7 +276,7 @@ const Icons = {
       />
     </svg>
   ),
-  
+
   messenger: () => (
     <svg
       width="100"

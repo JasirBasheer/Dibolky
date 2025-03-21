@@ -12,29 +12,18 @@ export default class PlanRepository extends BaseRepository<IPlan> implements IPl
                 super(model);
         }
 
-        async getAgencyPlans()
+        async getPlans()
                 : Promise<IPlan[] | null> {
                 return await this.find({})
         }
 
-        async getAgencyPlan(
+        async getPlan(
                 planId: string
         ): Promise<IPlan | null> {
                 return await this.findOne({ _id: planId });
         }
 
-        async getInfluencerPlans()
-                : Promise<IPlan[] | null> {
-                return await this.find({})
-        }
-
-        async getInfluencerPlan(
-                planId: string
-        ): Promise<IPlan | null> {
-                return await this.findOne({ _id: planId });
-        }
-
-
+     
 
         async createPlan(
                 details: planDetails
@@ -51,7 +40,7 @@ export default class PlanRepository extends BaseRepository<IPlan> implements IPl
         }
 
 
-        async editAgencyPlan(
+        async editPlan(
                 details: planDetails
         ): Promise<IPlan | null> {
                 const { _id, ...updateData } = details;
@@ -59,7 +48,7 @@ export default class PlanRepository extends BaseRepository<IPlan> implements IPl
         }
 
 
-        async changeAgencyPlanStatus(
+        async changePlanStatus(
                 plan_id: string
         ): Promise<IPlan | null> {
                 const plan = await this.findOne({ _id: plan_id })

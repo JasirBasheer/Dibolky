@@ -5,7 +5,6 @@ export interface IAdminService {
   verifyAdmin(admin_id: string): Promise<IAdmin>;
   getAllPlans(): Promise<object>;
   getPlan(plans: object, plan_id: string, platform: string): Promise<IPlan | null>;
-  getAgencyMenu(plan_id: string): Promise<object>;
   getRecentClients(): Promise<object>;
   getClient(client_id: string, role: string): Promise<object>;
   getAllClients(): Promise<object | null>;

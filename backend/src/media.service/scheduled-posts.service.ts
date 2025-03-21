@@ -2,7 +2,7 @@ import cron from 'node-cron';
 import { color } from 'console-log-colors';
 import Agencies from '../models/agency.model';
 import { connectTenantDB } from '../config/db.config';
-import { BucketSchema } from '../models/bucket.model';
+import { bucketSchema } from '../models/bucket.model';
 import { container } from 'tsyringe';
 import { Types } from 'mongoose';
 import { IProviderService } from '../services/Interface/IProviderService';
@@ -31,7 +31,7 @@ async function processAgencyScheduledPosts() {
 
         for (let agency of agencies) {
             let db = await connectTenantDB(agency.orgId)
-            const reviewBucket = db.model('reviewBucket', BucketSchema)
+            const reviewBucket = db.model('reviewBucket', bucketSchema)
             const scheduledContents = await reviewBucket.find({
                 status: "Approved",
                 isPublished: false
@@ -68,7 +68,7 @@ async function processAgencyScheduledPosts() {
                     if (result) {
                         for (let platform of result) {
 
-                            const reviewBucket = db.model('reviewBucket', BucketSchema)
+                            const reviewBucket = db.model('reviewBucket', bucketSchema)
                             let content = await reviewBucket.findOne({ _id: new Types.ObjectId(platform.id) })
                             if (content) {
                                 await content.changePlatformPublishStatus(String(platform.name), true);

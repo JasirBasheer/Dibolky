@@ -6,8 +6,6 @@ import { ScaleLoader } from 'react-spinners';
 import { useDispatch } from 'react-redux';
 import { setAgency } from '../../redux/slices/agencySlice';
 import { setUser } from '../../redux/slices/userSlice';
-import { setClient } from '@/redux/slices/clientSlice';
-
 
 interface IRedirectionUrls {
   agency: string;

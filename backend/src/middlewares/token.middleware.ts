@@ -11,11 +11,13 @@ import { IAgency } from "../types/agency.types";
 import { IAdmin } from "../types/admin.types";
 import { ITokenDetails } from "../types/common.types";
 import { ROLES } from "../utils/constants.utils";
+import { IInfluencerService } from "../services/Interface/IInfluencerService";
 
 // services
 const agencyService = container.resolve<IAgencyService>("AgencyService");
 const adminService = container.resolve<IAdminService>("AdminService");
 const clientService = container.resolve<IClientService>("ClientService");
+const influencerService = container.resolve<IInfluencerService>("InfluencerService");
 
 declare global {
     namespace Express {
@@ -68,7 +70,7 @@ export const TokenMiddleWare = async (
                 ownerDetails = await clientService.verifyClient(tokenDetails.id)
             break;
             case ROLES.INFLUENCER:
-                ownerDetails = await clientService.verifyClient(tokenDetails.id)
+                ownerDetails = await influencerService.verifyInfluencer(tokenDetails.id)
             break;
             case ROLES.MANAGER:
                 ownerDetails = await clientService.verifyClient(tokenDetails.id)

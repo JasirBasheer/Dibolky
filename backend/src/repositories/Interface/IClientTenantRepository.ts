@@ -1,4 +1,3 @@
-import { IBaseRepository } from "mern.common";
 import { IClientTenant, User } from "../../types/client.types";
 import { IUpdateProfile } from "../../types/common.types";
 

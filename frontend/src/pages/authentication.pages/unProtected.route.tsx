@@ -8,6 +8,7 @@ interface IRedirectionUrls {
   agency: string;
   admin: string;
   client: string;
+  influencer: string
 }
 
 
@@ -32,6 +33,7 @@ const UnProtectedRoute = ({ children, role }: { children: ReactNode, role: strin
             "agency": '/agency',
             "admin": '/admin/',
             "client": "/client/",
+            "influencer": "/influencer/",
 
           };
 

@@ -46,7 +46,7 @@ export class ProjectRepository extends BaseRepository<IProject> implements IProj
         dead_line: Date
     ): Promise<void> {
         const model = await this.getModel(orgId);
-        const res =  await model.create({orgId,client:{clientId,client_name},service_name,service_details,category,dead_line});
+        await model.create({orgId,client:{clientId,client_name},service_name,service_details,category,dead_line});
     }
 
     async fetchAllProjects(

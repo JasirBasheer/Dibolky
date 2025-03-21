@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 import { IInfluencer, IInfluncerTenant } from '../types/influencer.types';
 
 
-const influencerSchema: Schema<IInfluencer> = new mongoose.Schema({
+export const influencerSchema: Schema<IInfluencer> = new mongoose.Schema({
     orgId: {
         type: String,
         required: true
@@ -73,7 +73,7 @@ export default mongoose.model<IInfluencer>('Influencer', influencerSchema);
 
 
 
-export const ownerDetailsSchema = new Schema<IInfluncerTenant>({
+export const influencerTenantSchema = new Schema<IInfluncerTenant>({
     main_id: {
         type: String,
         required: false,
@@ -150,7 +150,7 @@ export const ownerDetailsSchema = new Schema<IInfluncerTenant>({
 
 
 
-ownerDetailsSchema.methods.setSocialMediaToken = async function(provider: string,token: string): Promise<void> {
+influencerTenantSchema.methods.setSocialMediaToken = async function(provider: string,token: string): Promise<void> {
     if (this.socialMedia_credentials.hasOwnProperty(provider)) {
       this.socialMedia_credentials[provider].accessToken = token;
       await this.save();

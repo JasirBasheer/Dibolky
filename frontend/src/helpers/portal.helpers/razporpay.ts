@@ -14,7 +14,6 @@ import { IRazorpayOrder } from "@/types/payment.types";
 export  const handleRazorpayPayment = async (
     formData:FormData,
     plan:IPlan,
-    platform:string,
     navigate:NavigateFunction,
     selectedCurrency:string
 ) => {
@@ -30,15 +29,15 @@ export  const handleRazorpayPayment = async (
             key: "rzp_test_fKh2fGYnPvSVrM",
             amount: amount,
             currency: currency,
-            name: plan?.title || "Subscription Plan",
-            description: plan?.description || "Plan Subscription",
+            name: plan?.planName || "Subscription Plan",
+            description: plan?.planDescription || "Plan Subscription",
             order_id: order_id,
             handler: (response: IRazorpayOrder) => {
                 if (response) {
                     handlePaymentSuccess(
                         response,
                         formData,
-                        plan,platform,
+                        plan,plan.planType,
                         navigate,currency
                     )
                 }
@@ -87,11 +86,11 @@ const handlePaymentSuccess = async (
         validity:formData.validity,
         planPurchasedRate:plan?.price * formData.validity,
         paymentGateway:"razorpay",
-        description:plan.title + " "+"Purchased",
+        description:plan.planName + " "+"Purchased",
         currency
     }
 
-    if (platform == "Agency") {
+    if (platform == "agency") {
 
         
         const res = await axios.post('/api/entities/create-agency', {details,transaction_id:response.razorpay_payment_id})
@@ -111,7 +110,7 @@ const handlePaymentSuccess = async (
         const res = await axios.post('/api/entities/create-influencer', {details,transaction_id:response.razorpay_payment_id})
         if (res.status == 201) {
             setTimeout(() => {
-                message.success('Company have been successfully')
+                message.success('Influencer have been successfully created')
                 new Audio(notificationSound).play()
             }, 100)
 
@@ -119,7 +118,7 @@ const handlePaymentSuccess = async (
                 message.success('Login to continue')
                 new Audio(notificationSound2).play()
             }, 500)
-            navigate('/company/login')
+            navigate('/influencer/login')
         }
     }
 

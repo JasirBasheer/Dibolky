@@ -52,6 +52,10 @@ const planSchema: Schema<IPlan> = new Schema(
             required: true,
             enum: ["agency", "influencer"],
         },
+        planDescription:{
+            type:String,
+            requried:true,
+        },
         price: { 
             type: Number, 
             required: true, 
@@ -67,12 +71,10 @@ const planSchema: Schema<IPlan> = new Schema(
             enum: ["monthly", "yearly", "lifetime"],
         },
         totalProjects: { 
-            type: Number, 
-            default: 0, 
+            type: Number
         },
         totalManagers: { 
-            type: Number, 
-            default: 0, 
+            type: Number
         },
         menu: {
             smm: { 

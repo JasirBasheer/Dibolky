@@ -16,7 +16,6 @@ export interface IClientTenant extends Document {
     isPaymentInitialized: boolean,
     createdAt?:string | number;
     setSocialMediaToken?: (provider: string, token: string) => Promise<void>;
-    setSocialMediaUserName?: (provider: string, username: string) => Promise<void>;
 }
 
 interface credentials {

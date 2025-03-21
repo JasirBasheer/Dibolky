@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { IChatService } from '../Interface/IChatService';
 import { IChatRepository } from '../../repositories/Interface/IChatRepository';
-import { ownerDetailsSchema } from '../../models/agency.model';
+import { agencyTenantSchema } from '../../models/agency.model';
 import { CustomError, NotFoundError } from 'mern.common';
 import { IMessageRepository } from '../../repositories/Interface/IMessageRepository';
 import { IChat, IGroupDetails, IMessage, Participant } from '../../types/chat.types';
@@ -127,7 +127,7 @@ export default class ChatService implements IChatService {
         tenantDb: Connection
     ): Promise<IAgencyTenant> {
         try {
-            const ownerModel = tenantDb.model("OwnerDetail", ownerDetailsSchema);
+            const ownerModel = tenantDb.model("OwnerDetail", agencyTenantSchema);
             const details =  await this.entityRepository.fetchOwnerDetails(ownerModel)
             if(!details)throw new CustomError("owner Details not found",500)
             return details[0]

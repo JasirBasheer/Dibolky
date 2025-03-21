@@ -1,12 +1,9 @@
 import { IPlan, planDetails } from "../../types/admin.types"
 
 export interface IPlanRepository {
-  getAgencyPlans(): Promise<IPlan[] | null>
-  getAgencyPlan(planId: string): Promise<Partial<IPlan> | null>
-  getInfluencerPlans(): Promise<IPlan[] | null>
-  getInfluencerPlan(planId: string): Promise<Partial<IPlan> | null>
+  getPlans(): Promise<IPlan[] | null>
+  getPlan(planId: string): Promise<Partial<IPlan> | null>
   createPlan(details: planDetails): Promise<Partial<IPlan> | null>
-  createInfluencerPlan(details: planDetails): Promise<Partial<IPlan> | null>
-  editAgencyPlan(details: planDetails): Promise<IPlan | null>
-  changeAgencyPlanStatus(plan_id: string): Promise<IPlan | null>
+  editPlan(details: planDetails): Promise<IPlan | null>
+  changePlanStatus(plan_id: string): Promise<IPlan | null>
 }

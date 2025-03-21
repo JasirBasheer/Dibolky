@@ -8,19 +8,31 @@ import { IAdmin } from "../../types/admin.types";
 import { IAgency } from "../../types/agency.types";
 import { createForgotPasswordData } from "../../utils/mail.datas";
 import { ROLES } from "../../utils/constants.utils";
+import { IClientRepository } from "../../repositories/Interface/IClientRepository";
+import { IInfluencerRepository } from "../../repositories/Interface/IInfluencerRepository";
+import { IManagerRepository } from "../../repositories/Interface/IManagerRepository";
 
 @injectable()
 export default class AuthenticationService implements IAuthenticationService {
     private agencyRepository: IAgencyRepository;
     private adminRepository: IAdminRepository;
+    private clientRepository: IClientRepository;
+    private influencerRepository: IInfluencerRepository;
+    private managerRepository: IManagerRepository;
 
     constructor(
         @inject('AgencyRepository') agencyRepository : IAgencyRepository,
-        @inject('AdminRepository') adminRepository : IAdminRepository
+        @inject('AdminRepository') adminRepository : IAdminRepository,
+        @inject('ClientRepository') clientRepository : IClientRepository,
+        @inject('InfluencerRepository') influencerRepository : IInfluencerRepository,
+        @inject('ManagerRepository') managerRepository : IManagerRepository,
 
     ) {
         this.agencyRepository = agencyRepository
         this.adminRepository = adminRepository
+        this.clientRepository = clientRepository
+        this.influencerRepository = influencerRepository
+        this.managerRepository = managerRepository
     }
 
     async resetPassword(
@@ -36,12 +48,12 @@ export default class AuthenticationService implements IAuthenticationService {
                 details = await this.agencyRepository.findAgencyWithMail(email)
                 break;
             case ROLES.CLIENT:
-                details = await this.agencyRepository.findAgencyWithMail(email)
+                details = await this.clientRepository.findClientWithMail(email)
                 break;
             case ROLES.INFLUENCER:
-                details = await this.agencyRepository.findAgencyWithMail(email)
+                details = await this.influencerRepository.findInfluencerWithMail(email)
                 break;
-            case ROLES.INFLUENCER:
+            case ROLES.MANAGER:
                 details = await this.agencyRepository.findAgencyWithMail(email)
                 break; 
             default:
@@ -84,12 +96,13 @@ export default class AuthenticationService implements IAuthenticationService {
                 changedPassword =  await this.agencyRepository.changePassword(isValid.id, hashedPassword)
                 break;
             case ROLES.CLIENT:
-                changedPassword =  await this.adminRepository.changePassword(isValid.id, hashedPassword)
+                changedPassword =  await this.clientRepository.changePassword(isValid.id, hashedPassword)
                 break;
             case ROLES.INFLUENCER:
-                changedPassword =  await this.adminRepository.changePassword(isValid.id, hashedPassword)
+                changedPassword =  await this.influencerRepository.changePassword(isValid.id, hashedPassword)
                 break;
-            case ROLES.INFLUENCER:
+            case ROLES.MANAGER:
+                // TODO : implement manager change password feature
                 changedPassword =  await this.adminRepository.changePassword(isValid.id, hashedPassword)
                 break; 
             default:

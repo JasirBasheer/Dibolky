@@ -3,7 +3,7 @@ import Skeleton from 'react-loading-skeleton';
 import { useNavigate } from 'react-router-dom';
 import { AlignLeft, Bell, Bolt, Moon, Sun, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import { setUser } from '@/redux/slices/userSlice';
+import { setUser } from '@/redux/slices/user.slice';
 import { useQuery } from '@tanstack/react-query';
 import { NavClient } from '@/types/agency.types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,6 +25,8 @@ import {
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '../ui/command';
 import { Button } from '../ui/button';
 import { useTheme } from '@/provider/theme.provider';
+import CreateContent from '../common.components/create-content.modal';
+import { openCreateContentModal } from '@/redux/slices/ui.slice';
 
 
 
@@ -35,6 +37,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
   const dispatch: AppDispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
   const agency = useSelector((state: RootState) => state.agency);
+  const ui = useSelector((state: RootState) => state.ui);
   const navigate = useNavigate()
   const [isSortCutOpen, setIsSortCutOpen] = useState(false)
 
@@ -152,6 +155,10 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
         e.preventDefault()
         setIsSortCutOpen(false)
         navigate('/agency/projects')
+      }else if(e.key == "c" &&  (e.metaKey || e.ctrlKey)){
+        e.preventDefault()
+        dispatch(openCreateContentModal())
+        setIsSortCutOpen(false)
       }
       
     }
@@ -193,9 +200,17 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
               </div> 
             </div>
             </CommandItem>
+            <CommandItem onSelect={() => dispatch(openCreateContentModal()) }>
+            <div className="flex justify-between w-full">
+              Create Content
+              <div className=" items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium sm:flex">
+              <span className="text-xs w-4 h-4">⌘</span>C
+              </div> 
+            </div>
+            </CommandItem>
             <CommandItem onSelect={() => navigate('/agency/settings?tab=social-integrations&') }>
               <div className="flex justify-between w-full">
-              Create Connection
+              Connections
           
             </div>
             </CommandItem>
@@ -221,6 +236,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
         </CommandList>
 
       </CommandDialog>
+      {ui.createContentModalOpen && <CreateContent/> }
 
       <div className="col-span-2 flex items-center justify-start pl-9 text-blue-600 dark:text-blue-300 font-cantarell text-2xl font-bold">Dibolky</div>
       <div className="lg:col-span-6 col-span-6"></div>

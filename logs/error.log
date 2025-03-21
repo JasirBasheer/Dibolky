@@ -1294,3 +1294,7 @@
  Error: {"message":"Account Not found","stack":"Error: Account Not found\n    at ClientController.<anonymous> (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:25:33)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/jasir/Dibolky/backend/src/controllers/Implementation/client.controller.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-03-21T11:17:03.186Z"} ms 
  
 
+::1 - - [21/Mar/2025:22:27:17 +0000] "GET /api/client/reject-content/67dde7aaf4c7e1e99145bcda" 404  
+ Error: No error details ms 
+ 
+

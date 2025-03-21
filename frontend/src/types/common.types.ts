@@ -48,10 +48,16 @@ export interface IPlatforms {
 }
 
 export interface IContentData {
+  _id:string;
   files: IFiles[];
   metadata: IMetadata;
   platforms: IPlatforms[];
   contentType: string;
+  caption:string;
+  status:string;
+  tags:string[];
+  createdAt?:string;
+  updatedAt?:string;
 }
 
 
@@ -65,18 +71,19 @@ export interface IMetaAccount {
 
 
 export interface IReviewBucket {
-  _id?: string;
+  _id: string;
   user_id?: string;
   orgId?: string;
-  files?: IFiles[];
-  status?: string;
-  platforms?: IPlatforms[];
-  title?: string;
-  contentType?: string;
-  caption?: string;
+  files: IFiles[];
+  status: string;
+  platforms: IPlatforms[];
+  contentType: string;
+  caption: string;
   tags?: string[];
   isPublished?: boolean;
   feedBack?: string;
+  createdAt?:string;
+  updatedAt?:string;
 }
 
 export interface ICalendarContent {

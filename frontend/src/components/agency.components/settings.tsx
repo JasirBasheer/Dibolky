@@ -4,9 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IConnection, RootState } from '@/types/common.types';
 import { fetchConnections, getConnectSocailMediaUrlApi } from '@/services/common/get.services';
 import { savePlatformTokenApi } from '@/services/common/post.services';
-import { setUser } from '@/redux/slices/userSlice';
+import { setUser } from '@/redux/slices/user.slice';
 import { Button } from '../ui/button';
-import { message } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 import PaymentIntegrationModal from '../common.components/integrate-payment.modal';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
@@ -15,6 +14,7 @@ import { getPaymentIntegrationsStatus } from '@/services/agency/get.services';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
 import ProfileContents from '../common.components/auth/editProfile';
+import { toast } from 'sonner';
 
 
 const SettingsPage = () => {
@@ -51,7 +51,7 @@ const SettingsPage = () => {
     const required = searchParams.get("required")?.split(",") || []
     if (required.length > 0) {
       setRequired(required)
-      message.warning('Please connect the required platforms')
+      toast.warning('Please connect the required platforms')
     }
 
   }, []);
@@ -97,11 +97,11 @@ const SettingsPage = () => {
         } else if (provider == "facebook") {
           dispatch(setUser({ facebookAccessToken: token }))
         }
-        message.success(`${provider} connected successfully`)
+        toast.success(`${provider} connected successfully`)
 
         return response;
       } else {
-        message.error(`faced some issues while connect ${provider} please try again later `)
+        toast.error(`faced some issues while connect ${provider} please try again later `)
       }
     } catch (error: unknown) {
       if (error instanceof Error) {

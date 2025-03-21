@@ -4,8 +4,8 @@ import axios from '../../utils/axios';
 import { useNavigate } from 'react-router-dom';
 import { ScaleLoader } from 'react-spinners';
 import { useDispatch } from 'react-redux';
-import { setAgency } from '../../redux/slices/agencySlice';
-import { setUser } from '../../redux/slices/userSlice';
+import { setAgency } from '../../redux/slices/agency.slice';
+import { setUser } from '../../redux/slices/user.slice';
 
 interface IRedirectionUrls {
   agency: string;

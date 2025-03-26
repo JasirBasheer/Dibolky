@@ -38,7 +38,7 @@ import { IProviderController } from "../controllers/Interface/IProviderControlle
 import ProviderController from "../controllers/Implementation/provider.controller";
 import { IProviderService } from "../services/Interface/IProviderService";
 import ProviderService from "../services/Implementation/provider.service";
-import  adminSchema  from "../models/admin.model";
+import adminSchema from "../models/admin.model";
 import ChatRepository from "../repositories/Implementation/chat.repository";
 import { IChatRepository } from "../repositories/Interface/IChatRepository";
 import { IChatService } from "../services/Interface/IChatService";
@@ -60,7 +60,7 @@ import { IAgencyTenantRepository } from "../repositories/Interface/IAgencyTenant
 import AgencyTenantRepository from "../repositories/Implementation/agency-tenant.repository";
 import { transactionSchema } from "../models/transaction.model";
 import { bucketSchema } from "../models/bucket.model";
-import clientSchema,{ clientTenantSchema } from "../models/client.model";
+import clientSchema, { clientTenantSchema } from "../models/client.model";
 import { Plan } from "../models/plan.model";
 import InfluencerController from "../controllers/Implementation/influencer.controller";
 import { IInfluencerController } from "../controllers/Interface/IInfluencerController";
@@ -79,6 +79,9 @@ import ManagerRepository from "../repositories/Implementation/manager.repository
 import { IManagerTenantRepository } from "../repositories/Interface/IManagerTenantRepository";
 import ManagerTenantRepository from "../repositories/Implementation/manager-tenant.repository";
 import influencerSchema, { influencerTenantSchema } from "../models/influencer.model";
+import { INoteRepository } from "../repositories/Interface/INoteRepository";
+import NoteRepository from "../repositories/Implementation/note.repository";
+import { noteSchema } from "../models/note.model";
 
 
 
@@ -97,6 +100,8 @@ container.register('message_model', { useValue: messageSchema });
 container.register('plan_model', { useValue: Plan });
 container.register('influencer_model', { useValue: influencerSchema });
 container.register('influencer_tenant_model', { useValue: influencerTenantSchema });
+container.register('note_model', { useValue: noteSchema });
+
 container.register('manager_model', { useValue: Plan });
 container.register('manager_tenant_model', { useValue: Plan });
 
@@ -121,6 +126,7 @@ container.register<IInfluencerTenantRepository>('InfluencerTenantRepository', { 
 container.register<IInfluencerTenantRepository>('InfluencerTenantRepository', { useClass: InfluencerTenantRepository });
 container.register<IManagerRepository>('ManagerRepository', { useClass: ManagerRepository });
 container.register<IManagerTenantRepository>('ManagerTenantRepository', { useClass: ManagerTenantRepository });
+container.register<INoteRepository>('NoteRepository', { useClass: NoteRepository });
 
 
 

@@ -10,6 +10,9 @@ import { IMetaAccount, IPlatforms, IBucket, ISocialMediaUploadResponse } from ".
 import { IClientTenant } from "../../types/client.types";
 import { IInfluncerTenant } from "../../types/influencer.types";
 import { FACEBOOK, INSTAGRAM } from "../../utils/constants.utils";
+import { INote } from "../../types/note.types";
+import { INoteRepository } from "../../repositories/Interface/INoteRepository";
+import { CustomError } from "mern.common";
 
 
 @injectable()
@@ -17,15 +20,18 @@ export default class ProviderService implements IProviderService {
     private clientTenantRepository: IClientTenantRepository;
     private contentRepository: IContentRepository;
     private agencyTenantRepository: IAgencyTenantRepository;
+    private noteRepository: INoteRepository;
 
     constructor(
         @inject('ClientTenantRepository') clientTenantRepository: IClientTenantRepository,
         @inject('ContentRepository') contentRepository: IContentRepository,
         @inject('AgencyTenantRepository') agencyTenantRepository: IAgencyTenantRepository,
+        @inject('NoteRepository') noteRepository : INoteRepository,
     ) {
         this.clientTenantRepository = clientTenantRepository
         this.contentRepository = contentRepository
         this.agencyTenantRepository = agencyTenantRepository
+        this.noteRepository = noteRepository
     }
 
     
@@ -148,6 +154,16 @@ export default class ProviderService implements IProviderService {
         date:string
     ):Promise<void>{
         await this.contentRepository.reScheduleContent(orgId,content_id,date)
+    }
+
+    async rejectContent(
+        orgId:string,
+        content_id:string,
+        reason:INote
+    ):Promise<void>{
+        const note = await this.noteRepository.addNote(orgId,reason)
+        if(!note)throw new CustomError("An unexpected error occured while create note please try again later..",500)
+        await this.contentRepository.changeContentStatus(orgId,content_id,"Rejected")
     }
 
 }

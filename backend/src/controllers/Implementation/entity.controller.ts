@@ -448,8 +448,8 @@ export default class EntityController implements IEntityController {
         try {
             if (!req.details) throw new NotFoundError("request details not found")
             const { user_id } = req.params
-            const reviewBucket = await this.entityService.fetchContents(req.details.orgId as string, user_id)
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { reviewBucket })
+            const contents = await this.entityService.fetchContents(req.details.orgId as string, user_id)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { contents })
 
         } catch (error) {
             next(error)

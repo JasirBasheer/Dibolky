@@ -97,4 +97,6 @@ export class ContentRepository extends BaseRepository<IBucket> implements IConte
         if(!content)throw new CustomError("An unexpected error occured while updating content",500)
         return content
     }
+
+
 }

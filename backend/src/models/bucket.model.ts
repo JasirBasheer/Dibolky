@@ -61,11 +61,8 @@ export const bucketSchema: Schema<IBucket> = new mongoose.Schema({
     isPublished: {
         type: Boolean,
         default: false
-    },
-    feedBack: {
-        type: String
     }
-});
+}, { timestamps: true });
 
 
 

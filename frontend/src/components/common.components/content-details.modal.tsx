@@ -1,15 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { Check, ChevronLeft, ChevronRight, Clock, Hash, X } from "lucide-react"
+import { Check, ChevronLeft, ChevronRight, Clock, Hash, X, XCircle } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Separator } from "@radix-ui/react-select"
-import { IPlatforms, IReviewBucket } from "@/types/common.types"
-
-
+import { Separator } from "@radix-ui/react-select" 
+import type { IPlatforms, IReviewBucket } from "@/types/common.types"
 
 interface ContentDetailModalProps {
   content: IReviewBucket
@@ -53,6 +51,65 @@ export function ContentDetailModal({ content, contentUrls, onClose, onApprove, o
   const currentFile = content.files[currentFileIndex]
   const isVideo = currentFile?.contentType.startsWith("video")
 
+  const renderReason = () => {
+    if (!content.reason) return null
+
+    const reasonText = content.reason?.note?.toString() ?? ""
+
+    const bulletPoints: string[] = []
+    const lines = reasonText.split("\n")
+
+    let additionalNotes = ""
+
+    let inBulletPoints = false
+
+    for (const line of lines) {
+      const trimmedLine = line.trim()
+
+      if (trimmedLine.startsWith("Rejection reasons:")) {
+        inBulletPoints = true
+        continue
+      }
+
+      if (inBulletPoints && trimmedLine.startsWith("•")) {
+        bulletPoints.push(trimmedLine.substring(1).trim())
+      } else if (trimmedLine === "") {
+        if (bulletPoints.length > 0) {
+          inBulletPoints = false
+        }
+      } else if (!inBulletPoints && trimmedLine !== "" && !trimmedLine.startsWith("Rejection reasons:")) {
+        additionalNotes += (additionalNotes ? " " : "") + trimmedLine
+      }
+    }
+
+    return (
+      <div className="bg-gray-50 border border-gray-200 rounded-md p-4">
+        <div className="flex items-start gap-2 mb-3">
+          <XCircle className="h-5 w-5 text-red-500 mt-0.5" />
+          <h3 className="font-medium text-gray-900">Content Rejected</h3>
+        </div>
+
+        {bulletPoints.length > 0 && (
+          <div className="mb-3">
+            <p className="text-sm font-medium text-gray-700 mb-2">Reasons:</p>
+            <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600">
+              {bulletPoints.map((point, index) => (
+                <li key={index}>{point}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {additionalNotes && (
+          <div className="mt-3 pt-3 border-t border-gray-200">
+            <p className="text-sm font-medium text-gray-700 mb-1">Additional Notes:</p>
+            <p className="text-sm text-gray-600">{additionalNotes}</p>
+          </div>
+        )}
+      </div>
+    )
+  }
+
   return (
     <Dialog open={!!content} onOpenChange={() => onClose()}>
       <DialogContent className="sm:max-w-3xl p-0 overflow-hidden">
@@ -61,8 +118,7 @@ export function ContentDetailModal({ content, contentUrls, onClose, onApprove, o
         </DialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-          {/* Media Carousel */}
-          <div className="relative bg-gray-900 aspect-square flex items-center justify-center">
+          <div className="relative bg-gray-900  aspect-square flex items-center justify-center">
             {content.files && content.files.length > 0 ? (
               <>
                 <div className="w-full h-full flex items-center justify-center">
@@ -118,7 +174,6 @@ export function ContentDetailModal({ content, contentUrls, onClose, onApprove, o
             )}
           </div>
 
-          {/* Content Details */}
           <div className="p-6 flex flex-col h-full">
             <div className="flex items-center justify-between mb-4">
               {getStatusBadge(content.status)}
@@ -164,6 +219,8 @@ export function ContentDetailModal({ content, contentUrls, onClose, onApprove, o
               </span>
             </div>
 
+            <Separator className="my-4" />
+            {renderReason()}
             <Separator className="my-4" />
 
             {content.status === "Pending" && (

@@ -1,4 +1,4 @@
-import { IContentData, IFilesMetaData, IUpdateProfile } from "@/types/common.types";
+import { IContentData, IFilesMetaData, INote, IUpdateProfile } from "@/types/common.types";
 import api from "@/utils/axios";
 
 export const savePlatformTokenApi = async (
@@ -64,6 +64,14 @@ export const approveContentApi = async (
 ) => {
     return await api.post(`/api/entities/approve-content`, { content_id, platform, user_id })
 }
+
+export const rejectContentApi = async (
+    content_id:string,
+    reason: Partial<INote>
+) => {
+    return await api.post(`/api/entities/reject-content`, { content_id, reason })
+}
+
 
 export const fetchChatsApi = async (
     chatId: string,

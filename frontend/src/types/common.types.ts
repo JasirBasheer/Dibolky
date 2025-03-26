@@ -48,14 +48,14 @@ export interface IPlatforms {
 }
 
 export interface IContentData {
-  _id:string;
+  _id?:string;
   files: IFiles[];
   metadata: IMetadata;
   platforms: IPlatforms[];
   contentType: string;
-  caption:string;
-  status:string;
-  tags:string[];
+  caption?:string;
+  status?:string;
+  tags?:string[];
   createdAt?:string;
   updatedAt?:string;
 }
@@ -81,7 +81,7 @@ export interface IReviewBucket {
   caption: string;
   tags?: string[];
   isPublished?: boolean;
-  feedBack?: string;
+  reason?: INote | null;
   createdAt?:string;
   updatedAt?:string;
 }
@@ -210,4 +210,27 @@ export interface IConnection {
   platform: string,
   is_valid: boolean,
   createdAt: Date
+}
+
+
+
+
+
+export interface Media {
+  contentType: string;
+  key: string;
+  fileName?: string;
+}
+
+export interface INote {
+  _id:string;
+  entityType: string;
+  entityId: string;
+  note?: string;
+  media?: Media[];
+  addedBy: string;
+  addedByModel: string;
+  parentNote?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }

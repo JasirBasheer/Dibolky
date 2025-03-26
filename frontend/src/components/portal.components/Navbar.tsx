@@ -23,7 +23,7 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
   const navItems = [
     { label: 'Features', tag: '#features' },
     { label: 'Pricing', tag: '#pricing' },
-    { label: 'Contact', tag: '#contact' }
+    { label: 'Reviews', tag: '#reviews' }
   ];
 
   useGSAP(() => {

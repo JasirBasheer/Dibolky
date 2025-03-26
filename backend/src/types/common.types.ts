@@ -1,4 +1,5 @@
 import { Document } from "mongoose";
+import { INote } from "./note.types";
 
 export interface User {
     _id: string;
@@ -45,7 +46,7 @@ export interface IBucket extends Document {
     caption: string;
     tags: string[];
     isPublished?: boolean;
-    feedBack: string;
+    reason?:INote | null;
     changePlatformPublishStatus(platform: string, value: boolean): Promise<void>;
 }
 

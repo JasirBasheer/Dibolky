@@ -38,7 +38,7 @@ router.get('/projects/:page', (req, res, next) => entityController.getAllProject
 router.get('/get-chats/:userId', (req, res, next) => entityController.getChats(req, res, next))
 router.get('/connect/:provider', (req, res, next) => providerController.connectSocialPlatforms(req, res, next))
 router.get('/get-meta-pages/:access_token', (req, res, next) => providerController.getMetaPagesDetails(req, res, next))
-router.get('/get-review-bucket/:user_id', (req, res, next) => entityController.fetchContents(req, res, next))
+router.get('/contents/:user_id', (req, res, next) => entityController.fetchContents(req, res, next))
 router.get('/get-scheduled-contents/:user_id', (req, res, next) => entityController.fetchAllScheduledContents(req, res, next))
 router.get('/get-connections/:entity/:user_id', (req, res, next) => entityController.getConnections(req, res, next))
 
@@ -50,6 +50,7 @@ router.get('/:role/:planId', (req, res, next) => entityController.getMenu(req, r
 
 // content
 router.post('/approve-content', (req, res, next) => providerController.processContentApproval(req, res, next))
+router.post('/reject-content', (req, res, next) => providerController.processContentReject(req, res, next))
 router.post('/reschedule-content', (req, res, next) => providerController.reScheduleContent(req, res, next))
 router.post('/content/save/:platform/:user_id', (req, res, next) => entityController.saveContent(req, res, next))
 router.post('/initiate-s3-batch-upload', (req, res, next) => entityController.initiateS3BatchUpload(req, res, next))

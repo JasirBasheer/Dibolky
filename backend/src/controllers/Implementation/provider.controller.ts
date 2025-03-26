@@ -33,18 +33,18 @@ export default class ProviderController implements IProviderController {
     }
 
     async processContentApproval(
-        req: Request, 
-        res: Response, 
+        req: Request,
+        res: Response,
         next: NextFunction
     ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
+            if (!req.details) throw new NotFoundError("Details Not Fount")
             const { content_id, user_id, platform } = req.body
             const content: IBucket | null = await this.providerService.getContentById(req.details.orgId as string, content_id)
             let user;
-            if(platform == 'agency'){
+            if (platform == 'agency') {
                 user = await this.agencyService.getAgencyOwnerDetails(req.details.orgId as string)
-            }else{
+            } else {
                 user = await this.agencyService.getAgencyOwnerDetails(req.details.orgId as string)
             }
             if (!content) throw new Error('content does not exists')
@@ -61,11 +61,11 @@ export default class ProviderController implements IProviderController {
     }
 
     async getMetaPagesDetails(
-        req: Request, 
-        res: Response, 
+        req: Request,
+        res: Response,
         next: NextFunction
     ): Promise<void> {
-        try {           
+        try {
             const { access_token } = req.params
 
             const pages = await this.providerService.getMetaPagesDetails(access_token as string)
@@ -76,8 +76,8 @@ export default class ProviderController implements IProviderController {
     }
 
     async connectSocialPlatforms(
-        req: Request, 
-        res: Response, 
+        req: Request,
+        res: Response,
         next: NextFunction
     ): Promise<void> {
         try {
@@ -106,11 +106,11 @@ export default class ProviderController implements IProviderController {
         next: NextFunction
     ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
+            if (!req.details) throw new NotFoundError("Details Not Fount")
             const { platform, provider, user_id } = req.params
             const { token } = req.body
 
-            await this.providerService.saveSocialMediaToken(req.details.orgId as string,platform,user_id,provider,token)
+            await this.providerService.saveSocialMediaToken(req.details.orgId as string, platform, user_id, provider, token)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
         } catch (error) {
             console.error('Error saving social platform token:', error)
@@ -120,16 +120,31 @@ export default class ProviderController implements IProviderController {
 
 
     async reScheduleContent(
-        req: Request, 
-        res: Response, 
+        req: Request,
+        res: Response,
         next: NextFunction
-    ): Promise<void>{
+    ): Promise<void> {
         try {
-            if(!req.details)throw new NotFoundError("Details Not Fount")
-            const {content_id, date } = req.body
-            await this.providerService.reScheduleContent(req.details.orgId as string,content_id,date)
+            if (!req.details) throw new NotFoundError("Details Not Fount")
+            const { content_id, date } = req.body
+            await this.providerService.reScheduleContent(req.details.orgId as string, content_id, date)
         } catch (error) {
-            console.log('Error while reshceduling',error)
+            console.log('Error while reshceduling', error)
+            next(error)
+        }
+    }
+
+    async processContentReject(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            if (!req.details) throw new NotFoundError("Details Not Fount")
+            const { content_id, reason } = req.body
+            await this.providerService.rejectContent(req.details.orgId as string, content_id, reason)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
+        } catch (error) {
             next(error)
         }
     }

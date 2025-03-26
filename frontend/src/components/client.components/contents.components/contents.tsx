@@ -17,7 +17,7 @@ const ClientContentComponent = () => {
 
   const fetchUserReviewBucket = async () => {
     try {
-      const res = await axios.get(`/api/client/get-review-bucket/${user.user_id}`)
+      const res = await axios.get(`/api/client/contents/${user.user_id}`)
 
       
       if (res.status === 200) {
@@ -60,7 +60,7 @@ const ClientContentComponent = () => {
 
 
   useEffect(() => {
-    if (user?.id) {
+    if (user?.user_id) {
       fetchUserReviewBucket()
     }
   }, [])

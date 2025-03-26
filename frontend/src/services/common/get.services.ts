@@ -19,7 +19,7 @@ export const getConnectSocailMediaUrlApi = async(
 export const getContentsApi = async(
     userId : string
 ) => {
-    return await api.get(`/api/entities/get-review-bucket/${userId}`)
+    return await api.get(`/api/entities/contents/${userId}`)
 }   
 
 export const fetchMessagesApi = async(

@@ -18,7 +18,7 @@ declare global {
   }
 }
 
-const logDirectory = path.join(__dirname, "../../../logs");
+const logDirectory = path.join(__dirname, "../../logs");
 const filePath = path.join(logDirectory, 'error.log');
 
 if (!fs.existsSync(logDirectory)) {

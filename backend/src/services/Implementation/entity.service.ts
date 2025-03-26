@@ -25,6 +25,7 @@ import {
     NotFoundError,
 } from 'mern.common';
 import { getMetaAccessTokenStatus } from '../../provider.strategies/facebook.strategy';
+import { INoteRepository } from '../../repositories/Interface/INoteRepository';
 
 @injectable()
 export default class EntityService implements IEntityService {
@@ -37,7 +38,7 @@ export default class EntityService implements IEntityService {
     private contentRepository: IContentRepository;
     private agencyTenantRepository: IAgencyTenantRepository;
     private agencyRepository: IAgencyRepository;
-    private contentRepositry: IContentRepository
+    private noteRepository: INoteRepository;
 
     constructor(
         @inject('EntityRepository') entityRepository: IEntityRepository,
@@ -50,6 +51,7 @@ export default class EntityService implements IEntityService {
         @inject('AgencyTenantRepository') agencyTenantRepository: IAgencyTenantRepository,
         @inject('AgencyRepository') agencyRepository: IAgencyRepository,
         @inject('ContentRepository') contentRepositry: IContentRepository,
+        @inject('NoteRepository') noteRepository: INoteRepository,
 
     ) {
         this.entityRepository = entityRepository
@@ -61,7 +63,7 @@ export default class EntityService implements IEntityService {
         this.contentRepository = contentRepository
         this.agencyTenantRepository = agencyTenantRepository
         this.agencyRepository = agencyRepository
-        this.contentRepositry = contentRepositry
+        this.noteRepository = noteRepository
     }
 
 
@@ -256,8 +258,19 @@ export default class EntityService implements IEntityService {
         orgId: string,
         user_id: string
     ): Promise<IBucket[]> {
-        const contents = await this.contentRepository.getContentsByUserId(orgId, user_id)
-        return contents ?? []
+        const contents = await this.contentRepository.getContentsByUserId(orgId, user_id) ?? []
+        const contentIds = contents.map((content) => String(content._id));
+        const notes = await this.noteRepository.getContentNotesByEntityIds(orgId,contentIds)
+
+        return contents.map((content) => {
+            const matchingNote = notes.find(
+              (note) => note.entityId.toString() === String(content._id)
+            );
+            return {
+              ...content.toObject(),
+              reason: matchingNote ? matchingNote : null,
+            };
+          });
     }
 
     async updateProfile(

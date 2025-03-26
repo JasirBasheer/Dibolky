@@ -68,11 +68,9 @@ interface Testimonial {
     const topRowTestimonials = testimonials.filter((_, i) => i % 2 === 0);
     const bottomRowTestimonials = testimonials.filter((_, i) => i % 2 === 1);
   
-    // Create duplicated arrays for infinite effect
     const extendedTopRow: Testimonial[] = [...topRowTestimonials, ...topRowTestimonials, ...topRowTestimonials];
     const extendedBottomRow: Testimonial[] = [...bottomRowTestimonials, ...bottomRowTestimonials, ...bottomRowTestimonials];
   
-    // Create separate autoplay plugins with different delays for visual variety
     const pluginTop = Autoplay({
       delay: 4000,
       stopOnInteraction: false,
@@ -86,7 +84,7 @@ interface Testimonial {
     });
   
     return (
-      <section className="py-12 relative overflow-hidden px-6 md:px-10 lg:px-20 mt-16">
+      <section className="py-12 relative overflow-hidden px-6 md:px-10 lg:px-20 mt-16" id="reviews">
       <h2 className="text-2xl font-bold font-lazare text-center mb-8">Testimonials</h2>
       <div className="max-w-6xl mx-auto">
         <div className="space-y-4">

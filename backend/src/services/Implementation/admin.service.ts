@@ -107,6 +107,7 @@ export default class AdminService implements IAdminService {
         details: planDetails
     ): Promise<void> {
         let menu = createNewPlanMenu(details.menu as string[])
+        details.permissions = details.menu as string[]
         details.menu = menu
         const createdPlan = await this.planRepository.createPlan(details)
         if (!createdPlan) throw new CustomError("Error While creating Plan", 500)

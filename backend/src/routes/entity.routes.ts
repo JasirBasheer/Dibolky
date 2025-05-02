@@ -13,27 +13,27 @@ const providerController = container.resolve<IProviderController>('ProviderContr
 
 // Get requests
 router.get('/get-all-plans', (req, res, next) => entityController.getAllPlans(req, res, next))
+router.get('/get-trial-plans', (req, res, next) => entityController.getAllTrialPlans(req, res, next))
+router.get('/get-plan/:plan_id', (req, res, next) => entityController.getPlan(req, res, next))
 router.get('/get-country', (req, res, next) => entityController.getCountry(req, res, next))
 
 
 // Post requests
+router.post('/check-mail', (req, res, next) => entityController.checkMail(req, res, next))
 router.post('/create-agency', (req, res, next) => entityController.registerAgency(req, res, next))
 router.post('/create-influencer', (req, res, next) => entityController.createInfluencer(req, res, next))
-router.post('/get-plan', (req, res, next) => entityController.getPlan(req, res, next))
-router.post('/check-mail', (req, res, next) => entityController.checkMail(req, res, next))
 
 router.use(TokenMiddleWare)
 router.use(TenantMiddleWare)
 
 
-// router.use(permissionGate(["Company", "agency"]))
-router.get('/owner', (req, res, next) => entityController.getOwner(req, res, next))
-router.get('/get-tasks', (req, res, next) => entityController.getAllProjects(req, res, next))
+// need permission inorder to enter to the routes that given below
+router.use(permissionGate(["agency", "client", "influencer"]))
 
-// needed permission inorder to enter to this parts
-router.use(permissionGate(["agency", "Client", "influencer"]))
 
 // get
+router.get('/owner', (req, res, next) => entityController.getOwner(req, res, next))
+router.get('/get-tasks', (req, res, next) => entityController.getAllProjects(req, res, next))
 router.get('/projects/:page', (req, res, next) => entityController.getAllProjects(req, res, next))
 router.get('/get-chats/:userId', (req, res, next) => entityController.getChats(req, res, next))
 router.get('/connect/:provider', (req, res, next) => providerController.connectSocialPlatforms(req, res, next))

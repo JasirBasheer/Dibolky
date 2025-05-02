@@ -12,18 +12,21 @@ import { IAdmin } from "../types/admin.types";
 import { ITokenDetails } from "../types/common.types";
 import { ROLES } from "../utils/constants.utils";
 import { IInfluencerService } from "../services/Interface/IInfluencerService";
+import { IEntityService } from "../services/Interface/IEntityService";
 
 // services
 const agencyService = container.resolve<IAgencyService>("AgencyService");
 const adminService = container.resolve<IAdminService>("AdminService");
 const clientService = container.resolve<IClientService>("ClientService");
 const influencerService = container.resolve<IInfluencerService>("InfluencerService");
+const entityService = container.resolve<IEntityService>("EntityService");
 
 declare global {
     namespace Express {
         interface Request {
             details?: IAdmin | IAgency | IClient | null;
             tokenDetails?: ITokenDetails;
+            permissions?:string[]
         }
     }
 }
@@ -38,6 +41,12 @@ export const TokenMiddleWare = async (
     try {
         let token = req.cookies.accessToken ?? null
         let refreshToken = req.cookies.refreshToken ?? null
+
+        const isTokenBlaclisted = await isTokenBlacklisted(token)
+        if (isTokenBlaclisted) {
+            res.clearCookie('accessToken')
+            throw new UnauthorizedError('Token blacklisted please login to continue')
+        }
 
         let refreshTokenSecret = JWT_REFRESH_SECRET || 'defaultRefreshSecret';
         let accessTokenSecret = JWT_ACCESS_SECRET || 'defaultAccessSecret';
@@ -58,7 +67,7 @@ export const TokenMiddleWare = async (
 
         const tokenDetails = await verifyToken(accessTokenSecret, token ?? '')
 
-        let ownerDetails
+        let ownerDetails 
         switch (tokenDetails.role) {
             case ROLES.ADMIN:
                 ownerDetails = await adminService.verifyAdmin(tokenDetails.id)
@@ -80,14 +89,13 @@ export const TokenMiddleWare = async (
         }       
 
         if (ownerDetails?.isBlocked) throw new UnauthorizedError('Account is Blocked')
-        const isTokenBlaclisted = await isTokenBlacklisted(token)
-        if (isTokenBlaclisted) {
-            res.clearCookie('accessToken')
-            throw new UnauthorizedError('Token blacklisted please login to continue')
-        }
+        const planId = ownerDetails && "planId" in ownerDetails ? ownerDetails.planId : null;
+        const plan = await entityService.getPlan(planId ?? "") 
+        
         ownerDetails = ownerDetails?.toObject();
         ownerDetails.role = tokenDetails.role
         req.details = ownerDetails
+        req.permissions = plan?.permissions ?? [] as string[]
         req.tokenDetails = tokenDetails as ITokenDetails
 
         next();

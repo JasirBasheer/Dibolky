@@ -76,10 +76,12 @@ export default class EntityService implements IEntityService {
         }
     }
 
-    async getPlan(plan_id: string): Promise<Partial<IPlan>> {
-        const plan = await this.planRepository.getPlan(plan_id)
-        if(!plan) throw new NotFoundError("plan not found")
-        return plan  
+    async getAllTrailPlans() : Promise<IPlan[]>{
+        return await this.planRepository.getTrialPlans() ?? []
+    }
+
+    async getPlan(plan_id: string): Promise<IPlan | null> {
+        return await this.planRepository.getPlan(plan_id)
     }
 
     async fetchAllProjects(orgId: string, page?: number): Promise<{ projects: IProject[], totalPages: number } | null> {
@@ -90,7 +92,7 @@ export default class EntityService implements IEntityService {
     async IsMailExists(
         mail: string,
         platform: string
-    ): Promise<boolean | null> {
+    ): Promise<boolean> {
         if (platform == "agency") {
             const isExists = await this.entityRepository.isAgencyMailExists(mail)
             if (isExists) return true
@@ -100,7 +102,7 @@ export default class EntityService implements IEntityService {
             if (isExists) return true
             return false
         }
-        return null
+        throw new NotFoundError('enter a valid platform')
     }
 
 

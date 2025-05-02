@@ -40,6 +40,7 @@ export interface IClient extends Document {
     industry: string;
     password: string;
     isBlocked?: boolean;
+
 }
 
 

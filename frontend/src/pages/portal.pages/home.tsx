@@ -28,7 +28,7 @@ const Home: React.FC = () => {
       />
 
       <div className="relative z-20">
-        <Navbar animation={true} />
+        <Navbar/>
         <Hero />
         <FeaturesCard />
         <AnimatedBeamMultipleOutput />
@@ -39,45 +39,44 @@ const Home: React.FC = () => {
           <p className='text-2xl text-center mb-6 font-bold font-lazare text-foreground/90'>FAQ Questions</p>
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
-              <AccordionTrigger>Is it accessible?</AccordionTrigger>
+              <AccordionTrigger>What is Dibolky and how does it help with social media management?</AccordionTrigger>
               <AccordionContent>
-                Yes. It adheres to the WAI-ARIA design pattern.
+              Dibolky is your all-in-one social media buddy! We help you create, schedule, and publish content across all your social accounts from one easy dashboard. No more jumping between apps or missing posts - we've got you covered whether you're an agency managing clients or an influencer working with your team.
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-2">
-              <AccordionTrigger>Is it accessible?</AccordionTrigger>
+              <AccordionTrigger>Which social media platforms does Dibolky support?</AccordionTrigger>
               <AccordionContent>
-                Yes. It adheres to the WAI-ARIA design pattern.
+              We play nice with all the popular platforms you love! That includes Facebook, Instagram, Twitter/X, LinkedIn, TikTok, Pinterest, and YouTube. Post everywhere with just a few clicks!
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-3">
-              <AccordionTrigger>Is it accessible?</AccordionTrigger>
+              <AccordionTrigger>How secure is my social media data on Dibolky?</AccordionTrigger>
               <AccordionContent>
-                Yes. It adheres to the WAI-ARIA design pattern.
+              Your data's safety is our top priority! We use super secure encryption and never store your passwords. Only the people you specifically authorize can access your accounts, and we follow all the major privacy regulations. Your social media is safe with us!
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-4">
-              <AccordionTrigger>Is it accessible?</AccordionTrigger>
+              <AccordionTrigger>Can I try Dibolky before purchasing a subscription?</AccordionTrigger>
               <AccordionContent>
-                Yes. It adheres to the WAI-ARIA design pattern.
+              Absolutely! Jump in with our 30-day free trial - no credit card needed. Take Dibolky for a spin with your team and see how much easier life gets when you're not juggling multiple social platforms manually.
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-5">
-              <AccordionTrigger>Is it accessible?</AccordionTrigger>
+              <AccordionTrigger>What makes Dibolky different from other social media management tools? </AccordionTrigger>
               <AccordionContent>
-                Yes. It adheres to the WAI-ARIA design pattern.
+              We're built for real teamwork! Whether you're an agency, client, influencer, or account manager, we've created specific interfaces for how YOU work. Plus, our analytics actually make sense, and our permission settings let you control exactly who can do what. We're like the other tools, but actually designed for how people really use social media!
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-6">
-              <AccordionTrigger>Is it accessible?</AccordionTrigger>
+              <AccordionTrigger>Does Dibolky offer customer support if I need help?</AccordionTrigger>
               <AccordionContent>
-                Yes. It adheres to the WAI-ARIA design pattern.
-              </AccordionContent>
+              You bet! We're real humans ready to help whenever you get stuck. Reach out through our live chat, email us, or browse our help center full of guides and videos. We're always just a message away and love helping our users succeed!RetryClaude can make mistakes. Please double-check responses.              </AccordionContent>
             </AccordionItem>
           </Accordion>
         </div>

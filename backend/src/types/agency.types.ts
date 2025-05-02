@@ -30,6 +30,7 @@ export interface IAgency extends Document {
     isBlocked: boolean;
     planPurchasedRate: number;
     currency?:string;
+
 }
 
 

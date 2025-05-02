@@ -6,6 +6,7 @@ import notificationSound2 from '../../assets/audios/notification-2-269292.mp3'
 import { NavigateFunction } from "react-router-dom";
 import { IPlan } from "@/types/admin.types";
 import { IRazorpayOrder } from "@/types/payment.types";
+import { createAgencyApi, createInfluencerApi } from "@/services/portal/post.services";
 
 
 
@@ -92,8 +93,7 @@ const handlePaymentSuccess = async (
 
     if (platform == "agency") {
 
-        
-        const res = await axios.post('/api/entities/create-agency', {details,transaction_id:response.razorpay_payment_id})
+        const res = await createAgencyApi(details,response.razorpay_payment_id)
         if (res.status == 201) {
             setTimeout(() => {
                 message.success('Agnecy successfully created')
@@ -107,7 +107,8 @@ const handlePaymentSuccess = async (
             navigate('/agency/login')
         }
     } else {
-        const res = await axios.post('/api/entities/create-influencer', {details,transaction_id:response.razorpay_payment_id})
+        const res = await createInfluencerApi(details,response.razorpay_payment_id)
+
         if (res.status == 201) {
             setTimeout(() => {
                 message.success('Influencer have been successfully created')

@@ -9,7 +9,7 @@ import { setUser } from '../../redux/slices/user.slice';
 
 interface IRedirectionUrls {
   agency: string;
-  Admin: string;
+  admin: string;
 }
 
 const ProtectedRoute = ({ children, role }: { children: ReactNode, role: string }) => {
@@ -102,7 +102,7 @@ const ProtectedRoute = ({ children, role }: { children: ReactNode, role: string 
   if (isLoading) {
     return (
       <div className='w-full h-screen flex items-center justify-center'>
-        <ScaleLoader />
+        <ScaleLoader/>
       </div>
     );
   }

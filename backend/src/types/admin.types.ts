@@ -22,6 +22,7 @@ export interface planDetails {
     price: number;
     validity: string;
     features: string[];
+    permissions:string[];
     menu: IMenuCategory | string[];
 }
 
@@ -43,7 +44,8 @@ export interface IPlan extends Document {
         accounting?: IMenuItems;
     };
     isActive:boolean;
-    deactivationDate:Date
+    deactivationDate:Date;
+    permissions:string[]
 }
 
 

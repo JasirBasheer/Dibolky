@@ -23,6 +23,7 @@ export interface IInfluencer extends Document {
     isBlocked: boolean;
     planPurchasedRate: number;
     currency?:string;
+
 }
 
 

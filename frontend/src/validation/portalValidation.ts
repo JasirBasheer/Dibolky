@@ -1,6 +1,6 @@
 export const validateField = (name: string, value: string): string => {
     if (name === 'firstName' || name === 'lastName') {
-        if (!value.trim()) return 'This field is required';
+        if (!value.trim()) return 'Name field is required';
         return '';
     } else if (name === 'email') {
         if (!value) return 'Email is required';
@@ -12,7 +12,7 @@ export const validateField = (name: string, value: string): string => {
         return '';
     } else if (name === 'phone') {
         if (!value) return 'Phone number is required';
-        if (!/^\d{10}$/.test(value)) return 'Must be exactly 10 digits';
+        if (!/^\d{10}$/.test(value)) return 'Phone number Must be exactly 10 digits';
         return '';
     } else if (name === 'organizationName') {
         if (!value.trim()) return 'Organization name is required';
@@ -21,7 +21,7 @@ export const validateField = (name: string, value: string): string => {
         // if (!value.trim()) return 'Invalid website URL';
         return '';
     } else if (name === 'city' || name === 'country') {
-        if (!value.trim()) return 'This field is required';
+        if (!value.trim()) return 'Geographical data is required';
         return '';
     } else {
         return '';

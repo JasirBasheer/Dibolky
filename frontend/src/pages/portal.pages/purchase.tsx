@@ -19,6 +19,7 @@ import {
     Check, CheckCircle2
 } from 'lucide-react';
 import { IPlan } from '@/types/admin.types';
+import { checkIsMailExistsApi } from '@/services/common/post.services';
 
 
 const PurchasePlan: React.FC = () => {
@@ -69,8 +70,8 @@ const PurchasePlan: React.FC = () => {
         return ctr === Object.keys(currentSet).length
     }
 
-    const validateMail = async (Mail: string): Promise<boolean> => {
-        const response = await axios.post('/api/entities/check-mail', { Mail, platform:plan?.planType })
+    const validateMail = async (mail: string): Promise<boolean> => {
+        const response = await  checkIsMailExistsApi(mail,plan?.planType as string)
         return response.data.isExists
     }
 
@@ -94,7 +95,7 @@ const PurchasePlan: React.FC = () => {
     const fetchPlanDetails = async () => {
         try {
             setLoading(true);
-            const response = await axios.post(`/api/entities/get-plan`, { plan_id })
+            const response = await axios.get(`/api/entities/get-plan/${plan_id}`)
             setPlan(response.data.plan)
         } catch (error) {
             console.log(error)
@@ -292,7 +293,7 @@ const PurchasePlan: React.FC = () => {
     };
     return (
         <>
-            <Navbar animation={false} />
+            <Navbar animation={false} showNavItems={false} />
             {loading ? (
                 <div className="animate-pulse flex items-center py-12 justify-center">
                     <div className="hidden md:block">

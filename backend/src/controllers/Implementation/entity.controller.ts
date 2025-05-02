@@ -50,12 +50,10 @@ export default class EntityController implements IEntityController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const { Mail, platform } = req.body
-            console.log(Mail,platform)
-            const isExists = await this.entityService.IsMailExists(Mail, platform)
-
-            if (isExists != null) return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.BAD_REQUEST, { isExists: isExists })
-            SendResponse(res, HTTPStatusCodes.BAD_REQUEST, ResponseMessage.NOT_FOUND)
+            const { mail, platform } = req.body
+            console.log(mail,platform,"entereedddddd")
+            const isExists = await this.entityService.IsMailExists(mail, platform)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { isExists: isExists })
         } catch (error) {
             next(error);
         }
@@ -99,6 +97,20 @@ export default class EntityController implements IEntityController {
     }
 
 
+    async getAllTrialPlans(
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> {
+        try {
+            const trialPlans = await this.entityService.getAllTrailPlans()
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { trialPlans })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
     /**
     * Handles mail existence check for a given platform.
     * @param req - Express request object containing `Mail` and `platform` in the body.
@@ -112,7 +124,7 @@ export default class EntityController implements IEntityController {
         next: NextFunction
     ): Promise<void> {
         try {
-            const { plan_id } = req.body
+            const { plan_id } = req.params
             const userCountry = req.cookies.userCountry
             const plan = await this.entityService.getPlan(plan_id);
             if (!plan) return SendResponse(res, HTTPStatusCodes.BAD_REQUEST, ResponseMessage.BAD_REQUEST, { message: "Platform or Plan not found please try again" })
@@ -141,8 +153,14 @@ export default class EntityController implements IEntityController {
         try {
             const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, paymentGateway, description, currency } = req.body.details
             const { transaction_id } = req.body
+            const isTrial = !transaction_id;
 
-            const createdAgency = await this.entityService.registerAgency(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, transaction_id, paymentGateway, description, currency)
+            const finalPlanPurchasedRate = isTrial ? 0 : planPurchasedRate;
+            const finalTransactionId = isTrial ? "trial_user" : transaction_id;
+            const finalPaymentGateway = isTrial ? "trial" : paymentGateway;
+    
+
+            const createdAgency = await this.entityService.registerAgency(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, finalPlanPurchasedRate, finalTransactionId, finalPaymentGateway, description, currency ?? "trial")
             if (!createdAgency) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.BAD_REQUEST)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
         } catch (error) {
@@ -157,7 +175,15 @@ export default class EntityController implements IEntityController {
             const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, paymentGateway, description, currency } = req.body.details
             const { transaction_id } = req.body
 
-            const createdAgency = await this.entityService.createInfluencer(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, transaction_id, paymentGateway, description, currency)
+            const isTrial = !transaction_id;
+
+            const finalPlanPurchasedRate = isTrial ? 0 : planPurchasedRate;
+            const finalTransactionId = isTrial ? "trial_user" : transaction_id;
+            const finalPaymentGateway = isTrial ? "trial" : paymentGateway;
+    
+
+
+            const createdAgency = await this.entityService.createInfluencer(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, finalPlanPurchasedRate, finalTransactionId, finalPaymentGateway, description, currency ?? "trial")
             if (!createdAgency) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.BAD_REQUEST)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
         } catch (error) {

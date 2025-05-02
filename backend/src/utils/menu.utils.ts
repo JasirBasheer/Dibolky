@@ -161,7 +161,6 @@ export const createNewMenuForClient = (selectedKeys: string[]) => {
 
 
 export const createNewPlanMenu = (selectedKeys: string[]) => {
-    console.log(selectedKeys)
     const result: IMenuCategory = {};
     const seen = new Set();
 

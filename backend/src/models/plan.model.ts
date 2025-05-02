@@ -95,6 +95,10 @@ const planSchema: Schema<IPlan> = new Schema(
             type: Date, 
             default: null 
         },
+        permissions:{
+            type: [String],
+            required:true
+        }
     },
     { timestamps: true }
 );

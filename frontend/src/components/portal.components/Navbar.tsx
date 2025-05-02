@@ -9,15 +9,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCurrency } from '@/redux/slices/portal.slice';
 import axios from '@/utils/axios';
 import { RootState } from '@/types/common.types';
+import { useNavigate } from 'react-router-dom';
 
 interface NavbarProps {
-  animation: boolean;
+  animation?: boolean;
+  showNavItems?: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ animation }) => {
+const Navbar: React.FC<NavbarProps> = ({ animation = true, showNavItems = true }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isCurrecyBarOpen, setIsCurrecyBarOpen] = useState(false);
   const currency = useSelector((state: RootState) => state.portal)
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const navItems = [
@@ -45,17 +48,17 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
     { code: 'INR', symbol: '₹', name: 'Rupees' },
     { code: 'AED', symbol: 'د.', name: 'Dirham' },
   ];
-  const symbols: Record<string,string> = {
+  const symbols: Record<string, string> = {
     INR: "₹",
     USD: "$",
     AED: "د."
   }
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, tag:string) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, tag: string) => {
     e.preventDefault();
     const targetElement = document.querySelector(tag);
-      if (targetElement) {
-      targetElement.scrollIntoView({ 
+    if (targetElement) {
+      targetElement.scrollIntoView({
         behavior: 'smooth',
         block: 'start'
       });
@@ -94,24 +97,25 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
       <nav className="w-full px-6 py-5 shadow-sm">
         <div className=" max-w-7xl mx-auto grid grid-cols-12 items-center gap-4">
           <div className={`${animation ? "sligeRight" : ""} col-span-6 md:col-span-8 flex items-center`}>
-            <a href="/" className="light:text-blue-600 text-2xl font-lazare font-bold mr-8">
+            <p className="light:text-blue-600 text-2xl font-lazare font-bold mr-8 cursor-pointer" onClick={() => navigate('/')}>
               Dibolky
-            </a>
-
-            <div className="hidden md:flex items-center space-x-8 cursor-pointer">
-              {navItems.map((item) => (
-                <a
-                  key={item.label}
-                  onClick={(e) => handleNavClick(e, item.tag)}
-                  className="text-gray-600 dark:text-white  transition-colors duration-200"
-                >
-                  {item.label}
-                </a>
-              ))}
-            </div>
+            </p>
+            {showNavItems &&
+              <div className="hidden md:flex items-center space-x-8 cursor-pointer">
+                {navItems.map((item) => (
+                  <a
+                    key={item.label}
+                    onClick={(e) => handleNavClick(e, item.tag)}
+                    className="text-gray-600 dark:text-white  transition-colors duration-200"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+            }
           </div>
 
-      
+
 
           <div className={`${animation ? "slideLeft" : ""} hidden md:flex col-span-4 items-center justify-end space-x-4`}>
             <div className="relative">
@@ -158,7 +162,7 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
               Login
             </a>
             <a
-              href="/trial"
+              onClick={() => navigate('/trial')}
               className="dark:bg-[#202d42ea] bg-[#1c1e21f3] border border-[#8c9ab03f] light:bg-blue-600 text-white px-4 py-2 rounded-[25rem] transition-colors duration-200"
             >
               Start Free Trial
@@ -202,7 +206,7 @@ const Navbar: React.FC<NavbarProps> = ({ animation }) => {
               Login
             </a>
             <a
-              href="/trial"
+              onClick={() => navigate('/trial')}
               className="text-center bg-blue-600 rounded text-white px-4 py-2  transition-colors duration-200"
             >
               Start Free Trial

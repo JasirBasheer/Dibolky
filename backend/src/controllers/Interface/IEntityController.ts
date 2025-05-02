@@ -8,6 +8,7 @@ import {
 export interface IEntityController {
     checkMail(req: Request, res: Response, next: NextFunction): Promise<void>
     getAllPlans(req: Request, res: Response, next: NextFunction): Promise<void>
+    getAllTrialPlans(req: Request, res: Response, next: NextFunction): Promise<void>
     getPlan(req: Request, res: Response, next: NextFunction ): Promise<void>
     registerAgency(req: Request, res: Response, next: NextFunction): Promise<void>
     createInfluencer(req: Request, res: Response, next: NextFunction): Promise<void>

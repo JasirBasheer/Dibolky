@@ -17,13 +17,18 @@ export default class PlanRepository extends BaseRepository<IPlan> implements IPl
                 return await this.find({})
         }
 
+        async getTrialPlans()
+                : Promise<IPlan[] | null> {
+                return await this.find({price:0})
+        }
+
         async getPlan(
                 planId: string
         ): Promise<IPlan | null> {
                 return await this.findOne({ _id: planId });
         }
 
-     
+
 
         async createPlan(
                 details: planDetails

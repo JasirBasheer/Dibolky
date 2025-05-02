@@ -7,9 +7,10 @@ import { IInfluencer } from "../../types/influencer.types";
 
 export interface IEntityService {
     getAllPlans(): Promise<Record<string, IPlan[]>>;
-    getPlan(plan_id: string): Promise<Partial<IPlan>>;
+    getAllTrailPlans(): Promise<IPlan[]>;
+    getPlan(plan_id: string): Promise<IPlan | null>;
     fetchAllProjects(orgId: string, page?: number): Promise<{ projects: IProject[], totalPages: number } | null>;
-    IsMailExists(mail: string, platform: string): Promise<boolean | null>;
+    IsMailExists(mail: string, platform: string): Promise<boolean>;
     registerAgency(organizationName: string, name: string, email: string, address: AddressType, websiteUrl: string, industry: string,
         contactNumber: number, logo: string, password: string, planId: string, validity: number, planPurchasedRate: number,
         transactionId: string, paymentGateway: string, description: string, currency: string): Promise<Partial<IAgency> | null>;

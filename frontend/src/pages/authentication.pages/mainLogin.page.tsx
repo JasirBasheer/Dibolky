@@ -31,18 +31,18 @@ const MainLoginPage:React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen dark:bg-[#181e2a] bg-gray-50 ">
     <div className="p-6 md:p-8">
-      <Link to="/" className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors">
+      <Link to="/" className="inline-flex items-center gap-2 dark:text-white text-gray-600 hover:text-[#868383] transition-colors">
         <CircleArrowLeft className="w-6 h-6" />
         <span className="text-sm font-medium">Back to Home</span>
       </Link>
     </div>
 
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:mt-14">
       <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Welcome Back</h1>
-        <p className="text-gray-600">Choose your login portal to continue</p>
+        <h1 className="text-3xl font-bold font-lazare dark:text-white text-gray-900 mb-1">Welcome Back</h1>
+        <p className="font-bold font-lazare text-gray-600 dark:text-gray-300">Choose your login portal to continue</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -50,14 +50,14 @@ const MainLoginPage:React.FC = () => {
           <Link
             key={item.title}
             to={item.link}
-            className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border"
+            className="group relative border bg-white dark:bg-[#182234] rounded-xl shadow-sm hover:shadow-md hover:scale-105 transition-all duration-300 overflow-hidden "
           >
             <div className="p-6">
-              <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center mb-6 ">
+              <div className="w-16 h-16 rounded-full bg-gray-50 dark:bg-[#2d3a50] flex items-center justify-center mb-6 ">
                 {item.icon}
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
-              <p className="text-gray-600 text-sm">{item.description}</p>
+              <h3 className="text-xl font-bold font-lazare dark:text-white text-gray-900 mb-2">{item.title}</h3>
+              <p className="text-gray-600 dark:text-gray-400  font-bold font-lazare text-sm">{item.description}</p>
             </div>
           </Link>
         ))}

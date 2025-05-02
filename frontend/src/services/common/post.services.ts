@@ -13,6 +13,16 @@ export const savePlatformTokenApi = async (
     );
 }
 
+
+export const checkIsMailExistsApi = async (
+    mail:string,
+    platform:string
+) => {
+    return await api.post('/api/entities/check-mail', {
+        mail,platform
+    });
+}
+
 export const InitiateS3BatchUpload = async (
     filesMetadata: IFilesMetaData[]
 ) => {

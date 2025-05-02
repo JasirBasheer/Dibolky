@@ -93,7 +93,7 @@ export default class ProviderService implements IProviderService {
     async getMetaPagesDetails(
         access_token: string
     ): Promise<IMetaAccount[]> {
-        return await getMetaPagesDetails(access_token)
+        return await getMetaPagesDetails(access_token) ?? []
     }
 
 

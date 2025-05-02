@@ -27,6 +27,7 @@ import { Button } from '../ui/button';
 import { useTheme } from '@/provider/theme.provider';
 import CreateContent from '../common.components/create-content.modal';
 import { openCreateContentModal } from '@/redux/slices/ui.slice';
+import PlanExpiredModal from '../common.components/plan-expired.modal';
 
 
 
@@ -40,6 +41,8 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
   const ui = useSelector((state: RootState) => state.ui);
   const navigate = useNavigate()
   const [isSortCutOpen, setIsSortCutOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
 
 
 
@@ -169,6 +172,30 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
 
 
   return (
+    <>
+     <PlanExpiredModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        currentPlan={{
+          name: "Basic",
+          price: 9.99,
+          features: ["5 Projects", "10GB Storage", "Basic Support"],
+        }}
+        upgradePlans={[
+          {
+            name: "Pro",
+            price: 19.99,
+            features: ["15 Projects", "50GB Storage", "Priority Support", "API Access"],
+            popular: true,
+          },
+          {
+            name: "Enterprise",
+            price: 49.99,
+            features: ["Unlimited Projects", "500GB Storage", "24/7 Support", "API Access", "Custom Integrations"],
+          },
+        ]}
+      />
+
     <div className='relative grid grid-cols-12 min-h-[4.5rem]'>
 
       <CommandDialog open={isSortCutOpen} onOpenChange={setIsSortCutOpen}>
@@ -312,7 +339,8 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
         {isOpen}
         {isOpen ? (<X onClick={() => setIsOpen(prev => !prev)} />) : (<AlignLeft onClick={() => setIsOpen(prev => !prev)} />)}
       </div>
-    </div>
+    </div>  
+      </>
   )
 }
 

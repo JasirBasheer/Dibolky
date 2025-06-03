@@ -11,7 +11,7 @@ export const connectTenantDB = async (tenantId: string): Promise<Connection> => 
         return tenantConnections[tenantId];
     }
 
-    const connection = mongoose.createConnection(`mongodb+srv://jasirbinbasheerpp:YgPIPzfYiPG3cqr1@cluster0.uuyi8.mongodb.net/${tenantId}?retryWrites=true&w=majority`)
+    const connection = mongoose.createConnection(`mongodb+srv://jasirbinbasheerpp:M7pVC9N7f9QzKkFE@cluster0.uuyi8.mongodb.net/${tenantId}?retryWrites=true&w=majority`)
     connection.on('connected', () => {
         console.log(`Connected to tenant database (${tenantId}) successfully.`);
     });

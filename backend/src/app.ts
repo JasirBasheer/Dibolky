@@ -20,7 +20,11 @@ const app = express()
 
 // app.use(limiter)
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: [
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+        'http://frontend:5173'
+    ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -32,11 +36,11 @@ app.use(errorLogger)
 
 app.use('/api/', router)
 
-app.get('/', (req, res) => {
-    res.send("Backend is running!");
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
 });
 
-connectToMongoDB(DB_URI || "mongodb://localhost:27017/dibolky")
+connectToMongoDB(DB_URI)
 app.use(errorHandler);
 
 // Cron Jobs

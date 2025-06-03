@@ -11,6 +11,7 @@ export interface AddressType {
 
 
 export interface IAgency extends Document {
+    _id: string;
     role?:string;
     orgId: string;
     organizationName: string;

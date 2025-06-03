@@ -4,7 +4,8 @@
   "main": "app.js",
   "scripts": {
     "test": "jest",
-    "start": "nodemon ./src/app.ts"
+    "start": "nodemon ./src/app.ts",
+    "dev": "nodemon ./src/app.ts"
   },
   "keywords": [],
   "author": "",

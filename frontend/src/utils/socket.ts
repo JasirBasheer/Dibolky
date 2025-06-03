@@ -1,7 +1,7 @@
 import io from 'socket.io-client'
 
 const createSocketConnection = () => {
-    return io('http://localhost:5000')
+    return io('http://backend:5050')
 }
 
 export default createSocketConnection

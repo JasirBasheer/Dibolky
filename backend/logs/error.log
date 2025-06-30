@@ -722,3 +722,499 @@
  Error: {"message":"Invalid Token","stack":"Error: Invalid Token\n    at /app/node_modules/mern.common/dist/utils/jwt.js:109:19\n    at Generator.next (<anonymous>)\n    at /app/node_modules/mern.common/dist/utils/jwt.js:41:71\n    at new Promise (<anonymous>)\n    at __awaiter (/app/node_modules/mern.common/dist/utils/jwt.js:37:12)\n    at verifyToken (/app/node_modules/mern.common/dist/utils/jwt.js:98:12)\n    at /app/src/middlewares/token.middleware.ts:57:51\n    at Generator.next (<anonymous>)\n    at fulfilled (/app/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-03T06:03:48.007Z"} ms 
  
 
+::ffff:192.168.65.1 - - [28/Jun/2025:06:16:38 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /app/src/middlewares/token.middleware.ts:53:44\n    at Generator.next (<anonymous>)\n    at fulfilled (/app/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:16:38.501Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:16:38 +0000] "GET /api/agency/" 401  
+ Error: {"message":"Access Denied","stack":"Error: Access Denied\n    at /app/src/middlewares/token.middleware.ts:53:44\n    at Generator.next (<anonymous>)\n    at fulfilled (/app/src/middlewares/token.middleware.ts:5:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:16:38.509Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.095Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.192Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.284Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.333Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.382Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.432Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.476Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.529Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.573Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.623Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.671Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.720Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.766Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.812Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.862Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.913Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:18 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:18.962Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:19 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:19.018Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:19 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:19.056Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:19 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:19.116Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:19 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:19.150Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:19 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:19.207Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:19 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:19.248Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:19 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:19.301Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:19 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:19.400Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:19 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:19.496Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:27 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:27.891Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:27 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:27.985Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.076Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.161Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.168Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.262Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.266Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.362Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.366Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.458Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.462Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.558Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.562Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.649Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.654Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.743Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.747Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.843Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.847Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.940Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:28 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:28.943Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:29 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:29.037Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:29 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:29.040Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:29 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:29.159Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:29 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:29.278Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:17:29 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:17:29.375Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:18:00 +0000] "POST /api/entities/get-s3Upload-url" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:18:00.032Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:21:52 +0000] "POST /api/entities/get-s3Upload-url" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:21:52.562Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:22:09 +0000] "POST /api/entities/get-s3Upload-url" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:22:09.600Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:22:10 +0000] "POST /api/entities/get-s3Upload-url" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:22:10.636Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:41:27 +0000] "GET /api/entities/get-connections/agency-client/67d67fdedc368e3983148cd5" 404  
+ Error: {"message":"User details not found please try again later..","stack":"Error: User details not found please try again later..\n    at EntityService.<anonymous> (/app/src/services/Implementation/entity.service.ts:316:27)\n    at Generator.next (<anonymous>)\n    at fulfilled (/app/src/services/Implementation/entity.service.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:41:27.344Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:41:28 +0000] "GET /api/entities/get-connections/agency-client/67d67fdedc368e3983148cd5" 404  
+ Error: {"message":"User details not found please try again later..","stack":"Error: User details not found please try again later..\n    at EntityService.<anonymous> (/app/src/services/Implementation/entity.service.ts:316:27)\n    at Generator.next (<anonymous>)\n    at fulfilled (/app/src/services/Implementation/entity.service.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:41:28.493Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:41:30 +0000] "GET /api/entities/get-connections/agency-client/67d67fdedc368e3983148cd5" 404  
+ Error: {"message":"User details not found please try again later..","stack":"Error: User details not found please try again later..\n    at EntityService.<anonymous> (/app/src/services/Implementation/entity.service.ts:316:27)\n    at Generator.next (<anonymous>)\n    at fulfilled (/app/src/services/Implementation/entity.service.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:41:30.643Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:41:34 +0000] "GET /api/entities/get-connections/agency-client/67d67fdedc368e3983148cd5" 404  
+ Error: {"message":"User details not found please try again later..","stack":"Error: User details not found please try again later..\n    at EntityService.<anonymous> (/app/src/services/Implementation/entity.service.ts:316:27)\n    at Generator.next (<anonymous>)\n    at fulfilled (/app/src/services/Implementation/entity.service.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:41:34.795Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:52:55 +0000] "GET /api/entities/get-connections/agency-client/67d67fdedc368e3983148cd5" 404  
+ Error: {"message":"User details not found please try again later..","stack":"Error: User details not found please try again later..\n    at EntityService.<anonymous> (/app/src/services/Implementation/entity.service.ts:316:27)\n    at Generator.next (<anonymous>)\n    at fulfilled (/app/src/services/Implementation/entity.service.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:52:55.063Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:52:56 +0000] "GET /api/entities/get-connections/agency-client/67d67fdedc368e3983148cd5" 404  
+ Error: {"message":"User details not found please try again later..","stack":"Error: User details not found please try again later..\n    at EntityService.<anonymous> (/app/src/services/Implementation/entity.service.ts:316:27)\n    at Generator.next (<anonymous>)\n    at fulfilled (/app/src/services/Implementation/entity.service.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:52:56.223Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:06:52:58 +0000] "GET /api/entities/get-connections/agency-client/67d67fdedc368e3983148cd5" 404  
+ Error: {"message":"User details not found please try again later..","stack":"Error: User details not found please try again later..\n    at EntityService.<anonymous> (/app/src/services/Implementation/entity.service.ts:316:27)\n    at Generator.next (<anonymous>)\n    at fulfilled (/app/src/services/Implementation/entity.service.ts:17:58)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T06:52:58.381Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:31 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:31.991Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.079Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.178Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.292Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.295Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.392Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.395Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.491Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.496Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.586Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.589Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.689Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.692Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.780Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.783Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.886Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.888Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:32 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:32.980Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:33 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:33.012Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:33 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:33.076Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:33 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:33.104Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:33 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:33.173Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:33 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:33.216Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:33 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:33.275Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:33 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:33.366Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:33 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:33.456Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.184Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.274Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.364Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.461Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.465Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.560Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.561Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.656Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.660Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.752Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.753Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.844Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.846Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.942Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:44 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:44.943Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:45 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:45.043Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:45 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:45.045Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:45 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:45.148Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:45 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:45.152Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:45 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:45.255Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:45 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:45.257Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:45 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:45.347Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:45 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:45.349Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:45 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:45.437Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:45 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:45.537Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:07:31:45 +0000] "POST /api/entities/get-signedUrl" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T07:31:45.627Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:08:45:45 +0000] "POST /api/entities/get-s3Upload-url" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T08:45:45.550Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:08:46:02 +0000] "POST /api/entities/get-s3Upload-url" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T08:46:02.824Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:08:46:04 +0000] "POST /api/entities/get-s3Upload-url" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T08:46:04.234Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:08:46:04 +0000] "POST /api/entities/get-s3Upload-url" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T08:46:04.785Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:08:46:04 +0000] "POST /api/entities/get-s3Upload-url" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T08:46:04.930Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:08:46:05 +0000] "POST /api/entities/get-s3Upload-url" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T08:46:05.266Z"} ms 
+ 
+
+::ffff:192.168.65.1 - - [28/Jun/2025:20:30:01 +0000] "POST /api/entities/get-s3Upload-url" 500  
+ Error: {"message":"No value provided for input HTTP label: Bucket.","stack":"Error: No value provided for input HTTP label: Bucket.\n    at resolvedPath (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:483:11)\n    at /app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:542:19\n    at RequestBuilder.build (/app/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:508:7)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-06-28T20:30:01.561Z"} ms 
+ 
+

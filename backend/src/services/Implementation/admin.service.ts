@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { IPlanRepository } from '../../repositories/Interface/IPlanRepository';
 import { IAdminRepository } from '../../repositories/Interface/IAdminRepository';
 import { IEntityRepository } from '../../repositories/Interface/IEntityRepository';

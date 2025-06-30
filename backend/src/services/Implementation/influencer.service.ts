@@ -3,7 +3,7 @@ import { IInfluencerService } from "../Interface/IInfluencerService";
 import { IInfluencerRepository } from "../../repositories/Interface/IInfluencerRepository";
 import { IInfluencerTenantRepository } from "../../repositories/Interface/IInfluencerTenantRepository";
 import { NotFoundError, UnauthorizedError } from "mern.common";
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { IInfluencer } from "../../types/influencer.types";
 
 @injectable()

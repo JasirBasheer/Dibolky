@@ -15,6 +15,7 @@ import {
     IBucket,
     ISocialMediaUploadResponse
 } from '../types/common.types';
+import logger from '../logger';
 
 
 // services
@@ -82,14 +83,14 @@ async function processAgencyScheduledPosts() {
         }
 
     } catch (error) {
-        console.error('Error processing scheduled posts:', error);
+        logger.error('Error processing scheduled posts:', error);
     }
 }
 
 
 export function startScheduledPostsProcessor() {
     cron.schedule('*/2 * * * *', async () => {
-        console.log(color.blue('✅ Cron job restarted for scheduled contents...'));
+        logger.info('Cron job restarted for scheduled contents...',{method:"cron-job"});
         await processAgencyScheduledPosts();
     });
 }

@@ -15,17 +15,31 @@ services:
     environment:
       - NODE_ENV=development
       - MONGODB_DEBUG=true
+      - LOGSTASH_HOST=172.19.0.5
+      - HOSTNAME=mern-backend
     networks:
-      - dibolky-tool
+      dibolky-tool:
+        aliases:
+          - backend
     depends_on:
       redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      logstash:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5050/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
+      start_period: 90s
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://172.19.0.5:12201"  
+        tag: "backend"
+        gelf-compression-type: "none"
 
   frontend:
     build:
@@ -41,19 +55,24 @@ services:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
     networks:
-      - dibolky-tool
+      dibolky-tool:
+        aliases:
+          - frontend
     stdin_open: true
     tty: true
 
   redis:
     image: redis:alpine
+    container_name: redis
     restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
     networks:
-      - dibolky-tool
+      dibolky-tool:
+        aliases:
+          - redis
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 30s
@@ -61,10 +80,87 @@ services:
       retries: 3
       start_period: 40s
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+      - ./elk/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - "9200:9200"
+    networks:
+      dibolky-tool:
+        aliases:
+          - elasticsearch
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:9200"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.15.1
+    container_name: logstash
+    volumes:
+      - ./elk/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./elk/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
+    ports:
+      - "5044:5044"
+      - "12201:12201/udp"
+      - "9600:9600"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      dibolky-tool:
+        aliases:
+          - logstash
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:9600"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.1
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    volumes:
+      - ./elk/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      dibolky-tool:
+        aliases:
+          - kibana
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:5601/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
 networks:
   dibolky-tool:
     driver: bridge
+    name: dibolky-tool
 
 volumes:
   redis_data:
+    driver: local
+  es_data:
     driver: local

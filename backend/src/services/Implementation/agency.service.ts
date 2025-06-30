@@ -1,5 +1,5 @@
 import { IAgency, IAgencyTenant } from "../../types/agency.types";
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { IAgencyService } from "../Interface/IAgencyService";
 import { inject, injectable } from "tsyringe";
 import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepository";

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { IEntityController } from '../Interface/IEntityController';
 import { IEntityService } from '../../services/Interface/IEntityService';
 import { inject, injectable } from 'tsyringe';
@@ -8,7 +8,7 @@ import { AWS_S3_BUCKET_NAME } from '../../config/env.config';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { v4 as uuidv4 } from 'uuid';
-import { IPlan } from '../../types/admin.types';
+import { IPlan } from '../../types/admin';
 import { CountryToCurrency, getPriceConversionFunc } from '../../utils/currency-conversion.utils';
 import {
     findCountryByIp,
@@ -44,19 +44,14 @@ export default class EntityController implements IEntityController {
     * @param next - Express next function for error handling.
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
-    async checkMail(
+    checkMail = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             const { mail, platform } = req.body
             console.log(mail,platform,"entereedddddd")
             const isExists = await this.entityService.IsMailExists(mail, platform)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { isExists: isExists })
-        } catch (error) {
-            next(error);
-        }
     }
 
 
@@ -67,12 +62,10 @@ export default class EntityController implements IEntityController {
     * @param next - Express next function for error handling.
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
-    async getAllPlans(
+    getAllPlans = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             let userCountry = req.cookies?.userCountry
             const plans = await this.entityService.getAllPlans()
 
@@ -91,23 +84,16 @@ export default class EntityController implements IEntityController {
 
             if (plans) return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plans: convertedPlans })
             SendResponse(res, HTTPStatusCodes.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR)
-        } catch (error) {
-            next(error);
-        }
     }
 
 
-    async getAllTrialPlans(
+    getAllTrialPlans = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             const trialPlans = await this.entityService.getAllTrailPlans()
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { trialPlans })
-        } catch (error) {
-            next(error)
-        }
+       
     }
 
 
@@ -118,12 +104,10 @@ export default class EntityController implements IEntityController {
     * @param next - Express next function for error handling.
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
-    async getPlan(
+    getPlan = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             const { plan_id } = req.params
             const userCountry = req.cookies.userCountry
             const plan = await this.entityService.getPlan(plan_id);
@@ -132,9 +116,7 @@ export default class EntityController implements IEntityController {
             const convertedPlanPrice = PriceConverisonFunc(plan.price as number)
             plan.price = convertedPlanPrice
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plan })
-        } catch (error) {
-            next(error);
-        }
+       
     }
 
 
@@ -145,12 +127,10 @@ export default class EntityController implements IEntityController {
     * @param next - Express next function for error handling.
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
-    async registerAgency(
+    registerAgency = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, paymentGateway, description, currency } = req.body.details
             const { transaction_id } = req.body
             const isTrial = !transaction_id;
@@ -163,15 +143,12 @@ export default class EntityController implements IEntityController {
             const createdAgency = await this.entityService.registerAgency(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, finalPlanPurchasedRate, finalTransactionId, finalPaymentGateway, description, currency ?? "trial")
             if (!createdAgency) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.BAD_REQUEST)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
-        } catch (error) {
-            next(error);
-        }
+        
 
     }
 
 
-    async createInfluencer(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
+    createInfluencer = async(req: Request, res: Response): Promise<void> => {
             const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, paymentGateway, description, currency } = req.body.details
             const { transaction_id } = req.body
 
@@ -186,9 +163,7 @@ export default class EntityController implements IEntityController {
             const createdAgency = await this.entityService.createInfluencer(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, finalPlanPurchasedRate, finalTransactionId, finalPaymentGateway, description, currency ?? "trial")
             if (!createdAgency) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.BAD_REQUEST)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
-        } catch (error) {
-            next(error);
-        }
+        
     }
 
     /**
@@ -198,12 +173,10 @@ export default class EntityController implements IEntityController {
     * @param next - Express next function for error handling.
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
     */
-    async getMenu(
+    getMenu = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const { role, planId } = req.params;
             let menu;
@@ -236,9 +209,7 @@ export default class EntityController implements IEntityController {
                 return SendResponse(res, HTTPStatusCodes.BAD_REQUEST, "Invalid role provided")
             }
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { menu })
-        } catch (error: unknown) {
-            next(error);
-        }
+        
     }
 
 
@@ -249,126 +220,98 @@ export default class EntityController implements IEntityController {
      * @param next Express NextFunction for error handling
     * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
      */
-    async getCountry(
+    getCountry = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             let ipAddressWithProxy = req.get('x-forwarded-for') || req.socket.remoteAddress;
             ipAddressWithProxy = ipAddressWithProxy == "::1" ? "49.36.231.0" : ipAddressWithProxy;
-            const locationData = findCountryByIp(ipAddressWithProxy as string)
+            const locationData = findCountryByIp(ipAddressWithProxy as string) || {country:"IN"}
             let userCountry = req.cookies?.userCountry
-            if (!userCountry) {
+            if (userCountry) {
                 userCountry = CountryToCurrency[locationData?.country as string]
                 res.cookie('userCountry', userCountry, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: false, secure: false, sameSite: 'strict', path: '/' });
             }
+
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-        } catch (error) {
-            next(error);
-        }
     }
 
 
-    async getOwner(
+    getOwner = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const ownerDetails = await this.entityService.getOwner(req.details.orgId as string)
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { ownerDetails: ownerDetails[0] })
-        } catch (error) {
-            next(error);
-        }
+        
     }
 
-    async getChats(
+    getChats = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
 
             if (!req.details) throw new NotFoundError("request details not found")
             const { userId } = req.params
             const chats = await this.chatService.getChats(req.details.orgId as string, userId)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
-        } catch (error) {
-            next(error);
-        }
+        
     }
 
 
-    async getChat(
+    getChat = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
 
             if (!req.details) throw new NotFoundError("request details not found")
             const { chatId } = req.body
             const chats = await this.chatService.getChat(req.details.orgId as string, chatId)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
-        } catch (error) {
-            next(error);
-        }
+        
     }
 
-    async getMessages(
+    getMessages = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
+    ): Promise<void> => {
         const { userId } = req.body
         // const messages = await this.chatService.getMessages(req.details.orgId,userId)
     }
 
 
-    async createGroup(
+    createGroup = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
 
             if (!req.details) throw new NotFoundError("request details not found")
             const { details, userId } = req.body
             const createdGroup = await this.chatService.createGroup(req.details?.orgId as string, userId, details)
             console.log(createdGroup);
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { group: createdGroup })
-        } catch (error) {
-            next(error);
-
-        }
+        
 
     }
 
 
-    async getAllProjects(
+    getAllProjects = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const { page } = req.params
             const projects = await this.entityService.fetchAllProjects(req.details.orgId as string, Number(page))
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects: projects?.projects, totalPages: projects?.totalPages })
-        } catch (error) {
-            next(error)
-        }
+       
     }
 
-    async initiateS3BatchUpload(
+    initiateS3BatchUpload = async (
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             const { files } = req.body;
 
             const filesInfo = await Promise.all(
@@ -376,7 +319,7 @@ export default class EntityController implements IEntityController {
                     const key = `test/${uuidv4()}-${file.fileName}`;
 
                     const command = new PutObjectCommand({
-                        Bucket: AWS_S3_BUCKET_NAME,
+                        Bucket: "dibolky-test-app",
                         Key: key,
                         ContentType: file.fileType,
                         ContentDisposition: 'inline',
@@ -394,18 +337,14 @@ export default class EntityController implements IEntityController {
             );
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { filesInfo });
-        } catch (error) {
-            next(error);
-        }
+        
     }
 
 
-    async getUploadS3Url(
+    getUploadS3Url = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             const { file } = req.body;
             console.log(file)
 
@@ -427,112 +366,84 @@ export default class EntityController implements IEntityController {
             };
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { s3file });
-        } catch (error) {
-            next(error);
-        }
+        
     }
 
 
-    async saveContent(
+    saveContent = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const { platform, user_id } = req.params
             const { files, platforms, metadata, contentType } = req.body
             await this.entityService.saveContent(req.details.orgId as string, platform, platforms, user_id, files, metadata, contentType)
 
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
-        } catch (error) {
-            next(error)
-        }
+       
     }
 
 
-    async getS3ViewUrl(
+    getS3ViewUrl = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             const { key } = req.body
             const signedUrl = await this.entityService.getS3ViewUrl(key)
 
             res.json({ signedUrl });
-        } catch (error) {
-            next(error)
-        }
+       
     }
 
-    async fetchContents(
+    fetchContents = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const { user_id } = req.params
             const contents = await this.entityService.fetchContents(req.details.orgId as string, user_id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { contents })
 
-        } catch (error) {
-            next(error)
-        }
+       
     }
 
 
-    async updateProfile(
+    updateProfile = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const { role, details } = req.body
             const updatedProfile = await this.entityService.updateProfile(req.details.orgId as string, role, req.details?.role as string, details)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details: updatedProfile })
-        } catch (error) {
-            next(error)
-        }
+       
     }
 
 
-    async fetchAllScheduledContents(
+    fetchAllScheduledContents = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const { user_id } = req.params
             const scheduledContents = await this.entityService.getScheduledContent(req.details.orgId as string, user_id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { scheduledContents })
 
-        } catch (error) {
-            next(error)
-        }
+       
     }
 
 
-    async getConnections(
+    getConnections = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const { entity, user_id } = req.params
             console.log
             const connections = await this.entityService.getConnections(req.details.orgId as string, entity, user_id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { connections })
-        } catch (error) {
-            next(error)
-        }
+       
     }
-
-
 
 }
 

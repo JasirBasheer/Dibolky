@@ -1,6 +1,6 @@
 import mongoose, { Model, Schema, Types } from "mongoose";
 import { IChatRepository } from "../Interface/IChatRepository";
-import { IChat, IChatDetails, IGroupDetails, Participant } from "../../types/chat.types";
+import { IChat, IChatDetails, IGroupDetails, Participant } from "../../types/chat";
 import { BaseRepository, CustomError, NotFoundError } from "mern.common";
 import { inject, injectable } from "tsyringe";
 import { connectTenantDB } from "../../config/db.config";

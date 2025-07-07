@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { Model } from 'mongoose';
 import { BaseRepository } from 'mern.common';
 import { IInfluencerRepository } from '../Interface/IInfluencerRepository';
-import { IInfluencer } from '../../types/influencer.types';
+import { IInfluencer } from '../../types/influencer';
 
 @injectable()
 export default class InfluencerRepository extends BaseRepository<IInfluencer> implements IInfluencerRepository {

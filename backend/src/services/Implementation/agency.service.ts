@@ -1,4 +1,4 @@
-import { IAgency, IAgencyTenant } from "../../types/agency.types";
+import { IAgency, IAgencyTenant } from "../../types/agency";
 import bcrypt from 'bcryptjs'
 import { IAgencyService } from "../Interface/IAgencyService";
 import { inject, injectable } from "tsyringe";
@@ -7,12 +7,12 @@ import { ConflictError, CustomError, generatePassword, hashPassword, NotFoundErr
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { IProjectRepository } from "../../repositories/Interface/IProjectRepository";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
-import { IClient, IClientTenant } from "../../types/client.types";
+import { IClient, IClientTenant } from "../../types/client";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
-import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common.types";
-import { IAvailableClients, ServicesData } from "../../types/chat.types";
-import { IProject } from "../../models/project.model";
+import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common";
+import { IAvailableClients, ServicesData } from "../../types/chat";
+import { IProject } from "../../models/project";
 import { createNewMenuForClient } from "../../utils/menu.utils";
 import { createClientMailData } from "../../utils/mail.datas";
 

@@ -18,7 +18,7 @@ export const checkIsMailExistsApi = async (
     mail:string,
     platform:string
 ) => {
-    return await api.post('/api/entities/check-mail', {
+    return await api.post('/api/public/check-mail', {
         mail,platform
     });
 }

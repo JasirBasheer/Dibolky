@@ -74,7 +74,7 @@ const Navbar: React.FC<NavbarProps> = ({ animation = true, showNavItems = true }
 
   const getCountry = async () => {
     try {
-      await axios.get('/api/entities/get-country');
+      await axios.get('/api/public/get-country');
       const country = Cookies.get('userCountry') || "USD"
       dispatch(setCurrency({ selectedCurrency: country, currencySymbol: symbols[country] }))
     } catch (error) {

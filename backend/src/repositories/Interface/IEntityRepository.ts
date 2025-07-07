@@ -1,7 +1,7 @@
 import { Model } from "mongoose";
-import { ITransaction } from "../../models/transaction.model";
-import { IAgency, IAgencyTenant } from "../../types/agency.types";
-import { IInfluencer } from "../../types/influencer.types";
+import { ITransaction } from "../../models/transaction";
+import { IAgency, IAgencyTenant } from "../../types/agency";
+import { IInfluencer } from "../../types/influencer";
 
 export interface IEntityRepository {
     createAgency(newAgency: object): Promise<Partial<IAgency> | null>;

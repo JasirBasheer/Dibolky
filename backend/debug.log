@@ -1,8 +1,0 @@
-{"environment":"development","hostname":"mern-backend","level":"info","message":"Logger initialized","timestamp":"2025-06-29T18:37:52.161Z"}
-{"level":"info","message":"http://localhost:5050","timestamp":"2025-06-29T18:37:52.264Z"}
-{"level":"info","message":"Connected to MongoDB successfully","timestamp":"2025-06-29T18:37:53.305Z"}
-{"hostname":"mern-backend","level":"info","message":"App log 2ms","method":"GET","path":"/health","status":200,"timestamp":"2025-06-29T18:37:55.282Z"}
-{"level":"info","message":"Cron job restarted for scheduled contents...","method":"cron-job","timestamp":"2025-06-29T18:38:00.288Z"}
-{"hostname":"mern-backend","level":"info","message":"App log 3ms","method":"GET","path":"/health","status":200,"timestamp":"2025-06-29T18:38:25.334Z"}
-{"hostname":"mern-backend","level":"info","message":"App log 2ms","method":"GET","path":"/health","status":200,"timestamp":"2025-06-29T18:38:55.373Z"}
-{"hostname":"mern-backend","level":"info","message":"App log 1ms","method":"GET","path":"/health","status":200,"timestamp":"2025-06-29T18:39:25.402Z"}

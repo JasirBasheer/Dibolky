@@ -2,9 +2,9 @@ import mongoose, { Model, Schema, Types } from "mongoose";
 import { BaseRepository, NotFoundError } from "mern.common";
 import { inject, injectable } from "tsyringe";
 import { connectTenantDB } from "../../config/db.config";
-import {  IAgencyTenant } from "../../types/agency.types";
+import {  IAgencyTenant } from "../../types/agency";
 import { IAgencyTenantRepository } from "../Interface/IAgencyTenantRepository";
-import { IIntegratePaymentType, IUpdateProfile } from "../../types/common.types";
+import { IIntegratePaymentType, IUpdateProfile } from "../../types/common";
 
 @injectable()
 export default class AgencyTenantRepository extends BaseRepository<IAgencyTenant> implements IAgencyTenantRepository {

@@ -1,4 +1,4 @@
-import { IPlan, planDetails } from "../../types/admin.types"
+import { IPlan, planDetails } from "../../types/admin"
 
 export interface IPlanRepository {
   getPlans(): Promise<IPlan[] | null>

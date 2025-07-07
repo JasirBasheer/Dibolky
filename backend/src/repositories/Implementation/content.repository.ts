@@ -4,7 +4,7 @@ import { Model } from "mongoose";
 import { Schema } from "mongoose";
 import { connectTenantDB } from "../../config/db.config";
 import { IContentRepository } from "../Interface/IContentRepository";
-import { IBucket } from "../../types/common.types";
+import { IBucket } from "../../types/common";
 
 @injectable()
 export class ContentRepository extends BaseRepository<IBucket> implements IContentRepository {

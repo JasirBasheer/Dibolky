@@ -2,19 +2,19 @@ import { inject, injectable } from 'tsyringe';
 import { IEntityService } from '../Interface/IEntityService';
 import { IEntityRepository } from '../../repositories/Interface/IEntityRepository';
 import { IPlanRepository } from '../../repositories/Interface/IPlanRepository';
-import { agencyTenantSchema } from '../../models/agency.model';
+import { agencyTenantSchema } from '../../models/agency';
 import { ITransactionRepository } from '../../repositories/Interface/ITransactionRepository';
-import { IPlan } from '../../types/admin.types';
-import { IProject } from '../../models/project.model';
+import { IPlan } from '../../types/admin';
+import { IProject } from '../../models/project';
 import { IProjectRepository } from '../../repositories/Interface/IProjectRepository';
 import { IClientTenantRepository } from '../../repositories/Interface/IClientTenantRepository';
 import { IContentRepository } from '../../repositories/Interface/IContentRepository';
 import { IAgencyTenantRepository } from '../../repositories/Interface/IAgencyTenantRepository';
-import { AddressType, IAgency, IAgencyTenant } from '../../types/agency.types';
-import { IInfluencer } from '../../types/influencer.types';
+import { AddressType, IAgency, IAgencyTenant } from '../../types/agency';
+import { IInfluencer } from '../../types/influencer';
 import { connectTenantDB } from '../../config/db.config';
-import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IBucket, IUpdateProfile } from '../../types/common.types';
-import { IClientTenant } from '../../types/client.types';
+import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IBucket, IUpdateProfile } from '../../types/common';
+import { IClientTenant } from '../../types/client';
 import { IAgencyRepository } from '../../repositories/Interface/IAgencyRepository';
 import { IClientRepository } from '../../repositories/Interface/IClientRepository';
 import { getS3ViewUrl } from '../../utils/aws.utils';
@@ -24,7 +24,7 @@ import {
     hashPassword,
     NotFoundError,
 } from 'mern.common';
-import { getMetaAccessTokenStatus } from '../../provider.strategies/facebook.strategy';
+import { getMetaAccessTokenStatus } from '../../provider-strategies/facebook';
 import { INoteRepository } from '../../repositories/Interface/INoteRepository';
 
 @injectable()

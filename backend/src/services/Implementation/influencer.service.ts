@@ -4,7 +4,7 @@ import { IInfluencerRepository } from "../../repositories/Interface/IInfluencerR
 import { IInfluencerTenantRepository } from "../../repositories/Interface/IInfluencerTenantRepository";
 import { NotFoundError, UnauthorizedError } from "mern.common";
 import bcrypt from 'bcryptjs'
-import { IInfluencer } from "../../types/influencer.types";
+import { IInfluencer } from "../../types/influencer";
 
 @injectable()
 export default class InfluencerService implements IInfluencerService {

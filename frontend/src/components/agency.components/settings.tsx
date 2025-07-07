@@ -230,24 +230,7 @@ const SettingsPage = () => {
         </button>
       </div>
 
-      <div className="flex items-center justify-between p-4 border border-gray-200 rounded">
-        <div className="flex items-center space-x-4">
-          <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
-            <img src='https://upload.wikimedia.org/wikipedia/commons/archive/c/c1/20210313114223%21Google_%22G%22_logo.svg' alt='FaceBook' className="w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="font-medium">Google</h4>
-            <p className="text-sm text-gray-500">Not connected</p>
-          </div>
-        </div>
-        <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 $ bg-blue-700 hover:bg-blue-800" text-white transition`}>
-          <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/facebook', 'facebook')}>
-            <span>Connect</span>
-            <ExternalLink size={14} />
-          </div>
-        </button>
-      </div>
-
+    
       <div className="flex items-center justify-between p-4 border border-gray-200 rounded">
         <div className="flex items-center space-x-4">
           <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
@@ -284,13 +267,13 @@ const SettingsPage = () => {
         </button>
       </div>
 
-      <div className="flex items-center justify-between p-4 border border-gray-200 rounded">
+        <div className="flex items-center justify-between p-4 border border-gray-200 rounded">
         <div className="flex items-center space-x-4">
           <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
-            <img src='https://upload.wikimedia.org/wikipedia/commons/3/34/Ionicons_logo-tiktok.svg' alt='FaceBook' className="w-6 h-6" />
+            <img src='https://upload.wikimedia.org/wikipedia/commons/archive/c/c1/20210313114223%21Google_%22G%22_logo.svg' alt='FaceBook' className="w-6 h-6" />
           </div>
           <div>
-            <h4 className="font-medium">Tik tok</h4>
+            <h4 className="font-medium">Google</h4>
             <p className="text-sm text-gray-500">Not connected</p>
           </div>
         </div>
@@ -301,6 +284,8 @@ const SettingsPage = () => {
           </div>
         </button>
       </div>
+
+
     </div>
   );
 

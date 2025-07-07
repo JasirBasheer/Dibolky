@@ -2,10 +2,10 @@ import { Model, Schema, Types } from "mongoose";
 import { connectTenantDB } from "../../config/db.config";
 import { inject, injectable } from "tsyringe";
 import { BaseRepository, CustomError } from "mern.common";
-import { INote } from "../../types/note.types";
+import { INote } from "../../types/note";
 import { INoteRepository } from "../Interface/INoteRepository";
-import { agencyTenantSchema } from "../../models/agency.model";
-import { clientTenantSchema } from "../../models/client.model";
+import { agencyTenantSchema } from "../../models/agency";
+import { clientTenantSchema } from "../../models/client";
 import mongoose from "mongoose";
 
 @injectable()

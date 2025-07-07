@@ -1,4 +1,4 @@
-import { IInfluencer } from "../../types/influencer.types";
+import { IInfluencer } from "../../types/influencer";
 
 export interface IInfluencerService {
     influencerLoginHandler(email: string, password: string): Promise<string>;

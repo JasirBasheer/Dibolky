@@ -1,5 +1,5 @@
 import { Model, Schema, Types } from "mongoose";
-import { IMessage } from "../../types/chat.types";
+import { IMessage } from "../../types/chat";
 import { IMessageRepository } from "../Interface/IMessageRepository";
 import { connectTenantDB } from "../../config/db.config";
 import { inject, injectable } from "tsyringe";

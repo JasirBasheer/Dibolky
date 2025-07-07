@@ -15,13 +15,6 @@ export const errorHandler = (
          status:res.statusCode || 500
         })
 
-    // res.locals.errorDetails = JSON.stringify({
-    //     message: err.message,
-    //     stack: err.stack,
-    //     timestamp: new Date().toISOString()
-    // });
-
-
     if (err.message === "Invalid Token") {
         res.clearCookie('accessToken', { httpOnly: true, secure: false });
         res.clearCookie('refreshToken', { httpOnly: false, secure: false });

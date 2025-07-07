@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { stripe } from "../../config/stripe.config";
-import { IRazorpayOrder, IUserDetails } from "../../types/payment.types";
+import { IRazorpayOrder, IUserDetails } from "../../types/payment";
 import { IPaymentService } from "../Interface/IPaymentService";
 import { inject, injectable } from "tsyringe";
 import { IEntityService } from "../Interface/IEntityService";

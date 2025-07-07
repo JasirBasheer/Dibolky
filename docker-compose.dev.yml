@@ -13,10 +13,10 @@ services:
     ports:
       - "5050:5050"
     environment:
-      - NODE_ENV=development
-      - MONGODB_DEBUG=true
-      - LOGSTASH_HOST=172.19.0.5
-      - HOSTNAME=mern-backend
+      NODE_ENV: development
+      MONGODB_DEBUG: true
+      LOGSTASH_HOST: logstash
+      HOSTNAME: mern-backend
     networks:
       dibolky-tool:
         aliases:
@@ -30,7 +30,7 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5050/health"]
-      interval: 30s
+      interval: 90s
       timeout: 10s
       retries: 3
       start_period: 90s
@@ -51,7 +51,7 @@ services:
       - /app/node_modules
     ports:
       - "5173:5173"
-    environment:
+    environment: 
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
     networks:

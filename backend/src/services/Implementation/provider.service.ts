@@ -1,16 +1,16 @@
 import { inject, injectable } from "tsyringe";
 import { IProviderService } from "../Interface/IProviderService";
-import { getMetaPagesDetails, handleFacebookUpload } from "../../provider.strategies/facebook.strategy";
-import { exchangeForLongLivedToken, handleInstagramUpload } from "../../provider.strategies/instagram.strategy";
+import { getMetaPagesDetails, handleFacebookUpload } from "../../provider-strategies/facebook";
+import { exchangeForLongLivedToken, handleInstagramUpload } from "../../provider-strategies/instagram";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
-import { IAgencyTenant } from "../../types/agency.types";
+import { IAgencyTenant } from "../../types/agency";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
-import { IMetaAccount, IPlatforms, IBucket, ISocialMediaUploadResponse } from "../../types/common.types";
-import { IClientTenant } from "../../types/client.types";
-import { IInfluncerTenant } from "../../types/influencer.types";
+import { IMetaAccount, IPlatforms, IBucket, ISocialMediaUploadResponse } from "../../types/common";
+import { IClientTenant } from "../../types/client";
+import { IInfluncerTenant } from "../../types/influencer";
 import { FACEBOOK, INSTAGRAM } from "../../utils/constants.utils";
-import { INote } from "../../types/note.types";
+import { INote } from "../../types/note";
 import { INoteRepository } from "../../repositories/Interface/INoteRepository";
 import { CustomError } from "mern.common";
 

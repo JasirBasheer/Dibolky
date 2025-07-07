@@ -1,12 +1,12 @@
 import { inject, injectable } from 'tsyringe';
 import { IChatService } from '../Interface/IChatService';
 import { IChatRepository } from '../../repositories/Interface/IChatRepository';
-import { agencyTenantSchema } from '../../models/agency.model';
+import { agencyTenantSchema } from '../../models/agency';
 import { CustomError, NotFoundError } from 'mern.common';
 import { IMessageRepository } from '../../repositories/Interface/IMessageRepository';
-import { IChat, IGroupDetails, IMessage, Participant } from '../../types/chat.types';
+import { IChat, IGroupDetails, IMessage, Participant } from '../../types/chat';
 import { IEntityRepository } from '../../repositories/Interface/IEntityRepository';
-import { IAgency, IAgencyTenant } from '../../types/agency.types';
+import { IAgency, IAgencyTenant } from '../../types/agency';
 import mongoose, { Connection, Model, Types } from 'mongoose';
 import { deleteS3Object } from '../../utils/aws.utils';
 

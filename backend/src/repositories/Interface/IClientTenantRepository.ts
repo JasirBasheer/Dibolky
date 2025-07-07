@@ -1,5 +1,5 @@
-import { IClientTenant, User } from "../../types/client.types";
-import { IUpdateProfile } from "../../types/common.types";
+import { IClientTenant, User } from "../../types/client";
+import { IUpdateProfile } from "../../types/common";
 
 export interface IClientTenantRepository  {
   createClient(orgId: string, details: Partial<IClientTenant>): Promise<IClientTenant>;

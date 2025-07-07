@@ -4,8 +4,8 @@ import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepositor
 import { IAdminRepository } from "../../repositories/Interface/IAdminRepository";
 import { CustomError, generateToken, hashPassword, NotFoundError, sendMail, verifyToken } from "mern.common";
 import { JWT_RESET_PASSWORD_SECRET } from "../../config/env.config";
-import { IAdmin } from "../../types/admin.types";
-import { IAgency } from "../../types/agency.types";
+import { IAdmin } from "../../types/admin";
+import { IAgency } from "../../types/agency";
 import { createForgotPasswordData } from "../../utils/mail.datas";
 import { ROLES } from "../../utils/constants.utils";
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";

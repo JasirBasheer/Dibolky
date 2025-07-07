@@ -47,6 +47,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
 
 
   useEffect(() => {
+    console.log(agency.user_id)
     if (!agency?.user_id) return;
 
     const selectedClient = localStorage.getItem('selectedClient');

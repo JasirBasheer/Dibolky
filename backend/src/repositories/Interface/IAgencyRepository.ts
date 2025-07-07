@@ -1,6 +1,6 @@
-import { IAgency } from "../../types/agency.types";
-import { IPlan } from "../../types/admin.types";
-import { IUpdateProfile } from "../../types/common.types";
+import { IAgency } from "../../types/agency";
+import { IPlan } from "../../types/admin";
+import { IUpdateProfile } from "../../types/common";
 
 export interface IAgencyRepository {
   findAgencyWithMail(agency_mail: string): Promise<IAgency | null>;

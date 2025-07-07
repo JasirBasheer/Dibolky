@@ -1,8 +1,8 @@
-import { IAgencyTenant } from "../../types/agency.types";
-import { IClientTenant } from "../../types/client.types";
-import { IMetaAccount, IBucket, ISocialMediaUploadResponse } from "../../types/common.types";
-import { IInfluncerTenant } from "../../types/influencer.types";
-import { INote } from "../../types/note.types";
+import { IAgencyTenant } from "../../types/agency";
+import { IClientTenant } from "../../types/client";
+import { IMetaAccount, IBucket, ISocialMediaUploadResponse } from "../../types/common";
+import { IInfluncerTenant } from "../../types/influencer";
+import { INote } from "../../types/note";
 
 export interface IProviderService {
     handleSocialMediaUploads(content: IBucket, user: IClientTenant | IAgencyTenant | IInfluncerTenant | null, isCron: boolean): Promise<ISocialMediaUploadResponse[]>;

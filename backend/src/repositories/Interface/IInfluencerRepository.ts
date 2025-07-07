@@ -1,4 +1,4 @@
-import { IInfluencer } from "../../types/influencer.types";
+import { IInfluencer } from "../../types/influencer";
 
 export interface IInfluencerRepository {
     findInfluencerWithMail(influencer_mail: string): Promise<IInfluencer | null>

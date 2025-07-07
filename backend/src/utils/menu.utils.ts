@@ -1,4 +1,4 @@
-import { IMenuCategory } from "../types/common.types";
+import { IMenuCategory } from "../types/common";
 
 const smm = {
     smm: {

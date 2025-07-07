@@ -1,9 +1,9 @@
-import { IProject } from "../../models/project.model";
-import { IPlan } from "../../types/admin.types";
-import { AddressType, IAgency, IAgencyTenant } from "../../types/agency.types";
-import { IClientTenant } from "../../types/client.types";
-import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IBucket, IUpdateProfile } from "../../types/common.types";
-import { IInfluencer } from "../../types/influencer.types";
+import { IProject } from "../../models/project";
+import { IPlan } from "../../types/admin";
+import { AddressType, IAgency, IAgencyTenant } from "../../types/agency";
+import { IClientTenant } from "../../types/client";
+import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IBucket, IUpdateProfile } from "../../types/common";
+import { IInfluencer } from "../../types/influencer";
 
 export interface IEntityService {
     getAllPlans(): Promise<Record<string, IPlan[]>>;

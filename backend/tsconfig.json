@@ -9,10 +9,14 @@
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./*"]
+    },
     "typeRoots": [
       "./node_modules/@types",
-      "./types"
-    ]
+      "./src/types/@declarations"
+    ],
   },
   "include": ["src/**/*", "src/tests"],           
   "exclude": ["node_modules", "dist"]  

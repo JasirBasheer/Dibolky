@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { ITransactionRepository } from '../Interface/ITransactionRepository';
 import { Model } from 'mongoose';
 import { BaseRepository } from 'mern.common';
-import { ITransaction } from '../../models/transaction.model';
+import { ITransaction } from '../../models/transaction';
 
 @injectable()
 export default class TransactionRepository extends BaseRepository<ITransaction> implements ITransactionRepository {

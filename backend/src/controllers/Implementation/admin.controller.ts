@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { IAdminController } from '../Interface/IAdminController';
 import { inject, injectable } from 'tsyringe';
 import { IAdminService } from '../../services/Interface/IAdminService';
-import { planDetails } from '../../types/admin.types';
+import { planDetails } from '../../types/admin';
 import {
     HTTPStatusCodes,
     NotFoundError,
@@ -34,19 +34,14 @@ export default class AdminController implements IAdminController {
      * @returns Promise resolving to void
      * @throws NotFoundError or other errors if verification fails
      */
-    async verifyAdmin(
+    verifyAdmin = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> =>{
             if(!req.details)throw new NotFoundError("Details Not Fount")
             console.log("reached here") 
             const details = await this.adminService.verifyAdmin(req.details._id as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.VERIFIED, { details, role: "admin" })
-        } catch (error) {
-            next(error)
-        }
     }
 
 
@@ -58,17 +53,12 @@ export default class AdminController implements IAdminController {
     * @returns Promise resolving to void
     * @throws NotFoundError if clients are not found or any other errors during the process
     */
-    async recentClients(
+    recentClients = async (
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> =>{
             const clients = await this.adminService.getRecentClients()
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { clients })
-        } catch (error) {
-            next(error)
-        }
     }
 
 
@@ -79,12 +69,10 @@ export default class AdminController implements IAdminController {
     * @param next - Express NextFunction for error handling
     * @returns A response with the client details or an error message
     */
-    async getClient(
+    getClient = async(
         req: Request<{ id: string, role: string }>,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             const { id, role } = req.params
 
             const details = await this.adminService.getClient(id, role)
@@ -92,9 +80,6 @@ export default class AdminController implements IAdminController {
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })
 
-        } catch (error) {
-            next(error)
-        }
     }
 
 
@@ -105,19 +90,14 @@ export default class AdminController implements IAdminController {
     * @param next - Express NextFunction for error handling
     * @returns A response with the list of clients or an error message
     */
-    async getAllClients(
+    getAllClients = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> =>{
             const details = await this.adminService.getAllClients()
             if (!details) throw new NotFoundError("Clients Not found")
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })
-        } catch (error) {
-            next(error)
-        }
     }
 
 
@@ -128,20 +108,15 @@ export default class AdminController implements IAdminController {
     * @param next - Express NextFunction for error handling
     * @returns A success response if the plan is created successfully, or forwards an error to the next middleware
     */
-    async createPlan(
+    createPlan = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> =>{
             const { details }: { entity: string, details: planDetails } = req.body
             console.log(details)
             await this.adminService.createPlan(details)
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-        } catch (error) {
-            next(error)
-        }
     }
 
 
@@ -152,19 +127,14 @@ export default class AdminController implements IAdminController {
     * @param next - Express NextFunction for error handling
     * @returns A success response if the plan is updated successfully, or forwards an error to the next middleware
     */
-    async editPlan(
+    editPlan = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> =>{
             const { entity, details }: { entity: string, details: planDetails } = req.body
             await this.adminService.editPlan(entity, details)
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-        } catch (error) {
-            next(error)
-        }
     }
 
 
@@ -175,19 +145,14 @@ export default class AdminController implements IAdminController {
     * @param next - Express NextFunction for error handling
     * @returns A success response if the plan status is updated successfully, or forwards an error to the next middleware
     */
-    async changePlanStatus(
+    changePlanStatus = async (
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> =>{
             const { entity, plan_id }: { entity: string, plan_id: string } = req.body
             await this.adminService.changePlanStatus(entity, plan_id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
 
-        } catch (error) {
-            next(error)
-        }
 
     }
 
@@ -199,19 +164,14 @@ export default class AdminController implements IAdminController {
     * @param next - Express NextFunction for error handling
     * @returns A success response with the plan details if found, or forwards an error to the next middleware
     */
-    async getPlan(
+    getPlan = async (
         req: Request<{ entity: string; id: string }>,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             const { entity, id } = req.params
             const details = await this.adminService.getPlanDetails(entity,id)
             
             SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{details})
-        } catch (error) {
-            next(error)
-        }
 
     }
 

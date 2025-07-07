@@ -28,6 +28,7 @@ if (environment === 'development') {
   transports.push(
     new winston.transports.Console({
       format: winston.format.combine(
+        winston.format.errors({stack:true}),
         winston.format.colorize(),
         winston.format.simple()
       ),

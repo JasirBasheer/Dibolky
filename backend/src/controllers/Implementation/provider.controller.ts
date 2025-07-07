@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { inject, injectable } from "tsyringe";
 import { HTTPStatusCodes, NotFoundError, ResponseMessage, SendResponse } from "mern.common";
 import { IProviderController } from "../Interface/IProviderController";
 import { IProviderService } from "../../services/Interface/IProviderService";
-import { createInstagramOAuthURL } from "../../provider.strategies/instagram.strategy";
+import { createInstagramOAuthURL } from "../../provider-strategies/instagram";
 import { IClientService } from "../../services/Interface/IClientService";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
-import { createFacebookOAuthURL } from "../../provider.strategies/facebook.strategy";
-import { IBucket } from "../../types/common.types";
+import { createFacebookOAuthURL } from "../../provider-strategies/facebook";
+import { IBucket } from "../../types/common";
 import { FACEBOOK, INSTAGRAM } from "../../utils/constants.utils";
 
 
@@ -32,12 +32,10 @@ export default class ProviderController implements IProviderController {
 
     }
 
-    async processContentApproval(
+    processContentApproval = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> =>{
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const { content_id, user_id, platform } = req.body
             const content: IBucket | null = await this.providerService.getContentById(req.details.orgId as string, content_id)
@@ -55,32 +53,22 @@ export default class ProviderController implements IProviderController {
                 await this.providerService.updateContentStatus(req.details.orgId as string, content_id, "Approved")
             }
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-        } catch (error) {
-            next(error)
-        }
     }
 
-    async getMetaPagesDetails(
+    getMetaPagesDetails = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> =>{
             const { access_token } = req.params
 
             const pages = await this.providerService.getMetaPagesDetails(access_token as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { pages })
-        } catch (error) {
-            next(error)
-        }
     }
 
-    async connectSocialPlatforms(
+    connectSocialPlatforms = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> =>{
             const { provider } = req.params
             const redirectUri: string = req.query.redirectUri as string;
             console.log(redirectUri)
@@ -93,60 +81,40 @@ export default class ProviderController implements IProviderController {
             }
 
             res.send({ url: url });
-        } catch (error) {
-            next(error)
-        }
     }
 
 
 
-    async saveSocialPlatformToken(
+    saveSocialPlatformToken = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> =>{
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const { platform, provider, user_id } = req.params
             const { token } = req.body
 
             await this.providerService.saveSocialMediaToken(req.details.orgId as string, platform, user_id, provider, token)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-        } catch (error) {
-            console.error('Error saving social platform token:', error)
-            next(error)
-        }
     }
 
 
-    async reScheduleContent(
+    reScheduleContent = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> =>{
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const { content_id, date } = req.body
             await this.providerService.reScheduleContent(req.details.orgId as string, content_id, date)
-        } catch (error) {
-            console.log('Error while reshceduling', error)
-            next(error)
-        }
     }
 
-    async processContentReject(
+    processContentReject = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> =>{
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const { content_id, reason } = req.body
             await this.providerService.rejectContent(req.details.orgId as string, content_id, reason)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-        } catch (error) {
-            next(error)
-        }
     }
 
 }

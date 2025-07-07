@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { IAuthenticationController } from '../Interface/IAuthenticationController';
 import { inject, injectable } from 'tsyringe';
 import { IAdminService } from '../../services/Interface/IAdminService';
@@ -61,12 +61,10 @@ export default class AuthenticationController implements IAuthenticationControll
     * @param next Express NextFunction for error handling
     * @returns Promise resolving to void
     */
-    async login(
+    login = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             const { email, password, role }: { email: string, password: string, role: string } = req.body
             let id;
 
@@ -99,9 +97,6 @@ export default class AuthenticationController implements IAuthenticationControll
             res.cookie('accessToken', tokens.accessToken, { httpOnly: false, secure: false, maxAge: 2 * 60 * 1000 });
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
 
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
 
@@ -112,12 +107,10 @@ export default class AuthenticationController implements IAuthenticationControll
     * @param next Express NextFunction for error handling
     * @returns Promise resolving to void
     */
-    async logout(
+    logout = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             if(!req.tokenDetails)throw new NotFoundError("Details Not Fount")
             let token: string = req.cookies.accessToken ?? null
             await blacklistToken(req.tokenDetails, token)
@@ -125,9 +118,6 @@ export default class AuthenticationController implements IAuthenticationControll
             res.clearCookie('accessToken')
             res.clearCookie('refreshToken')
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
 
@@ -138,19 +128,14 @@ export default class AuthenticationController implements IAuthenticationControll
     * @param next Express NextFunction for error handling
     * @returns Promise resolving to void
     */
-    async forgotPassword(
+    forgotPassword = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             const { email, role }: { email: string, role: string } = req.body
 
             await this.authenticationService.resetPassword(email, role)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
 
@@ -161,19 +146,14 @@ export default class AuthenticationController implements IAuthenticationControll
     * @param next Express NextFunction for error handling
     * @returns Promise resolving to void
     */
-    async resetPassword(
+    resetPassword = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             const { token } = req.params as { token: string };
             const { newPassword } = req.body as { newPassword: string };
 
             await this.authenticationService.changePassword(token, newPassword)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 }

@@ -1,6 +1,6 @@
 import { IAdminRepository } from '../Interface/IAdminRepository';
 import { BaseRepository } from 'mern.common';
-import { IAdmin } from '../../types/admin.types';
+import { IAdmin } from '../../types/admin';
 import { Model } from 'mongoose';
 import { inject, injectable } from 'tsyringe';
 

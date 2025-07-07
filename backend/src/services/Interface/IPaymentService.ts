@@ -1,4 +1,4 @@
-import { IRazorpayOrder, IUserDetails } from "../../types/payment.types";
+import { IRazorpayOrder, IUserDetails } from "../../types/payment";
 
 export interface IPaymentService {
     razorpay(details: {amount : number ; currency:string}): Promise<IRazorpayOrder>;

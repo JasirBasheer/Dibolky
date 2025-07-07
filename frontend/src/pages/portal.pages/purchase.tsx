@@ -95,7 +95,7 @@ const PurchasePlan: React.FC = () => {
     const fetchPlanDetails = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`/api/entities/get-plan/${plan_id}`)
+            const response = await axios.get(`/api/public/get-plan/${plan_id}`)
             setPlan(response.data.plan)
         } catch (error) {
             console.log(error)

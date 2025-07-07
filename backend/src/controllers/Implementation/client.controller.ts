@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { inject, injectable } from "tsyringe";
 import { IClientController } from "../Interface/IClientController";
 import { IClientService } from "../../services/Interface/IClientService";
@@ -14,51 +14,34 @@ export default class ClientController implements IClientController {
         this.clientService = clientService
     }
 
-    async getClient(
+    getClient = async(
         req: Request, 
         res: Response, 
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             if(!req.details)throw new NotFoundError("Details Not Fount")
             const details = await this.clientService.verifyClient(req.details._id as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details, role: "client" })
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
-    async getClientDetails(
+    getClientDetails = async(
         req: Request, 
         res: Response, 
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             if(!req.details)throw new NotFoundError("Details Not Fount")
             const details = await this.clientService.getClientDetails(req.details.orgId as string, req.details.email as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { client: details })
-
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
-    async getOwner(
+    getOwner = async(
         req: Request, 
         res: Response, 
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             if(!req.details)throw new NotFoundError("Details Not Fount")
             const owners = await this.clientService.getOwners(req.details.orgId as string)
             if (!owners) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { owners })
-
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
 

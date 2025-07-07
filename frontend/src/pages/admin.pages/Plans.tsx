@@ -23,7 +23,7 @@ const Plans = () => {
 
   const fetchPlans = async () => {
     try {
-      const response = await axios.get('/api/entities/get-all-plans');
+      const response = await axios.get('/api/public/get-all-plans');
       setPlans(response.data.plans);
     } catch (error: unknown) {
       console.log(error)

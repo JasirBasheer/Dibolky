@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { IAgencyController } from "../Interface/IAgencyController";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
 import { inject, injectable } from "tsyringe";
@@ -30,99 +30,72 @@ export default class AgencyController implements IAgencyController {
     }
 
 
-    async getAgency(
+    getAgency = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const details = await this.agencyService.verifyOwner(req.details._id as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details, role: "agency" })
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
 
-    async getAgencyOwnerDetails(
+    getAgencyOwnerDetails = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const details = await this.agencyService.getAgencyOwnerDetails(req.details.orgId as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
 
 
-    async createClient(
+    createClient = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
 
             const { orgId, name, email, industry, services, menu } = req.body
             console.log(req.body,'bodyeee')
             await this.agencyService.createClient(orgId, name, email, industry, services, menu, req.details.organizationName as string)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
 
 
 
 
-    async getAllClients(
+    getAllClients = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
 
             const orgId = req.details.orgId as string
             const clients = await this.agencyService.getAllClients(orgId)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { clients })
 
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
 
-    async getClient(
+    getClient = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const { id } = req.params
             const details = await this.agencyService.getClient(req.details.orgId as string, id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
-    async uploadContent(
+    uploadContent = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             const { selectedContentType, selectedPlatforms, id, files, caption } = req.body;
             if (!req.details) throw new NotFoundError("Details Not Fount")
             if (!files) {
@@ -132,114 +105,76 @@ export default class AgencyController implements IAgencyController {
 
             const result = await this.agencyService.saveContentToDb(id, req.details.orgId as string, files, JSON.parse(selectedPlatforms), selectedContentType, caption)
             if (result) SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS);
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
 
-    async getAvailableUsers(
+    getAvailableUsers = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const users = await this.agencyService.getAllAvailableClients(req.details.orgId as string)
             if (!users) throw new CustomError('Error while fetch available users', 500)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { users })
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
 
-    async getProjectsCount(
+    getProjectsCount = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const projects = await this.agencyService.getProjectsCount(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects })
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
-    async getClientsCount(
+    getClientsCount = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const clients = await this.agencyService.getClientsCount(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { clients })
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
-    async editProjectStatus(
+    editProjectStatus = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const { projectId, status } = req.body
             const result = await this.agencyService.editProjectStatus(req.details.orgId as string, projectId, status)
             if (result) SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
-    async getInitialSetUp(
+    getInitialSetUp = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const initialSetUp = await this.agencyService.getInitialSetUp(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { initialSetUp })
-        } catch (error: unknown) {
-            next(error);
-        }
     }
 
 
-    async IntegratePaymentGateWay(
+    IntegratePaymentGateWay = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+        res: Response
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const { details, provider } = req.body
             const gatewayDetails = await this.agencyService.integratePaymentGateWay(req.details.orgId as string, provider, details)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details: gatewayDetails, provider })
 
-        } catch (error) {
-            next(error)
-        }
     }
 
-    async getPaymentIntegrationStatus(
+    getPaymentIntegrationStatus = async(
         req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    res: Response
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const paymentIntegrationStatus = await this.agencyService.getPaymentIntegrationStatus(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { paymentIntegrationStatus })
-        } catch (error) {
-            next(error)
-        }
     }
 }
 

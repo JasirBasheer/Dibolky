@@ -1,8 +1,8 @@
-import { IProject } from "../../models/project.model";
-import { IAgency, IAgencyTenant } from "../../types/agency.types";
-import { IAvailableClients, ServicesData } from "../../types/chat.types";
-import { IClientTenant } from "../../types/client.types";
-import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common.types";
+import { IProject } from "../../models/project";
+import { IAgency, IAgencyTenant } from "../../types/agency";
+import { IAvailableClients, ServicesData } from "../../types/chat";
+import { IClientTenant } from "../../types/client";
+import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common";
 
 export interface IAgencyService {
     verifyOwner(agency_id: string): Promise<IAgency | null>;

@@ -1,4 +1,4 @@
-import { IAdmin, IPlan, planDetails } from "../../types/admin.types";
+import { IAdmin, IPlan, planDetails } from "../../types/admin";
 
 export interface IAdminService {
   adminLoginHandler(email: string, password: string): Promise<string>;

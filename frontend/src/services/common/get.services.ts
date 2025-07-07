@@ -53,5 +53,5 @@ export const fetchConnections = async (entity:string,user_id:string) => {
 
 
 export const getPlanDetailsApi = async(planId:string) =>{
-    return await api.get(`/api/entities/get-plan/${planId}`);
+    return await api.get(`/api/public/get-plan/${planId}`);
 }

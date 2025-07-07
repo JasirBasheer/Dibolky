@@ -1,5 +1,5 @@
 import { inject, injectable } from "tsyringe";
-import { IProject } from "../../models/project.model";
+import { IProject } from "../../models/project";
 import { BaseRepository } from "mern.common";
 import { IProjectRepository } from "../Interface/IProjectRepository";
 import { Model, Schema } from "mongoose";

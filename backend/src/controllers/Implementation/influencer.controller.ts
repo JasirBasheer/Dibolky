@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { inject, injectable } from "tsyringe";
 import { IInfluencerController } from "../Interface/IInfluencerController";
 import { IInfluencerService } from "../../services/Interface/IInfluencerService";
@@ -18,20 +18,14 @@ export default class InfluencerController implements IInfluencerController {
         this.influencerService = influencerService
     }
 
-    async getInfluencer(
+    getInfluencer = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const details = await this.influencerService.verifyInfluencer(req.details._id as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details, role: "influencer" })
-        } catch (error) {
-            next(error)
-        }
-
     }
 
 }

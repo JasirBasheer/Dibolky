@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { IPaymentController } from '../Interface/IPaymentController';
 import { inject, injectable } from 'tsyringe';
 import { IPaymentService } from '../../services/Interface/IPaymentService';
@@ -36,21 +36,14 @@ export default class PaymentController implements IPaymentController {
     * @param next Express NextFunction for error handling
     * @returns Promise<void> Resolves to a response with payment session data
     */
-    async razorpay(
+    razorpay = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             const { amount , currency }: { amount: number, currency:string } = req.body
 
             const response = await this.paymentService.razorpay({ amount, currency})
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.CREATED, { data: response })
-        } catch (error) {
-            console.error('Error creating company:', error);
-            next(error)
-
-        }
     }
 
 
@@ -61,19 +54,14 @@ export default class PaymentController implements IPaymentController {
      * @param next Express NextFunction for error handling
      * @returns Promise<void> Resolves to a response with a payment URL
      */
-    async stripe(
+    stripe = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             const { details, success_url, cancel_url } = req.body
 
             const session = await this.paymentService.stripe(details, success_url, cancel_url)
             res.json({ url: session })
-        } catch (error) {
-            next(error)
-        }
     }
 
 
@@ -84,19 +72,14 @@ export default class PaymentController implements IPaymentController {
      * @param next Express NextFunction for error handling
      * @returns Promise<void> Resolves to void
      */
-    async stripeWebhook(
+    stripeWebhook = async(
         req: Request,
         res: Response,
-        next: NextFunction
-    ): Promise<void> {
-        try {
+    ): Promise<void> => {
             const sig = req.headers['stripe-signature'] as string;
             const response = await this.paymentService.stripeWebhook(req.body,sig)
             if(response)SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.CREATED)
             
-        } catch (error) {
-            next(error)
-        }
     }
 
 

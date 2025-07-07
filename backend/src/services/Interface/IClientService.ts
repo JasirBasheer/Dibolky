@@ -1,5 +1,5 @@
-import { IAgencyTenant } from "../../types/agency.types";
-import { IClient, IClientTenant } from "../../types/client.types";
+import { IAgencyTenant } from "../../types/agency";
+import { IClient, IClientTenant } from "../../types/client";
 
 export interface IClientService {
     clientLoginHandler(email: string, password: string): Promise<string>;

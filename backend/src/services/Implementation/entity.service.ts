@@ -10,8 +10,8 @@ import { IProjectRepository } from '../../repositories/Interface/IProjectReposit
 import { IClientTenantRepository } from '../../repositories/Interface/IClientTenantRepository';
 import { IContentRepository } from '../../repositories/Interface/IContentRepository';
 import { IAgencyTenantRepository } from '../../repositories/Interface/IAgencyTenantRepository';
-import { AddressType, IAgency, IAgencyTenant } from '../../types/agency';
-import { IInfluencer } from '../../types/influencer';
+import { AddressType, IAgency, IAgencyRegistrationPayload, IAgencyTenant, } from '../../types/agency';
+import { IInfluencer, IInfluncerRegisterPayload } from '../../types/influencer';
 import { connectTenantDB } from '../../config/db.config';
 import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IBucket, IUpdateProfile } from '../../types/common';
 import { IClientTenant } from '../../types/client';
@@ -106,16 +106,8 @@ export default class EntityService implements IEntityService {
     }
 
 
-    async registerAgency(
-        organizationName: string, name: string,
-        email: string, address: AddressType,
-        websiteUrl: string, industry: string,
-        contactNumber: number, logo: string,
-        password: string, planId: string,
-        validity: number, planPurchasedRate: number,
-        transactionId: string, paymentGateway: string,
-        description: string, currency: string
-    ): Promise<Partial<IAgency> | null> {
+    async registerAgency(payload: IAgencyRegistrationPayload): Promise<Partial<IAgency> | null> {
+        const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, transactionId, paymentGateway, description, currency } = payload;
 
         const hashedPassword = await hashPassword(password)
         let orgId = organizationName.replace(/\s+/g, "") + Math.floor(Math.random() * 1000000);
@@ -149,16 +141,8 @@ export default class EntityService implements IEntityService {
 
 
 
-    async createInfluencer(
-        organizationName: string, name: string,
-        email: string, address: AddressType,
-        websiteUrl: string, industry: string,
-        contactNumber: number, logo: string,
-        password: string, planId: string,
-        validity: number, planPurchasedRate: number,
-        transactionId: string, paymentGateway: string,
-        description: string, currency: string
-    ): Promise<Partial<IInfluencer> | null> {
+    async createInfluencer(payload : IInfluncerRegisterPayload): Promise<Partial<IInfluencer> | null> {
+      const  { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, transactionId, paymentGateway, description, currency} = payload
 
         const hashedPassword = await hashPassword(password)
         let orgId = name.replace(/\s+/g, "") + Math.floor(Math.random() * 1000000);

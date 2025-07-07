@@ -5,6 +5,7 @@ import { IPaymentService } from "../Interface/IPaymentService";
 import { inject, injectable } from "tsyringe";
 import { IEntityService } from "../Interface/IEntityService";
 import razorpayInstance from "../../config/razorpay.config";
+import { STRIPE_WEBHOOK_SECRET } from "@/config";
 
 @injectable()
 export default class PaymentService implements IPaymentService {
@@ -72,19 +73,20 @@ export default class PaymentService implements IPaymentService {
     ): Promise<boolean> {
         try {
             let event: Stripe.Event;
-            event = stripe.webhooks.constructEvent(details, sig, "whsec_cae33044573115c56711a0bacaf0e229d72fbadd3301a0fc3f8bafe6c4093fe3");
+            event = stripe.webhooks.constructEvent(details, sig, STRIPE_WEBHOOK_SECRET);
 
             if (event.type == 'checkout.session.completed') {
                 const session = event.data.object as Stripe.Checkout.Session;
                 const metadata = session.metadata || {};
 
-                await this.entityService.registerAgency(
-                    metadata.organizationName, metadata.name, metadata.email,
-                    { city: metadata.city, country: metadata.country, }, metadata.website,
-                    metadata.industry, Number(metadata.phone), metadata.logo || "",
-                    metadata.password, JSON.parse(metadata.plan)._id, Number(metadata.validity),
-                    Number(metadata.amount), "2342saf", "Stripe", metadata.description, metadata.currency
-                )
+                await this.entityService.registerAgency({
+                    organizationName:metadata.organizationName, name:metadata.name, email:metadata.email,
+                    address:{ city: metadata.city, country: metadata.country, }, websiteUrl:metadata.website,
+                    industry:metadata.industry,contactNumber:Number(metadata.phone), logo:metadata.logo || "",
+                    password:metadata.password, planId:JSON.parse(metadata.plan)._id, validity:Number(metadata.validity),
+                    planPurchasedRate:Number(metadata.amount),transactionId: "2342saf", paymentGateway:"Stripe", description:metadata.description, 
+                    currency:metadata.currency
+                })
                 return true
             }
             return false

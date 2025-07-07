@@ -91,10 +91,6 @@ const planSchema: Schema<IPlan> = new Schema(
             type: Boolean, 
             default: true 
         },
-        deactivationDate: { 
-            type: Date, 
-            default: null 
-        },
         permissions:{
             type: [String],
             required:true

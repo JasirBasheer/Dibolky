@@ -49,7 +49,6 @@ export interface IPlan {
         accounting?: IMenuItems;
     };
     isActive:boolean;
-    deactivationDate:Date
 }
 
 

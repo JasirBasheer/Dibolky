@@ -44,7 +44,6 @@ export interface IPlan extends Document {
         accounting?: IMenuItems;
     };
     isActive:boolean;
-    deactivationDate:Date;
     permissions:string[]
 }
 

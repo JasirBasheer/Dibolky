@@ -1,9 +1,9 @@
 import { IProject } from "../../models/project";
 import { IPlan } from "../../types/admin";
-import { AddressType, IAgency, IAgencyTenant } from "../../types/agency";
+import { AddressType, IAgency, IAgencyRegistrationPayload, IAgencyTenant } from "../../types/agency";
 import { IClientTenant } from "../../types/client";
 import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IBucket, IUpdateProfile } from "../../types/common";
-import { IInfluencer } from "../../types/influencer";
+import { IInfluencer, IInfluncerRegisterPayload } from "../../types/influencer";
 
 export interface IEntityService {
     getAllPlans(): Promise<Record<string, IPlan[]>>;
@@ -11,12 +11,8 @@ export interface IEntityService {
     getPlan(plan_id: string): Promise<IPlan | null>;
     fetchAllProjects(orgId: string, page?: number): Promise<{ projects: IProject[], totalPages: number } | null>;
     IsMailExists(mail: string, platform: string): Promise<boolean>;
-    registerAgency(organizationName: string, name: string, email: string, address: AddressType, websiteUrl: string, industry: string,
-        contactNumber: number, logo: string, password: string, planId: string, validity: number, planPurchasedRate: number,
-        transactionId: string, paymentGateway: string, description: string, currency: string): Promise<Partial<IAgency> | null>;
-    createInfluencer(organizationName: string, name: string, email: string, address: AddressType, websiteUrl: string, industry: string,
-        contactNumber: number, logo: string, password: string, planId: string, validity: number, planPurchasedRate: number,
-        transactionId: string, paymentGateway: string, description: string, currency: string): Promise<Partial<IInfluencer> | null>;
+    registerAgency(payload: IAgencyRegistrationPayload): Promise<Partial<IAgency> | null>;
+    createInfluencer(payload :IInfluncerRegisterPayload): Promise<Partial<IInfluencer> | null>;
     getMenu(planId: string): Promise<IMenuCategory>;
     getClientMenu(orgId: string, client_id: string): Promise<IMenuCategory>;
     getOwner(orgId: string): Promise<IAgencyTenant[]>

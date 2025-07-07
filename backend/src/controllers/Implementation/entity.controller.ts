@@ -20,14 +20,10 @@ import {
 
 
 @injectable()
-/** Implementation of Entity Controller */
 export default class EntityController implements IEntityController {
     private entityService: IEntityService;
     private chatService: IChatService;
-    /**
-    * Initializes the EntityController with required service dependencies.
-    * @param entityService - Service for general entity operations.
-    */
+
     constructor(
         @inject('EntityService') entityService: IEntityService,
         @inject('ChatService') chatService: IChatService
@@ -37,13 +33,7 @@ export default class EntityController implements IEntityController {
     }
 
 
-    /**
-    * Handles mail existence in DB for a given platform.
-    * @param req - Express request object containing `Mail` and `platform` in the body.
-    * @param res - Express response object used to return the result.
-    * @param next - Express next function for error handling.
-    * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
-    */
+    
     checkMail = async(
         req: Request,
         res: Response,
@@ -55,13 +45,7 @@ export default class EntityController implements IEntityController {
     }
 
 
-    /**
-    * Handles mail existence check for a given platform.
-    * @param req - Express request object containing `Mail` and `platform` in the body.
-    * @param res - Express response object used to return the result.
-    * @param next - Express next function for error handling.
-    * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
-    */
+    
     getAllPlans = async(
         req: Request,
         res: Response,
@@ -140,11 +124,10 @@ export default class EntityController implements IEntityController {
             const finalPaymentGateway = isTrial ? "trial" : paymentGateway;
     
 
-            const createdAgency = await this.entityService.registerAgency(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, finalPlanPurchasedRate, finalTransactionId, finalPaymentGateway, description, currency ?? "trial")
+            const createdAgency = await this.entityService.registerAgency({organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate:finalPlanPurchasedRate, transactionId:finalTransactionId, paymentGateway:finalPaymentGateway, description, currency:currency ?? "trial"})
             if (!createdAgency) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.BAD_REQUEST)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
         
-
     }
 
 
@@ -159,20 +142,13 @@ export default class EntityController implements IEntityController {
             const finalPaymentGateway = isTrial ? "trial" : paymentGateway;
     
 
-
-            const createdAgency = await this.entityService.createInfluencer(organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, finalPlanPurchasedRate, finalTransactionId, finalPaymentGateway, description, currency ?? "trial")
+            const createdAgency = await this.entityService.createInfluencer({organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate:finalPlanPurchasedRate, transactionId:finalTransactionId, paymentGateway:finalPaymentGateway, description, currency:currency ?? "trial"})
             if (!createdAgency) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.BAD_REQUEST)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
         
     }
 
-    /**
-    * Returns menu for the given role.
-    * @param req - Express request object containing `role` and `planId` in the params.
-    * @param res - Express response object used to return the menu.
-    * @param next - Express next function for error handling.
-    * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
-    */
+  
     getMenu = async(
         req: Request,
         res: Response,
@@ -213,13 +189,7 @@ export default class EntityController implements IEntityController {
     }
 
 
-    /**
-     * Retrieves the user's country based on their IP address and sets it in a cookie.
-     * @param req Express Request object
-     * @param res Express Response object
-     * @param next Express NextFunction for error handling
-    * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
-     */
+   
     getCountry = async(
         req: Request,
         res: Response,

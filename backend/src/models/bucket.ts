@@ -36,14 +36,10 @@ export const bucketSchema: Schema<IBucket> = new mongoose.Schema({
             scheduledDate: {
                 type: String
             },
-            isPublished: {
-                type: Boolean,
-                default: false
+            status: {
+                type: String,
+                default: "pending"
             },
-            isRescheduled: {
-                type: Boolean,
-                default: false
-            }
         },
     ],
     contentType: {
@@ -74,7 +70,7 @@ bucketSchema.methods.changePlatformPublishStatus = async function (
     const platformEntry = this.platforms.find((p: { platform: string }) => p.platform === platform);
 
     if (platformEntry) {
-        platformEntry.isPublished = value;
+        platformEntry.status = value;
         await this.save();
     } else {
         throw new Error(`Error while updating scheduled posts: ${platform}`);

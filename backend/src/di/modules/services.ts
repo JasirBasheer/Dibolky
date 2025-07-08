@@ -19,6 +19,8 @@ import { IEntityService } from '@/services/Interface/IEntityService';
 import EntityService from '@/services/Implementation/entity.service';
 import PaymentService from '@/services/Implementation/payment.service';
 import { IPaymentService } from '@/services/Interface/IPaymentService';
+import PlanService from "@/services/Implementation/plan-service";
+import { IPlanService } from "@/services/Interface/IPlanService";
 
 export const registerServices = () => {
 container.register<IAuthenticationService>('AuthenticationService', { useClass: AuthenticationService });
@@ -31,4 +33,5 @@ container.register<IProviderService>('ProviderService', { useClass: ProviderServ
 container.register<IChatService>('ChatService', { useClass: ChatService });
 container.register<IInfluencerService>('InfluencerService', { useClass: InfluencerService });
 container.register<IManagerService>('ManagerService', { useClass: ManagerService });
+container.register<IPlanService>('PlanService', { useClass: PlanService });
 };

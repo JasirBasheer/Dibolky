@@ -1,104 +1,235 @@
-import React, { useState } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
-import { useDispatch, useSelector } from 'react-redux';
-import { IContentData, IFile, IMetaAccount, IPlatforms, RootState } from '@/types/common.types';
-import { toggleCreateContentModal } from '@/redux/slices/ui.slice';
-import { Button } from '../ui/button';
-import InstagramAccountModal from './instagram.acccounts.list';
-import { useNavigate } from 'react-router-dom';
-import { message } from 'antd';
-import { getMetaPages } from '@/services/common/get.services';
-import { InitiateS3BatchUpload, saveContentApi } from '@/services/common/post.services';
-import axios from 'axios';
-import { ArrowUpRight, Calendar, Facebook, Film, Image, Instagram, Upload } from 'lucide-react';
-import { Separator } from '@radix-ui/react-select';
-import { ScrollArea } from '../ui/scroll-area';
+"use client"
 
-const CreateContent = () => {
-  const ui = useSelector((state: RootState) => state.ui)
+import type React from "react"
+import { useState, useMemo } from "react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@radix-ui/react-select"
+import {
+  ArrowUpRight,
+  Calendar,
+  Facebook,
+  Film,
+  ImageIcon,
+  Upload,
+  MessageSquare,
+  Camera,
+  Linkedin,
+  Twitter,
+} from "lucide-react"
+import { useDispatch, useSelector } from "react-redux"
+import { IContentData, IPlatforms, RootState } from "@/types/common.types"
+import { toggleCreateContentModal } from "@/redux/slices/ui.slice"
+import { useNavigate } from "react-router-dom"
+import InstagramAccountModal from "./instagram.acccounts.list"
+import { message } from 'antd';
+import { getMetaPages } from "@/services/common/get.services"
+import { InitiateS3BatchUpload, saveContentApi } from "@/services/common/post.services"
+import axios from "@/utils/axios"
+
+interface IPlatform {
+  platform: string
+  scheduledDate: string
+}
+
+interface IFile {
+  file: File
+  type: string
+  id: string
+}
+
+const CreateContentModal = () => {
   const dispatch = useDispatch()
-  const [selectedPlatforms, setSelectedPlatforms] = useState<IPlatforms[]>([]);
-  const [selectedContentType, setSelectedContentType] = useState<string>("Reel");
-  const [uploadedFile, setUploadedFile] = useState<File[]>([]);
-  const [isScheduled, setIsScheduled] = useState<boolean>(false);
-  const [caption, setCaption] = useState<string>("")
+  const navigate = useNavigate()
+  const ui = useSelector((state: RootState) => state.ui)
   const user = useSelector((state: RootState) => state.user);
   const agency = useSelector((state: RootState) => state.agency);
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedPlatforms, setSelectedPlatforms] = useState<IPlatform[]>([])
+  const [selectedContentType, setSelectedContentType] = useState<string>("photo")
+  const [uploadedFile, setUploadedFile] = useState<File[]>([])
+  const [isScheduled, setIsScheduled] = useState<boolean>(false)
+  const [caption, setCaption] = useState<string>("")
   const [selectedAccount, setSelectedAccount] = useState("");
   const [accounts, setAccounts] = useState<IMetaAccount[]>([])
-  const navigate = useNavigate()
 
-
+  
 
   const PLATFORMS = [
     {
-      name: 'instagram',
-      icon: <Instagram className="w-5 h-5 text-pink-500" />,
-      uploadTypes: ['image', 'video', 'reel']
+      name: "instagram",
+      icon: <ImageIcon className="w-5 h-5 text-pink-500" />,
+      supportedTypes: ["reel", "video", "story", "photo"],
     },
     {
-      name: 'facebook',
+      name: "facebook",
       icon: <Facebook className="w-5 h-5 text-blue-600" />,
-      uploadTypes: ['image', 'video', 'post']
+      supportedTypes: ["thought", "reel", "video", "story", "photo"],
     },
-  ];
-
+    {
+      name: "x",
+      icon: <Twitter className="w-5 h-5 text-gray-900" />,
+      supportedTypes: ["thought", "reel", "video", "photo"],
+    },
+    {
+      name: "linkedin",
+      icon: <Linkedin className="w-5 h-5 text-blue-700" />,
+      supportedTypes: ["thought", "reel", "video", "photo"],
+    },
+  ]
 
   const CONTENT_TYPES = [
     {
-      name: 'Post',
-      icon: <Image className="w-5 h-5 text-blue-500" />,
-      accepts: 'image/*, video/*'
+      name: "thought",
+      icon: <MessageSquare className="w-5 h-5 text-green-500" />,
+      accepts: "",
+      description: "Text-only post",
     },
     {
-      name: 'Reel',
-      icon: <Film className="w-5 h-5 text-blue-500" />,
-      accepts: 'video/*'
-    }
-  ];
+      name: "photo",
+      icon: <ImageIcon className="w-5 h-5 text-blue-500" />,
+      accepts: "image/*",
+      description: "Single or multiple images",
+    },
+    {
+      name: "video",
+      icon: <Film className="w-5 h-5 text-purple-500" />,
+      accepts: "video/*",
+      description: "Video content",
+    },
+    {
+      name: "reel",
+      icon: <Film className="w-5 h-5 text-orange-500" />,
+      accepts: "video/*",
+      description: "Short-form video",
+    },
+    {
+      name: "story",
+      icon: <Camera className="w-5 h-5 text-pink-500" />,
+      accepts: "image/*, video/*",
+      description: "24-hour temporary content",
+    },
+  ]
 
-
-  const handlePlatformToggle = (platform: string) => {
-    setSelectedPlatforms(prev => prev.some(p => p.platform === platform) ? prev.filter(p => p.platform !== platform)
-      : [...prev, { platform: platform, scheduledDate: '' }]
-    );
-  };
-
-
-
-  const handleSchedule = (date: string) => {
-    setSelectedPlatforms(prev => prev.map(item => ({
-      ...item, scheduledDate: date
-    }))
-    );
-  };
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let file = Array.from(event.target.files || []);
-    if (file.length > 4) {
-      file = file.splice(0, 4)
-      message.warning("Since post limit is 4 , only selected the first 4 images")
-    }
-    if (file) {
-      setUploadedFile(file)
-    }
+  const SUGGESTED_TIMES = {
+    instagram: [
+      { label: "Morning Peak", time: "09:00", description: "9:00 AM - High engagement" },
+      { label: "Lunch Break", time: "12:30", description: "12:30 PM - Active users" },
+      { label: "Evening Prime", time: "19:00", description: "7:00 PM - Peak activity" },
+      { label: "Night Scroll", time: "21:30", description: "9:30 PM - Story time" },
+    ],
+    facebook: [
+      { label: "Morning Coffee", time: "08:00", description: "8:00 AM - Commute time" },
+      { label: "Lunch Hour", time: "13:00", description: "1:00 PM - Break time" },
+      { label: "After Work", time: "18:00", description: "6:00 PM - Wind down" },
+      { label: "Evening Social", time: "20:00", description: "8:00 PM - Social hour" },
+    ],
+    x: [
+      { label: "Morning News", time: "07:30", description: "7:30 AM - News check" },
+      { label: "Lunch Break", time: "12:00", description: "12:00 PM - Quick scroll" },
+      { label: "Commute Home", time: "17:30", description: "5:30 PM - Travel time" },
+      { label: "Evening Chat", time: "20:30", description: "8:30 PM - Discussion time" },
+    ],
+    linkedin: [
+      { label: "Work Start", time: "08:30", description: "8:30 AM - Professional check" },
+      { label: "Mid Morning", time: "10:00", description: "10:00 AM - Coffee break" },
+      { label: "Lunch Network", time: "12:00", description: "12:00 PM - Networking time" },
+      { label: "End of Day", time: "17:00", description: "5:00 PM - Wrap up time" },
+    ],
   }
 
+  const availableContentTypes = useMemo(() => {
+    if (selectedPlatforms.length === 0) {
+      return CONTENT_TYPES
+    }
 
+    const supportedTypes = selectedPlatforms.reduce((acc, platform) => {
+      const platformConfig = PLATFORMS.find((p) => p.name === platform.platform)
+      if (platformConfig) {
+        return acc.filter((type) => platformConfig.supportedTypes.includes(type.name))
+      }
+      return acc
+    }, CONTENT_TYPES)
+
+    return supportedTypes
+  }, [selectedPlatforms])
+
+  const isContentTypeSupported = useMemo(() => {
+    if (selectedPlatforms.length === 0) return true
+
+    return selectedPlatforms.every((platform) => {
+      const platformConfig = PLATFORMS.find((p) => p.name === platform.platform)
+      return platformConfig?.supportedTypes.includes(selectedContentType)
+    })
+  }, [selectedPlatforms, selectedContentType])
+
+  const handlePlatformToggle = (platformName: string) => {
+    setSelectedPlatforms((prev) => {
+      const exists = prev.find((p) => p.platform === platformName)
+      if (exists) {
+        return prev.filter((p) => p.platform !== platformName)
+      } else {
+        return [...prev, { platform: platformName, scheduledDate: "" }]
+      }
+    })
+  }
+
+  const handleScheduleChange = (platformName: string, date: string) => {
+    setSelectedPlatforms((prev) =>
+      prev.map((platform) => (platform.platform === platformName ? { ...platform, scheduledDate: date } : platform)),
+    )
+  }
+
+  const handleContentTypeChange = (contentType: string) => {
+    setSelectedContentType(contentType)
+    setUploadedFile([])
+  }
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let files = Array.from(event.target.files || [])
+
+    if (selectedContentType === "photo" && files.length > 4) {
+      files = files.slice(0, 4)
+      message.warning("Post limit is 4, only selected the first 4 images")
+    } else if (["video", "reel", "story"].includes(selectedContentType) && files.length > 1) {
+      files = files.slice(0, 1)
+      message.warning("Only one file allowed for this content type")
+    }
+
+    setUploadedFile(files)
+  }
 
   const handleUpload = async () => {
-
-    if (!uploadedFile || !selectedContentType ||
-      !selectedPlatforms || !caption ||
-      selectedPlatforms.length === 0
-    ) {
-      message.error('Full the inputs accordingly inorder to upolad content')
+    if (!selectedPlatforms.length) {
+      alert("Please select at least one platform")
       return
     }
 
+    if (!selectedContentType) {
+      alert("Please select a content type")
+      return
+    }
 
-    const requiredPlatforms: string[] = []
+    if (selectedContentType !== "thought" && uploadedFile.length === 0) {
+      alert("Please upload a file")
+      return
+    }
+
+    if (!caption.trim()) {
+      alert("Please enter a caption")
+      return
+    }
+
+    if (isScheduled) {
+      const unscheduledPlatforms = selectedPlatforms.filter((p) => !p.scheduledDate)
+      if (unscheduledPlatforms.length > 0) {
+        alert(`Please set schedule time for: ${unscheduledPlatforms.map((p) => p.platform).join(", ")}`)
+        return
+      }
+    }
+
+     const requiredPlatforms: string[] = []
     for (const item of selectedPlatforms as IPlatforms[]) {
       if (item.platform == 'instagram' && user.instagramAccessToken == "") {
         requiredPlatforms.push('instagram')
@@ -114,7 +245,6 @@ const CreateContent = () => {
       return
     }
 
-
     if (selectedPlatforms.some((p: IPlatforms) => ['instagram', 'facebook'].includes(p.platform)) && !selectedAccount) {
 
       const response = await getMetaPages(!user.facebookAccessToken ? user.instagramAccessToken : user.facebookAccessToken)
@@ -123,7 +253,7 @@ const CreateContent = () => {
       return
     }
 
-    try {
+     try {
       const files = uploadedFile.map((file: File) => {
         const type = file.type.startsWith('video/') ? 'video' : 'photo';
         return {
@@ -142,6 +272,8 @@ const CreateContent = () => {
       }));
 
       const initResponse = await InitiateS3BatchUpload(filesMetadata);
+      console.log(initResponse.data)
+      console.log("initResponse.data")
       const uploadInfos = initResponse.data.filesInfo;
       const uploadedFiles = [];
 
@@ -159,6 +291,7 @@ const CreateContent = () => {
               'Content-Type': fileObj.file.type,
               'Content-Disposition': 'inline',
             },
+            withCredentials: false
           });
 
 
@@ -196,11 +329,11 @@ const CreateContent = () => {
         contentData
       );
 
-      setUploadedFile([]);
-      setSelectedContentType("");
-      setSelectedPlatforms([]);
-      setCaption('');
-      setSelectedAccount('');
+     setSelectedPlatforms([])
+    setSelectedContentType("photo")
+    setUploadedFile([])
+    setIsScheduled(false)
+    setCaption("")
 
       if (savedContent) {
         message.success(`Content ${isScheduled ? 'scheduled' : 'uploaded'} successfully!`);
@@ -212,10 +345,24 @@ const CreateContent = () => {
       console.error('Upload Error:', error);
       message.error('Upload failed');
     }
+
+
+    console.log("Upload data:", {
+      platforms: selectedPlatforms,
+      contentType: selectedContentType,
+      files: uploadedFile,
+      caption,
+      isScheduled,
+    })
+
   }
 
-
-  const handleOpenChange = () => {
+    const handleClose = () => {
+    setSelectedPlatforms([])
+    setSelectedContentType("photo")
+    setUploadedFile([])
+    setIsScheduled(false)
+    setCaption("")
     dispatch(toggleCreateContentModal());
   };
 
@@ -224,33 +371,35 @@ const CreateContent = () => {
     setTimeout(() => setModalOpen(false), 200);
   };
 
-  return (
-    <Dialog open={ui.createContentModalOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-lg md:max-w-2xl w-full sm:max-h-[90vh] h-full p-0 gap-0 overflow-hidden sm:rounded-lg">
-        <DialogHeader className="  px-6 py-4 border-b">
-          <DialogTitle className="text-xl font-lazare font-bold">Create Content</DialogTitle>
-        </DialogHeader>
 
-        <InstagramAccountModal
+  const needsFileUpload = selectedContentType !== "thought"
+
+  return (
+    <Dialog open={ui.createContentModalOpen} onOpenChange={handleClose}>
+      <DialogContent className="sm:max-w-lg md:max-w-2xl w-full sm:max-h-[90vh] h-full p-0 gap-0 overflow-hidden sm:rounded-lg">
+        <DialogHeader className="px-6 py-4 border-b">
+          <DialogTitle className="text-xl font-bold">Create Content</DialogTitle>
+        </DialogHeader>
+         
+      <InstagramAccountModal
         accounts={accounts}
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onSelect={handleAccountSelect}
       />
+
         <ScrollArea className="max-h-[calc(90vh-4rem)]">
-          <div className="px-6 py-4 space-y-9">
+          <div className="px-6 py-4 space-y-6">
+            {/* Platform Selection */}
             <section>
-              <h2 className="text-sm  text-gray-800 dark:text-gray-200 font-lazare font-bold mb-3">Distribution Channels</h2>
+              <h2 className="text-sm text-gray-800 dark:text-gray-200 font-bold mb-3">Distribution Channels</h2>
               <div className="flex flex-wrap gap-2">
                 {PLATFORMS.map((platform) => (
                   <Button
                     key={platform.name}
                     variant={selectedPlatforms.some((p) => p.platform === platform.name) ? "default" : "outline"}
                     onClick={() => handlePlatformToggle(platform.name)}
-                    className={`flex items-center gap-2 h-9 px-3 py-1 text-sm transition-all ${selectedPlatforms.some((p) => p.platform === platform.name)
-                        ? "bg-primary text-primary-foreground"
-                        : "hover:bg-muted"
-                      }`}
+                    className="flex items-center gap-2 h-9 px-3 py-1 text-sm"
                     size="sm"
                   >
                     {platform.icon}
@@ -262,119 +411,273 @@ const CreateContent = () => {
 
             <Separator />
 
+            {/* Content Type Selection */}
             <section>
-              <h2 className="text-sm dark:text-gray-200 font-lazare font-bold text-gray-800 mb-3">Content Format</h2>
+              <h2 className="text-sm text-gray-800 dark:text-gray-200 font-bold mb-3">Content Format</h2>
               <div className="flex flex-wrap gap-2">
-                {CONTENT_TYPES.map((type) => (
+                {availableContentTypes.map((type) => (
                   <Button
                     key={type.name}
                     variant={selectedContentType === type.name ? "default" : "outline"}
-                    onClick={() => {
-                      setSelectedContentType(type.name)
-                      setUploadedFile([])
-                    }}
-                    className={`flex items-center gap-2 h-9 px-3 py-1 text-sm ${selectedContentType === type.name ? "bg-primary text-primary-foreground" : "hover:bg-muted"
-                      }`}
+                    onClick={() => handleContentTypeChange(type.name)}
+                    className="flex items-center gap-2 h-9 px-3 py-1 text-sm"
                     size="sm"
+                    disabled={
+                      selectedPlatforms.length > 0 &&
+                      !selectedPlatforms.every((platform) => {
+                        const platformConfig = PLATFORMS.find((p) => p.name === platform.platform)
+                        return platformConfig?.supportedTypes.includes(type.name)
+                      })
+                    }
                   >
                     {type.icon}
-                    <span>{type.name}</span>
+                    <span className="capitalize">{type.name}</span>
                   </Button>
                 ))}
               </div>
+              {selectedPlatforms.length > 0 && !isContentTypeSupported && (
+                <p className="text-sm text-red-500 mt-2">
+                  This content type is not supported by all selected platforms
+                </p>
+              )}
             </section>
 
             <Separator />
 
+            {/* File Upload Section */}
+            {needsFileUpload && (
+              <section className="space-y-4">
+                <h2 className="text-sm text-gray-800 dark:text-gray-200 font-bold">Upload Content</h2>
+                <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
+                  <input
+                    type="file"
+                    className="hidden"
+                    id="fileUpload"
+                    onChange={handleFileUpload}
+                    accept={CONTENT_TYPES.find((t) => t.name === selectedContentType)?.accepts}
+                    multiple={selectedContentType === "photo"}
+                  />
+                  <label htmlFor="fileUpload" className="cursor-pointer block">
+                    <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+                    <p className="text-gray-600 mb-1 text-sm dark:text-gray-200 font-bold">
+                      Drag and drop your file here or click to browse
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {selectedContentType === "photo" ? "You can upload up to 4 images" : "Only one file allowed"}
+                    </p>
+                  </label>
+                  {uploadedFile.length > 0 && (
+                    <div className="mt-4 space-y-1">
+                      {uploadedFile.map((file, index) => (
+                        <p key={index} className="text-sm text-gray-600 flex items-center justify-center">
+                          <span className="w-4 h-4 mr-1 text-green-500">✓</span>
+                          {file.name}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* Caption */}
+            <section className="space-y-2">
+              <label htmlFor="caption" className="block text-sm text-gray-800 dark:text-gray-200 font-bold">
+                Caption
+              </label>
+              <textarea
+                id="caption"
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+                placeholder="Enter your caption..."
+                className="w-full px-3 py-2 border border-gray-200 rounded-md focus:ring-1 focus:ring-primary focus:border-primary transition-colors placeholder:text-gray-400 min-h-[80px] text-sm"
+              />
+            </section>
+
+            {/* Scheduling */}
             <section className="space-y-4">
-              <h2 className="text-sm dark:text-gray-200 font-lazare font-bold text-gray-800">Upload Content</h2>
-              <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
+              <div className="flex items-center gap-2">
                 <input
-                  type="file"
-                  className="hidden"
-                  id="fileUpload"
-                  onChange={handleFileUpload}
-                  accept={CONTENT_TYPES.find((t) => t.name === selectedContentType)?.accepts}
-                  multiple={selectedContentType === "Post"}
+                  type="checkbox"
+                  id="schedule"
+                  checked={isScheduled}
+                  onChange={(e) => setIsScheduled(e.target.checked)}
+                  className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
                 />
-
-                <label htmlFor="fileUpload" className="cursor-pointer block">
-                  <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
-                  <p className="text-gray-600 mb-1 text-sm dark:text-gray-200 font-lazare font-bold">Drag and drop your file here or click to browse</p>
-                  <p className="text-xs text-gray-400">
-                    {selectedContentType === "Post" ? "You can upload multiple images" : "Only one file allowed"}
-                  </p>
-                </label>
-
-                {uploadedFile.length > 0 && (
-                  <div className="mt-4 space-y-1">
-                    {uploadedFile.map((item, index) => (
-                      <p key={index} className="text-sm text-gray-600 flex items-center justify-center">
-                        <span className="i-lucide-check-circle w-4 h-4 mr-1 text-green-500" />
-                        {item.name}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="caption" className="block text-sm dark:text-gray-200 font-lazare font-bold text-gray-800">
-                  Caption
-                </label>
-                <textarea
-                  onChange={(e) => setCaption(e.target.value)}
-                  id="caption"
-                  name="caption"
-                  placeholder="Enter your caption..."
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md focus:ring-1 focus:ring-primary focus:border-primary transition-colors placeholder:text-gray-400 min-h-[80px] text-sm"
-                  aria-describedby="caption-hint"
-                />
-              </div>
-
-              <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 bg-gray-50 dark:bg-[#181e2a]  rounded-md">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={isScheduled}
-                    onChange={(e) => {
-                      setIsScheduled(e.target.checked)
-                      handleSchedule("")
-                    }}
-                    className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
-                  />
+                <label htmlFor="schedule" className="flex items-center gap-2 cursor-pointer">
                   <Calendar className="w-4 h-4 text-gray-500" />
-                  <span className="text-gray-700 dark:text-gray-200 font-lazare font-bold  text-sm">Schedule Post</span>
+                  <span className="text-gray-700 dark:text-gray-200 font-bold text-sm">Schedule Post</span>
                 </label>
-                {isScheduled && (
-                  <input
-                    onChange={(e) => handleSchedule(e.target.value)}
-                    type="datetime-local"
-                    className="border border-gray-200 rounded px-3 py-1.5 text-sm w-full sm:w-auto"
-                  />
-                )}
               </div>
+
+              {isScheduled && selectedPlatforms.length > 0 && (
+                <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-md">
+                  {/* Quick Suggestions */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                        Suggested Times for Better Performance
+                      </h3>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const now = new Date()
+                          const tomorrow9AM = new Date(now)
+                          tomorrow9AM.setDate(tomorrow9AM.getDate() + 1)
+                          tomorrow9AM.setHours(9, 0, 0, 0)
+
+                          // Format for datetime-local input (YYYY-MM-DDTHH:MM)
+                          const year = tomorrow9AM.getFullYear()
+                          const month = String(tomorrow9AM.getMonth() + 1).padStart(2, "0")
+                          const day = String(tomorrow9AM.getDate()).padStart(2, "0")
+                          const hours = String(tomorrow9AM.getHours()).padStart(2, "0")
+                          const minutes = String(tomorrow9AM.getMinutes()).padStart(2, "0")
+                          const timeString = `${year}-${month}-${day}T${hours}:${minutes}`
+
+                          setSelectedPlatforms((prev) =>
+                            prev.map((platform) => ({
+                              ...platform,
+                              scheduledDate: timeString,
+                            })),
+                          )
+                        }}
+                        className="text-xs"
+                      >
+                        Apply 9 AM Tomorrow to All
+                      </Button>
+                    </div>
+
+                    {/* Platform-specific suggestions */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {selectedPlatforms.map((platform) => {
+                        const suggestions = SUGGESTED_TIMES[platform.platform as keyof typeof SUGGESTED_TIMES] || []
+                        const platformConfig = PLATFORMS.find((p) => p.name === platform.platform)
+
+                        return (
+                          <div
+                            key={platform.platform}
+                            className="border border-gray-200 dark:border-gray-600 rounded-lg p-3"
+                          >
+                            <div className="flex items-center gap-2 mb-2">
+                              {platformConfig?.icon}
+                              <span className="text-sm capitalize font-medium">{platform.platform}</span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-1">
+                              {suggestions.map((suggestion) => {
+                                const tomorrow = new Date()
+                                tomorrow.setDate(tomorrow.getDate() + 1)
+                                const [hours, minutes] = suggestion.time.split(":")
+                                tomorrow.setHours(Number.parseInt(hours), Number.parseInt(minutes), 0, 0)
+
+                                // Format for datetime-local input
+                                const year = tomorrow.getFullYear()
+                                const month = String(tomorrow.getMonth() + 1).padStart(2, "0")
+                                const day = String(tomorrow.getDate()).padStart(2, "0")
+                                const formattedHours = String(tomorrow.getHours()).padStart(2, "0")
+                                const formattedMinutes = String(tomorrow.getMinutes()).padStart(2, "0")
+                                const timeString = `${year}-${month}-${day}T${formattedHours}:${formattedMinutes}`
+
+                                return (
+                                  <Button
+                                    key={suggestion.label}
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleScheduleChange(platform.platform, timeString)}
+                                    className="h-auto p-2 text-left flex flex-col items-start hover:bg-primary/10"
+                                    title={suggestion.description}
+                                  >
+                                    <span className="text-xs font-medium text-primary">{suggestion.label}</span>
+                                    <span className="text-xs text-gray-500">{suggestion.time}</span>
+                                  </Button>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Manual time setting */}
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200">Or set custom times:</h3>
+                    {selectedPlatforms.map((platform) => {
+                      const platformConfig = PLATFORMS.find((p) => p.name === platform.platform)
+                      return (
+                        <div key={platform.platform} className="flex items-center gap-3">
+                          <div className="flex items-center gap-2 min-w-[120px]">
+                            {platformConfig?.icon}
+                            <span className="text-sm capitalize font-medium">{platform.platform}</span>
+                          </div>
+                          <input
+                            type="datetime-local"
+                            value={platform.scheduledDate}
+                            onChange={(e) => handleScheduleChange(platform.platform, e.target.value)}
+                            className="border border-gray-200 rounded px-3 py-1.5 text-sm flex-1"
+                          />
+                          {platform.scheduledDate && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedPlatforms((prev) =>
+                                  prev.map((p) =>
+                                    p.platform !== platform.platform
+                                      ? { ...p, scheduledDate: platform.scheduledDate }
+                                      : p,
+                                  ),
+                                )
+                              }}
+                              className="text-xs px-2 py-1 h-auto"
+                              title="Apply this time to all other platforms"
+                            >
+                              Apply to All
+                            </Button>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
             </section>
           </div>
 
-          <div className="sticky bottom-0 bg-white dark:bg-[#181e2a] border-t px-6 py-4 flex justify-end">
+          {/* Footer */}
+          <div className="sticky bottom-0 bg-white dark:bg-gray-900 border-t px-6 py-4 flex justify-end">
             <div className="flex gap-3 w-full sm:w-auto">
-              <Button variant="outline" onClick={handleOpenChange} className="flex-1 sm:flex-initial">
+              <Button variant="outline" onClick={handleClose} className="flex-1 sm:flex-initial bg-transparent">
                 Cancel
               </Button>
               <Button
                 onClick={handleUpload}
-                disabled={uploadedFile.length === 0 || selectedPlatforms.length === 0}
-                className="flex-1 sm:flex-initial "
+                disabled={
+                  selectedPlatforms.length === 0 ||
+                  !selectedContentType ||
+                  (needsFileUpload && uploadedFile.length === 0) ||
+                  !caption.trim()
+                }
+                className="flex-1 sm:flex-initial"
               >
-                <ArrowUpRight className="mr-2 h-4 w-4" /> Upload Content
+                <ArrowUpRight className="mr-2 h-4 w-4" />
+                {isScheduled ? "Schedule Content" : "Upload Content"}
               </Button>
             </div>
           </div>
         </ScrollArea>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
-export default React.memo(CreateContent)
+export default CreateContentModal
+
+
+
+
+
+
+
+
+

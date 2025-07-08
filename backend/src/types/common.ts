@@ -23,8 +23,7 @@ export interface ISocialMediaUploadResponse {
 export interface IPlatforms {
     platform: string;
     scheduledDate: string;
-    isPublished?: boolean;
-    isRescheduled?: boolean;
+    status: string;
 }
 export interface IFiles {
     fileName: string;

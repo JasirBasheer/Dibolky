@@ -6,11 +6,7 @@ import {
 /** Interface for Entity Controller */
 export interface IEntityController {
     checkMail(req: Request, res: Response): Promise<void>
-    getAllPlans(req: Request, res: Response): Promise<void>
-    getAllTrialPlans(req: Request, res: Response): Promise<void>
-    getPlan(req: Request, res: Response ): Promise<void>
-    registerAgency(req: Request, res: Response): Promise<void>
-    createInfluencer(req: Request, res: Response): Promise<void>
+    createAgency(req: Request, res: Response): Promise<void>
     getMenu(req: Request, res: Response): Promise<void>
     getCountry(req: Request, res: Response): Promise<void>
     getOwner(req: Request, res: Response): Promise<void>
@@ -27,4 +23,6 @@ export interface IEntityController {
     getUploadS3Url(req:Request,res:Response):Promise<void>
     updateProfile(req:Request,res:Response):Promise<void>
     getConnections(req:Request,res:Response):Promise<void>
+    handleLinkedinCallback(req:Request,res:Response):Promise<void>
+    
 }

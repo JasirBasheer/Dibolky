@@ -13,6 +13,7 @@ import { ITokenDetails } from "../types/common";
 import { ROLES } from "../utils/constants.utils";
 import { IInfluencerService } from "../services/Interface/IInfluencerService";
 import { IEntityService } from "../services/Interface/IEntityService";
+import { IPlanService } from "@/services/Interface/IPlanService";
 
 declare global {
     namespace Express {
@@ -35,6 +36,7 @@ export const TokenMiddleWare = async (
         const clientService = container.resolve<IClientService>("ClientService");
         const influencerService = container.resolve<IInfluencerService>("InfluencerService");
         const entityService = container.resolve<IEntityService>("EntityService");
+        const planService = container.resolve<IPlanService>("PlanService");
 
         let token = req.cookies.accessToken ?? null
         let refreshToken = req.cookies.refreshToken ?? null
@@ -87,7 +89,7 @@ export const TokenMiddleWare = async (
 
         if (ownerDetails?.isBlocked) throw new UnauthorizedError('Account is Blocked')
         const planId = ownerDetails && "planId" in ownerDetails ? ownerDetails.planId : null;
-        const plan = await entityService.getPlan(planId ?? "") 
+        const plan = await planService.getPlan(planId ?? "") 
         
         ownerDetails = ownerDetails?.toObject();
         ownerDetails.role = tokenDetails.role

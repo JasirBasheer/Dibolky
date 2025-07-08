@@ -171,7 +171,7 @@ export const agencyTenantSchema = new Schema<IAgencyTenant>({
                 required:false
             }
         },
-        tiktok: {
+        linkedin: {
             accessToken: {
                 type: String,
                 required: false,

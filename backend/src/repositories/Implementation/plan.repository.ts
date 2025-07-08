@@ -1,8 +1,9 @@
 import { inject, injectable } from 'tsyringe';
-import { IPlan, planDetails } from '../../types/admin'
 import { IPlanRepository } from '../Interface/IPlanRepository'
 import { Model } from 'mongoose';
 import { BaseRepository } from 'mern.common';
+import { PlanDetailsDTO } from '@/dto';
+import { IPlan } from '@/types';
 
 @injectable()
 export default class PlanRepository extends BaseRepository<IPlan> implements IPlanRepository {
@@ -31,14 +32,14 @@ export default class PlanRepository extends BaseRepository<IPlan> implements IPl
 
 
         async createPlan(
-                details: planDetails
+                details: PlanDetailsDTO
         ): Promise<Partial<IPlan> | null> {
                 const newPlan = new this.model(details);
                 return await newPlan.save();
         }
 
         async createInfluencerPlan(
-                details: planDetails
+                details: any
         ): Promise<Partial<IPlan> | null> {
                 const newPlan = new this.model(details);
                 return await newPlan.save();
@@ -46,7 +47,7 @@ export default class PlanRepository extends BaseRepository<IPlan> implements IPl
 
 
         async editPlan(
-                details: planDetails
+                details: IPlan
         ): Promise<IPlan | null> {
                 const { _id, ...updateData } = details;
                 return await this.model.findByIdAndUpdate(_id, updateData, { new: true, runValidators: true });

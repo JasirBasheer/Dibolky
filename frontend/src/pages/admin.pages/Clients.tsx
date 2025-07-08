@@ -30,11 +30,11 @@ const AdminClients = () => {
     fetchClients()
   }, [])
 
-  const viewClient = async (id: string, role: string) => {
+  const viewClient = async (client_id: string) => {
     try {
       setIsClicked(prev => !prev)
       setIsLoading(true);
-      const client = await axios.get(`api/admin/get-client/${role}/${id}`)
+      const client = await axios.get(`api/admin/get-client/${client_id}`)
       if (client) setClient(client.data.details)
         
     } catch (error: unknown) {
@@ -63,7 +63,7 @@ const AdminClients = () => {
               {clients.Agency.map((item: { _id: string; name: string }, index: number) => {
                 return (
                   <div key={index} className="w-full min-h-12 flex mb-2 px-4 bg-slate-50  transition-all duration-500 rounded-md hover:shadow-md cursor-pointer items-center text-sm"
-                    onClick={() => viewClient(item._id, "Agency")}
+                    onClick={() => viewClient(item._id)}
                   >{item.name || ""}</div>
                 )
               })}

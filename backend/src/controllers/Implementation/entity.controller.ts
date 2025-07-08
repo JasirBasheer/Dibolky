@@ -17,6 +17,7 @@ import {
     ResponseMessage,
     SendResponse
 } from 'mern.common';
+import { linkedInAuthCallback } from '@/provider-strategies/linkedin';
 
 
 @injectable()
@@ -38,80 +39,14 @@ export default class EntityController implements IEntityController {
         req: Request,
         res: Response,
     ): Promise<void> => {
-            const { mail, platform } = req.body
-            console.log(mail,platform,"entereedddddd")
-            const isExists = await this.entityService.IsMailExists(mail, platform)
+            const { mail } = req.body
+            console.log(mail,"entereedddddd")
+            const isExists = await this.entityService.IsMailExists(mail)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { isExists: isExists })
     }
 
-
     
-    getAllPlans = async(
-        req: Request,
-        res: Response,
-    ): Promise<void> => {
-            let userCountry = req.cookies?.userCountry
-            const plans = await this.entityService.getAllPlans()
-
-            let PriceConverisonFunc = getPriceConversionFunc(userCountry)
-
-            const convertedPlans = {
-                Agency: plans?.Agency.map((item: IPlan) => ({
-                    ...item.toObject(),
-                    price: PriceConverisonFunc(item.price as number)
-                })),
-                Influencer: plans?.Influencer.map((item: IPlan) => ({
-                    ...item.toObject(),
-                    price: PriceConverisonFunc(item.price as number)
-                }))
-            };
-
-            if (plans) return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plans: convertedPlans })
-            SendResponse(res, HTTPStatusCodes.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR)
-    }
-
-
-    getAllTrialPlans = async(
-        req: Request,
-        res: Response,
-    ): Promise<void> => {
-            const trialPlans = await this.entityService.getAllTrailPlans()
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { trialPlans })
-       
-    }
-
-
-    /**
-    * Handles mail existence check for a given platform.
-    * @param req - Express request object containing `Mail` and `platform` in the body.
-    * @param res - Express response object used to return the result.
-    * @param next - Express next function for error handling.
-    * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
-    */
-    getPlan = async(
-        req: Request,
-        res: Response,
-    ): Promise<void> => {
-            const { plan_id } = req.params
-            const userCountry = req.cookies.userCountry
-            const plan = await this.entityService.getPlan(plan_id);
-            if (!plan) return SendResponse(res, HTTPStatusCodes.BAD_REQUEST, ResponseMessage.BAD_REQUEST, { message: "Platform or Plan not found please try again" })
-            let PriceConverisonFunc = getPriceConversionFunc(userCountry)
-            const convertedPlanPrice = PriceConverisonFunc(plan.price as number)
-            plan.price = convertedPlanPrice
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plan })
-       
-    }
-
-
-    /**
-    * Handles mail existence check for a given platform.
-    * @param req - Express request object containing `Mail` and `platform` in the body.
-    * @param res - Express response object used to return the result.
-    * @param next - Express next function for error handling.
-    * @returns Promise<void> - Sends a response with the existence status or passes an error to `next`.
-    */
-    registerAgency = async(
+    createAgency = async(
         req: Request,
         res: Response,
     ): Promise<void> => {
@@ -124,29 +59,14 @@ export default class EntityController implements IEntityController {
             const finalPaymentGateway = isTrial ? "trial" : paymentGateway;
     
 
-            const createdAgency = await this.entityService.registerAgency({organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate:finalPlanPurchasedRate, transactionId:finalTransactionId, paymentGateway:finalPaymentGateway, description, currency:currency ?? "trial"})
+            const createdAgency = await this.entityService.createAgency({organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate:finalPlanPurchasedRate, transactionId:finalTransactionId, paymentGateway:finalPaymentGateway, description, currency:currency ?? "trial"})
             if (!createdAgency) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.BAD_REQUEST)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
         
     }
 
 
-    createInfluencer = async(req: Request, res: Response): Promise<void> => {
-            const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, paymentGateway, description, currency } = req.body.details
-            const { transaction_id } = req.body
 
-            const isTrial = !transaction_id;
-
-            const finalPlanPurchasedRate = isTrial ? 0 : planPurchasedRate;
-            const finalTransactionId = isTrial ? "trial_user" : transaction_id;
-            const finalPaymentGateway = isTrial ? "trial" : paymentGateway;
-    
-
-            const createdAgency = await this.entityService.createInfluencer({organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate:finalPlanPurchasedRate, transactionId:finalTransactionId, paymentGateway:finalPaymentGateway, description, currency:currency ?? "trial"})
-            if (!createdAgency) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.BAD_REQUEST)
-            SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
-        
-    }
 
   
     getMenu = async(
@@ -413,6 +333,17 @@ export default class EntityController implements IEntityController {
             const connections = await this.entityService.getConnections(req.details.orgId as string, entity, user_id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { connections })
        
+    }
+
+     handleLinkedinCallback = async(
+        req: Request,
+        res: Response,
+    ): Promise<void> => {
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { code, state } = req.body
+            const token = await linkedInAuthCallback(code as string, state as string)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { token })
+
     }
 
 }

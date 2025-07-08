@@ -6,7 +6,7 @@ import notificationSound2 from '../../assets/audios/notification-2-269292.mp3'
 import { NavigateFunction } from "react-router-dom";
 import { IPlan } from "@/types/admin.types";
 import { IRazorpayOrder } from "@/types/payment.types";
-import { createAgencyApi, createInfluencerApi } from "@/services/portal/post.services";
+import { createAgencyApi } from "@/services/portal/post.services";
 
 
 
@@ -30,15 +30,15 @@ export  const handleRazorpayPayment = async (
             key: "rzp_test_fKh2fGYnPvSVrM",
             amount: amount,
             currency: currency,
-            name: plan?.planName || "Subscription Plan",
-            description: plan?.planDescription || "Plan Subscription",
+            name: plan?.name || "Subscription Plan",
+            description: plan?.description || "Plan Subscription",
             order_id: order_id,
             handler: (response: IRazorpayOrder) => {
                 if (response) {
                     handlePaymentSuccess(
                         response,
                         formData,
-                        plan,plan.planType,
+                        plan,
                         navigate,currency
                     )
                 }
@@ -66,7 +66,7 @@ export  const handleRazorpayPayment = async (
 const handlePaymentSuccess = async (
     response: IRazorpayOrder,
     formData:FormData,
-    plan:IPlan,platform:string,
+    plan:IPlan,
     navigate:NavigateFunction,
     currency:string
 ) => {
@@ -87,11 +87,9 @@ const handlePaymentSuccess = async (
         validity:formData.validity,
         planPurchasedRate:plan?.price * formData.validity,
         paymentGateway:"razorpay",
-        description:plan.planName + " "+"Purchased",
+        description:plan.name + " "+"Purchased",
         currency
     }
-
-    if (platform == "agency") {
 
         const res = await createAgencyApi(details,response.razorpay_payment_id)
         if (res.status == 201) {
@@ -106,21 +104,5 @@ const handlePaymentSuccess = async (
             }, 500)
             navigate('/agency/login')
         }
-    } else {
-        const res = await createInfluencerApi(details,response.razorpay_payment_id)
-
-        if (res.status == 201) {
-            setTimeout(() => {
-                message.success('Influencer have been successfully created')
-                new Audio(notificationSound).play()
-            }, 100)
-
-            setTimeout(() => {
-                message.success('Login to continue')
-                new Audio(notificationSound2).play()
-            }, 500)
-            navigate('/influencer/login')
-        }
-    }
 
 }

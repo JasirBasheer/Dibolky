@@ -44,7 +44,7 @@ export interface IMetadata {
 export interface IPlatforms {
   platform: string;
   scheduledDate?: string | Date;
-  isRescheduled?: boolean
+  status: string
 }
 
 export interface IContentData {

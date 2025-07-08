@@ -51,7 +51,6 @@ export default class ProviderService implements IProviderService {
             let access_token;
             let response;
 
-
             try {
                 switch (platform.platform) {
                     case INSTAGRAM:
@@ -136,9 +135,6 @@ export default class ProviderService implements IProviderService {
                         longLivingAccessToken = await exchangeForLongLivedToken(token)
                     }
                     await this.clientTenantRepository.setSocialMediaTokens(orgId, user_id, provider, longLivingAccessToken)
-                    break;
-                case 'influencer':
-                    // await this.clientService.saveClientSocialMediaTokens(req.details.orgId, user_id, provider, token)
                     break;
                 default:
                     break;

@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { X, Plus, FolderKanban } from 'lucide-react';
+import { X, Plus, FolderKanban, Users } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,9 +19,9 @@ interface AddPlanProps {
 
 const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
   const [formData, setFormData] = useState({
-    planName: "", price: 0, description: "",
-    validity: "monthly", planType: "agency",
-    totalProjects: 0, totalManagers: 0
+    name: "", price: 0, description: "",
+    billingCycle: "monthly",
+    maxProjects: 0, maxClients: 0
   })
 
   const [features, setFeatures] = useState([]);
@@ -104,24 +104,12 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
             <div>
               <h3 className="text-lg font-medium mb-4 ml-1">Basic Information</h3>
               <div className="space-y-6">
-                <div>
-                  <Label className="text-sm ml-1">Entity Type</Label>
-                  <RadioGroup defaultValue="agency" className="flex gap-4 mt-3 ml-1">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="agency" id="agency" onClick={() => handleChange("agency", "planType")} defaultChecked />
-                      <Label htmlFor="agency">Agency</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="Influencer" id="influencer" onClick={() => handleChange("influencer", "planType")} />
-                      <Label htmlFor="influencer">Influencer</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
+               
 
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2 ml-1">
                     <Label htmlFor="title">Name</Label>
-                    <Input id="title" placeholder="Enter plan name" onChange={(e) => handleChange(e.target.value, 'planName')} />
+                    <Input id="title" placeholder="Enter plan name" onChange={(e) => handleChange(e.target.value, 'name')} />
                   </div>
                   <div className="space-y-2 ml-1">
                     <Label htmlFor="price">Price</Label>
@@ -135,7 +123,29 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
                     id="description"
                     placeholder="Enter plan description"
                     className="h-24"
-                    onChange={(e) => handleChange(e.target.value, 'planDescription')}
+                    onChange={(e) => handleChange(e.target.value, 'description')}
+                  />
+                </div>
+                  <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <FolderKanban className="h-4 w-4" />
+                    Total Projects
+                  </Label>
+                  <Input
+                    type="number"
+                    onChange={(e) => handleChange(Number(e.target.value), 'maxProjects')}
+                    placeholder="Enter project count"
+                  />
+                </div>
+                   <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <Users className="h-4 w-4" />
+                    Total Clients
+                  </Label>
+                  <Input
+                    type="number"
+                    onChange={(e) => handleChange(Number(e.target.value), 'maxClients')}
+                    placeholder="Enter project count"
                   />
                 </div>
 
@@ -143,45 +153,16 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
                   <Label className="text-sm ml-1">Validity Period</Label>
                   <RadioGroup defaultValue="month" className="flex gap-4 mt-4 ml-1">
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="month" id="month" onClick={() => handleChange("Monthly", "validity")} defaultChecked />
+                      <RadioGroupItem value="month" id="month" onClick={() => handleChange("monthly", "billingCycle")} defaultChecked />
                       <Label htmlFor="month">Monthly</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="year" id="year" onClick={() => handleChange("Yearly", "validity")} />
+                      <RadioGroupItem value="year" id="year" onClick={() => handleChange("yearly", "billingCycle")} />
                       <Label htmlFor="year">Yearly</Label>
                     </div>
                   </RadioGroup>
                 </div>
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-6 ml-1">
-              {formData.planType === 'agency' && (
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2">
-                    <FolderKanban className="h-4 w-4" />
-                    Total Projects
-                  </Label>
-                  <Input
-                    type="number"
-                    onChange={(e) => handleChange(Number(e.target.value), 'totalProjects')}
-                    placeholder="Enter project count"
-                  />
-                </div>
-              )}
-              {formData.planType === 'influencer' && (
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2">
-                    <FolderKanban className="h-4 w-4" />
-                    Total Managers
-                  </Label>
-                  <Input
-                    type="number"
-                    onChange={(e) => handleChange(Number(e.target.value), 'totalManagers')}
-                    placeholder="Enter project count"
-                  />
-                </div>
-              )}
-
             </div>
 
             <div>

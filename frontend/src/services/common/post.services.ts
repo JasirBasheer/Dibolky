@@ -16,10 +16,9 @@ export const savePlatformTokenApi = async (
 
 export const checkIsMailExistsApi = async (
     mail:string,
-    platform:string
 ) => {
     return await api.post('/api/public/check-mail', {
-        mail,platform
+        mail
     });
 }
 
@@ -88,3 +87,12 @@ export const fetchChatsApi = async (
 ) => {
     return await api.post(`/api/entities/chats`, { chatId })
 }
+
+export const handleLinkedinCallbackApi = async (
+    code: string,
+    state: string
+) => {
+    return await api.post(`/api/entities/linkedin/callback`, { code,state })
+}
+
+

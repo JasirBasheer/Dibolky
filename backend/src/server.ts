@@ -8,12 +8,14 @@ import { createApp } from "@/app";
 import { connectDB } from "@/utils";
 import logger from "@/logger";
 import { PORT, connectRedis } from "@/config";
+import { startCronJobs } from "./infrastructure/cron/startCronJobs";
 
 async function bootstrap() {
   try {
     await connectDB()
     await connectRedis();
     registerDependencies();
+    startCronJobs();
     
     const app = createApp(); 
     registerRoutes(app);

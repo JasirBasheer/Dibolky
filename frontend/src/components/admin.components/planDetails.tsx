@@ -20,11 +20,10 @@ import { changePlanStatusApi } from '@/services/admin/post.services';
 interface PlanDetailsProps {
   setIsPlanDetails: Dispatch<SetStateAction<boolean>>;
   planId: string;
-  entity: string;
 }
 
-const PlanDetails = ({ setIsPlanDetails, planId, entity }: PlanDetailsProps) => {
-  const [details, setDetails] = useState<IAdminPlan>();
+const PlanDetails = ({ setIsPlanDetails, planId }: PlanDetailsProps) => {
+  const [details, setDetails] = useState<any>();
   const [activeTab, setActiveTab] = useState('about');
   const [loading, setLoading] = useState(true);
 
@@ -32,7 +31,8 @@ const PlanDetails = ({ setIsPlanDetails, planId, entity }: PlanDetailsProps) => 
   const fetchPlanDetails = async () => {
     try {
       setLoading(true);
-      const res = await getPlanDetailsApi(entity,planId)
+      const res = await getPlanDetailsApi(planId)
+      console.log(res.data,'dataaaaaaaaa')
       const menu: string[] = [];
       for (const m in res.data.details.menu) {
         menu.push(m);
@@ -50,8 +50,8 @@ const PlanDetails = ({ setIsPlanDetails, planId, entity }: PlanDetailsProps) => 
     fetchPlanDetails();
   }, []);
 
-  const handleBlock = async(entity:string,plan_id:string) => {
-   const res =  await changePlanStatusApi(entity,plan_id)
+  const handleBlock = async(plan_id:string) => {
+   const res =  await changePlanStatusApi(plan_id)
    console.log(res)
    if(res.status == 200){
     message.success("Plan status changed successfully")
@@ -136,7 +136,7 @@ const PlanDetails = ({ setIsPlanDetails, planId, entity }: PlanDetailsProps) => 
       <div className="bg-gray-50 rounded-lg p-6 ">
         <div className="flex justify-between items-start mb-4">
           <div className="space-y-2">
-            <h3 className="text-xl font-semibold">{details?.title}</h3>
+            <h3 className="text-xl font-semibold">{details?.name}</h3>
             <p className="text-gray-600 text-sm">{details?.description}</p>
           </div>
           <DropdownMenu>
@@ -150,7 +150,7 @@ const PlanDetails = ({ setIsPlanDetails, planId, entity }: PlanDetailsProps) => 
                 <Edit className="mr-2 h-4 w-4" />
                 Edit Plan
               </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer" onClick={()=>handleBlock(entity,planId)}>
+                <DropdownMenuItem className="cursor-pointer" onClick={()=>handleBlock(planId)}>
                 <Ban className="mr-2 h-4 w-4" /> 
                 {details?.isActive ? "Block plan":"Unblock plan"}
               </DropdownMenuItem>
@@ -173,7 +173,7 @@ const PlanDetails = ({ setIsPlanDetails, planId, entity }: PlanDetailsProps) => 
               <div className="bg-white p-4 rounded-lg shadow-sm">
                 <div className="text-sm text-gray-600">Price</div>
                 <div className="text-xl font-semibold">${details?.price}</div>
-                <div className="text-sm text-gray-500">per {details?.validity}</div>
+                {/* <div className="text-sm text-gray-500">per {details?.validity}</div> */}
               </div>
               <div className="bg-white p-4 rounded-lg shadow-sm">
                 <div className="text-sm text-gray-600 mb-2">Features</div>

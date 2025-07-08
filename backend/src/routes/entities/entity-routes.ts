@@ -28,10 +28,13 @@ export const createEntityRoutes = (): Router => {
   router.get("/get-connections/:entity/:user_id",asyncHandler(entityController.getConnections));
   router.get("/:role/:planId",asyncHandler(entityController.getMenu));
 
+  // callback
+  router.post("/linkedin/callback",asyncHandler(entityController.handleLinkedinCallback))
+
   // content
   router.post("/approve-content",asyncHandler(providerController.processContentApproval));
   router.post("/reject-content",asyncHandler(providerController.processContentReject));
-  router.post("/reschedule-content",asyncHandler(providerController.reScheduleContent));
+  router.post("/reschedulec-content",asyncHandler(providerController.reScheduleContent));
   router.post("/content/save/:platform/:user_id",asyncHandler(entityController.saveContent));
   router.post("/initiate-s3-batch-upload",asyncHandler(entityController.initiateS3BatchUpload));
   router.post("/save-platform-token/:platform/:provider/:user_id",asyncHandler(providerController.saveSocialPlatformToken));

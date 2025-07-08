@@ -59,7 +59,7 @@ const FreeTrialPurchase = ({ planId, onClose }: FreeTrialPurchaseProps) => {
 
   const validateMail = async (mail: string): Promise<boolean> => {
     console.log(plan)
-    const response = await checkIsMailExistsApi(mail, plan?.planType as string)
+    const response = await checkIsMailExistsApi(mail)
     return response.data.isExists
   }
   const handleSubmit = async (e: React.FormEvent) => {

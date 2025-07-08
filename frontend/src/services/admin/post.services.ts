@@ -1,11 +1,11 @@
 import api from "@/utils/axios";
 
 export const createPlanApi = async(details:object) =>{
-    return await api.post('/api/admin/create-plan', {details})
+    return await api.post('/api/admin/plans', {details})
 }
 
-export const changePlanStatusApi = async(entity:string,plan_id:string) =>{
-    return await api.post('/api/admin/change-plan-status',{entity,plan_id})
+export const changePlanStatusApi = async(plan_id:string) =>{
+    return await api.put(`/api/admin/plans/${plan_id}`)
 }
 
 

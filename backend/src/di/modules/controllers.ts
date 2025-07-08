@@ -17,6 +17,8 @@ import { IPaymentController } from '@/controllers/Interface/IPaymentController';
 import PaymentController from '@/controllers/Implementation/payment.controller';
 import { IAuthenticationController } from '@/controllers/Interface/IAuthenticationController'
 import AuthenticationController from '@/controllers/Implementation/authentication.controller'
+import { IPlanController } from "@/controllers/Interface/IPlanController";
+import PlanController from "@/controllers/Implementation/plan-controller";
 
 export const registerControllers = () => {
 container.register<IAuthenticationController>('AuthenticationController', { useClass: AuthenticationController });
@@ -28,4 +30,5 @@ container.register<IPaymentController>('PaymentController', { useClass: PaymentC
 container.register<IProviderController>('ProviderController', { useClass: ProviderController });
 container.register<IInfluencerController>('InfluencerController', { useClass: InfluencerController });
 container.register<IManagerController>('ManagerController', { useClass: ManagerController });
+container.register<IPlanController>('PlanController', { useClass: PlanController });
 };

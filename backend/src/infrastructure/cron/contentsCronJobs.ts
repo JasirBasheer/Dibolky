@@ -1,30 +1,31 @@
 import cron from 'node-cron';
 import { color } from 'console-log-colors';
-import Agencies from '../models/agency';
-import { connectTenantDB } from '../config/db.config';
-import { bucketSchema } from '../models/bucket';
+import Agencies from '../../models/agency';
+import { connectTenantDB } from '../../config/db.config';
+import { bucketSchema } from '../../models/bucket';
 import { container } from 'tsyringe';
 import { Types } from 'mongoose';
-import { IProviderService } from '../services/Interface/IProviderService';
-import { IClientService } from '../services/Interface/IClientService';
-import { IAgencyService } from '../services/Interface/IAgencyService';
-import { IClientTenant } from '../types/client';
-import { IAgencyTenant } from '../types/agency';
+import { IProviderService } from '../../services/Interface/IProviderService';
+import { IClientService } from '../../services/Interface/IClientService';
+import { IAgencyService } from '../../services/Interface/IAgencyService';
+import { IClientTenant } from '../../types/client';
+import { IAgencyTenant } from '../../types/agency';
 import {
     IPlatforms,
     IBucket,
     ISocialMediaUploadResponse
-} from '../types/common';
-import logger from '../logger';
+} from '@/types/';
+import logger from '@/logger';
 
 
-// services
-const providerService = container.resolve<IProviderService>('ProviderService');
-const clientService = container.resolve<IClientService>("ClientService");
-const agencyService = container.resolve<IAgencyService>("AgencyService");
 
 async function processAgencyScheduledPosts() {
     try {
+        const clientService = container.resolve<IClientService>("ClientService");
+        const agencyService = container.resolve<IAgencyService>("AgencyService");
+        const providerService = container.resolve<IProviderService>('ProviderService');
+
+
         const now = new Date();
         const endTime = new Date(now.getTime() + 5 * 60 * 1000);
 
@@ -41,7 +42,7 @@ async function processAgencyScheduledPosts() {
 
             const filteredContents = scheduledContents.filter((content) => {
                 const validPlatforms = content.platforms.filter((platform) => {
-                    return !platform.isPublished && platform.scheduledDate !== '' && new Date(platform.scheduledDate).getTime() >= now.getTime() && new Date(platform.scheduledDate).getTime() <= endTime.getTime();
+                    return platform.status == "pending" && platform.scheduledDate !== '' && new Date(platform.scheduledDate).getTime() >= now.getTime() && new Date(platform.scheduledDate).getTime() <= endTime.getTime();
                 })
                 return validPlatforms.length > 0;
             })
@@ -49,7 +50,7 @@ async function processAgencyScheduledPosts() {
 
             const filteredScheduledContents: (Partial<IBucket> & Partial<{ platforms: IPlatforms[] }>)[] = filteredContents.map((content) => {
                 const validPlatforms = content.platforms.filter((platform) => {
-                    return !platform.isPublished && platform.scheduledDate !== '' && new Date(platform.scheduledDate).getTime() >= now.getTime() && new Date(platform.scheduledDate).getTime() <= endTime.getTime();
+                    return !["success","failed"].includes(platform.status) && platform.scheduledDate !== '' && new Date(platform.scheduledDate).getTime() >= now.getTime() && new Date(platform.scheduledDate).getTime() <= endTime.getTime();
                 }) ?? [];
 
                 return {

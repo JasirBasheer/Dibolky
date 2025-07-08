@@ -36,7 +36,7 @@ const ContentScheduler = () => {
           contentType: item.contentType || "Unknown",
           status: item.status || "Pending",
           isPublished: item.isPublished || false,
-          isRescheduled: item.platforms && item.platforms[0] ? item.platforms[0].isRescheduled || false : false,
+          isRescheduled: item.platforms && item.platforms[0] ? item.platforms[0].status == "rescheduled" || false : false,
           mediaType: item.files && item.files[0] ? item.files[0].contentType : "unknown",
           mediaUrl: item.files && item.files[0] ? item.files[0].key : "",
           fileNames: item.files && item.files.map((file) => file.fileName),

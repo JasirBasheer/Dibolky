@@ -1,4 +1,4 @@
-import { IPlan } from '../types/admin';
+import { IPlan } from '@/types';
 import { 
     model, 
     Schema 
@@ -41,18 +41,13 @@ const menuItemSchema = new Schema<IMenuItems>({
 
 const planSchema: Schema<IPlan> = new Schema(
     {
-        planName: {
+        name: {
             type: String,
             required: true,
             trim: true,
             unique: true
         },
-        planType: {
-            type: String,
-            required: true,
-            enum: ["agency", "influencer"],
-        },
-        planDescription:{
+        description:{
             type:String,
             requried:true,
         },
@@ -65,15 +60,15 @@ const planSchema: Schema<IPlan> = new Schema(
             type: [String], 
             required: true 
         },
-        validity: {
+        billingCycle: {
             type: String,
             required: true,
-            enum: ["monthly", "yearly", "lifetime"],
+            enum: ["monthly", "yearly"],
         },
-        totalProjects: { 
+        maxProjects: { 
             type: Number
         },
-        totalManagers: { 
+        maxClients: { 
             type: Number
         },
         menu: {

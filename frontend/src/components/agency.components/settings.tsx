@@ -3,7 +3,7 @@ import { Cable, Check, CreditCard, ExternalLink, GitCommitHorizontal, MoreVertic
 import { useDispatch, useSelector } from 'react-redux';
 import { IConnection, RootState } from '@/types/common.types';
 import { fetchConnections, getConnectSocailMediaUrlApi } from '@/services/common/get.services';
-import { savePlatformTokenApi } from '@/services/common/post.services';
+import { handleLinkedinCallbackApi, savePlatformTokenApi } from '@/services/common/post.services';
 import { setUser } from '@/redux/slices/user.slice';
 import { Button } from '../ui/button';
 import Skeleton from 'react-loading-skeleton';
@@ -48,6 +48,17 @@ const SettingsPage = () => {
         })
       }
     }
+    if(provider == "linkedin"){
+    const code = searchParams.get('code');
+    const state = searchParams.get('state');
+    console.log(code,state,'reached')
+    if(code && state){
+      handleCallback(code,provider,state).then(()=>{
+             window.history.replaceState({}, "", `${window.location.pathname}?tab=social-integrations&`);
+          setActiveTab('social-integrations')
+      })
+    }
+    }
     const required = searchParams.get("required")?.split(",") || []
     if (required.length > 0) {
       setRequired(required)
@@ -81,9 +92,19 @@ const SettingsPage = () => {
 
   const handleCallback = async (
     token: string,
-    provider: string
+    provider: string,
+    status?:string
   ): Promise<object | undefined> => {
     try {
+
+      if(provider == "linkedin"){
+       const response = await handleLinkedinCallbackApi(token,status as string)
+       if(!response)throw new Error("token not found")
+       console.log('reached here here is the response',response)
+       if(response)token = response.data.token
+      }
+      
+
       const user_id = localStorage.getItem('selectedClient') as string
       const response = await savePlatformTokenApi(
         user_id == agency?.user_id ? "agency" : "client",
@@ -230,6 +251,25 @@ const SettingsPage = () => {
         </button>
       </div>
 
+
+      <div className="flex items-center justify-between p-4 border border-gray-200 rounded">
+        <div className="flex items-center space-x-4">
+          <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
+            <img src='https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg' alt='FaceBook' className="w-6 h-6" />
+          </div>
+          <div>
+            <h4 className="font-medium">Linked In</h4>
+            <p className="text-sm text-gray-500">Not connected</p>
+          </div>
+        </div>
+        <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 $ bg-blue-700 hover:bg-blue-800" text-white transition`}>
+          <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/linkedin', 'linkedin')}>
+            <span>Connect</span>
+            <ExternalLink size={14} />
+          </div>
+        </button>
+      </div>
+
     
       <div className="flex items-center justify-between p-4 border border-gray-200 rounded">
         <div className="flex items-center space-x-4">
@@ -249,23 +289,6 @@ const SettingsPage = () => {
         </button>
       </div>
 
-      <div className="flex items-center justify-between p-4 border border-gray-200 rounded">
-        <div className="flex items-center space-x-4">
-          <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
-            <img src='https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg' alt='FaceBook' className="w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="font-medium">Linked In</h4>
-            <p className="text-sm text-gray-500">Not connected</p>
-          </div>
-        </div>
-        <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 $ bg-blue-700 hover:bg-blue-800" text-white transition`}>
-          <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/facebook', 'facebook')}>
-            <span>Connect</span>
-            <ExternalLink size={14} />
-          </div>
-        </button>
-      </div>
 
         <div className="flex items-center justify-between p-4 border border-gray-200 rounded">
         <div className="flex items-center space-x-4">

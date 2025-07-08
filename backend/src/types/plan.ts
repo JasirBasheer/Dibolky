@@ -1,18 +1,5 @@
-import mongoose, { Document } from "mongoose";
-import {  IMenuItems } from "./common";
-
-
-
-export interface IAdmin extends Document {
-    role?:string;
-    orgId?:string;
-    organizationName?:string;
-    name: string;
-    email: string;
-    password: string;
-    isBlocked?: boolean;
-}
-
+import { IMenuItems } from "@/types";
+import { Document } from "mongoose";
 
 export type BillingCycleTypes = "monthly" | "yearly" ;
 
@@ -31,9 +18,4 @@ export interface IPlan extends Document {
     };
     isActive:boolean;
     permissions:string[]
-}
-
-
-export interface Plans {
-    [key: string]: IPlan[]; 
 }

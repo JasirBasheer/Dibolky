@@ -11,7 +11,6 @@ import { IClientTenantRepository } from '../../repositories/Interface/IClientTen
 import { IContentRepository } from '../../repositories/Interface/IContentRepository';
 import { IAgencyTenantRepository } from '../../repositories/Interface/IAgencyTenantRepository';
 import { AddressType, IAgency, IAgencyRegistrationPayload, IAgencyTenant, } from '../../types/agency';
-import { IInfluencer, IInfluncerRegisterPayload } from '../../types/influencer';
 import { connectTenantDB } from '../../config/db.config';
 import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IBucket, IUpdateProfile } from '../../types/common';
 import { IClientTenant } from '../../types/client';
@@ -67,22 +66,7 @@ export default class EntityService implements IEntityService {
     }
 
 
-    async getAllPlans()
-        : Promise<Record<string, IPlan[]>> {
-        const plans = await this.planRepository.getPlans()
-        return {
-            Agency: plans?.filter((plan)=> plan.planType == "agency") || [],
-            Influencer: plans?.filter((plan)=> plan.planType == "influencer") || []
-        }
-    }
-
-    async getAllTrailPlans() : Promise<IPlan[]>{
-        return await this.planRepository.getTrialPlans() ?? []
-    }
-
-    async getPlan(plan_id: string): Promise<IPlan | null> {
-        return await this.planRepository.getPlan(plan_id)
-    }
+  
 
     async fetchAllProjects(orgId: string, page?: number): Promise<{ projects: IProject[], totalPages: number } | null> {
         return await this.projectRepository.fetchAllProjects(orgId, page)
@@ -91,22 +75,14 @@ export default class EntityService implements IEntityService {
 
     async IsMailExists(
         mail: string,
-        platform: string
     ): Promise<boolean> {
-        if (platform == "agency") {
             const isExists = await this.entityRepository.isAgencyMailExists(mail)
             if (isExists) return true
             return false
-        } else if (platform == "influencer") {
-            const isExists = await this.entityRepository.isInfluencerMailExists(mail)
-            if (isExists) return true
-            return false
-        }
-        throw new NotFoundError('enter a valid platform')
     }
 
 
-    async registerAgency(payload: IAgencyRegistrationPayload): Promise<Partial<IAgency> | null> {
+    async createAgency(payload: IAgencyRegistrationPayload): Promise<Partial<IAgency> | null> {
         const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, transactionId, paymentGateway, description, currency } = payload;
 
         const hashedPassword = await hashPassword(password)
@@ -139,34 +115,6 @@ export default class EntityService implements IEntityService {
         return ownerDetails
     }
 
-
-
-    async createInfluencer(payload : IInfluncerRegisterPayload): Promise<Partial<IInfluencer> | null> {
-      const  { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, transactionId, paymentGateway, description, currency} = payload
-
-        const hashedPassword = await hashPassword(password)
-        let orgId = name.replace(/\s+/g, "") + Math.floor(Math.random() * 1000000);
-        let validityInDate = addMonthsToDate(validity)
-
-        const newInfluencer = {
-            orgId, planId, validity: validityInDate, organizationName, name,
-            email, address, websiteUrl, industry, contactNumber, logo, password: hashedPassword,
-            planPurchasedRate: planPurchasedRate, currency
-        };
-        const ownerDetails = await this.entityRepository.createInfluencer(newInfluencer);
-
-
-        const newTransaction = {
-            orgId, email, userId: ownerDetails?._id,
-            planId, paymentGateway, transactionId,
-            amount: planPurchasedRate, description,
-            currency
-        }
-
-        await this.transactionRepository.createTransaction(newTransaction)
-        await this.entityRepository.saveDetailsInfluencerDb(ownerDetails?._id as string, ownerDetails?.orgId as string)
-        return ownerDetails
-    }
 
 
 

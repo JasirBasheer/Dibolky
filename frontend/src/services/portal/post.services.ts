@@ -6,7 +6,7 @@ export const createAgencyApi = async (
     transaction_id?: string
 ) => {
     return await api.post(
-        `/api/public/create-agency`,
+        `/api/public/agency`,
         {
             details,
             transaction_id

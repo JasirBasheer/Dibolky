@@ -18,6 +18,12 @@ export const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET as stri
 export const LINKEDIN_REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI as string
 
 
+// X
+export const X_CLIENT_ID = process.env.X_CLIENT_ID as string
+export const X_CLIENT_SECRET = process.env.X_CLIENT_SECRET as string
+export const X_REDIRECT_URI = process.env.X_REDIRECT_URI as string
+
+
 // AWS S3 BUCKET
 export const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME as string
 export const AWS_REGION = process.env.AWS_REGION as string

@@ -68,7 +68,7 @@ export interface IAgencyTenant extends Document {
             accessToken?: string;
             connectedAt?: string;
         };
-        tiktok?: {
+        linkedin?: {
             accessToken?: string;
             connectedAt?: string;
         };

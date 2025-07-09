@@ -12,6 +12,8 @@ const initialState: ReduxIUser = {
   orgId: "",
   facebookAccessToken: "",
   instagramAccessToken: "",
+  linkedinAccessToken: "",
+  xAccessToken: "",
   email: "",
   name: "",
   organizationName: "",

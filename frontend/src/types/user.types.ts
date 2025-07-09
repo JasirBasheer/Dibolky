@@ -7,6 +7,8 @@ export interface ReduxIUser {
   planId: string;
   facebookAccessToken: string;
   instagramAccessToken: string;
+  linkedinAccessToken: string;
+  xAccessToken: string;
   email: string;
   name: string;
   organizationName: string;

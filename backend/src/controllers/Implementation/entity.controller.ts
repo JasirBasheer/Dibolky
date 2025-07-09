@@ -18,6 +18,7 @@ import {
     SendResponse
 } from 'mern.common';
 import { linkedInAuthCallback } from '@/provider-strategies/linkedin';
+import { xAuthCallback } from '@/provider-strategies/x';
 
 
 @injectable()
@@ -342,6 +343,17 @@ export default class EntityController implements IEntityController {
             if (!req.details) throw new NotFoundError("request details not found")
             const { code, state } = req.body
             const token = await linkedInAuthCallback(code as string, state as string)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { token })
+
+    }
+
+    handleXCallback = async(
+        req: Request,
+        res: Response,
+    ): Promise<void> => {
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { code, state } = req.body
+            const token = await xAuthCallback(code as string, state as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { token })
 
     }

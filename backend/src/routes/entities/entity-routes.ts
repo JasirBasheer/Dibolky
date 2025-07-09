@@ -30,6 +30,7 @@ export const createEntityRoutes = (): Router => {
 
   // callback
   router.post("/linkedin/callback",asyncHandler(entityController.handleLinkedinCallback))
+  router.post("/x/callback",asyncHandler(entityController.handleXCallback))
 
   // content
   router.post("/approve-content",asyncHandler(providerController.processContentApproval));

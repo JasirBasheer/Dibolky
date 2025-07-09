@@ -88,11 +88,13 @@ export const fetchChatsApi = async (
     return await api.post(`/api/entities/chats`, { chatId })
 }
 
-export const handleLinkedinCallbackApi = async (
+export const handleLinkedinAndXCallbackApi = async (
     code: string,
-    state: string
+    state: string,
+    provider: string,
 ) => {
-    return await api.post(`/api/entities/linkedin/callback`, { code,state })
+    return await api.post(`/api/entities/${provider}/callback`, { code,state })
 }
+
 
 

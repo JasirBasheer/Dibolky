@@ -3,7 +3,7 @@ import { Cable, Check, CreditCard, ExternalLink, GitCommitHorizontal, MoreVertic
 import { useDispatch, useSelector } from 'react-redux';
 import { IConnection, RootState } from '@/types/common.types';
 import { fetchConnections, getConnectSocailMediaUrlApi } from '@/services/common/get.services';
-import { handleLinkedinCallbackApi, savePlatformTokenApi } from '@/services/common/post.services';
+import { handleLinkedinAndXCallbackApi, savePlatformTokenApi } from '@/services/common/post.services';
 import { setUser } from '@/redux/slices/user.slice';
 import { Button } from '../ui/button';
 import Skeleton from 'react-loading-skeleton';
@@ -48,7 +48,7 @@ const SettingsPage = () => {
         })
       }
     }
-    if(provider == "linkedin"){
+    if(provider == "linkedin" || provider == "x"){
     const code = searchParams.get('code');
     const state = searchParams.get('state');
     console.log(code,state,'reached')
@@ -97,8 +97,8 @@ const SettingsPage = () => {
   ): Promise<object | undefined> => {
     try {
 
-      if(provider == "linkedin"){
-       const response = await handleLinkedinCallbackApi(token,status as string)
+      if(provider == "linkedin" || provider == "x"){
+       const response = await handleLinkedinAndXCallbackApi(token,status as string,provider)
        if(!response)throw new Error("token not found")
        console.log('reached here here is the response',response)
        if(response)token = response.data.token
@@ -164,17 +164,19 @@ const SettingsPage = () => {
     const icons: Record<string, string> = {
       facebook: 'M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96C15.9 21.59 18.04 20.44 19.7 18.73C21.35 17.03 22.34 14.82 22.34 12.56C22.34 9.8 21.23 7.16 19.26 5.19C17.29 3.23 14.65 2.11 11.9 2.11L12 2.04Z',
       instagram: 'M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153.509.5.902 1.105 1.153 1.772.247.637.415 1.363.465 2.428.047 1.066.06 1.405.06 4.122 0 2.717-.01 3.056-.06 4.122-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 01-1.153 1.772c-.5.509-1.105.902-1.772 1.153-.637.247-1.363.415-2.428.465-1.066.047-1.405.06-4.122.06-2.717 0-3.056-.01-4.122-.06-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 01-1.772-1.153 4.904 4.904 0 01-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12c0-2.717.01-3.056.06-4.122.05-1.066.217-1.79.465-2.428a4.88 4.88 0 011.153-1.772A4.897 4.897 0 015.45 2.525c.638-.248 1.362-.415 2.428-.465C8.944 2.013 9.283 2 12 2zm0 1.802c-2.67 0-2.986.01-4.04.059-.976.045-1.505.207-1.858.344-.466.182-.8.398-1.15.748-.35.35-.566.684-.748 1.15-.137.353-.3.882-.344 1.857-.048 1.055-.058 1.37-.058 4.04 0 2.67.01 2.986.058 4.04.044.976.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.684.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.04.058 2.67 0 2.987-.01 4.04-.058.976-.044 1.504-.207 1.857-.344.466-.182.8-.398 1.15-.748.35-.35.566-.684.748-1.15.137-.353.3-.882.344-1.857.048-1.054.058-1.37.058-4.04 0-2.67-.01-2.986-.058-4.04-.044-.976-.207-1.504-.344-1.857a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.054-.048-1.37-.058-4.04-.058zm0 3.063a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 8.468a3.333 3.333 0 100-6.666 3.333 3.333 0 000 6.666zm6.538-8.469a1.2 1.2 0 11-2.4 0 1.2 1.2 0 012.4 0z',
+      x: 'M18.901 2.289h-3.346L8.978 9.743 3.099 2.289H0l7.071 10.286L0 21.711h3.346l7.071-8.457 5.879 8.457h3.099l-7.071-10.286 7.071-8.457z',
+      linkedin: 'M22 3.47C22 2.65 21.35 2 20.53 2H3.47C2.65 2 2 2.65 2 3.47v17.06C2 21.35 2.65 22 3.47 22h17.06c.82 0 1.47-.65 1.47-1.47V3.47zM6.67 18H4V8.67h2.67V18zm-1.33-10.67c-.86 0-1.56-.7-1.56-1.56s.7-1.56 1.56-1.56 1.56.7 1.56 1.56-.7 1.56-1.56 1.56zm14.66 10.67h-2.67v-5.33c0-1.27-.45-2.13-1.58-2.13-.86 0-1.37.58-1.6 1.14-.08.2-.1.48-.1.76v5.56H11.33V8.67h2.56v1.14c.38-.58 1.06-1.4 2.58-1.4 1.9 0 3.33 1.24 3.33 3.9v5.69z'
     };
     if (!icons[platformLower]) return `M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96C15.9 21.59 18.04 20.44 19.7 18.73C21.35 17.03 22.34 14.82 22.34 12.56C22.34 9.8 21.23 7.16 19.26 5.19C17.29 3.23 14.65 2.11 11.9 2.11L12 2.04Z`;
     return icons[platformLower]
   }
 
-  function formatRelativeTime(dateString: string, addSuffix: boolean = true): string {
+  function formatRelativeTime(dateString: Date | string, addSuffix: boolean = true): string {
     try {
-      const date = parseISO(dateString);
+      const date = parseISO(String(dateString));
       return formatDistanceToNow(date, { addSuffix });
     } catch (error) {
-      return dateString;
+      return dateString  as string
     }
   }
 
@@ -259,14 +261,29 @@ const SettingsPage = () => {
           </div>
           <div>
             <h4 className="font-medium">Linked In</h4>
-            <p className="text-sm text-gray-500">Not connected</p>
-          </div>
+            {user.linkedinAccessToken !== "" ? (
+              <p className="text-sm text-green-600">Connected </p>
+            ) : (
+              required.includes('linkedin') ? (
+                <p className="text-sm text-gray-700">Connection required..</p>
+              ) : (
+                <p className="text-sm text-gray-500">Not connected</p>)
+            )}  
+               </div>
         </div>
-        <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 $ bg-blue-700 hover:bg-blue-800" text-white transition`}>
+        <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 ${user.linkedinAccessToken !== "" ?
+          'border border-red-300 text-red-600 hover:bg-red-50'
+          : ` ${required.includes('linkedin') ? "bg-black hover:bg-gray-700" : "bg-blue-700 hover:bg-blue-800"} text-white`
+          } transition`}>
+            {user.instagramAccessToken !== "" ? (
+            'Disconnect'
+          ) : (
           <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/linkedin', 'linkedin')}>
             <span>Connect</span>
             <ExternalLink size={14} />
           </div>
+          )}
+
         </button>
       </div>
 
@@ -278,14 +295,28 @@ const SettingsPage = () => {
           </div>
           <div>
             <h4 className="font-medium">X</h4>
-            <p className="text-sm text-gray-500">Not connected</p>
+             {user.xAccessToken !== "" ? (
+              <p className="text-sm text-green-600">Connected </p>
+            ) : (
+              required.includes('x') ? (
+                <p className="text-sm text-gray-700">Connection required..</p>
+              ) : (
+                <p className="text-sm text-gray-500">Not connected</p>)
+            )} 
           </div>
         </div>
-        <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 $ bg-blue-700 hover:bg-blue-800" text-white transition`}>
-          <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/facebook', 'facebook')}>
+        <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 ${user.xAccessToken !== "" ?
+          'border border-red-300 text-red-600 hover:bg-red-50'
+          : ` ${required.includes('x') ? "bg-black hover:bg-gray-700" : "bg-blue-700 hover:bg-blue-800"} text-white`
+          } transition`}>
+            {user.instagramAccessToken !== "" ? (
+            'Disconnect'
+          ) : (
+          <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/x', 'x')}>
             <span>Connect</span>
             <ExternalLink size={14} />
           </div>
+            )} 
         </button>
       </div>
 
@@ -445,7 +476,7 @@ const SettingsPage = () => {
             </TableHeader>
             <TableBody>
 
-              {connections.map((connection: IConnection, index: number) => (
+              {connections?.map((connection: IConnection, index: number) => (
                 <TableRow key={index} className="hover:bg-gray-50">
                   <TableCell>
                     <div className="flex items-center gap-2">

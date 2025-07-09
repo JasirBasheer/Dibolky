@@ -24,5 +24,6 @@ export interface IEntityController {
     updateProfile(req:Request,res:Response):Promise<void>
     getConnections(req:Request,res:Response):Promise<void>
     handleLinkedinCallback(req:Request,res:Response):Promise<void>
+    handleXCallback(req:Request,res:Response):Promise<void>
     
 }

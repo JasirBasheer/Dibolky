@@ -8,8 +8,9 @@ import { IClientService } from "../../services/Interface/IClientService";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
 import { createFacebookOAuthURL } from "../../provider-strategies/facebook";
 import { IBucket } from "../../types/common";
-import { FACEBOOK, INSTAGRAM, LINKEDIN } from "../../utils/constants.utils";
+import { FACEBOOK, INSTAGRAM, LINKEDIN, X } from "../../utils/constants.utils";
 import { createLinkedInOAuthURL } from "@/provider-strategies/linkedin";
+import { createXAuthURL } from "@/provider-strategies/x";
 
 
 
@@ -72,7 +73,7 @@ export default class ProviderController implements IProviderController {
     ): Promise<void> =>{
             const { provider } = req.params
             const redirectUri: string = req.query.redirectUri as string;
-            console.log(redirectUri)
+            console.log(X, provider)
             let url;
 
             if (provider == INSTAGRAM) {
@@ -81,7 +82,8 @@ export default class ProviderController implements IProviderController {
                 url = await createFacebookOAuthURL(redirectUri)
             }else if(provider == LINKEDIN){
                 url = await createLinkedInOAuthURL(redirectUri)
-                console.log(url,"for auth of linkedin....")
+            }else if (provider == X){
+                url = await createXAuthURL(redirectUri)
             }
 
             res.send({ url: url });

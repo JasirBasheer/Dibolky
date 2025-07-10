@@ -14,7 +14,7 @@ export const createEntityRoutes = (): Router => {
 
   router.use(TokenMiddleWare);
   router.use(TenantMiddleWare);
-  router.use(requireRoles(["agency", "client", "influencer"]));
+  router.use(requireRoles(["agency", "client"]));
 
   // get
   router.get("/owner",asyncHandler(entityController.getOwner));

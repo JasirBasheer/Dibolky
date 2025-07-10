@@ -80,7 +80,7 @@ export const clientTenantSchema: Schema<IClientTenant> = new mongoose.Schema({
         default: ""
       }
     },
-    tiktok: {
+    linkedin: {
       accessToken: {
         type: String,
         required: false,

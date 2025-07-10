@@ -275,7 +275,7 @@ const SettingsPage = () => {
           'border border-red-300 text-red-600 hover:bg-red-50'
           : ` ${required.includes('linkedin') ? "bg-black hover:bg-gray-700" : "bg-blue-700 hover:bg-blue-800"} text-white`
           } transition`}>
-            {user.instagramAccessToken !== "" ? (
+            {user.linkedinAccessToken !== "" ? (
             'Disconnect'
           ) : (
           <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/linkedin', 'linkedin')}>
@@ -309,7 +309,7 @@ const SettingsPage = () => {
           'border border-red-300 text-red-600 hover:bg-red-50'
           : ` ${required.includes('x') ? "bg-black hover:bg-gray-700" : "bg-blue-700 hover:bg-blue-800"} text-white`
           } transition`}>
-            {user.instagramAccessToken !== "" ? (
+            {user.xAccessToken !== "" ? (
             'Disconnect'
           ) : (
           <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/x', 'x')}>

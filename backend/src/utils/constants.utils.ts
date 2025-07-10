@@ -13,8 +13,9 @@ export const LINKEDIN = 'linkedin'
 
 
 export const CONTENT_TYPE = {
-    VIDEO: "Video",
-    REEL: "Reel",
-    POST: "Post",
-    STORY: "Story"
+    THOUGHT: "thought",
+    VIDEO: "video",
+    REEL: "reel",
+    POST: "post",
+    STORY: "story"
 }

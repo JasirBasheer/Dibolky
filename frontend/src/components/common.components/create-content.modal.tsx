@@ -19,7 +19,7 @@ import {
   Twitter,
 } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
-import { IContentData, IPlatforms, RootState } from "@/types/common.types"
+import { IContentData, IMetaAccount, IPlatforms, RootState } from "@/types/common.types"
 import { toggleCreateContentModal } from "@/redux/slices/ui.slice"
 import { useNavigate } from "react-router-dom"
 import InstagramAccountModal from "./instagram.acccounts.list"
@@ -47,7 +47,7 @@ const CreateContentModal = () => {
   const agency = useSelector((state: RootState) => state.agency);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedPlatforms, setSelectedPlatforms] = useState<IPlatform[]>([])
-  const [selectedContentType, setSelectedContentType] = useState<string>("photo")
+  const [selectedContentType, setSelectedContentType] = useState<string>("post")
   const [uploadedFile, setUploadedFile] = useState<File[]>([])
   const [isScheduled, setIsScheduled] = useState<boolean>(false)
   const [caption, setCaption] = useState<string>("")
@@ -60,22 +60,22 @@ const CreateContentModal = () => {
     {
       name: "instagram",
       icon: <ImageIcon className="w-5 h-5 text-pink-500" />,
-      supportedTypes: ["reel", "video", "story", "photo"],
+      supportedTypes: ["reel", "video", "story", "post"],
     },
     {
       name: "facebook",
       icon: <Facebook className="w-5 h-5 text-blue-600" />,
-      supportedTypes: ["thought", "reel", "video", "story", "photo"],
+      supportedTypes: ["thought", "reel", "video", "story", "post"],
     },
     {
       name: "x",
       icon: <Twitter className="w-5 h-5 text-gray-900" />,
-      supportedTypes: ["thought", "reel", "video", "photo"],
+      supportedTypes: ["thought"],
     },
     {
       name: "linkedin",
       icon: <Linkedin className="w-5 h-5 text-blue-700" />,
-      supportedTypes: ["thought", "reel", "video", "photo"],
+      supportedTypes: ["thought", "reel", "video", "post"],
     },
   ]
 
@@ -87,7 +87,7 @@ const CreateContentModal = () => {
       description: "Text-only post",
     },
     {
-      name: "photo",
+      name: "post",
       icon: <ImageIcon className="w-5 h-5 text-blue-500" />,
       accepts: "image/*",
       description: "Single or multiple images",
@@ -189,7 +189,7 @@ const CreateContentModal = () => {
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     let files = Array.from(event.target.files || [])
 
-    if (selectedContentType === "photo" && files.length > 4) {
+    if (selectedContentType === "post" && files.length > 4) {
       files = files.slice(0, 4)
       message.warning("Post limit is 4, only selected the first 4 images")
     } else if (["video", "reel", "story"].includes(selectedContentType) && files.length > 1) {
@@ -255,7 +255,7 @@ const CreateContentModal = () => {
 
      try {
       const files = uploadedFile.map((file: File) => {
-        const type = file.type.startsWith('video/') ? 'video' : 'photo';
+        const type = file.type.startsWith('video/') ? 'video' : 'post';
         return {
           file,
           type,
@@ -330,7 +330,7 @@ const CreateContentModal = () => {
       );
 
      setSelectedPlatforms([])
-    setSelectedContentType("photo")
+    setSelectedContentType("post")
     setUploadedFile([])
     setIsScheduled(false)
     setCaption("")
@@ -359,7 +359,7 @@ const CreateContentModal = () => {
 
     const handleClose = () => {
     setSelectedPlatforms([])
-    setSelectedContentType("photo")
+    setSelectedContentType("post")
     setUploadedFile([])
     setIsScheduled(false)
     setCaption("")
@@ -455,7 +455,7 @@ const CreateContentModal = () => {
                     id="fileUpload"
                     onChange={handleFileUpload}
                     accept={CONTENT_TYPES.find((t) => t.name === selectedContentType)?.accepts}
-                    multiple={selectedContentType === "photo"}
+                    multiple={selectedContentType === "post"}
                   />
                   <label htmlFor="fileUpload" className="cursor-pointer block">
                     <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
@@ -463,7 +463,7 @@ const CreateContentModal = () => {
                       Drag and drop your file here or click to browse
                     </p>
                     <p className="text-xs text-gray-400">
-                      {selectedContentType === "photo" ? "You can upload up to 4 images" : "Only one file allowed"}
+                      {selectedContentType === "post" ? "You can upload up to 4 images" : "Only one file allowed"}
                     </p>
                   </label>
                   {uploadedFile.length > 0 && (

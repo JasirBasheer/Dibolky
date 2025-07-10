@@ -54,7 +54,6 @@ export async function uploadIGReel(
 export async function uploadFacebookReel(
     accessToken: string,
     content: IBucket,
-    caption: string
 ): Promise<{name:string,status: string,id:string }> {
     try {
 
@@ -69,7 +68,7 @@ export async function uploadFacebookReel(
 
         await uploadHostedReel(initResponse.video_id as string, url, pageAccessToken)
         await checkReelUploadStatus(initResponse.video_id as string, pageAccessToken)
-        const publishRespone = await publishReel(pageId, initResponse.video_id as string, pageAccessToken, caption)
+        const publishRespone = await publishReel(pageId, initResponse.video_id as string, pageAccessToken, content.caption)
 
         if (publishRespone) {
             return {

@@ -1,3 +1,4 @@
+import { uploadIGStory } from "@/media.service/story-handler";
 import { META_API_VERSION, META_CLIENTID, META_SECRETID } from "../config/env.config";
 import { uploadIGPost } from "../media.service/post-handler";
 import { uploadIGReel } from "../media.service/reel-handler";
@@ -5,6 +6,7 @@ import { IBucket } from "../types/common";
 import { getS3PublicUrl } from "../utils/aws.utils";
 import { CONTENT_TYPE } from "../utils/constants.utils";
 import { VIDEO_EXTENSIONS } from "../utils/video-dimensions.utils";
+import { uploadIGVideo } from "@/media.service/video-handler";
 
 
 
@@ -97,15 +99,13 @@ export async function handleInstagramUpload(
             case CONTENT_TYPE.POST:
                 return await uploadIGPost(content, access_token)
             case CONTENT_TYPE.VIDEO:
-                // return null
+                return await uploadIGVideo(content,access_token)
             case CONTENT_TYPE.REEL:
-                console.log('entereing to rell')
                 return await uploadIGReel(content, access_token)
             case CONTENT_TYPE.STORY:
-                // return null
+                return await uploadIGStory(content, access_token)
             default :
-                return await uploadIGPost(content, access_token)
-
+                throw new Error(`Unsupported content type`);
         }
     } catch (error) {
         throw error

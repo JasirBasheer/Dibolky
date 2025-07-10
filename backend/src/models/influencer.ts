@@ -131,7 +131,7 @@ export const influencerTenantSchema = new Schema<IInfluncerTenant>({
                 required: false,
             }
         },
-        tiktok: {
+        linkedin: {
             accessToken: {
                 type: String,
                 required: false,

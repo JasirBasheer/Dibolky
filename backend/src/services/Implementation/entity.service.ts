@@ -250,7 +250,6 @@ export default class EntityService implements IEntityService {
         if(!details)throw new NotFoundError('User details not found please try again later..')
         if(details.socialMedia_credentials?.facebook?.accessToken && details.socialMedia_credentials?.facebook?.accessToken !=""){
             const status = await getMetaAccessTokenStatus(details!.socialMedia_credentials?.facebook?.accessToken as string)
-         
             connections.push(
                 {platform:"facebook",
                 is_valid:status,
@@ -272,7 +271,6 @@ export default class EntityService implements IEntityService {
 
           if(details.socialMedia_credentials?.linkedin?.accessToken && details.socialMedia_credentials?.linkedin?.accessToken !=""){
             const status = await getLinkedInTokenStatus(details!.socialMedia_credentials?.linkedin?.accessToken as string)
-         
             connections.push(
                 {platform:"linkedin",
                 is_valid:status,
@@ -283,7 +281,6 @@ export default class EntityService implements IEntityService {
 
          if(details.socialMedia_credentials?.x?.accessToken && details.socialMedia_credentials?.x?.accessToken !=""){
             const status = await isXAccessTokenValid(details!.socialMedia_credentials?.x?.accessToken as string)
-         
             connections.push(
                 {platform:"x",
                 is_valid:status,

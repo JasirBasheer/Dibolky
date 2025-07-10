@@ -3,6 +3,9 @@ import { META_API_VERSION, META_CLIENTID, META_SECRETID } from "../config/env.co
 import { uploadFacebookReel } from "../media.service/reel-handler";
 import { IMetaAccount, IBucket, IReelUploadStatus } from "../types/common";
 import { CONTENT_TYPE } from "../utils/constants.utils";
+import { uploadFaceBookStory } from "@/media.service/story-handler";
+import { uploadFaceBookThought } from "@/media.service/thought-handler";
+import { uploadFaceBookVideo } from "@/media.service/video-handler";
 
 
 export async function createFacebookOAuthURL(
@@ -16,8 +19,8 @@ export async function createFacebookOAuthURL(
         response_type: 'token',
         scope: [
             'public_profile', 'email', 'pages_show_list',
-            'pages_manage_posts', 'pages_manage_metadata',
-            'pages_manage_engagement', 'pages_messaging',
+            'pages_manage_posts', 'pages_manage_metadata','instagram_content_publish',
+            'pages_manage_engagement', 'pages_messaging', 'instagram_basic',
             'business_management', 'pages_read_user_content',
             'read_insights', 'ads_management',
             'ads_read', 'pages_read_engagement',
@@ -67,12 +70,15 @@ export async function handleFacebookUpload(
 ): Promise<{name:string,status: string,id:string } > {
     switch (content.contentType) {
         case CONTENT_TYPE.REEL:
-            return await uploadFacebookReel(access_token, content, content.caption)
+            return await uploadFacebookReel(access_token, content)
         case CONTENT_TYPE.VIDEO:
-            return await uploadFacebookReel(access_token, content, content.caption)
+            return await uploadFaceBookVideo(access_token, content)
+        case CONTENT_TYPE.STORY:
+            return await uploadFaceBookStory(access_token, content)
+        case CONTENT_TYPE.THOUGHT:
+            return await uploadFaceBookThought(access_token, content)
         default:
-            return await uploadFacebookReel(access_token, content, content.caption)
-            
+            throw new Error(`Unsupported content type`);
     }
 }
 

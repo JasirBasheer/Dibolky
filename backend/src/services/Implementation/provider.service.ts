@@ -9,10 +9,12 @@ import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTen
 import { IMetaAccount, IPlatforms, IBucket, ISocialMediaUploadResponse } from "../../types/common";
 import { IClientTenant } from "../../types/client";
 import { IInfluncerTenant } from "../../types/influencer";
-import { FACEBOOK, INSTAGRAM } from "../../utils/constants.utils";
+import { FACEBOOK, INSTAGRAM, LINKEDIN, X } from "../../utils/constants.utils";
 import { INote } from "../../types/note";
 import { INoteRepository } from "../../repositories/Interface/INoteRepository";
 import { CustomError } from "mern.common";
+import { handleLinkedinUpload } from "@/provider-strategies/linkedin";
+import { handleXUpload } from "@/provider-strategies/x";
 
 
 @injectable()
@@ -63,6 +65,16 @@ export default class ProviderService implements IProviderService {
                         if (!access_token) throw new Error('FaceBook access token not found');
                         return response = await handleFacebookUpload(content, access_token);
 
+                    case LINKEDIN:
+                        access_token = user?.socialMedia_credentials?.linkedin?.accessToken;
+                        if (!access_token) throw new Error('Linkedin access token not found');
+                        return response = await handleLinkedinUpload(content, access_token);
+
+                    case X:
+                        access_token = user?.socialMedia_credentials?.x?.accessToken;
+                        if (!access_token) throw new Error('Linkedin access token not found');
+                        return response = await handleXUpload(content, access_token);
+                        
                     default:
                         throw new Error(`Unsupported platform: ${platform}`);
                 }

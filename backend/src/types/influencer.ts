@@ -55,7 +55,7 @@ export interface IInfluncerTenant {
       accessToken?: string;
       apiKey?: string;
     };
-    tiktok?: {
+    linkedin?: {
       accessToken?: string;
       apiKey?: string;
     };

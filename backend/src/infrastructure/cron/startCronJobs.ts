@@ -1,7 +1,8 @@
+import logger from "@/logger";
 import { startScheduledPostsProcessor } from "./contentsCronJobs";
 
 
 export const startCronJobs = () => {
   startScheduledPostsProcessor();
-  console.log("⏰ All cron jobs started.");
+  logger.info("All cron jobs started.",{method:"cron-job"});
 };

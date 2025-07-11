@@ -8,11 +8,11 @@ import {
     fetchIGAccountId, 
     publishInstagramContent, 
     uploadSinglePost
-} from "@/provider-strategies/instagram"
+} from "@/providers/instagram"
 import { getPages } from "./shared";
 import { NotFoundError } from "mern.common";
-import { createCarouselPost, uploadImageToFacebook } from "@/provider-strategies/facebook";
-import { getUserURN, publishLinkedInPost } from "@/provider-strategies/linkedin";
+import { createCarouselPost, uploadImageToFacebook } from "@/providers/facebook";
+import { getUserURN, publishLinkedInPost } from "@/providers/linkedin";
 
 
 

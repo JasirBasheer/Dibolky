@@ -1,10 +1,10 @@
-import { fetchIGAccountId } from "@/provider-strategies/instagram/";
+import { fetchIGAccountId } from "@/providers/instagram";
 import { IBucket } from "@/types";
 import { getPages } from "./shared";
 import { NotFoundError } from "mern.common";
-import { publishFaceBookImageStory, publishFaceBookVideoStory } from "@/provider-strategies/facebook/story";
+import { publishFaceBookImageStory, publishFaceBookVideoStory } from "@/providers/facebook/story";
 import { getMediaDetails } from "@/utils";
-import { publishInstagramStory } from "@/provider-strategies/instagram/story";
+import { publishInstagramStory } from "@/providers/instagram/story";
 
 // INSTAGRAM STORY
 export async function uploadIGStory(

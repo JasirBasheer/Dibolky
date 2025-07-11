@@ -1,10 +1,10 @@
 import { IBucket } from "@/types";
 import { getPages } from "./shared";
 import { NotFoundError } from "mern.common";
-import { publishFaceBookThought } from "@/provider-strategies/facebook";
-import { publishXThought } from "@/provider-strategies/x";
-import { getUserURN } from "@/provider-strategies/linkedin";
-import { publishLinkedinThought } from "@/provider-strategies/linkedin/thought";
+import { publishFaceBookThought } from "@/providers/facebook";
+import { publishXThought } from "@/providers/x";
+import { getUserURN } from "@/providers/linkedin";
+import { publishLinkedinThought } from "@/providers/linkedin/thought";
 
 // FACEBOOK THOUGHT
 export async function uploadFaceBookThought(

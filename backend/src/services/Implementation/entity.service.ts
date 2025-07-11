@@ -24,9 +24,9 @@ import {
     NotFoundError,
 } from 'mern.common';
 import { INoteRepository } from '../../repositories/Interface/INoteRepository';
-import { getLinkedInTokenStatus } from '@/provider-strategies/linkedin';
-import { getMetaAccessTokenStatus } from '@/provider-strategies/facebook';
-import { isXAccessTokenValid } from '@/provider-strategies/x';
+import { getLinkedInTokenStatus } from '@/providers/linkedin';
+import { getMetaAccessTokenStatus } from '@/providers/facebook';
+import { isXAccessTokenValid } from '@/providers/x';
 
 @injectable()
 export default class EntityService implements IEntityService {

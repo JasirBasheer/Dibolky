@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { IProviderService } from "../Interface/IProviderService";
-import { handleFacebookUpload } from "@/provider-strategies/facebook";
-import { exchangeForLongLivedToken, handleInstagramUpload } from "@/provider-strategies/instagram";
+import { handleFacebookUpload } from "@/providers/facebook";
+import { exchangeForLongLivedToken, handleInstagramUpload } from "@/providers/instagram";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
 import { IAgencyTenant } from "../../types/agency";
@@ -13,9 +13,9 @@ import { FACEBOOK, INSTAGRAM, LINKEDIN, X } from "../../utils/constants";
 import { INote } from "../../types/note";
 import { INoteRepository } from "../../repositories/Interface/INoteRepository";
 import { CustomError } from "mern.common";
-import { handleLinkedinUpload } from "@/provider-strategies/linkedin/handler";
-import { handleXUpload } from "@/provider-strategies/x";
-import { getMetaPagesDetails } from "@/provider-strategies/facebook";
+import { handleLinkedinUpload } from "@/providers/linkedin/handler";
+import { handleXUpload } from "@/providers/x";
+import { getMetaPagesDetails } from "@/providers/facebook";
 
 
 @injectable()

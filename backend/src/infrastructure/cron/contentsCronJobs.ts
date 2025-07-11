@@ -91,7 +91,6 @@ async function processAgencyScheduledPosts() {
 
 export function startScheduledPostsProcessor() {
     cron.schedule('*/2 * * * *', async () => {
-        logger.info('Cron job restarted for scheduled contents...',{method:"cron-job"});
         await processAgencyScheduledPosts();
     });
 }

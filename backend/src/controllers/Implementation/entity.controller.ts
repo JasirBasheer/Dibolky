@@ -16,8 +16,8 @@ import {
     ResponseMessage,
     SendResponse
 } from 'mern.common';
-import { linkedInAuthCallback } from '@/provider-strategies/linkedin';
-import { xAuthCallback } from '@/provider-strategies/x';
+import { linkedInAuthCallback } from '@/providers/linkedin';
+import { xAuthCallback } from '@/providers/x';
 
 
 @injectable()

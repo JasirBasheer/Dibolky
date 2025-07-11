@@ -2,8 +2,8 @@ import { IBucket } from "@/types";
 import { getPages } from "./shared";
 import { NotFoundError } from "mern.common";
 import { getMediaDetails } from "@/utils";
-import { publishFaceBookVideo } from "@/provider-strategies/facebook";
-import { getUserURN, publishLinkedinVideo } from "@/provider-strategies/linkedin";
+import { publishFaceBookVideo } from "@/providers/facebook";
+import { getUserURN, publishLinkedinVideo } from "@/providers/linkedin";
 import { getS3PublicUrl } from "@/utils/aws.utils";
 
 

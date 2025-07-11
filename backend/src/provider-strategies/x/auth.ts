@@ -1,6 +1,4 @@
 import { X_CLIENT_ID, X_CLIENT_SECRET, X_REDIRECT_URI } from "@/config";
-import { IBucket } from "@/types";
-import { CONTENT_TYPE } from "@/utils/constants.utils";
 const STATIC_STATE = 'teststate123';
 const STATIC_CODE_VERIFIER = 'testcodeverifier1234567890';
 const STATIC_CODE_CHALLENGE = STATIC_CODE_VERIFIER;
@@ -69,59 +67,5 @@ export async function isXAccessTokenValid(accessToken: string): Promise<boolean>
   } catch (error:any) {
     console.error('Error validating X access token:', error.message);
     return false;
-  }
-}
-
-
-async function postXThought(
-  accessToken: string,
-  content: IBucket
-): Promise<{ name: string; status: string; id: string; postId?: string }> {
-  console.log(accessToken,content)
-  if (content.caption.length > 280) {
-    return {
-      name: "X",
-      status: "failed",
-      id: content._id as string,
-    };
-  }
-
-  const response = await fetch("https://api.x.com/2/tweets", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      text: content.caption,
-    }),
-  });
-  console.log(response,"response")
-
-  if (!response.ok) {
-    return {
-      name: "X",
-      status: "failed",
-      id: content._id as string,
-    };
-  }
-  return {
-    name: "X",
-    status: "success",
-    id: content._id as string,
-  };
-}
-
-
-
-export async function handleXUpload(
-  content: IBucket,
-  access_token: string
-): Promise<{ name: string, status: string, id: string }> {
-  switch (content.contentType) {
-    case CONTENT_TYPE.THOUGHT:
-      return await postXThought(access_token, content);
-    default:
-      throw new Error(`Unsupported content type`);
   }
 }

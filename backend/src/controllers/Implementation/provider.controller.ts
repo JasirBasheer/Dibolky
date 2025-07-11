@@ -3,14 +3,14 @@ import { inject, injectable } from "tsyringe";
 import { HTTPStatusCodes, NotFoundError, ResponseMessage, SendResponse } from "mern.common";
 import { IProviderController } from "../Interface/IProviderController";
 import { IProviderService } from "../../services/Interface/IProviderService";
-import { createInstagramOAuthURL } from "../../provider-strategies/instagram";
+import { createInstagramOAuthURL } from "@/provider-strategies/instagram";
 import { IClientService } from "../../services/Interface/IClientService";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
-import { createFacebookOAuthURL } from "../../provider-strategies/facebook";
 import { IBucket } from "../../types/common";
-import { FACEBOOK, INSTAGRAM, LINKEDIN, X } from "../../utils/constants.utils";
+import { FACEBOOK, INSTAGRAM, LINKEDIN, X } from "../../utils/constants";
 import { createLinkedInOAuthURL } from "@/provider-strategies/linkedin";
 import { createXAuthURL } from "@/provider-strategies/x";
+import { createFacebookOAuthURL } from "@/provider-strategies/facebook";
 
 
 

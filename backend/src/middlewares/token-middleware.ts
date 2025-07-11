@@ -10,7 +10,7 @@ import { IClient } from "../types/client";
 import { IAgency } from "../types/agency";
 import { IAdmin } from "../types/admin";
 import { ITokenDetails } from "../types/common";
-import { ROLES } from "../utils/constants.utils";
+import { ROLES } from "../utils/constants";
 import { IInfluencerService } from "../services/Interface/IInfluencerService";
 import { IEntityService } from "../services/Interface/IEntityService";
 import { IPlanService } from "@/services/Interface/IPlanService";

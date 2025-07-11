@@ -23,9 +23,9 @@ import {
     hashPassword,
     NotFoundError,
 } from 'mern.common';
-import { getMetaAccessTokenStatus } from '../../provider-strategies/facebook';
 import { INoteRepository } from '../../repositories/Interface/INoteRepository';
 import { getLinkedInTokenStatus } from '@/provider-strategies/linkedin';
+import { getMetaAccessTokenStatus } from '@/provider-strategies/facebook';
 import { isXAccessTokenValid } from '@/provider-strategies/x';
 
 @injectable()

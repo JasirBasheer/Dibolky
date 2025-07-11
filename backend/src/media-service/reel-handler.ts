@@ -1,24 +1,13 @@
-import { NotFoundError } from "mern.common";
-import { getPages } from "./shared";
+import { checkIGContainerStatus, fetchIGAccountId, publishInstagramContent, uploadIGReelContent } from "@/provider-strategies/instagram";
+import { checkReelUploadStatus, initializeReelUpload, publishReel, uploadHostedReel } from "@/provider-strategies/facebook";
 import { getS3PublicUrl, getS3ViewUrl } from "../utils/aws.utils";
+import { FACEBOOK, INSTAGRAM } from "../utils/constants";
+import { NotFoundError } from "mern.common";
 import { IBucket } from "../types/common";
-import { FACEBOOK, INSTAGRAM } from "../utils/constants.utils";
-import { 
-    checkReelUploadStatus, 
-    initializeReelUpload, 
-    publishReel, 
-    uploadHostedReel 
-} from "../provider-strategies/facebook";
-import { 
-    checkIGContainerStatus, 
-    fetchIGAccountId, 
-    publishInstagramContent, 
-    uploadIGReelContent 
-} from "../provider-strategies/instagram";
+import { getPages } from "./shared";
 
 
-// Instagram -- reel
-
+// INSTAGRAM REEL
 export async function uploadIGReel(
     content: IBucket, 
     access_token: string
@@ -26,7 +15,6 @@ export async function uploadIGReel(
     try {
 
         const url = await getS3PublicUrl(content.files[0].key)
-        console.log(url,'urllllllll')
         const instagramAccountId = await fetchIGAccountId(content.metaAccountId, access_token);
         console.log(access_token, instagramAccountId.id, url, content.caption)
         const containerData = await uploadIGReelContent(access_token, instagramAccountId.id, url, content.caption)
@@ -49,8 +37,7 @@ export async function uploadIGReel(
 }
 
 
-// Facebook -- reel
-
+// FACEBOOK REEL
 export async function uploadFacebookReel(
     accessToken: string,
     content: IBucket,

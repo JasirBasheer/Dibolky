@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { IProviderService } from "../Interface/IProviderService";
-import { getMetaPagesDetails, handleFacebookUpload } from "../../provider-strategies/facebook";
-import { exchangeForLongLivedToken, handleInstagramUpload } from "../../provider-strategies/instagram";
+import { handleFacebookUpload } from "@/provider-strategies/facebook";
+import { exchangeForLongLivedToken, handleInstagramUpload } from "@/provider-strategies/instagram";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
 import { IAgencyTenant } from "../../types/agency";
@@ -9,12 +9,13 @@ import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTen
 import { IMetaAccount, IPlatforms, IBucket, ISocialMediaUploadResponse } from "../../types/common";
 import { IClientTenant } from "../../types/client";
 import { IInfluncerTenant } from "../../types/influencer";
-import { FACEBOOK, INSTAGRAM, LINKEDIN, X } from "../../utils/constants.utils";
+import { FACEBOOK, INSTAGRAM, LINKEDIN, X } from "../../utils/constants";
 import { INote } from "../../types/note";
 import { INoteRepository } from "../../repositories/Interface/INoteRepository";
 import { CustomError } from "mern.common";
-import { handleLinkedinUpload } from "@/provider-strategies/linkedin";
+import { handleLinkedinUpload } from "@/provider-strategies/linkedin/handler";
 import { handleXUpload } from "@/provider-strategies/x";
+import { getMetaPagesDetails } from "@/provider-strategies/facebook";
 
 
 @injectable()

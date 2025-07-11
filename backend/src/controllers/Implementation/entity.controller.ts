@@ -8,8 +8,7 @@ import { AWS_S3_BUCKET_NAME } from '../../config/env.config';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { v4 as uuidv4 } from 'uuid';
-import { IPlan } from '../../types/admin';
-import { CountryToCurrency, getPriceConversionFunc } from '../../utils/currency-conversion.utils';
+import { CountryToCurrency } from '../../utils/currency-conversion.utils';
 import {
     findCountryByIp,
     HTTPStatusCodes,
@@ -41,7 +40,6 @@ export default class EntityController implements IEntityController {
         res: Response,
     ): Promise<void> => {
             const { mail } = req.body
-            console.log(mail,"entereedddddd")
             const isExists = await this.entityService.IsMailExists(mail)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { isExists: isExists })
     }

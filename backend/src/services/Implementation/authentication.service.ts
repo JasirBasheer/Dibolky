@@ -7,7 +7,7 @@ import { JWT_RESET_PASSWORD_SECRET } from "../../config/env.config";
 import { IAdmin } from "../../types/admin";
 import { IAgency } from "../../types/agency";
 import { createForgotPasswordData } from "../../utils/mail.datas";
-import { ROLES } from "../../utils/constants.utils";
+import { ROLES } from "../../utils/constants";
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { IInfluencerRepository } from "../../repositories/Interface/IInfluencerRepository";
 import { IManagerRepository } from "../../repositories/Interface/IManagerRepository";

@@ -14,7 +14,7 @@ import {
     ResponseMessage,
     SendResponse
 } from 'mern.common';
-import { ROLES } from '../../utils/constants.utils';
+import { ROLES } from '../../utils/constants';
 import { IInfluencerService } from '../../services/Interface/IInfluencerService';
 import { IManagerService } from '../../services/Interface/IManagerService';
 

@@ -8,29 +8,29 @@ import { IBucket } from "../../types/common";
 
 @injectable()
 export class ContentRepository extends BaseRepository<IBucket> implements IContentRepository {
-    private BucketSchema: Schema;
-    private modelName = 'reviewbucket';
-    private models: Map<string, Model<IBucket>> = new Map();
+    private _BucketSchema: Schema;
+    private _modelName = 'reviewbucket';
+    private _models: Map<string, Model<IBucket>> = new Map();
 
     constructor(
         @inject('review_bucket_model') schema: Schema
     ) {
         super(null as unknown as Model<IBucket>);
-        this.BucketSchema = schema;
+        this._BucketSchema = schema;
     }
 
     private async getModel(
         orgId: string
     ): Promise<Model<IBucket>> {
-        if (this.models.has(orgId)) {
-            return this.models.get(orgId)!;
+        if (this._models.has(orgId)) {
+            return this._models.get(orgId)!;
         }
 
         const connection = await connectTenantDB(orgId);
         if (!connection) throw new Error('Connection not found');
 
-        let model: Model<IBucket> = connection.model<IBucket>(this.modelName, this.BucketSchema);
-        this.models.set(orgId, model);
+        let model: Model<IBucket> = connection.model<IBucket>(this._modelName, this._BucketSchema);
+        this._models.set(orgId, model);
         return model;
     }
 

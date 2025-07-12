@@ -1,18 +1,16 @@
 import { connectTenantDB } from "../../config/db.config";
-import Agency, { agencyTenantSchema } from "../../models/agency";
+import Agency, { agencyTenantSchema } from "../../models/Implementation/agency";
 import { IEntityRepository } from "../Interface/IEntityRepository";
-import { IAgency, IAgencyTenant } from "../../types/agency";
-import { IInfluencer } from "../../types/influencer";
-import Influencer from "../../models/influencer";
+import { IAgencyType, IAgencyTenant } from "../../types/agency";
 import {  Model } from "mongoose";
-import { CustomError } from "mern.common";
+import { IAgency } from "@/models/Interface/agency";
 
 
 export default class EntityRepository implements IEntityRepository {
 
     async createAgency(
         new_agency: object
-    ): Promise<Partial<IAgency> | null> {
+    ): Promise<Partial<IAgencyType> | null> {
         const agency = new Agency(new_agency)
         return await agency.save()
     }
@@ -21,7 +19,7 @@ export default class EntityRepository implements IEntityRepository {
 
     async isAgencyMailExists(
         agency_mail: string
-    ): Promise<IAgency | null> {
+    ): Promise<IAgencyType | null> {
         return await Agency.findOne({ email: agency_mail })
     }
 
@@ -42,11 +40,11 @@ export default class EntityRepository implements IEntityRepository {
   
 
 
-    async getAllAgencyOwners(): Promise<Partial<IAgency[]> | null> {
+    async getAllAgencyOwners(): Promise<IAgency[] | null> {
         return await Agency.find()
     }
 
-    async getAllRecentAgencyOwners(): Promise<Partial<IAgency[]> | null> {
+    async getAllRecentAgencyOwners(): Promise<IAgency[] | null> {
         return await Agency.find().limit(10)
     }
 

@@ -2,15 +2,15 @@ import { inject, injectable } from 'tsyringe';
 import { IEntityService } from '../Interface/IEntityService';
 import { IEntityRepository } from '../../repositories/Interface/IEntityRepository';
 import { IPlanRepository } from '../../repositories/Interface/IPlanRepository';
-import { agencyTenantSchema } from '../../models/agency';
+import { agencyTenantSchema } from '../../models/Implementation/agency';
 import { ITransactionRepository } from '../../repositories/Interface/ITransactionRepository';
-import { IPlan } from '../../types/admin';
-import { IProject } from '../../models/project';
+import { IPlanType } from '../../types/admin';
+import { IProject } from '../../models/Implementation/project';
 import { IProjectRepository } from '../../repositories/Interface/IProjectRepository';
 import { IClientTenantRepository } from '../../repositories/Interface/IClientTenantRepository';
 import { IContentRepository } from '../../repositories/Interface/IContentRepository';
 import { IAgencyTenantRepository } from '../../repositories/Interface/IAgencyTenantRepository';
-import { AddressType, IAgency, IAgencyRegistrationPayload, IAgencyTenant, } from '../../types/agency';
+import { AddressType, IAgencyType, IAgencyTenant, } from '../../types/agency';
 import { connectTenantDB } from '../../config/db.config';
 import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IBucket, IUpdateProfile } from '../../types/common';
 import { IClientTenant } from '../../types/client';
@@ -27,19 +27,21 @@ import { INoteRepository } from '../../repositories/Interface/INoteRepository';
 import { getLinkedInTokenStatus } from '@/providers/linkedin';
 import { getMetaAccessTokenStatus } from '@/providers/facebook';
 import { isXAccessTokenValid } from '@/providers/x';
+import { IAgencyRegistrationDto } from '@/dto';
+import { SaveContentDto } from '@/dto/content';
 
 @injectable()
 export default class EntityService implements IEntityService {
-    private entityRepository: IEntityRepository;
-    private planRepository: IPlanRepository;
-    private transactionRepository: ITransactionRepository;
-    private projectRepository: IProjectRepository;
-    private clientTenantRepository: IClientTenantRepository;
-    private clientRepository: IClientRepository;
-    private contentRepository: IContentRepository;
-    private agencyTenantRepository: IAgencyTenantRepository;
-    private agencyRepository: IAgencyRepository;
-    private noteRepository: INoteRepository;
+    private _entityRepository: IEntityRepository;
+    private _planRepository: IPlanRepository;
+    private _transactionRepository: ITransactionRepository;
+    private _projectRepository: IProjectRepository;
+    private _clientTenantRepository: IClientTenantRepository;
+    private _clientRepository: IClientRepository;
+    private _contentRepository: IContentRepository;
+    private _agencyTenantRepository: IAgencyTenantRepository;
+    private _agencyRepository: IAgencyRepository;
+    private _noteRepository: INoteRepository;
 
     constructor(
         @inject('EntityRepository') entityRepository: IEntityRepository,
@@ -51,40 +53,39 @@ export default class EntityService implements IEntityService {
         @inject('ContentRepository') contentRepository: IContentRepository,
         @inject('AgencyTenantRepository') agencyTenantRepository: IAgencyTenantRepository,
         @inject('AgencyRepository') agencyRepository: IAgencyRepository,
-        @inject('ContentRepository') contentRepositry: IContentRepository,
         @inject('NoteRepository') noteRepository: INoteRepository,
 
     ) {
-        this.entityRepository = entityRepository
-        this.planRepository = planRepository
-        this.transactionRepository = transactionRepository
-        this.projectRepository = projectRepository
-        this.clientTenantRepository = clientTenantRepository
-        this.clientRepository = clientRepository
-        this.contentRepository = contentRepository
-        this.agencyTenantRepository = agencyTenantRepository
-        this.agencyRepository = agencyRepository
-        this.noteRepository = noteRepository
+        this._entityRepository = entityRepository
+        this._planRepository = planRepository
+        this._transactionRepository = transactionRepository
+        this._projectRepository = projectRepository
+        this._clientTenantRepository = clientTenantRepository
+        this._clientRepository = clientRepository
+        this._contentRepository = contentRepository
+        this._agencyTenantRepository = agencyTenantRepository
+        this._agencyRepository = agencyRepository
+        this._noteRepository = noteRepository
     }
 
 
   
 
     async fetchAllProjects(orgId: string, page?: number): Promise<{ projects: IProject[], totalPages: number } | null> {
-        return await this.projectRepository.fetchAllProjects(orgId, page)
+        return await this._projectRepository.fetchAllProjects(orgId, page)
     }
 
 
     async IsMailExists(
         mail: string,
     ): Promise<boolean> {
-            const isExists = await this.entityRepository.isAgencyMailExists(mail)
+            const isExists = await this._entityRepository.isAgencyMailExists(mail)
             if (isExists) return true
             return false
     }
 
 
-    async createAgency(payload: IAgencyRegistrationPayload): Promise<Partial<IAgency> | null> {
+    async createAgency(payload: IAgencyRegistrationDto): Promise<Partial<IAgencyType> | null> {
         const { organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate, transactionId, paymentGateway, description, currency } = payload;
 
         const hashedPassword = await hashPassword(password)
@@ -97,7 +98,7 @@ export default class EntityService implements IEntityService {
             planPurchasedRate: planPurchasedRate, currency
         };
 
-        const ownerDetails = await this.entityRepository.createAgency(newAgency);
+        const ownerDetails = await this._entityRepository.createAgency(newAgency);
 
         const newTenantAgency = {
             main_id: ownerDetails?._id, orgId,
@@ -112,8 +113,8 @@ export default class EntityService implements IEntityService {
             currency
         }
 
-        await this.transactionRepository.createTransaction(newTransaction)
-        await this.entityRepository.saveDetailsInAgencyDb(newTenantAgency, orgId as string)
+        await this._transactionRepository.createTransaction(newTransaction)
+        await this._entityRepository.saveDetailsInAgencyDb(newTenantAgency, orgId as string)
         return ownerDetails
     }
 
@@ -123,13 +124,13 @@ export default class EntityService implements IEntityService {
     async getMenu(
         planId: string
     ): Promise<IMenuCategory> {
-        const plan = await this.planRepository.getPlan(planId)
+        const plan = await this._planRepository.getPlan(planId)
         if (!plan) throw new CustomError("Plan not found", 500)
         return plan.menu as IMenuCategory
     }
 
     async getClientMenu(orgId: string, client_id: string): Promise<IMenuCategory> {
-        const client = await this.clientTenantRepository.getClientById(orgId, client_id)
+        const client = await this._clientTenantRepository.getClientById(orgId, client_id)
         if (!client || !client.menu) throw new CustomError("Client menu not found", 500)
         return client?.menu
     }
@@ -140,21 +141,14 @@ export default class EntityService implements IEntityService {
     ): Promise<IAgencyTenant[]> {
         const tenantDb = await connectTenantDB(orgId)
         const ownerDetailModel = tenantDb.model('OwnerDetail', agencyTenantSchema);
-        return await this.entityRepository.fetchOwnerDetails(ownerDetailModel)
+        return await this._entityRepository.fetchOwnerDetails(ownerDetailModel)
     }
 
-    async saveContent(
-        orgId: string,
-        platform: string,
-        platforms: IPlatforms[],
-        user_id: string,
-        files: IFiles[],
-        metadata: IMetadata,
-        contentType: string
-    ): Promise<IBucket> {
+    async saveContent(payload: SaveContentDto): Promise<IBucket> {
+        const {orgId, platform, platforms, user_id, files, metadata, contentType } = payload 
         let detials;
         if (platform == "agency") {
-            const ownerDetials = await this.agencyTenantRepository.getOwners(orgId)
+            const ownerDetials = await this._agencyTenantRepository.getOwners(orgId)
             detials = {
                 user_id: ownerDetials![0]._id as string,
                 orgId, files, platforms, title: metadata.title,
@@ -167,12 +161,6 @@ export default class EntityService implements IEntityService {
                 caption: metadata.caption, tags: metadata.tags,
                 metaAccountId: metadata.metaAccountId, contentType
             }
-        } else if (platform == "influencer") {
-            detials = {
-                user_id, orgId, files, platforms, title: metadata.title,
-                caption: metadata.caption, tags: metadata.tags,
-                metaAccountId: metadata.metaAccountId, contentType
-            }
         } else {
             detials = {
                 user_id, orgId, files, platforms, title: metadata.title,
@@ -180,7 +168,7 @@ export default class EntityService implements IEntityService {
                 metaAccountId: metadata.metaAccountId, contentType
             }
         }
-        return this.contentRepository.saveContent(detials)
+        return this._contentRepository.saveContent(detials)
     }
 
 
@@ -194,9 +182,9 @@ export default class EntityService implements IEntityService {
         orgId: string,
         user_id: string
     ): Promise<IBucket[]> {
-        const contents = await this.contentRepository.getContentsByUserId(orgId, user_id) ?? []
+        const contents = await this._contentRepository.getContentsByUserId(orgId, user_id) ?? []
         const contentIds = contents.map((content) => String(content._id));
-        const notes = await this.noteRepository.getContentNotesByEntityIds(orgId,contentIds)
+        const notes = await this._noteRepository.getContentNotesByEntityIds(orgId,contentIds)
 
         return contents.map((content) => {
             const matchingNote = notes.find(
@@ -217,11 +205,11 @@ export default class EntityService implements IEntityService {
     ): Promise<IAgencyTenant | IClientTenant> {
         let updatedProfile;
         if (role == "agency") {
-            await this.agencyRepository.updateProfile(orgId, details)
-            updatedProfile = await this.agencyTenantRepository.updateProfile(orgId, details)
+            await this._agencyRepository.updateProfile(orgId, details)
+            updatedProfile = await this._agencyTenantRepository.updateProfile(orgId, details)
         } else if (role == "client" && requestRole == "agency" || requestRole == "client") {
-            await this.clientRepository.updateProfile(details)
-            updatedProfile = await this.clientTenantRepository.updateProfile(orgId, details)
+            await this._clientRepository.updateProfile(details)
+            updatedProfile = await this._clientTenantRepository.updateProfile(orgId, details)
         }
         if (!updatedProfile) throw new CustomError("An unexpected error occured while updating profile , try again later.", 500)
         return updatedProfile
@@ -231,7 +219,7 @@ export default class EntityService implements IEntityService {
         orgId: string,
         user_id: string
     ): Promise<IBucket[]> {
-        return await this.contentRepository.getAllScheduledContents(orgId, user_id)
+        return await this._contentRepository.getAllScheduledContents(orgId, user_id)
     }
 
     async getConnections(
@@ -241,11 +229,11 @@ export default class EntityService implements IEntityService {
     ):Promise<object[]>{
         let details,connections = [];
         if(entity == "agency"){
-            details = await this.agencyTenantRepository.getOwnerWithOrgId(orgId)
+            details = await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
         }else if(entity == "agency-client"){
-            details = await this.clientTenantRepository.getClientById(orgId, user_id)
+            details = await this._clientTenantRepository.getClientById(orgId, user_id)
         }else{
-            details = await this.clientTenantRepository.getClientById(orgId, user_id)
+            details = await this._clientTenantRepository.getClientById(orgId, user_id)
         }
         if(!details)throw new NotFoundError('User details not found please try again later..')
         if(details.socialMedia_credentials?.facebook?.accessToken && details.socialMedia_credentials?.facebook?.accessToken !=""){

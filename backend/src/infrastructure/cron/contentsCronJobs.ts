@@ -1,8 +1,8 @@
 import cron from 'node-cron';
 import { color } from 'console-log-colors';
-import Agencies from '../../models/agency';
+import Agencies from '../../models/Implementation/agency';
 import { connectTenantDB } from '../../config/db.config';
-import { bucketSchema } from '../../models/bucket';
+import { bucketSchema } from '../../models/Implementation/bucket';
 import { container } from 'tsyringe';
 import { Types } from 'mongoose';
 import { IProviderService } from '../../services/Interface/IProviderService';

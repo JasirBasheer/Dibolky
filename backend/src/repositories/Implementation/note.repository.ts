@@ -4,35 +4,35 @@ import { inject, injectable } from "tsyringe";
 import { BaseRepository, CustomError } from "mern.common";
 import { INote } from "../../types/note";
 import { INoteRepository } from "../Interface/INoteRepository";
-import { agencyTenantSchema } from "../../models/agency";
-import { clientTenantSchema } from "../../models/client";
+import { agencyTenantSchema } from "../../models/Implementation/agency";
+import { clientTenantSchema } from "../../models/Implementation/client";
 import mongoose from "mongoose";
 
 @injectable()
 export default class NoteRepository extends BaseRepository<INote> implements INoteRepository {
-    private messageSchema: Schema;
-    private modelName = 'note';
-    private models: Map<string, Model<INote>> = new Map();
+    private _messageSchema: Schema;
+    private _modelName = 'note';
+    private _models: Map<string, Model<INote>> = new Map();
 
     constructor(
         @inject('note_model') schema: Schema
     ) {
         super(null as unknown as Model<INote>);
-        this.messageSchema = schema;
+        this._messageSchema = schema;
     }
 
     private async getModel(
         orgId: string
     ): Promise<Model<INote>> {
-        if (this.models.has(orgId)) {
-            return this.models.get(orgId)!;
+        if (this._models.has(orgId)) {
+            return this._models.get(orgId)!;
         }
 
         const connection = await connectTenantDB(orgId);
         if (!connection) throw new Error('Connection not found');
 
-        let model: Model<INote> = connection.model<INote>(this.modelName, this.messageSchema);
-        this.models.set(orgId, model);
+        let model: Model<INote> = connection.model<INote>(this._modelName, this._messageSchema);
+        this._models.set(orgId, model);
         return model;
     }
 

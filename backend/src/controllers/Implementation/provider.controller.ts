@@ -4,7 +4,6 @@ import { HTTPStatusCodes, NotFoundError, ResponseMessage, SendResponse } from "m
 import { IProviderController } from "../Interface/IProviderController";
 import { IProviderService } from "../../services/Interface/IProviderService";
 import { createInstagramOAuthURL } from "@/providers/instagram";
-import { IClientService } from "../../services/Interface/IClientService";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
 import { IBucket } from "../../types/common";
 import { FACEBOOK, INSTAGRAM, LINKEDIN, X } from "../../utils/constants";
@@ -18,19 +17,16 @@ import { createFacebookOAuthURL } from "@/providers/facebook";
 
 @injectable()
 export default class ProviderController implements IProviderController {
-    private providerService: IProviderService;
-    private clientService: IClientService;
-    private agencyService: IAgencyService
+    private _providerService: IProviderService;
+    private _agencyService: IAgencyService
 
     constructor(
         @inject('ProviderService') providerService: IProviderService,
-        @inject('ClientService') clientService: IClientService,
         @inject('AgencyService') agencyService: IAgencyService,
 
     ) {
-        this.providerService = providerService
-        this.clientService = clientService
-        this.agencyService = agencyService
+        this._providerService = providerService
+        this._agencyService = agencyService
 
     }
 
@@ -40,19 +36,19 @@ export default class ProviderController implements IProviderController {
     ): Promise<void> =>{
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const { content_id, user_id, platform } = req.body
-            const content: IBucket | null = await this.providerService.getContentById(req.details.orgId as string, content_id)
+            const content: IBucket | null = await this._providerService.getContentById(req.details.orgId as string, content_id)
             let user;
             if (platform == 'agency') {
-                user = await this.agencyService.getAgencyOwnerDetails(req.details.orgId as string)
+                user = await this._agencyService.getAgencyOwnerDetails(req.details.orgId as string)
             } else {
-                user = await this.agencyService.getAgencyOwnerDetails(req.details.orgId as string)
+                user = await this._agencyService.getAgencyOwnerDetails(req.details.orgId as string)
             }
             if (!content) throw new Error('content does not exists')
 
-            const response = await this.providerService.handleSocialMediaUploads(content, user, false)
+            const response = await this._providerService.handleSocialMediaUploads(content, user, false)
 
             if (response) {
-                await this.providerService.updateContentStatus(req.details.orgId as string, content_id, "Approved")
+                await this._providerService.updateContentStatus(req.details.orgId as string, content_id, "Approved")
             }
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
@@ -63,7 +59,7 @@ export default class ProviderController implements IProviderController {
     ): Promise<void> =>{
             const { access_token } = req.params
 
-            const pages = await this.providerService.getMetaPagesDetails(access_token as string)
+            const pages = await this._providerService.getMetaPagesDetails(access_token as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { pages })
     }
 
@@ -99,7 +95,7 @@ export default class ProviderController implements IProviderController {
             const { platform, provider, user_id } = req.params
             const { token } = req.body
 
-            await this.providerService.saveSocialMediaToken(req.details.orgId as string, platform, user_id, provider, token)
+            await this._providerService.saveSocialMediaToken(req.details.orgId as string, platform, user_id, provider, token)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
 
@@ -110,7 +106,7 @@ export default class ProviderController implements IProviderController {
     ): Promise<void> =>{
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const { content_id, date } = req.body
-            await this.providerService.reScheduleContent(req.details.orgId as string, content_id, date)
+            await this._providerService.reScheduleContent(req.details.orgId as string, content_id, date)
     }
 
     processContentReject = async(
@@ -119,7 +115,7 @@ export default class ProviderController implements IProviderController {
     ): Promise<void> =>{
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const { content_id, reason } = req.body
-            await this.providerService.rejectContent(req.details.orgId as string, content_id, reason)
+            await this._providerService.rejectContent(req.details.orgId as string, content_id, reason)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
 

@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { IBucket } from '../types/common';
+import { IBucket } from '../../types/common';
 
 
 

@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { IAgencyController } from "../Interface/IAgencyController";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
 import { inject, injectable } from "tsyringe";
-import { IClientService } from "../../services/Interface/IClientService";
 import {
     ConflictError,
     CustomError,
@@ -17,16 +16,13 @@ import {
 
 @injectable()
 export default class AgencyController implements IAgencyController {
-    private agencyService: IAgencyService;
-    private clientService: IClientService
+    private _agencyService: IAgencyService;
 
     constructor(
         @inject('AgencyService') agencyService: IAgencyService,
-        @inject('ClientService') clientService: IClientService
 
     ) {
-        this.agencyService = agencyService
-        this.clientService = clientService
+        this._agencyService = agencyService
     }
 
 
@@ -35,7 +31,7 @@ export default class AgencyController implements IAgencyController {
         res: Response
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
-            const details = await this.agencyService.verifyOwner(req.details._id as string)
+            const details = await this._agencyService.verifyOwner(req.details._id as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details, role: "agency" })
     }
@@ -46,7 +42,7 @@ export default class AgencyController implements IAgencyController {
         res: Response
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
-            const details = await this.agencyService.getAgencyOwnerDetails(req.details.orgId as string)
+            const details = await this._agencyService.getAgencyOwnerDetails(req.details.orgId as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })
     }
@@ -61,7 +57,7 @@ export default class AgencyController implements IAgencyController {
 
             const { orgId, name, email, industry, services, menu } = req.body
             console.log(req.body,'bodyeee')
-            await this.agencyService.createClient(orgId, name, email, industry, services, menu, req.details.organizationName as string)
+            await this._agencyService.createClient(orgId, name, email, industry, services, menu, req.details.organizationName as string)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
     }
 
@@ -76,7 +72,7 @@ export default class AgencyController implements IAgencyController {
             if (!req.details) throw new NotFoundError("Details Not Fount")
 
             const orgId = req.details.orgId as string
-            const clients = await this.agencyService.getAllClients(orgId)
+            const clients = await this._agencyService.getAllClients(orgId)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { clients })
 
     }
@@ -88,7 +84,7 @@ export default class AgencyController implements IAgencyController {
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const { id } = req.params
-            const details = await this.agencyService.getClient(req.details.orgId as string, id)
+            const details = await this._agencyService.getClient(req.details.orgId as string, id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })
     }
 
@@ -103,7 +99,7 @@ export default class AgencyController implements IAgencyController {
                 return;
             }
 
-            const result = await this.agencyService.saveContentToDb(id, req.details.orgId as string, files, JSON.parse(selectedPlatforms), selectedContentType, caption)
+            const result = await this._agencyService.saveContentToDb(id, req.details.orgId as string, files, JSON.parse(selectedPlatforms), selectedContentType, caption)
             if (result) SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS);
     }
 
@@ -113,7 +109,7 @@ export default class AgencyController implements IAgencyController {
         res: Response
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
-            const users = await this.agencyService.getAllAvailableClients(req.details.orgId as string)
+            const users = await this._agencyService.getAllAvailableClients(req.details.orgId as string)
             if (!users) throw new CustomError('Error while fetch available users', 500)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { users })
     }
@@ -124,7 +120,7 @@ export default class AgencyController implements IAgencyController {
         res: Response
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
-            const projects = await this.agencyService.getProjectsCount(req.details.orgId as string)
+            const projects = await this._agencyService.getProjectsCount(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects })
     }
 
@@ -133,7 +129,7 @@ export default class AgencyController implements IAgencyController {
         res: Response
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
-            const clients = await this.agencyService.getClientsCount(req.details.orgId as string)
+            const clients = await this._agencyService.getClientsCount(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { clients })
     }
 
@@ -143,7 +139,7 @@ export default class AgencyController implements IAgencyController {
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const { projectId, status } = req.body
-            const result = await this.agencyService.editProjectStatus(req.details.orgId as string, projectId, status)
+            const result = await this._agencyService.editProjectStatus(req.details.orgId as string, projectId, status)
             if (result) SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
 
@@ -152,7 +148,7 @@ export default class AgencyController implements IAgencyController {
         res: Response
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
-            const initialSetUp = await this.agencyService.getInitialSetUp(req.details.orgId as string)
+            const initialSetUp = await this._agencyService.getInitialSetUp(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { initialSetUp })
     }
 
@@ -163,7 +159,7 @@ export default class AgencyController implements IAgencyController {
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const { details, provider } = req.body
-            const gatewayDetails = await this.agencyService.integratePaymentGateWay(req.details.orgId as string, provider, details)
+            const gatewayDetails = await this._agencyService.integratePaymentGateWay(req.details.orgId as string, provider, details)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details: gatewayDetails, provider })
 
     }
@@ -173,7 +169,7 @@ export default class AgencyController implements IAgencyController {
     res: Response
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
-            const paymentIntegrationStatus = await this.agencyService.getPaymentIntegrationStatus(req.details.orgId as string)
+            const paymentIntegrationStatus = await this._agencyService.getPaymentIntegrationStatus(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { paymentIntegrationStatus })
     }
 }

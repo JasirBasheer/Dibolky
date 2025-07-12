@@ -6,12 +6,12 @@ import { HTTPStatusCodes, NotFoundError, ResponseMessage, SendResponse } from "m
 
 @injectable()
 export default class ClientController implements IClientController {
-    private clientService: IClientService;
+    private _clientService: IClientService;
 
     constructor(
         @inject('ClientService') clientService: IClientService
     ) {
-        this.clientService = clientService
+        this._clientService = clientService
     }
 
     getClient = async(
@@ -19,7 +19,7 @@ export default class ClientController implements IClientController {
         res: Response, 
     ): Promise<void> => {
             if(!req.details)throw new NotFoundError("Details Not Fount")
-            const details = await this.clientService.verifyClient(req.details._id as string)
+            const details = await this._clientService.verifyClient(req.details._id as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details, role: "client" })
     }
@@ -29,7 +29,7 @@ export default class ClientController implements IClientController {
         res: Response, 
     ): Promise<void> => {
             if(!req.details)throw new NotFoundError("Details Not Fount")
-            const details = await this.clientService.getClientDetails(req.details.orgId as string, req.details.email as string)
+            const details = await this._clientService.getClientDetails(req.details.orgId as string, req.details.email as string)
             if (!details) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { client: details })
     }
@@ -39,7 +39,7 @@ export default class ClientController implements IClientController {
         res: Response, 
     ): Promise<void> => {
             if(!req.details)throw new NotFoundError("Details Not Fount")
-            const owners = await this.clientService.getOwners(req.details.orgId as string)
+            const owners = await this._clientService.getOwners(req.details.orgId as string)
             if (!owners) throw new NotFoundError("Account Not found")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { owners })
     }

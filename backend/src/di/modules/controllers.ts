@@ -1,8 +1,6 @@
 import { container } from "tsyringe";
 import { IManagerController } from "@/controllers/Interface/IManagerController";
 import ManagerController from "@/controllers/Implementation/manager.controller";
-import InfluencerController from "@/controllers/Implementation/influencer.controller";
-import { IInfluencerController } from "@/controllers/Interface/IInfluencerController";
 import { IClientController } from "@/controllers/Interface/IClientController";
 import ClientController from "@/controllers/Implementation/client.controller";
 import { IProviderController } from "@/controllers/Interface/IProviderController";
@@ -28,7 +26,6 @@ container.register<IClientController>('ClientController', { useClass: ClientCont
 container.register<IEntityController>('EntityController', { useClass: EntityController });
 container.register<IPaymentController>('PaymentController', { useClass: PaymentController });
 container.register<IProviderController>('ProviderController', { useClass: ProviderController });
-container.register<IInfluencerController>('InfluencerController', { useClass: InfluencerController });
 container.register<IManagerController>('ManagerController', { useClass: ManagerController });
 container.register<IPlanController>('PlanController', { useClass: PlanController });
 };

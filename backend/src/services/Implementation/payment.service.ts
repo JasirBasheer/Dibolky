@@ -5,15 +5,14 @@ import { IPaymentService } from "../Interface/IPaymentService";
 import { inject, injectable } from "tsyringe";
 import { IEntityService } from "../Interface/IEntityService";
 import razorpayInstance from "../../config/razorpay.config";
-import { STRIPE_WEBHOOK_SECRET } from "@/config";
 
 @injectable()
 export default class PaymentService implements IPaymentService {
-    private entityService:IEntityService
+    private _entityService:IEntityService
     constructor(
         @inject('EntityService')entityService:IEntityService
     ){
-        this.entityService  = entityService
+        this._entityService  = entityService
 
     }
 
@@ -35,9 +34,6 @@ export default class PaymentService implements IPaymentService {
         cancel_url: string
     ): Promise<string> {
         try {
-            console.log(details, "details")
-            console.log("details=plan", details.plan)
-            const { menu, features, name, ...planWithoutMenu } = details.plan;
             const session = await stripe.checkout.sessions.create({
                 payment_method_types: ["card"],
                 mode: "payment",
@@ -55,7 +51,7 @@ export default class PaymentService implements IPaymentService {
                 cancel_url,
                 metadata: {
                     ...details,
-                    plan: JSON.stringify(planWithoutMenu)
+                    plan: JSON.stringify(details.plan)
                 }
             })
 
@@ -80,7 +76,7 @@ export default class PaymentService implements IPaymentService {
                 const session = event.data.object as Stripe.Checkout.Session;
                 const metadata = session.metadata || {};
 
-                await this.entityService.createAgency({
+                await this._entityService.createAgency({
                     organizationName:metadata.organizationName, name:metadata.name, email:metadata.email,
                     address:{ city: metadata.city, country: metadata.country }, websiteUrl:metadata.website,
                     industry:metadata.industry,contactNumber:Number(metadata.phone), logo:metadata.logo || "",

@@ -1,14 +1,14 @@
 import { container } from "tsyringe";
-import { noteSchema } from "@/models/note";
-import influencerSchema, { influencerTenantSchema } from "@/models/influencer";
-import { transactionSchema } from "@/models/transaction";
-import { bucketSchema } from "@/models/bucket";
-import clientSchema, { clientTenantSchema } from "@/models/client";
-import { Plan } from "@/models/plan";
-import { chatSchema, messageSchema } from "@/models/chat";
-import agencySchema, { agencyTenantSchema } from "@/models/agency";
-import { projectSchema } from "@/models/project";
-import adminSchema from "@/models/admin";
+import { noteSchema } from "@/models/Implementation/note";
+import influencerSchema, { influencerTenantSchema } from "@/models/Implementation/influencer";
+import { transactionSchema } from "@/models/Implementation/transaction";
+import { bucketSchema } from "@/models/Implementation/bucket";
+import clientSchema, { clientTenantSchema } from "@/models/Implementation/client";
+import { Plan } from "@/models/Implementation/plan";
+import { chatSchema, messageSchema } from "@/models/Implementation/chat";
+import agencySchema, { agencyTenantSchema } from "@/models/Implementation/agency";
+import { projectSchema } from "@/models/Implementation/project";
+import adminSchema from "@/models/Implementation/admin";
 
 
 export const registerModels = () => {

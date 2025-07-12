@@ -1,8 +1,8 @@
 import { IAdminRepository } from '../Interface/IAdminRepository';
 import { BaseRepository } from 'mern.common';
-import { IAdmin } from '../../types/admin';
 import { Model } from 'mongoose';
 import { inject, injectable } from 'tsyringe';
+import { IAdmin } from '@/models/Interface/admin';
 
 @injectable()
 export default class AdminRepository extends BaseRepository<IAdmin> implements IAdminRepository {

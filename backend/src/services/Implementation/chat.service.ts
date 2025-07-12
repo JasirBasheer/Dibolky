@@ -1,20 +1,20 @@
 import { inject, injectable } from 'tsyringe';
 import { IChatService } from '../Interface/IChatService';
 import { IChatRepository } from '../../repositories/Interface/IChatRepository';
-import { agencyTenantSchema } from '../../models/agency';
+import { agencyTenantSchema } from '../../models/Implementation/agency';
 import { CustomError, NotFoundError } from 'mern.common';
 import { IMessageRepository } from '../../repositories/Interface/IMessageRepository';
 import { IChat, IGroupDetails, IMessage, Participant } from '../../types/chat';
 import { IEntityRepository } from '../../repositories/Interface/IEntityRepository';
-import { IAgency, IAgencyTenant } from '../../types/agency';
-import mongoose, { Connection, Model, Types } from 'mongoose';
+import { IAgencyTenant } from '../../types/agency';
+import { Connection, Types } from 'mongoose';
 import { deleteS3Object } from '../../utils/aws.utils';
 
 @injectable()
 export default class ChatService implements IChatService {
-    private chatRepository: IChatRepository;
-    private messageRepository: IMessageRepository;
-    private entityRepository: IEntityRepository;
+    private _chatRepository: IChatRepository;
+    private _messageRepository: IMessageRepository;
+    private _entityRepository: IEntityRepository;
 
     constructor(
         @inject('ChatRepository') chatRepository: IChatRepository,
@@ -22,9 +22,9 @@ export default class ChatService implements IChatService {
         @inject('EntityRepository') entityRepository: IEntityRepository,
 
     ) {
-        this.chatRepository = chatRepository
-        this.messageRepository = messageRepository
-        this.entityRepository = entityRepository
+        this._chatRepository = chatRepository
+        this._messageRepository = messageRepository
+        this._entityRepository = entityRepository
     }
 
 
@@ -42,7 +42,7 @@ export default class ChatService implements IChatService {
                 userId, userName,
                 targetUserId, targetUserName,targetUserProfile,userProfile
             }
-            let newChat = await this.chatRepository.createNewChat(orgId, details);
+            let newChat = await this._chatRepository.createNewChat(orgId, details);
             if (!newChat) throw new CustomError("Error while create new chat", 500)
             return newChat
         } catch (error) {
@@ -58,9 +58,9 @@ export default class ChatService implements IChatService {
         chatId: string
     ): Promise<IMessage | null> {
         try {
-            const chat = await this.chatRepository.findChatById(orgId,chatId)
+            const chat = await this._chatRepository.findChatById(orgId,chatId)
             if(!chat) throw new NotFoundError('Chat not found')
-            return await this.messageRepository.createMessage(orgId, chat._id as string, newMessage);
+            return await this._messageRepository.createMessage(orgId, chat._id as string, newMessage);
         } catch (error) {
             throw new CustomError("Error while sending message", 500)
         }
@@ -73,7 +73,7 @@ export default class ChatService implements IChatService {
     ):Promise<IChat | null>{
         try {
             console.log(orgId,chatId,memberId)
-            return await this.chatRepository.removeMember(orgId, chatId, memberId);
+            return await this._chatRepository.removeMember(orgId, chatId, memberId);
         } catch (error) {
             throw new CustomError("Error while sending message", 500)
         }
@@ -86,12 +86,12 @@ export default class ChatService implements IChatService {
         messageId:string,
     ): Promise<IMessage | null>{
         try {
-            const message = await this.messageRepository.getMessageById(orgId,messageId)
+            const message = await this._messageRepository.getMessageById(orgId,messageId)
             if(message.key && message.key!=""){
                 await deleteS3Object(message.key as string)
             }
 
-            const deletedMessage = await this.messageRepository.deleteMessage(orgId,messageId)
+            const deletedMessage = await this._messageRepository.deleteMessage(orgId,messageId)
             if(!deletedMessage) throw new CustomError("Error while deleting message",500)
             return deletedMessage
         } catch (error) {
@@ -104,11 +104,11 @@ export default class ChatService implements IChatService {
         userId: string
     ): Promise<object[] | null> {
         try {
-            const chats = await this.chatRepository.fetchChats(orgId, userId)
+            const chats = await this._chatRepository.fetchChats(orgId, userId)
             const plainChats = chats!.map((chat: { toObject: () => IChat; }) => chat.toObject());
 
             return await Promise.all(plainChats.map(async (item: IChat) => {
-                const chatMessages = await this.messageRepository.fetchChatMessages(orgId, item._id as string);
+                const chatMessages = await this._messageRepository.fetchChatMessages(orgId, item._id as string);
                 const sortedMessages = chatMessages.sort((a: IMessage, b: IMessage) => {
                     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
                 });
@@ -128,7 +128,7 @@ export default class ChatService implements IChatService {
     ): Promise<IAgencyTenant> {
         try {
             const ownerModel = tenantDb.model("OwnerDetail", agencyTenantSchema);
-            const details =  await this.entityRepository.fetchOwnerDetails(ownerModel)
+            const details =  await this._entityRepository.fetchOwnerDetails(ownerModel)
             if(!details)throw new CustomError("owner Details not found",500)
             return details[0]
         } catch (error) {
@@ -142,11 +142,11 @@ export default class ChatService implements IChatService {
         chatId: string
     ): Promise<object> {
         try {
-            const chat = await this.chatRepository.findChatById(orgId, chatId);
+            const chat = await this._chatRepository.findChatById(orgId, chatId);
             if (!chat) throw new Error('Chat not found');
 
             const plainChat = chat.toObject();
-            const messages = await this.messageRepository.fetchChatMessages(orgId, chatId);
+            const messages = await this._messageRepository.fetchChatMessages(orgId, chatId);
             const sortedMessages = messages.length > 0 ?
                 messages.sort((a: IMessage, b: IMessage) => {
                     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
@@ -181,7 +181,7 @@ export default class ChatService implements IChatService {
               
 
             const newGroupDetails:Partial<IChat>  = { name: details.groupName, participants }
-            return await this.chatRepository.createNewGroup(orgId, newGroupDetails)
+            return await this._chatRepository.createNewGroup(orgId, newGroupDetails)
         } catch (error) {
             throw new CustomError("Error while fetching creating group", 500)
         }
@@ -193,7 +193,7 @@ export default class ChatService implements IChatService {
         memberDetails: Participant
     ): Promise<IChat | null> {
         try {
-            return await this.chatRepository.addMember(orgId, chatId, memberDetails)
+            return await this._chatRepository.addMember(orgId, chatId, memberDetails)
         } catch (error) {
             throw new CustomError("Error while adding member", 500)
         }
@@ -204,7 +204,7 @@ export default class ChatService implements IChatService {
         message: object
     ): Promise<IMessage | null> {
         try {
-            const newMessage = await this.messageRepository.createCommonMessage(orgId, message)
+            const newMessage = await this._messageRepository.createCommonMessage(orgId, message)
             if (!newMessage) throw new CustomError("Error occured while creating common message", 500)
             return newMessage
         } catch (error) {
@@ -218,7 +218,7 @@ export default class ChatService implements IChatService {
         targetUserId: string
     ): Promise<IChat | null> {
         try {
-            return await this.chatRepository.findChatByMembers(orgId, userId, targetUserId)
+            return await this._chatRepository.findChatByMembers(orgId, userId, targetUserId)
         } catch (error) {
             throw new CustomError("Error while creating common message", 500)
         }
@@ -231,7 +231,7 @@ export default class ChatService implements IChatService {
         userName:string
     ):Promise<void>{
         try {
-            const messages = await this.messageRepository.fetchChatMessages(orgId,chatId)
+            const messages = await this._messageRepository.fetchChatMessages(orgId,chatId)
             for(const message of messages){
                 if(!message.seen.some((user) => String(user.userId) == userId)){
                     const details = {
@@ -239,7 +239,7 @@ export default class ChatService implements IChatService {
                         userName,
                         seenAt:Date.now()
                     }
-                    await this.messageRepository.setSeenMessage(orgId,message._id as string,details) 
+                    await this._messageRepository.setSeenMessage(orgId,message._id as string,details) 
                 }
                     
             }

@@ -20,10 +20,10 @@ import { getMetaPagesDetails } from "@/providers/facebook";
 
 @injectable()
 export default class ProviderService implements IProviderService {
-    private clientTenantRepository: IClientTenantRepository;
-    private contentRepository: IContentRepository;
-    private agencyTenantRepository: IAgencyTenantRepository;
-    private noteRepository: INoteRepository;
+    private _clientTenantRepository: IClientTenantRepository;
+    private _contentRepository: IContentRepository;
+    private _agencyTenantRepository: IAgencyTenantRepository;
+    private _noteRepository: INoteRepository;
 
     constructor(
         @inject('ClientTenantRepository') clientTenantRepository: IClientTenantRepository,
@@ -31,10 +31,10 @@ export default class ProviderService implements IProviderService {
         @inject('AgencyTenantRepository') agencyTenantRepository: IAgencyTenantRepository,
         @inject('NoteRepository') noteRepository : INoteRepository,
     ) {
-        this.clientTenantRepository = clientTenantRepository
-        this.contentRepository = contentRepository
-        this.agencyTenantRepository = agencyTenantRepository
-        this.noteRepository = noteRepository
+        this._clientTenantRepository = clientTenantRepository
+        this._contentRepository = contentRepository
+        this._agencyTenantRepository = agencyTenantRepository
+        this._noteRepository = noteRepository
     }
 
     
@@ -114,7 +114,7 @@ export default class ProviderService implements IProviderService {
         contentId: string,
         status: string
     ): Promise<IBucket | null> {
-        return await this.contentRepository.changeContentStatus(orgId, contentId, status)
+        return await this._contentRepository.changeContentStatus(orgId, contentId, status)
     }
 
 
@@ -122,7 +122,7 @@ export default class ProviderService implements IProviderService {
         orgId: string,
         contentId: string
     ): Promise<IBucket | null> {
-        return await this.contentRepository.getContentById(orgId, contentId)
+        return await this._contentRepository.getContentById(orgId, contentId)
     }
 
 
@@ -141,13 +141,13 @@ export default class ProviderService implements IProviderService {
                     if(provider == INSTAGRAM || provider == FACEBOOK ){
                         longLivingAccessToken = await exchangeForLongLivedToken(token)
                     }
-                    await this.agencyTenantRepository.setSocialMediaTokens(orgId, provider, longLivingAccessToken)
+                    await this._agencyTenantRepository.setSocialMediaTokens(orgId, provider, longLivingAccessToken)
                     break;
                 case 'client':
                     if(provider == INSTAGRAM || provider == FACEBOOK){
                         longLivingAccessToken = await exchangeForLongLivedToken(token)
                     }
-                    await this.clientTenantRepository.setSocialMediaTokens(orgId, user_id, provider, longLivingAccessToken)
+                    await this._clientTenantRepository.setSocialMediaTokens(orgId, user_id, provider, longLivingAccessToken)
                     break;
                 default:
                     break;
@@ -162,7 +162,7 @@ export default class ProviderService implements IProviderService {
         content_id:string,
         date:string
     ):Promise<void>{
-        await this.contentRepository.reScheduleContent(orgId,content_id,date)
+        await this._contentRepository.reScheduleContent(orgId,content_id,date)
     }
 
     async rejectContent(
@@ -170,9 +170,9 @@ export default class ProviderService implements IProviderService {
         content_id:string,
         reason:INote
     ):Promise<void>{
-        const note = await this.noteRepository.addNote(orgId,reason)
+        const note = await this._noteRepository.addNote(orgId,reason)
         if(!note)throw new CustomError("An unexpected error occured while create note please try again later..",500)
-        await this.contentRepository.changeContentStatus(orgId,content_id,"Rejected")
+        await this._contentRepository.changeContentStatus(orgId,content_id,"Rejected")
     }
 
 }

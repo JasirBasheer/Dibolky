@@ -7,29 +7,29 @@ import { connectTenantDB } from "../../config/db.config";
 
 @injectable()
 export default class ChatRepository extends BaseRepository<IChat> implements IChatRepository {
-    private chatSchema: Schema;
-    private modelName = 'chat';
-    private models: Map<string, Model<IChat>> = new Map();
+    private _chatSchema: Schema;
+    private _modelName = 'chat';
+    private _models: Map<string, Model<IChat>> = new Map();
 
     constructor(
         @inject('chat_model') schema: Schema
     ) {
         super(null as unknown as Model<IChat>);
-        this.chatSchema = schema;
+        this._chatSchema = schema;
     }
 
 
     private async getModel(
         orgId: string
     ): Promise<Model<IChat>> {
-        if (this.models.has(orgId)) {
-            return this.models.get(orgId)!
+        if (this._models.has(orgId)) {
+            return this._models.get(orgId)!
         }
         const connection = await connectTenantDB(orgId);
         if (!connection) throw new Error('Connection not found');
 
-        let model: Model<IChat> = connection.model<IChat>(this.modelName, this.chatSchema);
-        this.models.set(orgId, model);
+        let model: Model<IChat> = connection.model<IChat>(this._modelName, this._chatSchema);
+        this._models.set(orgId, model);
         return model;
     }
 

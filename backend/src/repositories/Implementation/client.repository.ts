@@ -1,9 +1,10 @@
 import { BaseRepository } from "mern.common";
-import { IClient } from "../../types/client";
 import { IClientRepository } from "../Interface/IClientRepository";
 import { Model } from "mongoose";
 import { inject, injectable } from "tsyringe";
 import { IUpdateProfile } from "../../types/common";
+import { IClient } from "@/models/Interface/client";
+import { IClientType } from "@/types/client";
 
 @injectable()
 export default class ClientRepository extends BaseRepository<IClient> implements IClientRepository {
@@ -37,7 +38,7 @@ export default class ClientRepository extends BaseRepository<IClient> implements
     }
 
     async createClient(
-        newClient: IClient
+        newClient: IClientType
     ): Promise<IClient | null> {
         return await this.create(newClient)
     }

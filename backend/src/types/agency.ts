@@ -10,7 +10,7 @@ export interface AddressType {
 
 
 
-export interface IAgency extends Document {
+export interface IAgencyType {
     _id: string;
     role?:string;
     orgId: string;

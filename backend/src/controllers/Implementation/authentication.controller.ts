@@ -15,25 +15,21 @@ import {
     SendResponse
 } from 'mern.common';
 import { ROLES } from '../../utils/constants';
-import { IInfluencerService } from '../../services/Interface/IInfluencerService';
-import { IManagerService } from '../../services/Interface/IManagerService';
 
 @injectable()
 /** Implementation of Authentication Controller */
 export default class AuthenticationController implements IAuthenticationController {
-    private adminService: IAdminService;
-    private agencyService: IAgencyService;
-    private authenticationService: IAuthenticationService;
-    private clientService: IClientService;
-    private influencerService: IInfluencerService;
-    private managerService: IManagerService;
+    private _adminService: IAdminService;
+    private _agencyService: IAgencyService;
+    private _authenticationService: IAuthenticationService;
+    private _clientService: IClientService;
 
     /**
     * Initializes the AuthenticationController with required service dependencies.
-    * @param adminService - Service for handling admin authentication.
-    * @param agencyService - Service for handling agency authentication.
-    * @param authenticationService - Service for general authentication operations.
-    * @param clientService - Service for handling client authentication.
+    * @param _adminService - Service for handling admin authentication.
+    * @param _agencyService - Service for handling agency authentication.
+    * @param _authenticationService - Service for general authentication operations.
+    * @param _clientService - Service for handling client authentication.
     * @param influencerService - Service for handling influencer authentication.
     * @param managerService - Service for handling manager authentication.
     */
@@ -42,15 +38,11 @@ export default class AuthenticationController implements IAuthenticationControll
         @inject('AgencyService') agencyService: IAgencyService,
         @inject('AuthenticationService') authenticationService: IAuthenticationService,
         @inject('ClientService') clientService: IClientService,
-        @inject('InfluencerService') influencerService: IInfluencerService,
-        @inject('ManagerService') managerService: IManagerService,
     ) {
-        this.adminService = adminService;
-        this.agencyService = agencyService;
-        this.authenticationService = authenticationService;
-        this.clientService = clientService;
-        this.influencerService = influencerService;
-        this.managerService = managerService;
+        this._adminService = adminService;
+        this._agencyService = agencyService;
+        this._authenticationService = authenticationService;
+        this._clientService = clientService;
     }
 
 
@@ -70,20 +62,13 @@ export default class AuthenticationController implements IAuthenticationControll
 
             switch (role) {
                 case ROLES.ADMIN:
-                    id = await this.adminService.adminLoginHandler(email, password);
+                    id = await this._adminService.adminLoginHandler(email, password);
                     break;
                 case ROLES.AGENCY:
-                    id = await this.agencyService.agencyLoginHandler(email, password);
+                    id = await this._agencyService.agencyLoginHandler(email, password);
                     break;
                 case ROLES.CLIENT:
-                    id = await this.clientService.clientLoginHandler(email, password);
-                    break;
-                case ROLES.INFLUENCER:
-                    id = await this.influencerService.influencerLoginHandler(email, password);
-                    break;
-                case ROLES.MANAGER:
-                    // TODO: Implement manager login feature.
-                    id = await this.influencerService.influencerLoginHandler(email, password);
+                    id = await this._clientService.clientLoginHandler(email, password);
                     break;
                 default:
                     throw new Error('Invalid role specified');
@@ -134,7 +119,7 @@ export default class AuthenticationController implements IAuthenticationControll
     ): Promise<void> => {
             const { email, role }: { email: string, role: string } = req.body
 
-            await this.authenticationService.resetPassword(email, role)
+            await this._authenticationService.resetPassword(email, role)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
 
@@ -153,7 +138,7 @@ export default class AuthenticationController implements IAuthenticationControll
             const { token } = req.params as { token: string };
             const { newPassword } = req.body as { newPassword: string };
 
-            await this.authenticationService.changePassword(token, newPassword)
+            await this._authenticationService.changePassword(token, newPassword)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
 }

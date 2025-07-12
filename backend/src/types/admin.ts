@@ -3,20 +3,21 @@ import {  IMenuItems } from "./common";
 
 
 
-export interface IAdmin extends Document {
+export interface IAdminType {
+    _id: string;
     role?:string;
     orgId?:string;
     organizationName?:string;
     name: string;
     email: string;
-    password: string;
+    password?: string;
     isBlocked?: boolean;
 }
 
 
 export type BillingCycleTypes = "monthly" | "yearly" ;
 
-export interface IPlan extends Document {
+export interface IPlanType extends Document {
     name: string;
     description:string;
     price: number;
@@ -35,5 +36,5 @@ export interface IPlan extends Document {
 
 
 export interface Plans {
-    [key: string]: IPlan[]; 
+    [key: string]: IPlanType[]; 
 }

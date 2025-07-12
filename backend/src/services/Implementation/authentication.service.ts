@@ -4,35 +4,33 @@ import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepositor
 import { IAdminRepository } from "../../repositories/Interface/IAdminRepository";
 import { CustomError, generateToken, hashPassword, NotFoundError, sendMail, verifyToken } from "mern.common";
 import { JWT_RESET_PASSWORD_SECRET } from "../../config/env.config";
-import { IAdmin } from "../../types/admin";
-import { IAgency } from "../../types/agency";
+import { IAdminType } from "../../types/admin";
+import { IAgencyType } from "../../types/agency";
 import { createForgotPasswordData } from "../../utils/mail.datas";
 import { ROLES } from "../../utils/constants";
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { IInfluencerRepository } from "../../repositories/Interface/IInfluencerRepository";
-import { IManagerRepository } from "../../repositories/Interface/IManagerRepository";
+import { UserMapper } from "@/mappers/shared/shared-mapper";
+import { IClientType } from "@/types/client";
 
 @injectable()
 export default class AuthenticationService implements IAuthenticationService {
-    private agencyRepository: IAgencyRepository;
-    private adminRepository: IAdminRepository;
-    private clientRepository: IClientRepository;
-    private influencerRepository: IInfluencerRepository;
-    private managerRepository: IManagerRepository;
+    private _agencyRepository: IAgencyRepository;
+    private _adminRepository: IAdminRepository;
+    private _clientRepository: IClientRepository;
+    private _influencerRepository: IInfluencerRepository;
 
     constructor(
         @inject('AgencyRepository') agencyRepository : IAgencyRepository,
         @inject('AdminRepository') adminRepository : IAdminRepository,
         @inject('ClientRepository') clientRepository : IClientRepository,
         @inject('InfluencerRepository') influencerRepository : IInfluencerRepository,
-        @inject('ManagerRepository') managerRepository : IManagerRepository,
 
     ) {
-        this.agencyRepository = agencyRepository
-        this.adminRepository = adminRepository
-        this.clientRepository = clientRepository
-        this.influencerRepository = influencerRepository
-        this.managerRepository = managerRepository
+        this._agencyRepository = agencyRepository
+        this._adminRepository = adminRepository
+        this._clientRepository = clientRepository
+        this._influencerRepository = influencerRepository
     }
 
     async resetPassword(
@@ -42,19 +40,19 @@ export default class AuthenticationService implements IAuthenticationService {
         let details
         switch (role) {
             case ROLES.ADMIN:
-                details = await this.adminRepository.findAdminWithMail(email)
+                details = await this._adminRepository.findAdminWithMail(email)
                 break;
             case ROLES.AGENCY:
-                details = await this.agencyRepository.findAgencyWithMail(email)
+                details = await this._agencyRepository.findAgencyWithMail(email)
                 break;
             case ROLES.CLIENT:
-                details = await this.clientRepository.findClientWithMail(email)
+                details = await this._clientRepository.findClientWithMail(email)
                 break;
             case ROLES.INFLUENCER:
-                details = await this.influencerRepository.findInfluencerWithMail(email)
+                details = await this._influencerRepository.findInfluencerWithMail(email)
                 break;
             case ROLES.MANAGER:
-                details = await this.agencyRepository.findAgencyWithMail(email)
+                details = await this._agencyRepository.findAgencyWithMail(email)
                 break; 
             default:
                 throw new NotFoundError("Role not found please try again, later..")
@@ -81,7 +79,7 @@ export default class AuthenticationService implements IAuthenticationService {
     async changePassword(
         token: string, 
         password: string
-    ): Promise<IAgency | IAdmin> {
+    ): Promise<IAgencyType | IAdminType | IClientType> {
         if(!JWT_RESET_PASSWORD_SECRET)throw new NotFoundError("Jwt reset password key is not found")
         let jwtSecret = JWT_RESET_PASSWORD_SECRET 
         let changedPassword;
@@ -90,26 +88,19 @@ export default class AuthenticationService implements IAuthenticationService {
 
         switch (isValid.role) {
             case ROLES.ADMIN:
-                changedPassword =  await this.adminRepository.changePassword(isValid.id, hashedPassword)
+                changedPassword =  await this._adminRepository.changePassword(isValid.id, hashedPassword)
                 break;
             case ROLES.AGENCY:
-                changedPassword =  await this.agencyRepository.changePassword(isValid.id, hashedPassword)
+                changedPassword =  await this._agencyRepository.changePassword(isValid.id, hashedPassword)
                 break;
             case ROLES.CLIENT:
-                changedPassword =  await this.clientRepository.changePassword(isValid.id, hashedPassword)
+                changedPassword =  await this._clientRepository.changePassword(isValid.id, hashedPassword)
                 break;
-            case ROLES.INFLUENCER:
-                changedPassword =  await this.influencerRepository.changePassword(isValid.id, hashedPassword)
-                break;
-            case ROLES.MANAGER:
-                // TODO : implement manager change password feature
-                changedPassword =  await this.adminRepository.changePassword(isValid.id, hashedPassword)
-                break; 
             default:
                 throw new NotFoundError("Role not found please try again, later..")
         }
         if(!changedPassword)throw new CustomError("Error while Changing password",500)
-        return changedPassword
+          return  UserMapper.getMappedDetails(isValid.role,changedPassword)
     }
 
 }

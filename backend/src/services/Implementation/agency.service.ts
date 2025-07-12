@@ -1,4 +1,4 @@
-import { IAgency, IAgencyTenant } from "../../types/agency";
+import { IAgencyType, IAgencyTenant } from "../../types/agency";
 import bcrypt from 'bcryptjs'
 import { IAgencyService } from "../Interface/IAgencyService";
 import { inject, injectable } from "tsyringe";
@@ -7,23 +7,25 @@ import { ConflictError, CustomError, generatePassword, hashPassword, NotFoundErr
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { IProjectRepository } from "../../repositories/Interface/IProjectRepository";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
-import { IClient, IClientTenant } from "../../types/client";
+import { IClientType, IClientTenant } from "../../types/client";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
 import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common";
 import { IAvailableClients, ServicesData } from "../../types/chat";
-import { IProject } from "../../models/project";
+import { IProject } from "../../models/Implementation/project";
 import { createNewMenuForClient } from "../../utils/menu.utils";
 import { createClientMailData } from "../../utils/mail.datas";
+import { AgencyMapper } from "@/mappers/agency/agency-mapper";
+import { IAgency } from "@/models/Interface/agency";
 
 @injectable()
 export default class AgencyService implements IAgencyService {
-    private agencyRepository: IAgencyRepository;
-    private agencyTenantRepository: IAgencyTenantRepository;
-    private clientRepository: IClientRepository;
-    private clientTenantRepository: IClientTenantRepository;
-    private projectRepository: IProjectRepository;
-    private contentRepository: IContentRepository;
+    private _agencyRepository: IAgencyRepository;
+    private _agencyTenantRepository: IAgencyTenantRepository;
+    private _clientRepository: IClientRepository;
+    private _clientTenantRepository: IClientTenantRepository;
+    private _projectRepository: IProjectRepository;
+    private _contentRepository: IContentRepository;
 
     constructor(
         @inject('AgencyRepository') agencyRepository: IAgencyRepository,
@@ -34,12 +36,12 @@ export default class AgencyService implements IAgencyService {
         @inject('ContentRepository') contentRepository: IContentRepository,
 
     ) {
-        this.agencyRepository = agencyRepository,
-            this.agencyTenantRepository = agencyTenantRepository
-        this.clientRepository = clientRepository,
-            this.clientTenantRepository = clientTenantRepository,
-            this.projectRepository = projectRepository
-        this.contentRepository = contentRepository
+        this._agencyRepository = agencyRepository,
+        this._agencyTenantRepository = agencyTenantRepository
+        this._clientRepository = clientRepository,
+        this._clientTenantRepository = clientTenantRepository,
+        this._projectRepository = projectRepository
+        this._contentRepository = contentRepository
     }
 
     async agencyLoginHandler(
@@ -47,7 +49,7 @@ export default class AgencyService implements IAgencyService {
         password: string
     ): Promise<string> {
         try {
-            const ownerDetails = await this.agencyRepository.findAgencyWithMail(email);
+            const ownerDetails = await this._agencyRepository.findAgencyWithMail(email);
             if (!ownerDetails) throw new NotFoundError('User not found');
             if (ownerDetails.isBlocked) throw new UnauthorizedError('Account is blocked');
 
@@ -63,7 +65,7 @@ export default class AgencyService implements IAgencyService {
     async getProjectsCount(
         orgId: string
     ): Promise<object> {
-        const data = await this.projectRepository.fetchAllProjects(orgId)
+        const data = await this._projectRepository.fetchAllProjects(orgId)
         const weaklyProjects = data.projects?.filter((project: IProject) => new Date(project.createdAt!).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000) || []
         return {
             count: data?.projects.length || 0,
@@ -74,7 +76,7 @@ export default class AgencyService implements IAgencyService {
     async getClientsCount(
         orgId: string
     ): Promise<object> {
-        const clients = await this.clientTenantRepository.getAllClients(orgId)
+        const clients = await this._clientTenantRepository.getAllClients(orgId)
         const weaklyClients = clients.filter((client: IClientTenant) => new Date(client.createdAt!).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000)
         return {
             count: clients.length || 0,
@@ -86,7 +88,7 @@ export default class AgencyService implements IAgencyService {
     async getAllAvailableClients(
         orgId: string
     ): Promise<IAvailableClients[]> {
-        const clients = await this.clientTenantRepository.getAllClients(orgId)
+        const clients = await this._clientTenantRepository.getAllClients(orgId)
         return clients.map((client: IClientTenant) => {
             return {
                 _id: client._id as string,
@@ -102,15 +104,17 @@ export default class AgencyService implements IAgencyService {
 
     async verifyOwner(
         agency_id: string
-    ): Promise<IAgency | null> {
-        return await this.agencyRepository.findAgencyWithId(agency_id)
+    ): Promise<Partial<IAgencyType> | null> {
+        const AgencyDetails =  await this._agencyRepository.findAgencyWithId(agency_id)
+        return AgencyMapper.AgenyDetailsMapper(AgencyDetails as IAgency)
+
     }
 
 
     async getAgencyOwnerDetails(
         orgId: string
     ): Promise<IAgencyTenant | null> {
-        let AgencyOwners = await this.agencyTenantRepository.getOwners(orgId)
+        let AgencyOwners = await this._agencyTenantRepository.getOwners(orgId)
         if (!AgencyOwners) throw new NotFoundError("Agency not found , Please try again")
         return AgencyOwners[0]
     }
@@ -124,9 +128,9 @@ export default class AgencyService implements IAgencyService {
         menu: string[],
         organizationName: string
     ): Promise<IClientTenant | null> {
-        const client = await this.clientRepository.findClientWithMail(email)
+        const client = await this._clientRepository.findClientWithMail(email)
         if (client && client.orgId == orgId) throw new ConflictError('Client already exists with this email')
-        const Agency = await this.agencyRepository.findAgencyWithOrgId(orgId)
+        const Agency = await this._agencyRepository.findAgencyWithOrgId(orgId)
         if (!Agency) throw new NotFoundError("Agency not found , Please try again")
         if (Agency.remainingClients == 0) throw new CustomError("Client creation limit reached ,Please upgrade for more clients", 402)
 
@@ -140,14 +144,14 @@ export default class AgencyService implements IAgencyService {
         }
         let newMenu = createNewMenuForClient(menu)
 
-        const mainDbCreatedClient = await this.clientRepository.createClient(clientDetails as IClient)
+        const mainDbCreatedClient = await this._clientRepository.createClient(clientDetails as IClientType)
         if (!mainDbCreatedClient) throw new CustomError("An unexpected error occured while creating client,Please try again later.", 500)
-        const createdClient: IClientTenant = await this.clientTenantRepository.createClient(orgId, { ...clientDetails, menu: newMenu, main_id: String(mainDbCreatedClient._id) })
+        const createdClient: IClientTenant = await this._clientTenantRepository.createClient(orgId, { ...clientDetails, menu: newMenu, main_id: String(mainDbCreatedClient._id) })
 
         for (let item in services) {
             const { serviceName, serviceDetails } = services[item];
             const { deadline, ...details } = serviceDetails;
-            await this.projectRepository.createProject(createdClient.orgId as string, createdClient._id as string, createdClient.name as string, serviceName as string, details, item, new Date(deadline))
+            await this._projectRepository.createProject(createdClient.orgId as string, createdClient._id as string, createdClient.name as string, serviceName as string, details, item, new Date(deadline))
         }
 
 
@@ -173,14 +177,14 @@ export default class AgencyService implements IAgencyService {
     async getAllClients(
         orgId: string
     ): Promise<IClientTenant[] | null> {
-        return await this.clientTenantRepository.getAllClients(orgId)
+        return await this._clientTenantRepository.getAllClients(orgId)
     }
 
     async getClient(
         orgId: string,
         client_id: string
     ): Promise<IClientTenant | null> {
-        return await this.clientTenantRepository.getClientById(orgId, client_id)
+        return await this._clientTenantRepository.getClientById(orgId, client_id)
     }
 
 
@@ -193,7 +197,7 @@ export default class AgencyService implements IAgencyService {
         caption: string
     ): Promise<IBucket | null> {
         const details = { files, platforms, contentType, client_id, orgId, caption }
-        return await this.contentRepository.saveContent(details)
+        return await this._contentRepository.saveContent(details)
     }
 
 
@@ -201,7 +205,7 @@ export default class AgencyService implements IAgencyService {
         orgId: string,
         contentId: string
     ): Promise<IBucket | null> {
-        return await this.contentRepository.getContentById(orgId, contentId)
+        return await this._contentRepository.getContentById(orgId, contentId)
 
     }
 
@@ -210,7 +214,7 @@ export default class AgencyService implements IAgencyService {
         contentId: string,
         status: string
     ): Promise<IBucket | null> {
-        return await this.contentRepository.changeContentStatus(orgId, contentId, status)
+        return await this._contentRepository.changeContentStatus(orgId, contentId, status)
     }
 
 
@@ -220,13 +224,13 @@ export default class AgencyService implements IAgencyService {
         projectId: string,
         status: string
     ): Promise<IProject | null> {
-        return await this.projectRepository.editProjectStatus(orgId, projectId, status)
+        return await this._projectRepository.editProjectStatus(orgId, projectId, status)
     }
 
     async getInitialSetUp(
         orgId: string
     ): Promise<object> {
-        const owners = await this.agencyTenantRepository.getOwners(orgId)
+        const owners = await this._agencyTenantRepository.getOwners(orgId)
 
         return {
             isSocialMediaInitialized: owners?.[0]?.isSocialMediaInitialized,
@@ -239,7 +243,7 @@ export default class AgencyService implements IAgencyService {
         provider: string,
         details: IIntegratePaymentType
     ): Promise<IAgencyTenant> {
-        const integratedDetails = await this.agencyTenantRepository.integratePaymentGateWay(orgId, provider, details)
+        const integratedDetails = await this._agencyTenantRepository.integratePaymentGateWay(orgId, provider, details)
         if (!integratedDetails) throw new CustomError("An unexpected error occured while integration paymentgatway", 500)
         return integratedDetails
     }
@@ -247,7 +251,7 @@ export default class AgencyService implements IAgencyService {
     async getPaymentIntegrationStatus(
         orgId: string
     ): Promise<Record<string, boolean>>{
-        const owner = await this.agencyTenantRepository.getOwnerWithOrgId(orgId)
+        const owner = await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
         if(!owner)throw new CustomError("An unexpected error occured while fetching owner details, please try again later",500)
         return {
             isRazorpayIntegrated :!!owner.paymentCredentials?.razorpay?.secret_id ,

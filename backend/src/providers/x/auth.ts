@@ -16,7 +16,7 @@ export async function createXAuthURL(
 export async function xAuthCallback(
     code:string,state:string
 ): Promise<string> {
-
+console.log("reached here",code, state)
 
 const params = new URLSearchParams({
   code,
@@ -37,6 +37,8 @@ const response = await fetch('https://api.twitter.com/2/oauth2/token', {
 });
 
 if (!response.ok) {
+  let error = await response.json()
+  console.log(error)
   throw new Error('Failed to get Twitter access token');
 }
 

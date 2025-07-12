@@ -1,11 +1,11 @@
-import { IProject } from "../../models/project";
-import { IAgency, IAgencyTenant } from "../../types/agency";
+import { IProject } from "../../models/Implementation/project";
+import { IAgencyType, IAgencyTenant } from "../../types/agency";
 import { IAvailableClients, ServicesData } from "../../types/chat";
 import { IClientTenant } from "../../types/client";
 import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common";
 
 export interface IAgencyService {
-    verifyOwner(agency_id: string): Promise<IAgency | null>;
+    verifyOwner(agency_id: string): Promise<Partial<IAgencyType> | null>;
     getAgencyOwnerDetails(orgId: string): Promise<IAgencyTenant | null>;
     agencyLoginHandler(email: string, password: string): Promise<string>;
     getProjectsCount(orgId: string): Promise<object>

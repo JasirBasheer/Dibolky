@@ -1,24 +1,22 @@
 import { Request, Response, NextFunction } from "express";
 import { generateToken, NotFoundError, UnauthorizedError, verifyToken } from "mern.common";
-import { container } from "tsyringe"; // Keep container import at top
+import { container } from "tsyringe"; 
 import { IAgencyService } from "../services/Interface/IAgencyService";
 import { IAdminService } from "../services/Interface/IAdminService";
 import { IClientService } from "../services/Interface/IClientService";
 import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../config/env.config";
 import { isTokenBlacklisted } from "../config/redis.config";
-import { IClient } from "../types/client";
-import { IAgency } from "../types/agency";
-import { IAdmin } from "../types/admin";
+import { IAgencyType } from "../types/agency";
+import { IAdminType } from "../types/admin";
 import { ITokenDetails } from "../types/common";
 import { ROLES } from "../utils/constants";
-import { IInfluencerService } from "../services/Interface/IInfluencerService";
-import { IEntityService } from "../services/Interface/IEntityService";
 import { IPlanService } from "@/services/Interface/IPlanService";
+import { IClientType } from "@/types/client";
 
 declare global {
     namespace Express {
         interface Request {
-            details?: IAdmin | IAgency | IClient | null;
+            details?: Partial<IAdminType> | Partial<IAgencyType>  | Partial<IClientType> | null;
             tokenDetails?: ITokenDetails;
             permissions?:string[]
         }
@@ -34,8 +32,6 @@ export const TokenMiddleWare = async (
         const agencyService = container.resolve<IAgencyService>("AgencyService");
         const adminService = container.resolve<IAdminService>("AdminService");
         const clientService = container.resolve<IClientService>("ClientService");
-        const influencerService = container.resolve<IInfluencerService>("InfluencerService");
-        const entityService = container.resolve<IEntityService>("EntityService");
         const planService = container.resolve<IPlanService>("PlanService");
 
         let token = req.cookies.accessToken ?? null
@@ -66,7 +62,7 @@ export const TokenMiddleWare = async (
 
         const tokenDetails = await verifyToken(accessTokenSecret, token ?? '')
 
-        let ownerDetails 
+        let ownerDetails ;
         switch (tokenDetails.role) {
             case ROLES.ADMIN:
                 ownerDetails = await adminService.verifyAdmin(tokenDetails.id)
@@ -77,21 +73,15 @@ export const TokenMiddleWare = async (
             case ROLES.CLIENT:
                 ownerDetails = await clientService.verifyClient(tokenDetails.id)
             break;
-            case ROLES.INFLUENCER:
-                ownerDetails = await influencerService.verifyInfluencer(tokenDetails.id)
-            break;
-            case ROLES.MANAGER:
-                ownerDetails = await clientService.verifyClient(tokenDetails.id)
-            break;
             default:
                 throw new NotFoundError("Role not found, try again later..")
         }       
-
+        if (!ownerDetails) throw new UnauthorizedError("User not found");
         if (ownerDetails?.isBlocked) throw new UnauthorizedError('Account is Blocked')
+
         const planId = ownerDetails && "planId" in ownerDetails ? ownerDetails.planId : null;
-        const plan = await planService.getPlan(planId ?? "") 
-        
-        ownerDetails = ownerDetails?.toObject();
+        let plan;
+        if(tokenDetails.role != ROLES.CLIENT && tokenDetails.role != ROLES.ADMIN)plan = await planService.getPlan(planId as string ?? "")
         ownerDetails.role = tokenDetails.role
         req.details = ownerDetails
         req.permissions = plan?.permissions ?? [] as string[]

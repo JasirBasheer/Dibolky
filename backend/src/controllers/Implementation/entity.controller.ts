@@ -22,15 +22,15 @@ import { xAuthCallback } from '@/providers/x';
 
 @injectable()
 export default class EntityController implements IEntityController {
-    private entityService: IEntityService;
-    private chatService: IChatService;
+    private _entityService: IEntityService;
+    private _chatService: IChatService;
 
     constructor(
         @inject('EntityService') entityService: IEntityService,
         @inject('ChatService') chatService: IChatService
     ) {
-        this.entityService = entityService
-        this.chatService = chatService
+        this._entityService = entityService
+        this._chatService = chatService
     }
 
 
@@ -40,7 +40,7 @@ export default class EntityController implements IEntityController {
         res: Response,
     ): Promise<void> => {
             const { mail } = req.body
-            const isExists = await this.entityService.IsMailExists(mail)
+            const isExists = await this._entityService.IsMailExists(mail)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { isExists: isExists })
     }
 
@@ -58,7 +58,7 @@ export default class EntityController implements IEntityController {
             const finalPaymentGateway = isTrial ? "trial" : paymentGateway;
     
 
-            const createdAgency = await this.entityService.createAgency({organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate:finalPlanPurchasedRate, transactionId:finalTransactionId, paymentGateway:finalPaymentGateway, description, currency:currency ?? "trial"})
+            const createdAgency = await this._entityService.createAgency({organizationName, name, email, address, websiteUrl, industry, contactNumber, logo, password, planId, validity, planPurchasedRate:finalPlanPurchasedRate, transactionId:finalTransactionId, paymentGateway:finalPaymentGateway, description, currency:currency ?? "trial"})
             if (!createdAgency) return SendResponse(res, HTTPStatusCodes.UNAUTHORIZED, ResponseMessage.BAD_REQUEST)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
         
@@ -78,10 +78,10 @@ export default class EntityController implements IEntityController {
 
 
             if (role === "agency") {
-                menu = await this.entityService.getMenu(planId);
+                menu = await this._entityService.getMenu(planId);
             } else if (role === "agency-client") {
                 console.log(req.details.orgId, planId, "tehireaserfamsdjfklasdjflkasjfasdkl")
-                menu = await this.entityService.getClientMenu(req.details.orgId as string, planId);
+                menu = await this._entityService.getClientMenu(req.details.orgId as string, planId);
             } else if (role === "admin") {
                 menu = {
                     clients: {
@@ -131,7 +131,7 @@ export default class EntityController implements IEntityController {
         res: Response,
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
-            const ownerDetails = await this.entityService.getOwner(req.details.orgId as string)
+            const ownerDetails = await this._entityService.getOwner(req.details.orgId as string)
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { ownerDetails: ownerDetails[0] })
         
@@ -144,7 +144,7 @@ export default class EntityController implements IEntityController {
 
             if (!req.details) throw new NotFoundError("request details not found")
             const { userId } = req.params
-            const chats = await this.chatService.getChats(req.details.orgId as string, userId)
+            const chats = await this._chatService.getChats(req.details.orgId as string, userId)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
         
     }
@@ -157,7 +157,7 @@ export default class EntityController implements IEntityController {
 
             if (!req.details) throw new NotFoundError("request details not found")
             const { chatId } = req.body
-            const chats = await this.chatService.getChat(req.details.orgId as string, chatId)
+            const chats = await this._chatService.getChat(req.details.orgId as string, chatId)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
         
     }
@@ -167,7 +167,7 @@ export default class EntityController implements IEntityController {
         res: Response,
     ): Promise<void> => {
         const { userId } = req.body
-        // const messages = await this.chatService.getMessages(req.details.orgId,userId)
+        // const messages = await this._chatService.getMessages(req.details.orgId,userId)
     }
 
 
@@ -178,7 +178,7 @@ export default class EntityController implements IEntityController {
 
             if (!req.details) throw new NotFoundError("request details not found")
             const { details, userId } = req.body
-            const createdGroup = await this.chatService.createGroup(req.details?.orgId as string, userId, details)
+            const createdGroup = await this._chatService.createGroup(req.details?.orgId as string, userId, details)
             console.log(createdGroup);
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { group: createdGroup })
         
@@ -192,7 +192,7 @@ export default class EntityController implements IEntityController {
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const { page } = req.params
-            const projects = await this.entityService.fetchAllProjects(req.details.orgId as string, Number(page))
+            const projects = await this._entityService.fetchAllProjects(req.details.orgId as string, Number(page))
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects: projects?.projects, totalPages: projects?.totalPages })
        
     }
@@ -266,7 +266,7 @@ export default class EntityController implements IEntityController {
             if (!req.details) throw new NotFoundError("request details not found")
             const { platform, user_id } = req.params
             const { files, platforms, metadata, contentType } = req.body
-            await this.entityService.saveContent(req.details.orgId as string, platform, platforms, user_id, files, metadata, contentType)
+            await this._entityService.saveContent({orgId:req.details.orgId as string, platform, platforms, user_id, files, metadata, contentType})
 
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
        
@@ -278,7 +278,7 @@ export default class EntityController implements IEntityController {
         res: Response,
     ): Promise<void> => {
             const { key } = req.body
-            const signedUrl = await this.entityService.getS3ViewUrl(key)
+            const signedUrl = await this._entityService.getS3ViewUrl(key)
 
             res.json({ signedUrl });
        
@@ -290,7 +290,7 @@ export default class EntityController implements IEntityController {
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const { user_id } = req.params
-            const contents = await this.entityService.fetchContents(req.details.orgId as string, user_id)
+            const contents = await this._entityService.fetchContents(req.details.orgId as string, user_id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { contents })
 
        
@@ -303,7 +303,7 @@ export default class EntityController implements IEntityController {
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const { role, details } = req.body
-            const updatedProfile = await this.entityService.updateProfile(req.details.orgId as string, role, req.details?.role as string, details)
+            const updatedProfile = await this._entityService.updateProfile(req.details.orgId as string, role, req.details?.role as string, details)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details: updatedProfile })
        
     }
@@ -315,7 +315,7 @@ export default class EntityController implements IEntityController {
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const { user_id } = req.params
-            const scheduledContents = await this.entityService.getScheduledContent(req.details.orgId as string, user_id)
+            const scheduledContents = await this._entityService.getScheduledContent(req.details.orgId as string, user_id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { scheduledContents })
 
        
@@ -329,7 +329,7 @@ export default class EntityController implements IEntityController {
             if (!req.details) throw new NotFoundError("request details not found")
             const { entity, user_id } = req.params
             console.log
-            const connections = await this.entityService.getConnections(req.details.orgId as string, entity, user_id)
+            const connections = await this._entityService.getConnections(req.details.orgId as string, entity, user_id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { connections })
        
     }

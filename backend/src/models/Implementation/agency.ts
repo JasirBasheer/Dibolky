@@ -1,11 +1,20 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { IInfluencer, IInfluncerTenant } from '../types/influencer';
+import { IAgencyTenant } from '../../types/agency';
+import { IAgency } from '../Interface/agency';
 
 
-export const influencerSchema: Schema<IInfluencer> = new mongoose.Schema({
+const agencySchema: Schema<IAgency> = new mongoose.Schema({
     orgId: {
         type: String,
         required: true
+    },
+    profile:{
+        type: String,
+        default:""
+    },
+    bio:{
+        type: String,
+        default:""
     },
     planId: {
         type: String,
@@ -67,13 +76,13 @@ export const influencerSchema: Schema<IInfluencer> = new mongoose.Schema({
 
 });
 
-export default mongoose.model<IInfluencer>('Influencer', influencerSchema);
+export default mongoose.model<IAgency>('Agency', agencySchema);
 
 
 
 
 
-export const influencerTenantSchema = new Schema<IInfluncerTenant>({
+export const agencyTenantSchema = new Schema<IAgencyTenant>({
     main_id: {
         type: String,
         required: false,
@@ -90,23 +99,43 @@ export const influencerTenantSchema = new Schema<IInfluncerTenant>({
         type: String,
         default:""
     },
+    planId: {
+        type: String,
+        required: false,
+    },
+    organizationName: {
+        type: String,
+        required: false,
+    },
+    name: {
+        type: String,
+        required: false,
+    },
+    email: {
+        type: String,
+        required: false,
+    },
     paymentCredentials: {
         razorpay: {
-            key_id: {
+            secret_id: {
                 type: String,
                 required: false,
             },
-            key_secret: {
+            secret_key: {
                 type: String,
                 required: false,
             }
         },
         stripe: {
-            key_id: {
+            publish_key: {
                 type: String,
                 required: false,
             },
-            key_secret: {
+            secret_key: {
+                type: String,
+                required: false,
+            },
+            webhook_url: {
                 type: String,
                 required: false,
             }
@@ -117,24 +146,40 @@ export const influencerTenantSchema = new Schema<IInfluncerTenant>({
             accessToken: {
                 type: String,
                 required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
             }
         },
         facebook: {
             accessToken: {
                 type: String,
                 required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
             }
         },
         x: {
             accessToken: {
                 type: String,
                 required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
             }
         },
         linkedin: {
             accessToken: {
                 type: String,
                 required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
             }
         }
     },
@@ -150,12 +195,29 @@ export const influencerTenantSchema = new Schema<IInfluncerTenant>({
 
 
 
-influencerTenantSchema.methods.setSocialMediaToken = async function(provider: string,token: string): Promise<void> {
+agencyTenantSchema.methods.setSocialMediaToken = async function(provider: string,token: string): Promise<void> {
     if (this.socialMedia_credentials.hasOwnProperty(provider)) {
       this.socialMedia_credentials[provider].accessToken = token;
+      this.socialMedia_credentials[provider].connectedAt = Date.now()
       await this.save();
     } else {
       throw new Error(`Unsupported social media provider: ${provider}`);
+    }
+};
+  
+agencyTenantSchema.methods.integratePaymentGateway = async function(provider: string,key1:string,key2:string,webhookUrl?:string): Promise<void> {
+    if (this.paymentCredentials.hasOwnProperty(provider)) {
+        if(provider == "razorpay"){
+            this.paymentCredentials[provider].secret_id = key1;
+            this.paymentCredentials[provider].secret_key = key2;
+        }else{
+            this.paymentCredentials[provider].publish_key = key1;
+            this.paymentCredentials[provider].secret_key = key2; 
+            this.paymentCredentials[provider].webhook_url = webhookUrl; 
+        }
+      await this.save();
+    } else {
+      throw new Error(`Unsupported payment provider: ${provider}`);
     }
 };
   

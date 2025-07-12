@@ -9,21 +9,21 @@ import {
     SendResponse
 } from 'mern.common';
 import { PlanDetailsDTO } from '@/dto';
-import { IPlan } from '@/types/admin';
+import { IPlanType } from '@/types/admin';
 
 @injectable()
 /** Implementation of AdminController Controller */
 export default class AdminController implements IAdminController {
-    private adminService: IAdminService;
+    private _adminService: IAdminService;
 
     /**
     * Initializes the AdminController with required service dependencies.
-    * @param adminService - Service for handling admin authentication.
+    * @param _adminService - Service for handling admin authentication.
     */
     constructor(
         @inject('AdminService') adminService: IAdminService
     ) {
-        this.adminService = adminService
+        this._adminService = adminService
     }
 
 
@@ -41,7 +41,7 @@ export default class AdminController implements IAdminController {
     ): Promise<void> =>{
             if(!req.details)throw new NotFoundError("Details Not Fount")
             console.log("reached here") 
-            const details = await this.adminService.verifyAdmin(req.details._id as string)
+            const details = await this._adminService.verifyAdmin(req.details._id as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.VERIFIED, { details, role: "admin" })
     }
 
@@ -58,7 +58,7 @@ export default class AdminController implements IAdminController {
         req: Request,
         res: Response,
     ): Promise<void> =>{
-            const clients = await this.adminService.getRecentClients()
+            const clients = await this._adminService.getRecentClients()
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { clients })
     }
 
@@ -76,7 +76,7 @@ export default class AdminController implements IAdminController {
     ): Promise<void> => {
             const { client_id } = req.params
 
-            const details = await this.adminService.getClient(client_id)
+            const details = await this._adminService.getClient(client_id)
             if (!details) throw new NotFoundError("Client Not found")
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })
@@ -95,7 +95,7 @@ export default class AdminController implements IAdminController {
         req: Request,
         res: Response,
     ): Promise<void> =>{
-            const details = await this.adminService.getAllClients()
+            const details = await this._adminService.getAllClients()
             if (!details) throw new NotFoundError("Clients Not found")
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })

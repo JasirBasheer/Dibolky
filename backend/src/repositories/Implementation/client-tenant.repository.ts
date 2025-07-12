@@ -10,27 +10,27 @@ import { IUpdateProfile } from "../../types/common";
 
 @injectable()
 export class ClientTenantRepository extends BaseRepository<IClientTenant> implements IClientTenantRepository {
-    private clientSchema: Schema;
-    private modelName = 'client';
-    private models: Map<string, Model<IClientTenant>> = new Map();
+    private _clientSchema: Schema;
+    private _modelName = 'client';
+    private _models: Map<string, Model<IClientTenant>> = new Map();
 
     constructor(
         @inject('client_tenant_model') schema: Schema
     ) {
         super(null as unknown as Model<IClientTenant>);
-        this.clientSchema = schema;
+        this._clientSchema = schema;
     }
 
     private async getModel(
         orgId: string
     ): Promise<Model<IClientTenant>> {
-        if (this.models.has(orgId)) {
-            return this.models.get(orgId)!
+        if (this._models.has(orgId)) {
+            return this._models.get(orgId)!
         }
         const connection = await connectTenantDB(orgId);
         if (!connection) throw new Error('Connection not found');
-        let model: Model<IClientTenant> = connection.model<IClientTenant>(this.modelName, this.clientSchema);
-        this.models.set(orgId, model);
+        let model: Model<IClientTenant> = connection.model<IClientTenant>(this._modelName, this._clientSchema);
+        this._models.set(orgId, model);
         return model;
     }
 

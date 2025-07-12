@@ -3,7 +3,8 @@ import { IPlanRepository } from '../Interface/IPlanRepository'
 import { Model } from 'mongoose';
 import { BaseRepository } from 'mern.common';
 import { PlanDetailsDTO } from '@/dto';
-import { IPlan } from '@/types';
+import { IPlan } from '@/models/Interface/plan';
+import { IPlanType } from '@/types';
 
 @injectable()
 export default class PlanRepository extends BaseRepository<IPlan> implements IPlanRepository {
@@ -47,7 +48,7 @@ export default class PlanRepository extends BaseRepository<IPlan> implements IPl
 
 
         async editPlan(
-                details: IPlan
+                details: IPlanType
         ): Promise<IPlan | null> {
                 const { _id, ...updateData } = details;
                 return await this.model.findByIdAndUpdate(_id, updateData, { new: true, runValidators: true });

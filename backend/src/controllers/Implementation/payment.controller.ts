@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { IPaymentController } from '../Interface/IPaymentController';
 import { inject, injectable } from 'tsyringe';
 import { IPaymentService } from '../../services/Interface/IPaymentService';
-import { IEntityService } from '../../services/Interface/IEntityService';
 import { 
     HTTPStatusCodes, 
     ResponseMessage, 
@@ -12,15 +11,12 @@ import {
 @injectable()
 export default class PaymentController implements IPaymentController {
     private _paymentService: IPaymentService;
-    private _entityService: IEntityService;
 
  
     constructor(
-        @inject('EntityService') entityService: IEntityService,
         @inject('PaymentService') paymentService: IPaymentService
     ) {
         this._paymentService = paymentService
-        this._entityService = entityService
     }
 
 

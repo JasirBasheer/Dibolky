@@ -8,21 +8,21 @@ import { IInfluencer } from "../../types/influencer";
 
 @injectable()
 export default class InfluencerService implements IInfluencerService {
-    private influencerRepository : IInfluencerRepository;
-    private influencerTenantRepository : IInfluencerTenantRepository;
+    private _influencerRepository : IInfluencerRepository;
+    private _influencerTenantRepository : IInfluencerTenantRepository;
     constructor(
         @inject('InfluencerRepository') influencerRepository: IInfluencerRepository,
         @inject('InfluencerTenantRepository') influencerTenantRepository: IInfluencerTenantRepository
     ) {
-        this.influencerRepository = influencerRepository
-        this.influencerTenantRepository = influencerTenantRepository
+        this._influencerRepository = influencerRepository
+        this._influencerTenantRepository = influencerTenantRepository
     }
 
     async influencerLoginHandler(
         email: string, 
         password: string
     ): Promise<string>{
-        const influencer = await this.influencerRepository.findInfluencerWithMail(email)
+        const influencer = await this._influencerRepository.findInfluencerWithMail(email)
         if(!influencer)throw new NotFoundError("Influencer not found")
         if(influencer.isBlocked)throw new UnauthorizedError("Account is blocked")
 
@@ -34,7 +34,7 @@ export default class InfluencerService implements IInfluencerService {
     async verifyInfluencer(
         influencer_id:string
     ):Promise<IInfluencer | null>{
-        return await this.influencerRepository.findInfluencerWithId(influencer_id)
+        return await this._influencerRepository.findInfluencerWithId(influencer_id)
     }
 
 }

@@ -15,7 +15,7 @@ const AdminDashboard = () => {
       console.log(response)
 
       if (response && response.status == 200) {
-        setRecentClients([...response.data.clients.Agency])
+        setRecentClients([...response.data.clients])
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { error?: string } } };

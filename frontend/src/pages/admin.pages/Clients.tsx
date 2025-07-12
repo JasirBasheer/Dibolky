@@ -7,13 +7,13 @@ import { IAdminClientData } from '@/types/admin.types'
 const AdminClients = () => {
   const [isClicked, setIsClicked] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [clients, setClients] = useState({ Agency: [], Company: [] })
+  const [clients, setClients] = useState([])
   const [client, setClient] = useState<IAdminClientData>()
 
   const fetchClients = async () => {
     try {
       const response = await axios.get('/api/admin/recent-clients')
-      console.log(response)
+      console.log(response,"responseee")
       if (response && response.status == 200) setClients(response.data.clients)
     } catch (error: unknown) {
       if (typeof error === "object" && error !== null && "response" in error) {
@@ -60,7 +60,7 @@ const AdminClients = () => {
             </div>
 
             <div className="w-full">
-              {clients.Agency.map((item: { _id: string; name: string }, index: number) => {
+              {clients?.map((item: { _id: string; name: string }, index: number) => {
                 return (
                   <div key={index} className="w-full min-h-12 flex mb-2 px-4 bg-slate-50  transition-all duration-500 rounded-md hover:shadow-md cursor-pointer items-center text-sm"
                     onClick={() => viewClient(item._id)}
@@ -69,8 +69,6 @@ const AdminClients = () => {
               })}
             </div>
           </div>
-
-
 
         </div>
       </div>

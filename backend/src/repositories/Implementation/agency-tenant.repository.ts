@@ -8,29 +8,29 @@ import { IIntegratePaymentType, IUpdateProfile } from "../../types/common";
 
 @injectable()
 export default class AgencyTenantRepository extends BaseRepository<IAgencyTenant> implements IAgencyTenantRepository {
-    private chatSchema: Schema;
-    private modelName = 'ownerdetails';
-    private models: Map<string, Model<IAgencyTenant>> = new Map();
+    private _chatSchema: Schema;
+    private _modelName = 'ownerdetails';
+    private _models: Map<string, Model<IAgencyTenant>> = new Map();
 
     constructor(
         @inject('agency_tenant_model') schema: Schema
     ) {
         super(null as unknown as Model<IAgencyTenant>);
-        this.chatSchema = schema;
+        this._chatSchema = schema;
     }
 
 
     private async getModel(
         orgId: string
     ): Promise<Model<IAgencyTenant>> {
-        if (this.models.has(orgId)) {
-            return this.models.get(orgId)!
+        if (this._models.has(orgId)) {
+            return this._models.get(orgId)!
         }
         const connection = await connectTenantDB(orgId);
         if (!connection) throw new Error('Connection not found');
 
-        let model: Model<IAgencyTenant> = connection.model<IAgencyTenant>(this.modelName, this.chatSchema);
-        this.models.set(orgId, model);
+        let model: Model<IAgencyTenant> = connection.model<IAgencyTenant>(this._modelName, this._chatSchema);
+        this._models.set(orgId, model);
         return model;
     }
 

@@ -65,21 +65,25 @@ const AgencyClientContent = () => {
 
 
   const fetchSignedUrls = async () => {
-    const urlMap: Record<string, string> = {};
+  const urlMap: Record<string, string> = {};
 
-    for (const item of reviewBucket) {
-      for (const file of item.files) {
+  await Promise.all(
+    reviewBucket.flatMap((item) =>
+      item.files.map(async (file) => {
         try {
-          const response = await getSignedUrlApi(file.key)
+          const response = await getSignedUrlApi(file.key);
           urlMap[file.key] = response.data.signedUrl;
         } catch (error) {
           console.error(`Error fetching URL for ${file.key}:`, error);
-          urlMap[file.key] = ""
+          urlMap[file.key] = "";
         }
-      }
-    }
-    setContentUrls(urlMap);
-  };
+      })
+    )
+  );
+
+  setContentUrls(urlMap);
+};
+
 
   const fetchUserReviewBucket = async () => {
     try {

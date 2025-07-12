@@ -1,4 +1,3 @@
-import { IPlan } from '@/types';
 import { 
     model, 
     Schema 
@@ -6,7 +5,8 @@ import {
 import { 
     IMenuItems, 
     ISubItem 
-} from '../types/common';
+} from '../../types/common';
+import { IPlan } from '../Interface/plan';
 
 const subItemSchema = new Schema<ISubItem>({
     label: { 

@@ -7,8 +7,7 @@ import {
 } from 'mern.common';
 import { IPlanController } from '../Interface/IPlanController';
 import { IPlanService } from '@/services/Interface/IPlanService';
-import { getPriceConversionFunc } from '@/utils/currency-conversion.utils';
-import { IPlan } from '@/types';
+import { IPlanType } from '@/types';
 import { PlanDetailsDTO } from '@/dto';
 
 @injectable()
@@ -42,16 +41,8 @@ export default class PlanController implements IPlanController {
         req: Request,
         res: Response,
     ): Promise<void> => {
-            let userCountry = req.cookies?.userCountry
-            const plans = await this._planService.getAllPlans()
-
-            let PriceConverisonFunc = getPriceConversionFunc(userCountry)
-            const convertedPlans = plans?.map((item: IPlan) => ({
-                    ...item.toObject(),
-                    price: PriceConverisonFunc(item.price as number)
-                }))
-            
-            if (plans) return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plans: convertedPlans })
+            const plans = await this._planService.getAllPlans(req.cookies?.userCountry)
+            if (plans) return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plans })
             SendResponse(res, HTTPStatusCodes.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR)
     }
 
@@ -68,31 +59,24 @@ export default class PlanController implements IPlanController {
         res: Response,
     ): Promise<void> => {
             const { plan_id } = req.params
-            const userCountry = req.cookies.userCountry
-            const plan = await this._planService.getPlan(plan_id);
-            if (!plan) return SendResponse(res, HTTPStatusCodes.BAD_REQUEST, ResponseMessage.BAD_REQUEST, { message: "Platform or Plan not found please try again" })
-            let PriceConverisonFunc = getPriceConversionFunc(userCountry)
-            const convertedPlanPrice = PriceConverisonFunc(plan.price as number)
-            plan.price = convertedPlanPrice
+            const plan = await this._planService.getPlan(plan_id,req.cookies.userCountry);
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plan })
     }
 
     createPlan = async(
         req: Request,
         res: Response,
-    ): Promise<void> =>{
+    ): Promise<void> => {
             const { details }: { details: PlanDetailsDTO } = req.body
-            console.log(details)
             await this._planService.createPlan(details)
-
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
 
     editPlan = async(
         req: Request,
         res: Response,
-    ): Promise<void> =>{
-            const { details }: {details: IPlan } = req.body
+    ): Promise<void> => {
+            const { details }: {details: IPlanType } = req.body
             await this._planService.editPlan(details)
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
@@ -101,7 +85,7 @@ export default class PlanController implements IPlanController {
     changePlanStatus = async (
         req: Request<{ plan_id: string }>,
         res: Response,
-    ): Promise<void> =>{
+    ): Promise<void> => {
             const { plan_id } = req.params
             await this._planService.changePlanStatus(plan_id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
@@ -110,5 +94,3 @@ export default class PlanController implements IPlanController {
 
 
 }
-
-

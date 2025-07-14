@@ -3,7 +3,7 @@ import * as ToastPrimitives from "@radix-ui/react-toast"
 import { cva, type VariantProps } from "class-variance-authority"
 import { X } from "lucide-react"
 
-import { cn } from "@/utils/shardcn.utils"
+import { cn } from "@/utils/shardcn"
 
 const ToastProvider = ToastPrimitives.Provider
 

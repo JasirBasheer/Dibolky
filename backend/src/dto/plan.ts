@@ -1,6 +1,7 @@
-import { IMenuCategory } from "@/types/common";
+import { IMenu } from "@/types";
 
 export interface PlanDetailsDTO {
+    _id?:string;
     name: string;
     description: string;
     price: number;
@@ -9,5 +10,5 @@ export interface PlanDetailsDTO {
     maxClients: number;
     features: string[];
     permissions:string[];
-    menu: IMenuCategory | string[];
+    menu: IMenu | string[];
 }

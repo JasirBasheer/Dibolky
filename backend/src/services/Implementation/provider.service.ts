@@ -7,7 +7,6 @@ import { IContentRepository } from "../../repositories/Interface/IContentReposit
 import { IAgencyTenant } from "../../types/agency";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
 import { IMetaAccount, IPlatforms, IBucket, ISocialMediaUploadResponse } from "../../types/common";
-import { IClientTenant } from "../../types/client";
 import { IInfluncerTenant } from "../../types/influencer";
 import { FACEBOOK, INSTAGRAM, LINKEDIN, X } from "../../utils/constants";
 import { INote } from "../../types/note";
@@ -16,6 +15,7 @@ import { CustomError } from "mern.common";
 import { handleLinkedinUpload } from "@/providers/linkedin/handler";
 import { handleXUpload } from "@/providers/x";
 import { getMetaPagesDetails } from "@/providers/facebook";
+import { IClientTenant } from "@/models";
 
 
 @injectable()

@@ -1,5 +1,4 @@
-import { IMenuItems } from "@/types";
-import { Document } from "mongoose";
+import { IMenu } from "./common";
 
 export type BillingCycleTypes = "monthly" | "yearly" ;
 
@@ -12,11 +11,7 @@ export interface IPlanType {
     billingCycle:  BillingCycleTypes;
     maxProjects: number;
     maxClients: number;
-    menu?: {
-        smm?: IMenuItems;
-        crm?: IMenuItems;
-        accounting?: IMenuItems;
-    };
+    menu?: IMenu[]
     isActive:boolean;
     permissions:string[]
 }

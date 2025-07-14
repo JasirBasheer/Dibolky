@@ -5,4 +5,4 @@ const customAxios = axios.create({
     withCredentials:true
   });
 
-export default customAxios;
+export default customAxios;

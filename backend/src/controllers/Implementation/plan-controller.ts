@@ -76,7 +76,7 @@ export default class PlanController implements IPlanController {
         req: Request,
         res: Response,
     ): Promise<void> => {
-            const { details }: {details: IPlanType } = req.body
+            const { details }: {details: PlanDetailsDTO } = req.body
             await this._planService.editPlan(details)
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)

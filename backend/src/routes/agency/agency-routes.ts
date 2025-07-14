@@ -19,21 +19,19 @@ router.use(requireRoles(["agency"]))
 router.get('/', asyncHandler(agencyController.getAgency))
 router.get('/owner-details', asyncHandler(agencyController.getAgencyOwnerDetails))
 router.get('/availabe-users', asyncHandler(agencyController.getAvailableUsers))
-router.get('/clients', asyncHandler(agencyController.getAllClients))
 router.get('/client/:id', asyncHandler(agencyController.getClient))
 router.get('/projects-count', asyncHandler(agencyController.getProjectsCount))
 router.get('/clients-count', asyncHandler(agencyController.getClientsCount))
 router.get('/get-initial-set-up', asyncHandler(agencyController.getInitialSetUp))
 router.get('/get-payment-integration-status', asyncHandler( agencyController.getPaymentIntegrationStatus))
 
+router
+.route("/clients")
+.get(asyncHandler(agencyController.getAllClients))
+.post(asyncHandler(agencyController.createClient))
 
-// Patch requests
+
 router.patch('/edit-project-status', asyncHandler(agencyController.editProjectStatus))
-
-
-
-// Post requests
-router.post('/client', asyncHandler(agencyController.createClient))
 router.post('/upload', asyncHandler(agencyController.uploadContent))
 router.post('/integrate-payment-gateway', asyncHandler( agencyController.IntegratePaymentGateWay))
 

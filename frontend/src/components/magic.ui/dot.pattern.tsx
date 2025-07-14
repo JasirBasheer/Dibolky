@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/utils/shardcn.utils"; 
+import { cn } from "@/utils/shardcn"; 
 import { motion } from "framer-motion";
 import React, { useEffect, useId, useRef, useState } from "react";
 

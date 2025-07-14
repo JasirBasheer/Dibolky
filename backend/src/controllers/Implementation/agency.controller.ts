@@ -56,7 +56,6 @@ export default class AgencyController implements IAgencyController {
             if (!req.details) throw new NotFoundError("Details Not Fount")
 
             const { orgId, name, email, industry, services, menu } = req.body
-            console.log(req.body,'bodyeee')
             await this._agencyService.createClient(orgId, name, email, industry, services, menu, req.details.organizationName as string)
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
     }
@@ -70,9 +69,7 @@ export default class AgencyController implements IAgencyController {
         res: Response
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
-
-            const orgId = req.details.orgId as string
-            const clients = await this._agencyService.getAllClients(orgId)
+            const clients = await this._agencyService.getAllClients(req.details.orgId as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { clients })
 
     }

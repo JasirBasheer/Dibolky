@@ -1,5 +1,5 @@
 import type React from "react"
-import { cn } from "@/utils/shardcn.utils" 
+import { cn } from "@/utils/shardcn" 
 import type { LucideIcon } from "lucide-react"
 
 interface BentoCardProps {

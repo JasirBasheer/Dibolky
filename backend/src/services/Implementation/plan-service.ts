@@ -1,9 +1,9 @@
 import { inject, injectable } from "tsyringe";
 import { IPlanService } from "../Interface/IPlanService";
 import { IPlanRepository } from "@/repositories/Interface/IPlanRepository";
-import { IPlanType } from "@/types";
+import { IMenu, IPlanType } from "@/types";
 import { PlanDetailsDTO } from "@/dto";
-import { createNewPlanMenu } from "@/utils/menu.utils";
+import { createMenu } from "@/utils/menu.utils";
 import { CustomError } from "mern.common";
 import { IAgencyRepository } from "@/repositories/Interface/IAgencyRepository";
 import { PortalMapper } from "@/mappers/portal/portal-mapper";
@@ -59,17 +59,17 @@ export default class PlanService implements IPlanService {
   }
 
   async createPlan(details: PlanDetailsDTO): Promise<void> {
-    let menu = createNewPlanMenu(details.menu as string[]);
+    let menu = createMenu(details.menu as string[]);
     details.permissions = details.menu as string[];
-    details.menu = menu;
+    details.menu =  menu as unknown as IMenu | string[];
     const createdPlan = await this._planRepository.createPlan(details);
     if (!createdPlan) throw new CustomError("Error While creating Plan", 500);
   }
 
-  async editPlan(details: IPlanType): Promise<void> {
+  async editPlan(details: PlanDetailsDTO): Promise<void> {
     let editedPlan;
-    let menu = createNewPlanMenu(details.menu as string[]);
-    details.menu = menu;
+    let menu = createMenu(details.menu as string[]) as IMenu[]
+    details.menu = menu as unknown as IMenu | string[];
     editedPlan = await this._planRepository.editPlan(details);
     if (!editedPlan) throw new CustomError("Error While editing Plan", 500);
   }

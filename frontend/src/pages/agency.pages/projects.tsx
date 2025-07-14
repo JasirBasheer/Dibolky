@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import Table from '@/components/common.components/table.component';
 import { getStatusColor } from '@/utils/utils';
 import { IAgencyProjects, IColumn, IDataItem, IProject } from '@/types/common.types';
+import CustomBreadCrumbs from '@/components/ui/custom-breadcrumbs';
 
 
 
@@ -68,6 +69,14 @@ export default function AgencyProject() {
   }
 
   return (
+    <>
+         <CustomBreadCrumbs
+            breadCrumbs={[
+              ["Content & Projects", "/agency/projects"],
+              ["All Projects", ""],
+            ]}
+          />
+          
     <div className="p-6 mx-auto bg-gray-50 min-h-screen pb-28">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Projects</h1>
@@ -199,5 +208,6 @@ export default function AgencyProject() {
         </DialogContent>
       </Dialog>
     </div>
+    </>
   );
 }

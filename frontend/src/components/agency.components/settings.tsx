@@ -15,6 +15,7 @@ import { formatDistanceToNow, parseISO } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
 import ProfileContents from '../common.components/auth/editProfile';
 import { toast } from 'sonner';
+import CustomBreadCrumbs from '../ui/custom-breadcrumbs';
 
 
 const SettingsPage = () => {
@@ -572,6 +573,13 @@ const SettingsPage = () => {
     { id: 'account-security', label: 'Account Security', icon: <Settings size={18} /> },
   ];
   return (
+    <>
+        <CustomBreadCrumbs
+        breadCrumbs={[
+          ["Tools & Inegration", "/agency"],
+          ["Settings", ""],
+        ]}
+      />
     <div className="min-h-screen bg-gray-50 dark:bg-[#191919] pb-7">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
@@ -607,6 +615,7 @@ const SettingsPage = () => {
         </div>
       </div>
     </div>
+        </>
   );
 };
 

@@ -99,21 +99,18 @@ export interface IReelUploadStatus {
     id: string;
 }
 
-export interface ISubItem {
-    label: string;
-    icon: string;
-    path: string[];
+export interface Item {
+    title: string;
+    url: string;
 }
 
-export interface IMenuItems {
-    label: string;
+export interface IMenu {
+    title: string;
     icon: string;
-    subItems: ISubItem[];
+    items: Item[];
 }
 
-export interface IMenuCategory {
-    [key: string]: IMenuItems ;
-}
+
 
 
 export interface IMetadata{
@@ -141,3 +138,22 @@ export interface IIntegratePaymentType {
     key2:string;
     webhookUrl?:string
   }
+
+
+
+
+
+  // socail integrations
+
+ export interface credentials {
+    facebook: platform;
+    instagram: platform;
+    linkedin: platform;
+    x: platform;
+}
+
+
+export interface platform {
+    accessToken: string;
+    connectedAt: string;
+}

@@ -2,13 +2,14 @@ import { inject, injectable } from "tsyringe";
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { IClientService } from "../Interface/IClientService";
 import { CustomError, NotFoundError, UnauthorizedError, comparePassword } from "mern.common";
-import { IClientTenant, IClientType } from "../../types/client";
+import { IClientType } from "../../types/client";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
 import { IAgencyTenant } from "../../types/agency";
 import { IClient } from "@/models/Interface/client";
 import { ClientMapper } from "@/mappers/client/client-mapper";
+import { IClientTenant } from "@/models";
 
 @injectable()
 export default class ClientService implements IClientService {

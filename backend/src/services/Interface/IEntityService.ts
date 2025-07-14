@@ -1,9 +1,9 @@
 import { IAgencyRegistrationDto } from "@/dto";
 import { IProject } from "../../models/Implementation/project";
 import {  IAgencyType, IAgencyTenant } from "../../types/agency";
-import { IClientTenant } from "../../types/client";
 import { IFiles, IMenuCategory, IMetadata, IPlatforms, IBucket, IUpdateProfile } from "../../types/common";
 import { SaveContentDto } from "@/dto/content";
+import { IClientTenant } from "@/models";
 
 export interface IEntityService {
     fetchAllProjects(orgId: string, page?: number): Promise<{ projects: IProject[], totalPages: number } | null>;

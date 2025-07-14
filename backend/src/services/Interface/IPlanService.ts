@@ -9,7 +9,7 @@ export interface IPlanService {
     getPlans():Promise<IPlan[]>;
 
     createPlan(details: PlanDetailsDTO): Promise<void>
-    editPlan(details: IPlanType): Promise<void>
+    editPlan(details: PlanDetailsDTO): Promise<void>
     changePlanStatus(plan_id: string): Promise<void>
     getPlanDetails(plan_id: string): Promise<object>
 }

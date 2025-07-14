@@ -1,6 +1,6 @@
 import type React from "react"
 import { useId } from "react"
-import { cn } from "@/utils/shardcn.utils" 
+import { cn } from "@/utils/shardcn" 
 
 interface GridPatternProps extends React.SVGProps<SVGSVGElement> {
   width?: number

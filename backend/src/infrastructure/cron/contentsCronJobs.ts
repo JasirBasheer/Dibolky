@@ -8,7 +8,6 @@ import { Types } from 'mongoose';
 import { IProviderService } from '../../services/Interface/IProviderService';
 import { IClientService } from '../../services/Interface/IClientService';
 import { IAgencyService } from '../../services/Interface/IAgencyService';
-import { IClientTenant } from '../../types/client';
 import { IAgencyTenant } from '../../types/agency';
 import {
     IPlatforms,
@@ -16,6 +15,7 @@ import {
     ISocialMediaUploadResponse
 } from '@/types/';
 import logger from '@/logger';
+import { IClientTenant } from '@/models';
 
 
 

@@ -1,7 +1,7 @@
 import { IProject } from "../../models/Implementation/project";
 import { IAgencyType, IAgencyTenant } from "../../types/agency";
 import { IAvailableClients, ServicesData } from "../../types/chat";
-import { IClientTenant } from "../../types/client";
+import { IClientTenant, IClientTenantType } from "../../types/client";
 import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common";
 
 export interface IAgencyService {
@@ -12,7 +12,7 @@ export interface IAgencyService {
     getClientsCount(orgId: string): Promise<object>
     getAllAvailableClients(orgId: string): Promise<IAvailableClients[]>
     createClient(orgId: string, name: string, email: string, industry: string, services: ServicesData, menu: string[], organizationName: string): Promise<IClientTenant | null>;
-    getAllClients(orgId: string): Promise<IClientTenant[] | null>
+    getAllClients(orgId: string): Promise<IClientTenantType[] | null>
     getClient(orgId: string, client_id: string): Promise<IClientTenant | null>
     saveContentToDb(client_id: string, orgId: string, files: IFiles[], platforms: IPlatforms[], contentType: string, caption: string): Promise<IBucket | null>
     getContent(orgId: string, contentId: string): Promise<IBucket | null>

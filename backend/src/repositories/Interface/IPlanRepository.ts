@@ -7,6 +7,6 @@ export interface IPlanRepository
   getTrialPlans(): Promise<IPlan[] | null>
   getPlan(planId: string): Promise<IPlan | null>
   createPlan(details: PlanDetailsDTO): Promise<Partial<IPlan> | null>
-  editPlan(details: IPlanType): Promise<IPlan | null>
+  editPlan(details: PlanDetailsDTO): Promise<IPlan | null>
   changePlanStatus(plan_id: string): Promise<IPlan | null>
 }

@@ -1,4 +1,4 @@
-import { IClientTenant, User } from "../../types/client";
+import { IClientTenant } from "@/models";
 import { IUpdateProfile } from "../../types/common";
 
 export interface IClientTenantRepository  {

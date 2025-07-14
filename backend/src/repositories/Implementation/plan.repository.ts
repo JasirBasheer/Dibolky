@@ -48,7 +48,7 @@ export default class PlanRepository extends BaseRepository<IPlan> implements IPl
 
 
         async editPlan(
-                details: IPlanType
+                details: PlanDetailsDTO
         ): Promise<IPlan | null> {
                 const { _id, ...updateData } = details;
                 return await this.model.findByIdAndUpdate(_id, updateData, { new: true, runValidators: true });

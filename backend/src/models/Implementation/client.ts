@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-import { IClientTenant } from "../../types/client";
 import { IClient } from "../Interface/client";
+import { IClientTenant } from "../Interface";
 
 
 export const clientSchema: Schema<IClient> = new mongoose.Schema({

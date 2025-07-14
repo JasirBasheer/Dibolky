@@ -7,16 +7,17 @@ import { ConflictError, CustomError, generatePassword, hashPassword, NotFoundErr
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { IProjectRepository } from "../../repositories/Interface/IProjectRepository";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
-import { IClientType, IClientTenant } from "../../types/client";
+import { IClientTenantType, IClientType } from "../../types/client";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
 import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common";
 import { IAvailableClients, ServicesData } from "../../types/chat";
 import { IProject } from "../../models/Implementation/project";
-import { createNewMenuForClient } from "../../utils/menu.utils";
 import { createClientMailData } from "../../utils/mail.datas";
 import { AgencyMapper } from "@/mappers/agency/agency-mapper";
 import { IAgency } from "@/models/Interface/agency";
+import { IClientTenant } from "@/models";
+import { createNewMenuForClient } from "@/utils/menu.utils";
 
 @injectable()
 export default class AgencyService implements IAgencyService {
@@ -146,7 +147,7 @@ export default class AgencyService implements IAgencyService {
 
         const mainDbCreatedClient = await this._clientRepository.createClient(clientDetails as IClientType)
         if (!mainDbCreatedClient) throw new CustomError("An unexpected error occured while creating client,Please try again later.", 500)
-        const createdClient: IClientTenant = await this._clientTenantRepository.createClient(orgId, { ...clientDetails, menu: newMenu, main_id: String(mainDbCreatedClient._id) })
+        const createdClient: IClientTenant = await this._clientTenantRepository.createClient(orgId, { ...clientDetails,menu: newMenu, main_id: String(mainDbCreatedClient._id) })
 
         for (let item in services) {
             const { serviceName, serviceDetails } = services[item];
@@ -176,8 +177,9 @@ export default class AgencyService implements IAgencyService {
 
     async getAllClients(
         orgId: string
-    ): Promise<IClientTenant[] | null> {
-        return await this._clientTenantRepository.getAllClients(orgId)
+    ): Promise<IClientTenantType[] | null> {
+        const clients = await this._clientTenantRepository.getAllClients(orgId)
+        return AgencyMapper.TenantClientMapper(clients)
     }
 
     async getClient(

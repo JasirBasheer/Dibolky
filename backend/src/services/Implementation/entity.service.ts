@@ -12,8 +12,7 @@ import { IContentRepository } from '../../repositories/Interface/IContentReposit
 import { IAgencyTenantRepository } from '../../repositories/Interface/IAgencyTenantRepository';
 import { AddressType, IAgencyType, IAgencyTenant, } from '../../types/agency';
 import { connectTenantDB } from '../../config/db.config';
-import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IBucket, IUpdateProfile } from '../../types/common';
-import { IClientTenant } from '../../types/client';
+import { IFiles, IIntegratePaymentType, IMetadata, IPlatforms, IBucket, IUpdateProfile, IMenu } from '../../types/common';
 import { IAgencyRepository } from '../../repositories/Interface/IAgencyRepository';
 import { IClientRepository } from '../../repositories/Interface/IClientRepository';
 import { getS3ViewUrl } from '../../utils/aws.utils';
@@ -29,6 +28,7 @@ import { getMetaAccessTokenStatus } from '@/providers/facebook';
 import { isXAccessTokenValid } from '@/providers/x';
 import { IAgencyRegistrationDto } from '@/dto';
 import { SaveContentDto } from '@/dto/content';
+import { IClientTenant } from '@/models';
 
 @injectable()
 export default class EntityService implements IEntityService {
@@ -123,13 +123,13 @@ export default class EntityService implements IEntityService {
 
     async getMenu(
         planId: string
-    ): Promise<IMenuCategory> {
+    ): Promise<IMenu[]> {
         const plan = await this._planRepository.getPlan(planId)
         if (!plan) throw new CustomError("Plan not found", 500)
-        return plan.menu as IMenuCategory
+        return plan.menu as IMenu[]
     }
 
-    async getClientMenu(orgId: string, client_id: string): Promise<IMenuCategory> {
+    async getClientMenu(orgId: string, client_id: string): Promise<IMenu[]> {
         const client = await this._clientTenantRepository.getClientById(orgId, client_id)
         if (!client || !client.menu) throw new CustomError("Client menu not found", 500)
         return client?.menu

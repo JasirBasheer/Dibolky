@@ -38,6 +38,7 @@ export const TokenMiddleWare = async (
         let refreshToken = req.cookies.refreshToken ?? null
 
         const isTokenBlaclisted = await isTokenBlacklisted(token)
+        console.log(isTokenBlaclisted,token,refreshToken,"laksdjlfasdkfjsdlfkjslf")
         if (isTokenBlaclisted) {
             res.clearCookie('accessToken')
             throw new UnauthorizedError('Token blacklisted please login to continue')

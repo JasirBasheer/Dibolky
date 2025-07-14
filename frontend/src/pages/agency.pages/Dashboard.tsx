@@ -5,6 +5,7 @@ import AgencyClientDashboard from '@/components/agency.components/clientside.com
 import { RootState } from '@/types/common.types';
 
 const Dashboard = () => {
+  console.log('reached here')
   const [isAgencyDashboard,setIsAgencyDashboard] = useState(false)
   const user = useSelector((state:RootState)=>state.user)
 
@@ -15,6 +16,7 @@ const Dashboard = () => {
       setIsAgencyDashboard(true)
     }
   }, [user.role,user.user_id]);
+  console.log('form dashbaord;',user)
   return (
     isAgencyDashboard?<AgencyDashboard/>:<AgencyClientDashboard/>
   )

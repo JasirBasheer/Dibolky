@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { IAuthenticationController } from "../../controllers/Interface/IAuthenticationController";
 import { container } from "tsyringe";
-import { TokenMiddleWare } from "../../middlewares/token-middleware";
+import { TokenMiddleWare } from "../../middlewares/token";
 import { asyncHandler } from "@/utils/async-handler-util";
 
 export const createAuthRoutes = (): Router => {

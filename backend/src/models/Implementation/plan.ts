@@ -2,29 +2,22 @@ import {
     model, 
     Schema 
 } from 'mongoose';
-import { 
-    IMenuItems, 
-    ISubItem 
-} from '../../types/common';
 import { IPlan } from '../Interface/plan';
+import { IMenu, Item } from '@/types';
 
-const subItemSchema = new Schema<ISubItem>({
-    label: { 
+const subItemSchema = new Schema<Item>({
+    title: { 
         type: String, 
         required: true 
     },
-    icon: { 
+    url: { 
         type: String, 
-        required: true 
-    },
-    path: { 
-        type: [String], 
         required: true 
     },
 }, { _id: false });
 
-const menuItemSchema = new Schema<IMenuItems>({
-    label: { 
+const menuItemSchema = new Schema<IMenu>({
+    title: { 
         type: String, 
         required: true
     },
@@ -32,7 +25,7 @@ const menuItemSchema = new Schema<IMenuItems>({
         type: String, 
         required: true 
     },
-    subItems: { 
+    items: { 
         type: [subItemSchema], 
         required: true
      },
@@ -71,16 +64,9 @@ const planSchema: Schema<IPlan> = new Schema(
         maxClients: { 
             type: Number
         },
-        menu: {
-            smm: { 
-                type: menuItemSchema
-            },
-            crm: {
-                 type: menuItemSchema, 
-            },
-            accounting: { 
-                type: menuItemSchema, 
-            },
+        menu: { 
+            type: [menuItemSchema],
+            required:true
         },
         isActive: { 
             type: Boolean, 

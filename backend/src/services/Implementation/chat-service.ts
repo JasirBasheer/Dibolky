@@ -123,6 +123,7 @@ export class ChatService implements IChatService {
         }
     }
 
+
     async findOwnerDetails(
         tenantDb: Connection
     ): Promise<IAgencyTenant> {

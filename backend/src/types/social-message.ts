@@ -1,4 +1,5 @@
 export interface ISocialMessageMedia {
+    id?:string;
     type: 'image' | 'video';
     url: string;
     mimeType?: string;
@@ -18,4 +19,25 @@ export interface ISocialMessageMedia {
     createdAt?: Date;
     updatedAt?: Date;
   }
+
+export interface InstagramUser {
+  id: string;
+  username: string;
+}
+
+export interface InstagramConversation {
+  id: string;
+  participants?: { data: InstagramUser[] };
+}
   
+export interface InstagramMessage {
+  id: string;
+  from: InstagramUser;
+  to: { data: InstagramUser[] };
+  message: string;
+  created_time: string;
+  attachments?: { data: { id: string; image_data?: { url: string } }[] };
+}
+
+
+

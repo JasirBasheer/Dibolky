@@ -1,5 +1,6 @@
 import { META_API_VERSION, META_CLIENTID, META_SECRETID } from "@/config";
 import { IMetaAccount } from "@/types";
+import axios from "axios";
 
 export async function createFacebookOAuthURL(
     redirectUri: string
@@ -70,4 +71,39 @@ export async function getMetaAccessTokenStatus(
     } catch (error) {
         return false;
     }
+
+}
+
+
+
+export async function getIGTokenDetails(pageId: string, accessToken: string) {
+  try {
+    const igAccountResponse = await axios.get(
+      `https://graph.facebook.com/${META_API_VERSION}/${pageId}`,
+      {
+        params: {
+          fields: "instagram_business_account",
+          access_token: accessToken,
+        },
+      }
+    );
+    const igAccountId = igAccountResponse.data.instagram_business_account?.id;
+    if (!igAccountId) {
+      throw new Error("No Instagram Business account linked to this Page");
+    }
+
+    const response = await axios.get(
+      `https://graph.facebook.com/${META_API_VERSION}/${igAccountId}`,
+      {
+        params: {
+          fields: "id,username,name,profile_picture_url",
+          access_token: accessToken,
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching IG user details:", error.response?.data || error.message);
+    return null;
+  }
 }

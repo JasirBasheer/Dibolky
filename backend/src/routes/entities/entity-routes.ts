@@ -25,6 +25,7 @@ export const createEntityRoutes = (): Router => {
   router.get("/get-meta-pages/:access_token",asyncHandler(providerController.getMetaPagesDetails));
   router.get("/contents/:user_id",asyncHandler(entityController.fetchContents));
   router.get("/get-scheduled-contents/:user_id",asyncHandler(entityController.fetchAllScheduledContents));
+  router.get("/inbox/:entity/:user_id",asyncHandler(entityController.getChats));
   router.get("/get-connections/:entity/:user_id",asyncHandler(entityController.getConnections));
   router.get("/:role/:planId",asyncHandler(entityController.getMenu));
 

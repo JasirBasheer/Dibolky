@@ -4,13 +4,15 @@ import { Document, ObjectId } from "mongoose";
 
   export interface ISocialMessage extends Document{
     senderId: ObjectId; 
-    platform: 'facebook' | 'instagram';
+    platform: string
+    userId: string;
+    isFromMe:boolean;
     externalMessageId: string;
     content?: string;
     media?: ISocialMessageMedia[];
     isDeleted?: boolean;
     timestamp: Date;
-    status?: 'received' | 'processed' | 'failed';
+    status?: string
     createdAt?: Date;
     updatedAt?: Date;
   }

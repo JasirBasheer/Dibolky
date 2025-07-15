@@ -13,7 +13,7 @@ export async function createInstagramOAuthURL(
         scope: [
             'public_profile', 'pages_show_list', 'pages_read_engagement', 'pages_manage_posts',
             'pages_manage_metadata', 'pages_manage_engagement', 'pages_messaging', 'business_management',
-            'instagram_basic', 'instagram_content_publish', 'instagram_manage_comments',
+            'instagram_basic', 'instagram_content_publish', 'instagram_manage_comments','pages_show_list',
             'instagram_manage_insights', 'instagram_manage_messages','ads_management'
         ].join(',')
     });

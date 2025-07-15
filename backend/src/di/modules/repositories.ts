@@ -1,5 +1,5 @@
 import { container } from "tsyringe";
-import { ActivityRepository, AdminRepository, AgencyRepository, AgencyTenantRepository, ChatRepository, ClientRepository, ClientTenantRepository, ContentRepository, EntityRepository, IActivityRepository, IAdminRepository, IAgencyRepository, IAgencyTenantRepository, IChatRepository, IClientRepository, IClientTenantRepository, IContentRepository, IEntityRepository, IMessageRepository, INoteRepository, IPlanRepository, IProjectRepository, ITransactionRepository, MessageRepository, NoteRepository, PlanRepository, ProjectRepository, TransactionRepository } from "@/repositories";
+import { ActivityRepository, AdminRepository, AgencyRepository, AgencyTenantRepository, ChatRepository, ClientRepository, ClientTenantRepository, ContentRepository, EntityRepository, IActivityRepository, IAdminRepository, IAgencyRepository, IAgencyTenantRepository, IChatRepository, IClientRepository, IClientTenantRepository, IContentRepository, IEntityRepository, IMessageRepository, INoteRepository, IPlanRepository, IProjectRepository, ISocialMessageRepository, ISocialUserRepository, ITransactionRepository, MessageRepository, NoteRepository, PlanRepository, ProjectRepository, SocialMessageRepository, SocialUserRepository, TransactionRepository } from "@/repositories";
 
 export const registerRepositories = () => {
 container.register<IAdminRepository>('AdminRepository', { useClass: AdminRepository });
@@ -17,4 +17,6 @@ container.register<ITransactionRepository>('TransactionRepository', { useClass: 
 container.register<IAgencyTenantRepository>('AgencyTenantRepository', { useClass: AgencyTenantRepository });
 container.register<INoteRepository>('NoteRepository', { useClass: NoteRepository });
 container.register<IActivityRepository>('ActivityRepository', { useClass: ActivityRepository });
+container.register<ISocialUserRepository>('SocialUserRepository', { useClass: SocialUserRepository });
+container.register<ISocialMessageRepository>('SocialMessageRepository', { useClass: SocialMessageRepository });
 };

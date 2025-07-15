@@ -3,7 +3,7 @@ import { createAdminRoutes, createAgencyRoutes, createAuthRoutes, createClientRo
 
 export const registerRoutes = (app: Express) => {
   app.use("/api/health", createHealthRoutes());
-  app.use("/api/public",createPublicRoutes())
+  app.use("/api/public",createPublicRoutes());
   app.use("/api/auth", createAuthRoutes());
   app.use("/api/entities", createEntityRoutes());
   app.use("/api/admin", createAdminRoutes());

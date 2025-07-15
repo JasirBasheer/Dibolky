@@ -2,16 +2,24 @@ import { model, Schema } from "mongoose";
 import { ISocialUser } from "../Interface";
 
 
-const socialUserSchema:Schema<ISocialUser> = new Schema({
+export const socialUserSchema:Schema<ISocialUser> = new Schema({
   platform: {
     type: String,
-    enum: ['facebook', 'instagram'],
     required: true
+  },
+  userId:{
+    type: String,
+    required: true,
+    index: true
+
+  },
+  pageId: {
+    type: String,
+    required: true,
   },
   externalUserId: {
     type: String,
     required: true,
-    index: true
   },
   name: String,
   avatarUrl: String,

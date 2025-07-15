@@ -64,10 +64,12 @@ export interface SocialMediaPage {
     name: string;
     id: string;
     tasks: string[];
+    instagram_business_account:string
 }
 
 export interface SocialMediaResponse {
     data: SocialMediaPage[];
+    
 }
 
 

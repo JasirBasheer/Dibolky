@@ -13,19 +13,31 @@ const mediaSchema: Schema<ISocialMessageMedia> = new Schema({
     type: String,
     required: true
   },
+  id: {
+    type: String,
+  },
   mimeType: String,
   size: Number
 });
 
-const socialMessageSchema: Schema<ISocialMessage> = new Schema({
+export const socialMessageSchema: Schema<ISocialMessage> = new Schema({
   senderId: {
     type: Schema.Types.ObjectId,
+    ref: 'SocialUser',
+    required: true
+  },
+  userId: {
+    type: String,
     ref: 'SocialUser',
     required: true
   },
   platform: {
     type: String,
     enum: ['facebook', 'instagram'],
+    required: true
+  },
+  isFromMe: {
+    type: Boolean,
     required: true
   },
   externalMessageId: {
@@ -45,7 +57,6 @@ const socialMessageSchema: Schema<ISocialMessage> = new Schema({
   },
   status: {
     type: String,
-    enum: ['received', 'processed', 'failed'],
     default: 'received'
   }
 }, {

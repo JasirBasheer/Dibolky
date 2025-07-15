@@ -12,3 +12,6 @@ export * from "./plan-repository"
 export * from "./project-repository"
 export * from "./transaction-repository"
 export * from "./admin-repository"
+export * from "./social-user-repository"
+export * from "./social-message-repository"
+

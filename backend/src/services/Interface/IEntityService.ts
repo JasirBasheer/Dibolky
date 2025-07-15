@@ -17,5 +17,6 @@ export interface IEntityService {
     fetchContents(orgId: string, user_id: string): Promise<IBucket[]>
     updateProfile(orgId: string, role: string, requestRole: string, details: IUpdateProfile): Promise<IAgencyTenant | IClientTenant>
     getScheduledContent(orgId: string, user_id: string): Promise<IBucket[]>
-    getConnections(orgId: string, entity: string, user_id: string): Promise<object[]>
+    getConnections(orgId: string, entity: string, user_id: string): Promise<any>
+    getInbox(orgId: string, entity: string,  userId: string, selectedPlatforms: string[], selectedPages: string[]): Promise<any>
 }

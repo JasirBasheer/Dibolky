@@ -75,8 +75,6 @@ export class EntityController implements IEntityController {
             if (!req.details) throw new NotFoundError("request details not found")
             const { role, planId } = req.params;
             let menu;
-
-
             if (role === "agency") {
                 menu = await this._entityService.getMenu(planId);
             } else if (role === "agency-client") {
@@ -145,6 +143,19 @@ export class EntityController implements IEntityController {
             if (!req.details) throw new NotFoundError("request details not found")
             const { userId } = req.params
             const chats = await this._chatService.getChats(req.details.orgId as string, userId)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
+        
+    }
+
+    getInbox = async(
+        req: Request,
+        res: Response,
+    ): Promise<void> => {
+
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { entity, userId } = req.params
+            const { selectedPlatforms, selectedPages } = req.body
+            const chats = await this._entityService.getInbox(req.details.orgId as string,entity, userId, selectedPlatforms, selectedPages)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
         
     }
@@ -330,7 +341,7 @@ export class EntityController implements IEntityController {
             const { entity, user_id } = req.params
             console.log
             const connections = await this._entityService.getConnections(req.details.orgId as string, entity, user_id)
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { connections })
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { connections:connections.validConnections,connectedPages:connections.connectedPages })
        
     }
 

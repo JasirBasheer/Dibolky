@@ -51,12 +51,10 @@ export function CalendarWithEvents() {
     <Card className="w-fit max-w-full">
       <CardContent className="p-0">
         <div className="flex flex-col md:flex-row">
-          {/* Calendar Section - Top on mobile, Left on desktop */}
           <div className="p-4 border-b md:border-b-0 md:border-r">
             <Calendar mode="single" selected={date} onSelect={setDate} className="bg-transparent p-0" required />
           </div>
 
-          {/* Events Section - Bottom on mobile, Right on desktop */}
           <div className="w-full md:w-80">
             <div className="p-4 border-b">
               <div className="flex items-center justify-between">

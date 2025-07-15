@@ -10,13 +10,12 @@ import { Separator } from '@radix-ui/react-separator';
 import { CalendarWithEvents } from './dashboard/calendar-with-events';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar, Crown, Download, FileText, Receipt, Users } from 'lucide-react';
+import ActivityFeed from '@/components/common.components/activity';
 
 
 
 const AgencyDashboard: React.FC = () => {
   const [isInitialSetUpOpened, setIsInitailSetUpOpen] = useState<boolean>(false)
-  const [isDummyActivitythere, setIsDummyActivitythere] = useState<boolean>(false)
-
 
   const { data: project, isLoading: isProjectsLoading } = useQuery({
     queryKey: ["get-projects-count"],
@@ -98,6 +97,94 @@ const quickActions = [
   },
 ]
 
+
+
+
+const sampleActivities= [
+  {
+    _id: "1",
+    user: {
+      userId: "u123",
+      username: "jasir",
+      email: "jasir@example.com",
+    },
+    activityType: "account_created",
+    entity: {
+      type: "agency",
+      id: "new Types.ObjectId()",
+    },
+    activity: "Jasir created a new agency account.",
+    redirectUrl: "/agency/overview",
+    createdAt: "new Date().toISOString()",
+  },
+  {
+    _id: "2",
+    user: {
+      userId: "u456",
+      username: "amaya",
+      email: "amaya@example.com",
+    },
+    activityType: "client_created",
+    entity: {
+      type: "client",
+      id: "new Types.ObjectId()",
+    },
+    activity: "Amaya added a new client.",
+    redirectUrl: "/clients/u456",
+    createdAt: "new Date().toISOString()",
+  },
+  {
+    _id: "3",
+    user: {
+      userId: "u789",
+      username: "ravi",
+      email: "ravi@example.com",
+    },
+    activityType: "plan_upgraded",
+    entity: {
+      type: "agency",
+      id: "new Types.ObjectId()",
+    },
+    activity: "Ravi upgraded the agency’s subscription plan.",
+    redirectUrl: "/billing",
+    createdAt: "new Date().toISOString()",
+  },
+  {
+    _id: "4",
+    user: {
+      userId: "u101",
+      username: "nisha",
+      email: "nisha@example.com",
+    },
+    activityType: "content_approved",
+    entity: {
+      type: "client",
+      id: "new Types.ObjectId()",
+    },
+    activity: "Nisha approved a content piece for Client X.",
+    redirectUrl: "/content/approved",
+    createdAt: "new Date().toISOString()",
+  },
+  {
+    _id: "5",
+    user: {
+      userId: "u102",
+      username: "arjun",
+      email: "arjun@example.com",
+    },
+    activityType: "content_rejected",
+    entity: {
+      type: "client",
+      id: "new Types.ObjectId()",
+    },
+    activity: "Arjun rejected the content for revision.",
+    redirectUrl: "/content/rejected",
+    createdAt: "new Date().toISOString()",
+  },
+];
+
+
+
   return (
     <>
       {isInitialSetUpOpened && (
@@ -113,7 +200,7 @@ const quickActions = [
       />
       <div className='w-full  lg:p-9 p-4  mb-16'>
         <div className="w-full ">
-          <div className="flex flex-wrap items-center lg:justify-start justify-center w-full mt-5 gap-5 ">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mt-5 mx-auto">
             <DashboardCard title="Total Projects" count={project?.count} lastWeekCount={project?.lastWeekCount} isLoading={isProjectsLoading} />
             <DashboardCard title="Total Clients" count={client?.count} lastWeekCount={client?.lastWeekCount} isLoading={isClientsLoading} />
             <DashboardCard title="Total Clients" count={client?.count} lastWeekCount={client?.lastWeekCount} isLoading={isClientsLoading} />
@@ -123,54 +210,55 @@ const quickActions = [
             <div className="w-full h-[20rem]  border rounded-xl  bg-white p-5 shadow-sm  transition-all duration-300 mt">
               <h1 className='text-md cantarell font-cantarell font-semibold text-black'>Activity History</h1>
                 <Separator orientation="horizontal" className="h-[1px] mt-2 w-full bg-gray-200" />
-              <div className="w-full flex justify-center items-center lg:justify-start lg:items-start  flex-wrap gap-5 p-2 pt-3">
-                {!isDummyActivitythere ? 
-                (
-                <div className='w-full h-[14rem] flex items-center justify-center'>
-                  <p className='text-sm text-gray-500'>No activity found as of now..</p>
-              </div>
-              )
-                :
-                 (<div>
-              </div>)
-                }
-              </div>
+                <div className='w-full h-[16rem]'>
+
+             <ActivityFeed activities={sampleActivities}/>
+                </div>
             </div>
           </div>
-          <div className="w-full flex flex-wrap lg:justify-start justify-center mt-6 gap-6">
 
-            <Card className="w-[32.4rem] min-h-[11rem]">
-      <CardHeader className="pb-4">
-        <CardTitle className="text-md font-semibold text-gray-900">Quick Actions</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-          {quickActions.map((action) => {
-            const Icon = action.icon
-            return (
-              <Link
-                key={action.title}
-                to={action.href||"adsf"}
-                className="group relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 p-4 transition-all duration-200 hover:border-gray-300 hover:bg-white hover:shadow-md"
-              >
-                <div className="flex flex-col items-center space-y-2 text-center">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-sm transition-colors group-hover:bg-blue-50">
-                    <Icon className="h-4 w-4 text-gray-600 transition-colors group-hover:text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-[13px] font-medium text-gray-900 group-hover:text-blue-900">{action.title}</h3>
-                    <p className="mt-1 text-[9px] text-gray-500 group-hover:text-gray-600">{action.description}</p>
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6  mx-auto">
+  {/* Quick Actions Card */}
+  <Card className="w-full min-h-[11rem]">
+    <CardHeader className="pb-4">
+      <CardTitle className="text-md font-semibold text-gray-900">Quick Actions</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {quickActions.map((action) => {
+          const Icon = action.icon;
+          return (
+            <Link
+              key={action.title}
+              to={action.href || "#"}
+              className="group relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 p-4 transition-all duration-200 hover:border-gray-300 hover:bg-white hover:shadow-md"
+            >
+              <div className="flex flex-col items-center space-y-2 text-center">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-sm transition-colors group-hover:bg-blue-50">
+                  <Icon className="h-4 w-4 text-gray-600 group-hover:text-blue-600" />
                 </div>
-              </Link>
-            )
-          })}
-        </div>
-      </CardContent>
-    </Card>
+                <div>
+                  <h3 className="text-[13px] font-medium text-gray-900 group-hover:text-blue-900">
+                    {action.title}
+                  </h3>
+                  <p className="mt-1 text-[9px] text-gray-500 group-hover:text-gray-600">
+                    {action.description}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </CardContent>
+  </Card>
 
-                <CalendarWithEvents />
-          </div>
+  {/* Calendar Component */}
+  <div className="w-full flex items-center justify-center">
+    <CalendarWithEvents />
+  </div>
+</div>
+
         </div>
       </div>
     </>

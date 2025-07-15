@@ -11,7 +11,7 @@ import { IPlanType } from '@/types';
 import { PlanDetailsDTO } from '@/dto';
 
 @injectable()
-export default class PlanController implements IPlanController {
+export class PlanController implements IPlanController {
     private _planService: IPlanService;
 
     constructor(

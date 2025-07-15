@@ -1,40 +1,5 @@
 import { container } from "tsyringe";
-import AdminRepository from "@/repositories/Implementation/admin.repository"; 
-import { IAdminRepository } from '@/repositories/Interface/IAdminRepository';
-import { IAgencyRepository } from '@/repositories/Interface/IAgencyRepository';
-import { AgencyRepository } from '@/repositories/Implementation/agency.repository';
-import EntityRepository from '@/repositories/Implementation/entity.repository';
-import { IEntityRepository } from '@/repositories/Interface/IEntityRepository';
-import PlanRepository from '@/repositories/Implementation/plan.repository';
-import { IPlanRepository } from '@/repositories/Interface/IPlanRepository';
-import { IClientRepository } from "@/repositories/Interface/IClientRepository";
-import ClientRepository from "@/repositories/Implementation/client.repository";
-import ChatRepository from "@/repositories/Implementation/chat.repository";
-import { IChatRepository } from "@/repositories/Interface/IChatRepository";
-import { ProjectRepository } from "@/repositories/Implementation/project.repository";
-import { IProjectRepository } from "@/repositories/Interface/IProjectRepository";
-import { IContentRepository } from "@/repositories/Interface/IContentRepository";
-import { ContentRepository } from "@/repositories/Implementation/content.repository";
-import { IMessageRepository } from "@/repositories/Interface/IMessageRepository";
-import MessageRepository from "@/repositories/Implementation/message.repository";
-import { ITransactionRepository } from "@/repositories/Interface/ITransactionRepository";
-import TransactionRepository from "@/repositories/Implementation/transaction.repository";
-import { IAgencyTenantRepository } from "@/repositories/Interface/IAgencyTenantRepository";
-import AgencyTenantRepository from "@/repositories/Implementation/agency-tenant.repository";
-import { IInfluencerRepository } from "@/repositories/Interface/IInfluencerRepository";
-import InfluencerRepository from "@/repositories/Implementation/influencer.repository";
-import { IInfluencerTenantRepository } from "@/repositories/Interface/IInfluencerTenantRepository";
-import InfluencerTenantRepository from "@/repositories/Implementation/influencer-tenant.repository";
-import { IManagerRepository } from "@/repositories/Interface/IManagerRepository";
-import ManagerRepository from "@/repositories/Implementation/manager.repository";
-import { IManagerTenantRepository } from "@/repositories/Interface/IManagerTenantRepository";
-import ManagerTenantRepository from "@/repositories/Implementation/manager-tenant.repository";
-import { INoteRepository } from "@/repositories/Interface/INoteRepository";
-import NoteRepository from "@/repositories/Implementation/note.repository";
-import { IClientTenantRepository } from "@/repositories/Interface/IClientTenantRepository";
-import { ClientTenantRepository } from "@/repositories/Implementation/client-tenant.repository";
-
-
+import { ActivityRepository, AdminRepository, AgencyRepository, AgencyTenantRepository, ChatRepository, ClientRepository, ClientTenantRepository, ContentRepository, EntityRepository, IActivityRepository, IAdminRepository, IAgencyRepository, IAgencyTenantRepository, IChatRepository, IClientRepository, IClientTenantRepository, IContentRepository, IEntityRepository, IMessageRepository, INoteRepository, IPlanRepository, IProjectRepository, ITransactionRepository, MessageRepository, NoteRepository, PlanRepository, ProjectRepository, TransactionRepository } from "@/repositories";
 
 export const registerRepositories = () => {
 container.register<IAdminRepository>('AdminRepository', { useClass: AdminRepository });
@@ -50,10 +15,6 @@ container.register<IContentRepository>('ContentRepository', { useClass: ContentR
 container.register<IMessageRepository>('MessageRepository', { useClass: MessageRepository });
 container.register<ITransactionRepository>('TransactionRepository', { useClass: TransactionRepository });
 container.register<IAgencyTenantRepository>('AgencyTenantRepository', { useClass: AgencyTenantRepository });
-container.register<IInfluencerRepository>('InfluencerRepository', { useClass: InfluencerRepository });
-container.register<IInfluencerTenantRepository>('InfluencerTenantRepository', { useClass: InfluencerTenantRepository });
-container.register<IInfluencerTenantRepository>('InfluencerTenantRepository', { useClass: InfluencerTenantRepository });
-container.register<IManagerRepository>('ManagerRepository', { useClass: ManagerRepository });
-container.register<IManagerTenantRepository>('ManagerTenantRepository', { useClass: ManagerTenantRepository });
 container.register<INoteRepository>('NoteRepository', { useClass: NoteRepository });
+container.register<IActivityRepository>('ActivityRepository', { useClass: ActivityRepository });
 };

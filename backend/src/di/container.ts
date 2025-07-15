@@ -12,4 +12,3 @@ export const registerDependencies = () => {
   registerServices();
   registerControllers();
 };
-

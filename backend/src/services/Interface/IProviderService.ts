@@ -1,5 +1,5 @@
+import { IClientTenant } from "@/models";
 import { IAgencyTenant } from "../../types/agency";
-import { IClientTenant } from "../../types/client";
 import { IMetaAccount, IBucket, ISocialMediaUploadResponse } from "../../types/common";
 import { IInfluncerTenant } from "../../types/influencer";
 import { INote } from "../../types/note";

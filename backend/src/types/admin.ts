@@ -1,5 +1,5 @@
 import mongoose, { Document } from "mongoose";
-import {  IMenuItems } from "./common";
+import { IMenu } from "./common";
 
 
 
@@ -25,11 +25,7 @@ export interface IPlanType extends Document {
     billingCycle:  BillingCycleTypes;
     maxProjects: number;
     maxClients: number;
-    menu?: {
-        smm?: IMenuItems;
-        crm?: IMenuItems;
-        accounting?: IMenuItems;
-    };
+    menu?: IMenu[]
     isActive:boolean;
     permissions:string[]
 }

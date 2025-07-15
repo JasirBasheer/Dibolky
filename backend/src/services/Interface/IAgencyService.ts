@@ -1,7 +1,8 @@
 import { IProject } from "../../models/Implementation/project";
 import { IAgencyType, IAgencyTenant } from "../../types/agency";
 import { IAvailableClients, ServicesData } from "../../types/chat";
-import { IClientTenant, IClientTenantType } from "../../types/client";
+import { IClientTenantType } from "../../types/client";
+import { IClientTenant } from "@/models";
 import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common";
 
 export interface IAgencyService {

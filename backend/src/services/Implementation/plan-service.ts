@@ -13,7 +13,7 @@ import { IPlan } from "@/models/Interface/plan";
 
 
 @injectable()
-export default class PlanService implements IPlanService {
+export class PlanService implements IPlanService {
   private _planRepository: IPlanRepository;
   private _agencyRepository: IAgencyRepository;
 

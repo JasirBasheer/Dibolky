@@ -17,6 +17,8 @@ import {
   Camera,
   Linkedin,
   Twitter,
+  Lock,
+  Crown,
 } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import { IContentData, IMetaAccount, IPlatforms, RootState } from "@/types/common.types"
@@ -330,10 +332,10 @@ const CreateContentModal = () => {
       );
 
      setSelectedPlatforms([])
-    setSelectedContentType("post")
-    setUploadedFile([])
-    setIsScheduled(false)
-    setCaption("")
+     setSelectedContentType("post")
+     setUploadedFile([])
+     setIsScheduled(false)
+     setCaption("")
 
       if (savedContent) {
         message.success(`Content ${isScheduled ? 'scheduled' : 'uploaded'} successfully!`);
@@ -376,7 +378,30 @@ const CreateContentModal = () => {
 
   return (
     <Dialog open={ui.createContentModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-lg md:max-w-2xl w-full sm:max-h-[90vh] h-full p-0 gap-0 overflow-hidden sm:rounded-lg">
+      {!user.permissions.includes("Content Management") ? (
+       <DialogContent className="sm:max-w-lg w-full sm:max-h-[90vh] p-0 gap-0 overflow-hidden sm:rounded-lg">
+       <ScrollArea className="max-h-[calc(90vh-4rem)]">
+         <div className="p-8">
+           <div className="text-center space-y-6">
+             <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+               <Lock className="w-8 h-8 text-gray-600" />
+             </div>
+
+             <div className="space-y-2">
+               <h3 className="text-lg font-semibold text-gray-900">This feature is locked</h3>
+               <p className="text-gray-600">Upgrade your plan for content management features</p>
+             </div>
+
+             <Button className="w-full" size="lg">
+               <Crown className="w-4 h-4 mr-2" />
+               Upgrade Plan
+             </Button>
+           </div>
+         </div>
+       </ScrollArea>
+     </DialogContent>
+      ):
+      ( <DialogContent className="sm:max-w-lg md:max-w-2xl w-full sm:max-h-[90vh]  p-0 gap-0 overflow-hidden sm:rounded-lg">
         <DialogHeader className="px-6 py-4 border-b">
           <DialogTitle className="text-xl font-bold">Create Content</DialogTitle>
         </DialogHeader>
@@ -390,7 +415,6 @@ const CreateContentModal = () => {
 
         <ScrollArea className="max-h-[calc(90vh-4rem)]">
           <div className="px-6 py-4 space-y-6">
-            {/* Platform Selection */}
             <section>
               <h2 className="text-sm text-gray-800 dark:text-gray-200 font-bold mb-3">Distribution Channels</h2>
               <div className="flex flex-wrap gap-2">
@@ -667,6 +691,10 @@ const CreateContentModal = () => {
           </div>
         </ScrollArea>
       </DialogContent>
+      )
+      
+    }
+     
     </Dialog>
   )
 }

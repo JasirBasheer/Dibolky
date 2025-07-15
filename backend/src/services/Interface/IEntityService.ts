@@ -1,7 +1,7 @@
 import { IAgencyRegistrationDto } from "@/dto";
 import { IProject } from "../../models/Implementation/project";
 import {  IAgencyType, IAgencyTenant } from "../../types/agency";
-import { IFiles, IMenuCategory, IMetadata, IPlatforms, IBucket, IUpdateProfile } from "../../types/common";
+import { IMenu, IBucket, IUpdateProfile } from "../../types/common";
 import { SaveContentDto } from "@/dto/content";
 import { IClientTenant } from "@/models";
 
@@ -9,8 +9,8 @@ export interface IEntityService {
     fetchAllProjects(orgId: string, page?: number): Promise<{ projects: IProject[], totalPages: number } | null>;
     IsMailExists(mail: string): Promise<boolean>;
     createAgency(payload: IAgencyRegistrationDto): Promise<Partial<IAgencyType> | null>;
-    getMenu(planId: string): Promise<IMenuCategory>;
-    getClientMenu(orgId: string, client_id: string): Promise<IMenuCategory>;
+    getMenu(planId: string): Promise<IMenu[]>;
+    getClientMenu(orgId: string, client_id: string): Promise<IMenu[]>;
     getOwner(orgId: string): Promise<IAgencyTenant[]>
     saveContent(payload: SaveContentDto): Promise<IBucket>;
     getS3ViewUrl(key: string): Promise<string>

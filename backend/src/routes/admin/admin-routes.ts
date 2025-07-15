@@ -24,7 +24,7 @@ export const createAdminRoutes = (): Router => {
   router
   .route("/plans/:plan_id")
   .get(asyncHandler(planController.getPlanWithConsumers))
-  .put(asyncHandler(planController.changePlanStatus))
+  .patch(asyncHandler(planController.changePlanStatus))
   
   router
   .route("/plans")

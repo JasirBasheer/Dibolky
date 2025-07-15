@@ -10,6 +10,7 @@ const initialState: ReduxIUser = {
   bio:"",
   planId: "",
   orgId: "",
+  permissions: [],
   facebookAccessToken: "",
   instagramAccessToken: "",
   linkedinAccessToken: "",

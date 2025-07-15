@@ -6,13 +6,30 @@ import { NavUser } from "./nav-user"
 import { TeamSwitcher } from "./team-switcher"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from "@/components/ui/sidebar"
 import { RootState } from "@/types/common.types"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { fetchAgencyMenuApi, fetchAllClientsApi } from "@/services/agency/get.services"
 import { useQuery } from "@tanstack/react-query"
 import Skeleton from "react-loading-skeleton"
+import CreateContentModal from "@/components/common.components/create-content.modal"
+import { openCreateContentModal } from "@/redux/slices/ui.slice"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = useSelector((state: RootState) => state.user);
+  const ui = useSelector((state: RootState) => state.ui);
+  const dispatch = useDispatch()
+
+
+    React.useEffect(() => {
+      const down = (e: KeyboardEvent) => {
+        if(e.key == "c" &&  (e.metaKey || e.ctrlKey)){
+          e.preventDefault()
+          dispatch(openCreateContentModal())
+        }
+        
+      }
+      document.addEventListener("keydown", down)
+      return () => document.removeEventListener("keydown", down)
+    }, [])
 
 
   const selectedUser = localStorage.getItem('selectedClient') as string
@@ -47,6 +64,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
+      {ui.createContentModalOpen && <CreateContentModal/> }
       <SidebarHeader>
           {isClientsLoading ? (
        <Skeleton height={50} count={1} />

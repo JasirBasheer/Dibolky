@@ -1,6 +1,7 @@
 import { IClient } from "@/models/Interface/client";
 import { IAgencyTenant } from "../../types/agency";
-import { IClientType, IClientTenant } from "../../types/client";
+import { IClientType } from "../../types/client";
+import { IClientTenant } from "@/models";
 
 export interface IClientService {
     clientLoginHandler(email: string, password: string): Promise<string>;

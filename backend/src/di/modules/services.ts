@@ -1,26 +1,5 @@
 import { container } from "tsyringe";
-import { IManagerService } from "@/services/Interface/IManagerService";
-import ManagerService from "@/services/Implementation/manager.service";
-import { IInfluencerService } from "@/services/Interface/IInfluencerService";
-import InfluencerService from "@/services/Implementation/influencer.service";
-import { IChatService } from "@/services/Interface/IChatService";
-import ChatService from "@/services/Implementation/chat.service";
-import { IProviderService } from "@/services/Interface/IProviderService";
-import ProviderService from "@/services/Implementation/provider.service";
-import { IClientService } from "@/services/Interface/IClientService";
-import ClientService from "@/services/Implementation/client.service";
-import { IAdminService } from '@/services/Interface/IAdminService';
-import AdminService from '@/services/Implementation/admin.service';
-import AgencyService from '@/services/Implementation/agency.service';
-import { IAgencyService } from '@/services/Interface/IAgencyService';
-import AuthenticationService from '@/services/Implementation/authentication.service';
-import { IAuthenticationService } from '@/services/Interface/IAuthenticationService';
-import { IEntityService } from '@/services/Interface/IEntityService';
-import EntityService from '@/services/Implementation/entity.service';
-import PaymentService from '@/services/Implementation/payment.service';
-import { IPaymentService } from '@/services/Interface/IPaymentService';
-import PlanService from "@/services/Implementation/plan-service";
-import { IPlanService } from "@/services/Interface/IPlanService";
+import { AdminService, AgencyService, AuthenticationService, ChatService, ClientService, EntityService, IAdminService, IAgencyService, IAuthenticationService, IChatService, IClientService, IEntityService, IPaymentService, IPlanService, IProviderService, PaymentService, PlanService, ProviderService } from "@/services";
 
 export const registerServices = () => {
 container.register<IAuthenticationService>('AuthenticationService', { useClass: AuthenticationService });
@@ -31,7 +10,5 @@ container.register<IPaymentService>('PaymentService', { useClass: PaymentService
 container.register<IClientService>('ClientService', { useClass: ClientService });
 container.register<IProviderService>('ProviderService', { useClass: ProviderService });
 container.register<IChatService>('ChatService', { useClass: ChatService });
-container.register<IInfluencerService>('InfluencerService', { useClass: InfluencerService });
-container.register<IManagerService>('ManagerService', { useClass: ManagerService });
 container.register<IPlanService>('PlanService', { useClass: PlanService });
 };

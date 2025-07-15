@@ -1,4 +1,4 @@
-import { credentials, IMenuCategory } from "@/types";
+import { credentials, IMenu,  } from "@/types";
 import { Document } from "mongoose";
 
 
@@ -12,7 +12,7 @@ export interface IClientTenant extends Document {
     industry?: string;
     password?: string;
     socialMedia_credentials?: credentials;
-    menu?: IMenuCategory;
+    menu?: IMenu[];
     isSocialMediaInitialized: boolean,
     isPaymentInitialized: boolean,
     createdAt?:string | number;

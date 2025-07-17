@@ -11,7 +11,8 @@
     },
     "strict": false, 
     "noUnusedLocals": false, 
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "strictNullChecks": false
   }
 
 }

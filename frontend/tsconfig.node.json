@@ -10,10 +10,13 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-    "strict": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": false,
+
+    "strict": false, 
+    "noImplicitAny": false,  
+    "strictNullChecks": false, 
+    "noUnusedLocals": false,  
+    "noUnusedParameters": false,  
+    "noFallthroughCasesInSwitch": false,  
     "noUncheckedSideEffectImports": false
   },
   "include": ["vite.config.ts"]

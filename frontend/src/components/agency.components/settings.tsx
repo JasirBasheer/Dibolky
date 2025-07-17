@@ -6,8 +6,6 @@ import { fetchConnections, getConnectSocailMediaUrlApi } from '@/services/common
 import { handleLinkedinAndXCallbackApi, savePlatformTokenApi } from '@/services/common/post.services';
 import { setUser } from '@/redux/slices/user.slice';
 import { Button } from '../ui/button';
-import Skeleton from 'react-loading-skeleton';
-import PaymentIntegrationModal from '../common.components/integrate-payment.modal';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { getPaymentIntegrationsStatus } from '@/services/agency/get.services';
@@ -22,12 +20,7 @@ const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState('about');
   const user = useSelector((state: RootState) => state.user);
   const agency = useSelector((state: RootState) => state.agency)
-  const [required, setRequired] = useState<string[]>([]);
   const dispatch = useDispatch()
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-  const [paymentIntegrationTutorialUrl, setPaymentIntegrationTutorialUrl] = useState<string>("")
-  const [currentPaymentProvider, setCurrentPaymentProvider] = useState<string>("")
-
 
 
 
@@ -62,22 +55,12 @@ const SettingsPage = () => {
     }
     const required = searchParams.get("required")?.split(",") || []
     if (required.length > 0) {
-      setRequired(required)
       toast.warning('Please connect the required platforms')
     }
 
   }, []);
 
-
-  const { data: paymentIntegrationStatus, isLoading: isPaymentIntegrationStatusLoading, refetch } = useQuery({
-    queryKey: ["get-payment-integration-status"],
-    queryFn: () => {
-      return getPaymentIntegrationsStatus()
-    },
-    select: (data) => data?.data.paymentIntegrationStatus,
-    staleTime: 1000 * 60 * 60,
-  })
-
+ 
   const { data: connections } = useQuery({
     queryKey: ["get-connections-status"],
     queryFn: () => {
@@ -137,24 +120,24 @@ const SettingsPage = () => {
   };
 
 
-  const handleConnectSocailMedia = async (
-    connectionEndpoint: string,
-    platform: string
-  ): Promise<void> => {
-    try {
-      const urlQuery = new URL(window.location.href);
-      urlQuery.searchParams.set("provider", platform);
-      const redirectUri = encodeURIComponent(urlQuery.toString());
-      const response = await getConnectSocailMediaUrlApi(`${connectionEndpoint}?redirectUri=${redirectUri}`)
+  // const handleConnectSocailMedia = async (
+  //   connectionEndpoint: string,
+  //   platform: string
+  // ): Promise<void> => {
+  //   try {
+  //     const urlQuery = new URL(window.location.href);
+  //     urlQuery.searchParams.set("provider", platform);
+  //     const redirectUri = encodeURIComponent(urlQuery.toString());
+  //     const response = await getConnectSocailMediaUrlApi(`${connectionEndpoint}?redirectUri=${redirectUri}`)
 
-      const url = new URL(response?.data.url);
-      window.location.href = url.toString();
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error("Error:", error);
-      }
-    }
-  };
+  //     const url = new URL(response?.data.url);
+  //     window.location.href = url.toString();
+  //   } catch (error: unknown) {
+  //     if (error instanceof Error) {
+  //       console.error("Error:", error);
+  //     }
+  //   }
+  // };
 
 
 
@@ -181,260 +164,6 @@ const SettingsPage = () => {
     }
   }
 
-
-
-
-
-  const SocialIntegrationsContent = () => (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-medium">Platforms</h3>
-      </div>
-      <div className={`flex items-center justify-between p-4 border  bg-grey-200 rounded`}>
-        <div className="flex items-center  space-x-4">
-          <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
-            <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/1200px-Instagram_icon.png' alt='Instagram' className="w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="font-medium">Instagram</h4>
-            {user.instagramAccessToken !== "" ? (
-              <p className="text-sm text-green-600">Connected </p>
-            ) : (
-              required.includes('instagram') ? (
-                <p className="text-sm text-gray-700">Connection required..</p>
-              ) : (
-                <p className="text-sm text-gray-500">Not connected</p>)
-            )}
-          </div>
-        </div>
-        <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 ${user.instagramAccessToken !== "" ?
-          'border border-red-300 text-red-600 hover:bg-red-50'
-          : ` ${required.includes('instagram') ? "bg-black hover:bg-gray-700" : "bg-blue-700 hover:bg-blue-800"} text-white `
-          } transition`}>
-          {user.instagramAccessToken !== "" ? (
-            'Disconnect'
-          ) : (
-            <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/instagram', 'instagram')}>
-              <span>Connect</span>
-              <ExternalLink size={14} />
-            </div>
-          )}
-        </button>
-      </div>
-
-      <div className="flex items-center justify-between p-4 border border-gray-200 rounded">
-        <div className="flex items-center space-x-4">
-          <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
-            <img src='https://upload.wikimedia.org/wikipedia/commons/6/6c/Facebook_Logo_2023.png' alt='FaceBook' className="w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="font-medium">FaceBook</h4>
-            {user.facebookAccessToken !== "" ? (
-              <p className="text-sm text-green-600">Connected </p>
-            ) : (
-              required.includes('facebook') ? (
-                <p className="text-sm text-gray-700">Connection required..</p>
-              ) : (
-                <p className="text-sm text-gray-500">Not connected</p>)
-            )}
-          </div>
-        </div>
-        <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 ${user.facebookAccessToken !== "" ?
-          'border border-red-300 text-red-600 hover:bg-red-50'
-          : ` ${required.includes('facebook') ? "bg-black hover:bg-gray-700" : "bg-blue-700 hover:bg-blue-800"} text-white`
-          } transition`}>
-          {user.facebookAccessToken !== "" ? (
-            'Disconnect'
-          ) : (
-            <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/facebook', 'facebook')}>
-              <span>Connect</span>
-              <ExternalLink size={14} />
-            </div>
-          )}
-        </button>
-      </div>
-
-
-      <div className="flex items-center justify-between p-4 border border-gray-200 rounded">
-        <div className="flex items-center space-x-4">
-          <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
-            <img src='https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg' alt='FaceBook' className="w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="font-medium">Linked In</h4>
-            {user.linkedinAccessToken !== "" ? (
-              <p className="text-sm text-green-600">Connected </p>
-            ) : (
-              required.includes('linkedin') ? (
-                <p className="text-sm text-gray-700">Connection required..</p>
-              ) : (
-                <p className="text-sm text-gray-500">Not connected</p>)
-            )}  
-               </div>
-        </div>
-        <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 ${user.linkedinAccessToken !== "" ?
-          'border border-red-300 text-red-600 hover:bg-red-50'
-          : ` ${required.includes('linkedin') ? "bg-black hover:bg-gray-700" : "bg-blue-700 hover:bg-blue-800"} text-white`
-          } transition`}>
-            {user.linkedinAccessToken !== "" ? (
-            'Disconnect'
-          ) : (
-          <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/linkedin', 'linkedin')}>
-            <span>Connect</span>
-            <ExternalLink size={14} />
-          </div>
-          )}
-
-        </button>
-      </div>
-
-    
-      <div className="flex items-center justify-between p-4 border border-gray-200 rounded">
-        <div className="flex items-center space-x-4">
-          <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
-            <img src='https://img.freepik.com/free-vector/new-2023-twitter-logo-x-icon-design_1017-45418.jpg?t=st=1741153885~exp=1741157485~hmac=b159ae34d29580cfef086c305907d1ae7952b8b6ba01d3b7196d5f9bc1b12e89&w=900' alt='FaceBook' className="w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="font-medium">X</h4>
-             {user.xAccessToken !== "" ? (
-              <p className="text-sm text-green-600">Connected </p>
-            ) : (
-              required.includes('x') ? (
-                <p className="text-sm text-gray-700">Connection required..</p>
-              ) : (
-                <p className="text-sm text-gray-500">Not connected</p>)
-            )} 
-          </div>
-        </div>
-        <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 ${user.xAccessToken !== "" ?
-          'border border-red-300 text-red-600 hover:bg-red-50'
-          : ` ${required.includes('x') ? "bg-black hover:bg-gray-700" : "bg-blue-700 hover:bg-blue-800"} text-white`
-          } transition`}>
-            {user.xAccessToken !== "" ? (
-            'Disconnect'
-          ) : (
-          <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/x', 'x')}>
-            <span>Connect</span>
-            <ExternalLink size={14} />
-          </div>
-            )} 
-        </button>
-      </div>
-
-
-        <div className="flex items-center justify-between p-4 border border-gray-200 rounded">
-        <div className="flex items-center space-x-4">
-          <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
-            <img src='https://upload.wikimedia.org/wikipedia/commons/archive/c/c1/20210313114223%21Google_%22G%22_logo.svg' alt='FaceBook' className="w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="font-medium">Google</h4>
-            <p className="text-sm text-gray-500">Not connected</p>
-          </div>
-        </div>
-        <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 $ bg-blue-700 hover:bg-blue-800" text-white transition`}>
-          <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/facebook', 'facebook')}>
-            <span>Connect</span>
-            <ExternalLink size={14} />
-          </div>
-        </button>
-      </div>
-
-
-    </div>
-  );
-
-
-
-
-
-  const PaymentIntegrationsContent = () => (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-medium">Payment Gateways</h3>
-      </div>
-
-
-      <div className={`flex items-center justify-between p-4 border  bg-grey-200 rounded`}>
-        <div className="flex items-center  space-x-4">
-          <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
-            <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQl_awAhWbcBFYxdA0BCF6Y-dZP_0nbXCnRrEuCyf_5Tsoy88XrQ5PbSU5_00ygMQ5Az_s&usqp=CAU' className="w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="font-medium">Razorpay</h4>
-            {paymentIntegrationStatus && paymentIntegrationStatus?.isRazorpayIntegrated ? (<p className="text-sm text-green-600">Integrated</p>) : (<p className="text-sm text-gray-500">Not integrated</p>)}
-
-
-          </div>
-        </div>
-        {isPaymentIntegrationStatusLoading ? (
-          <>
-            <Skeleton height={25} width={90} />
-          </>
-        ) : (
-          <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 bg-black text-white transition`}>
-            <div className='w-full flex items-center justify-between gap-2'
-              onClick={() => {
-                setPaymentIntegrationTutorialUrl("https://www.youtube.com/embed/aLLI9UwNMl0?si=JQg5Q1RLNbyL1G8T")
-                setCurrentPaymentProvider("razorpay")
-                setIsModalOpen(true)
-              }
-              }>
-              <span>
-                {paymentIntegrationStatus.isRazorpayIntegrated ? "Re Integrate" : "Integrate"}
-
-              </span>
-              <Cable size={14} />
-            </div>
-          </button>
-        )}
-
-      </div>
-
-
-      <div className={`flex items-center justify-between p-4 border  bg-grey-200 rounded`}>
-        <div className="flex items-center  space-x-4">
-          <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
-            <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPlXQfoxEWFHosgkF9qA78PE_wQzqHKRGthXKVeS1hRBe27oqxJ8lCbz34LRPKaCvT3Bc&usqp=CAU' className="w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="font-medium">Stripe</h4>
-            {paymentIntegrationStatus && paymentIntegrationStatus?.isStripeIntegrated ? (<p className="text-sm text-green-600">Integrated</p>) : (<p className="text-sm text-gray-500">Not integrated</p>)}
-          </div>
-        </div>
-
-        {isPaymentIntegrationStatusLoading ? (
-          <>
-            <Skeleton height={25} width={90} />
-          </>
-        ) : (
-          <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 bg-black text-white transition`}>
-            <div className='w-full flex items-center justify-between gap-2'
-              onClick={() => {
-                setPaymentIntegrationTutorialUrl("https://www.youtube.com/embed/7edR32QVp_A?si=nHaQBAWtpeaeA40l")
-                setCurrentPaymentProvider("stripe")
-                setIsModalOpen(true)
-              }
-              }>
-              <span>
-                {paymentIntegrationStatus && paymentIntegrationStatus?.isStripeIntegrated ? "Re Integrate" : "Integrate"}
-
-              </span>
-              <Cable size={14} />
-            </div>
-          </button>
-        )}
-      </div>
-      <PaymentIntegrationModal
-        isOpen={isModalOpen}
-        onClose={setIsModalOpen}
-        tutorialUrl={paymentIntegrationTutorialUrl}
-        provider={currentPaymentProvider}
-        refetch={refetch}
-      />
-    </div>
-
-  );
 
 
 
@@ -553,10 +282,6 @@ const SettingsPage = () => {
     switch (activeTab) {
       case 'about':
         return <ProfileContents />;
-      case 'social-integrations':
-        return <SocialIntegrationsContent />;
-      case 'payment-integrations':
-        return <PaymentIntegrationsContent />;
       case 'connections':
         return <ConnectionContent />
       default:
@@ -567,8 +292,6 @@ const SettingsPage = () => {
   };
   const tabs = [
     { id: 'about', label: 'About', icon: <User size={18} /> },
-    { id: 'social-integrations', label: 'Social Integrations', icon: <Zap size={18} /> },
-    { id: 'payment-integrations', label: 'Payment Integrations', icon: <CreditCard size={18} /> },
     { id: 'connections', label: 'Connections', icon: <GitCommitHorizontal size={18} /> },
     { id: 'account-security', label: 'Account Security', icon: <Settings size={18} /> },
   ];
@@ -576,11 +299,11 @@ const SettingsPage = () => {
     <>
         <CustomBreadCrumbs
         breadCrumbs={[
-          ["Tools & Inegration", "/agency"],
+          ["Tools & Settings", "/agency"],
           ["Settings", ""],
         ]}
       />
-    <div className="min-h-screen bg-gray-50 dark:bg-[#191919] pb-7">
+    <div className="dark:bg-[#191919] pb-7">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <div className="bg-white rounded-lg shadow overflow-hidden">

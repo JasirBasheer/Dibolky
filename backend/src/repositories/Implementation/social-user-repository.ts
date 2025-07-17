@@ -36,7 +36,7 @@ export class SocialUserRepository extends BaseRepository<ISocialUser> implements
         social_user: any
     ): Promise<any> {
         const model = await this.getModel(orgId);
-
+        console.log(social_user)
         const newSocialUser = new model(social_user)
         const createdUser = await newSocialUser.save()
         if(!createdUser)throw new CustomError("An unexpected error occured while creating user please try again later.",500)
@@ -56,10 +56,10 @@ export class SocialUserRepository extends BaseRepository<ISocialUser> implements
         orgId:string,
         userId: string,
         platform:string,
-        pageId?:string
+        linkedPage?:string
     ): Promise<any> {
         const model = await this.getModel(orgId);
-        return model.find({userId,platform,pageId})
+        return model.find({userId,platform,linkedPage})
     }
 
 }

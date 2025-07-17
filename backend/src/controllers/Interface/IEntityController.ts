@@ -12,6 +12,8 @@ export interface IEntityController {
     getOwner(req: Request, res: Response): Promise<void>
     getChats(req: Request, res: Response): Promise<void>
     getInbox(req: Request, res: Response): Promise<void>
+    sendMessage(req: Request, res: Response): Promise<void>
+    getInboxMessages(req: Request, res: Response): Promise<void>
     getChat(req: Request, res: Response): Promise<void>
     getMessages(req: Request, res: Response): Promise<void>
     createGroup(req: Request, res: Response): Promise<void>

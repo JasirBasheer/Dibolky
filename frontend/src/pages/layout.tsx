@@ -10,7 +10,7 @@ export default function Layout() {
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
-          <main className="flex-1 ">
+          <main className="flex-1 bg-gray-50">
             <Outlet />
           </main>
         </SidebarInset>

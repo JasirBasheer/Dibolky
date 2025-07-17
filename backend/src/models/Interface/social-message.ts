@@ -1,12 +1,13 @@
 import { ISocialMessageMedia } from "@/types";
-import { Document, ObjectId } from "mongoose";
+import { Document } from "mongoose";
 
 
   export interface ISocialMessage extends Document{
-    senderId: ObjectId; 
+    senderId: string; 
     platform: string
     userId: string;
     isFromMe:boolean;
+    linkedPage:string;
     externalMessageId: string;
     content?: string;
     media?: ISocialMessageMedia[];
@@ -15,5 +16,6 @@ import { Document, ObjectId } from "mongoose";
     status?: string
     createdAt?: Date;
     updatedAt?: Date;
+    conversationId:string;
   }
   

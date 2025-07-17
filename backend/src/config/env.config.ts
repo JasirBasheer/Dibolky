@@ -10,6 +10,7 @@ export const JWT_RESET_PASSWORD_SECRET = process.env.JWT_RESET_PASSWORD_SECRET a
 export const META_CLIENTID = process.env.META_CLIENTID as string
 export const META_SECRETID = process.env.META_SECRETID as string
 export const META_API_VERSION = process.env.META_API_VERSION as string
+export const META_WEBHOOK_VERIFY_TOKEN = process.env.META_WEBHOOK_VERIFY_TOKEN as string
 
 
 // LINKEDIN API

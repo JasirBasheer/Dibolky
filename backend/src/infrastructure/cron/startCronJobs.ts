@@ -1,8 +1,10 @@
 import logger from "@/logger";
 import { startScheduledPostsProcessor } from "./contentsCronJobs";
+import { processWebhookQueue } from "./inboxJobProcess";
 
 
 export const startCronJobs = () => {
   startScheduledPostsProcessor();
-  logger.info("All cron jobs started.",{method:"cron-job"});
+  processWebhookQueue()
+  logger.info("All cron jobs started and processes.",{method:"cron-job"});
 };

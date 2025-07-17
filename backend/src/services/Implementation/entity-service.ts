@@ -377,44 +377,33 @@ async getInbox(
   selectedPages: string[]
 ): Promise<ISocialUserType[]> {
   try {
-    const user =
-      entity === 'agency'
+    const user = entity === 'agency'
         ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
         : await this._clientTenantRepository.getClientById(orgId, userId);
 
-
     const users: ISocialUserType[] = [];
     for (const platform of selectedPlatforms) {
-      // Initialize platformUsers to collect users from repository or API
       let platformUsers: ISocialUserType[] = [];
 
       if (platform === 'instagram') {
-        if (!user?.socialMedia_credentials?.instagram?.accessToken) return []
-
+      if (!user?.socialMedia_credentials?.instagram?.accessToken) return []
+        
         platformUsers = (
           await Promise.all(
             selectedPages.map(async (pageId) => {
-              const usersWithPageId = await this._socialUserRepository.getUsersWithPageId(
-                orgId,
-                userId,
-                platform,
-                pageId
-              );
+              const usersWithPageId = await this._socialUserRepository.getUsersWithPageId(orgId, userId, platform, pageId);
               return usersWithPageId;
             })
           )
         ).flat();
-
-        if (platformUsers.length > 0) {
-          users.push(...platformUsers);
-        }
+ 
+        if (platformUsers.length > 0) users.push(...platformUsers);
 
         const pagesWithNoUsers = selectedPages.filter((pageId) => !platformUsers.some((u) => u.linkedPage === pageId));
-
+        console.log(pagesWithNoUsers.length)
         if (pagesWithNoUsers.length > 0) {
           const pages = await getPages(user.socialMedia_credentials.instagram.accessToken);
           const validPages = pages.data.filter((page) => pagesWithNoUsers.includes(page.id));
-
           const pageUsers = await Promise.all(
             validPages.map(async (page) => {
               const tokenDetails = await getIGTokenDetails(page.id, page.access_token); 
@@ -426,7 +415,11 @@ async getInbox(
                 conversations.map(async (conversation: InstagramConversation) => {
                   const messages = await getIGMessages(conversation.id, page.access_token);
                   if (!messages.length) return null;
+                      const validMessages = messages.filter((msg: InstagramMessage) => 
+                        msg.message.trim() !== '' || (msg.attachments && msg.attachments.data.length > 0)
+                      );
 
+                  if (validMessages.length === 0) return null;
                   const otherUser = messages.find(
                     (msg: InstagramMessage) =>
                       msg.from.id !== tokenDetails.id || msg.to.data[0].id !== tokenDetails.id)?.from.id !== tokenDetails.id
@@ -436,20 +429,21 @@ async getInbox(
                   if (!otherUser) return null;
                   const userDetails = await getIGMessageSenderDetails(otherUser.id, page.access_token);
                   const socialUser = await this._socialUserRepository.createUser(orgId, {
-                    platform,
-                    externalUserId: otherUser.id,
-                    pageId: page.id,
+                    platform, externalUserId: otherUser.id, 
                     userId,
-                    name: userDetails.name || userDetails.username,
-                    avatarUrl: userDetails.profile_picture_url || '',
-                    linkedPage: page.id,
-                    lastSeen: new Date(messages[0].created_time),
-                    updatedAt: new Date(),
-                  });
+                    conversationId: conversation.id,
+                    userName: userDetails.username || userDetails.name,
+                    name: userDetails.name || userDetails.username, 
+                    profile: userDetails.profile_picture_url || "", 
+                    linkedPage: page.id, 
+                    lastSeen: new Date(messages[0].created_time), 
+                     });
 
-                  const socialMessages = messages.map((msg: InstagramMessage) => ({
+                     const socialMessages = messages.map((msg: InstagramMessage) => ({
                     platform,
                     userId,
+                    linkedPage: page.id,
+                    conversationId: conversation.id,
                     externalMessageId: msg.id,
                     senderId: msg.from.id,
                     isFromMe: msg.from.id === tokenDetails.id, 
@@ -459,7 +453,7 @@ async getInbox(
                       url: att.image_data?.url || '',
                     })) || [],
                     timestamp: new Date(msg.created_time),
-                    status: 'received' as const,
+                    status: 'received',
                   }));
 
                   await this._socialMessageRepository.createMessages(orgId, socialMessages);
@@ -469,8 +463,9 @@ async getInbox(
                     platform,
                     externalUserId: otherUser.id,
                     userId,
+                    conversationId: conversation.id,
                     name: userDetails.name || userDetails.username,
-                    avatarUrl: userDetails.profile_picture_url || '',
+                    profile: userDetails.profile_picture_url || '',
                     linkedPage: page.id,
                     lastSeen: new Date(messages[0].created_time),
                   } as ISocialUserType;
@@ -492,11 +487,19 @@ async getInbox(
     }
 
     return users;
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error fetching inbox:', error);
     throw new CustomError('Error while fetching chats', 500);
   }
 }
 
-  
+
+
+   async getInboxMessages(orgId: string,  userId: string, platform: string, conversationId: string): Promise<any>{
+      const messages = await this._socialMessageRepository.getMessages(orgId,userId,platform,conversationId)
+      return messages
+    
+   }
+
+
 }

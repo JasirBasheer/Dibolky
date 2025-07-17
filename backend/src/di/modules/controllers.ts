@@ -1,4 +1,4 @@
-import { AdminController, AgencyController, AuthenticationController, ClientController, EntityController, IAdminController, IAgencyController, IAuthenticationController, IClientController, IEntityController, IPaymentController, IPlanController, IProviderController, PaymentController, PlanController, ProviderController } from "@/controllers";
+import { AdminController, AgencyController, AuthenticationController, ClientController, EntityController, IAdminController, IAgencyController, IAuthenticationController, IClientController, IEntityController, IInboxWebHookController, InboxWebhookController, IPaymentController, IPlanController, IProviderController, PaymentController, PlanController, ProviderController } from "@/controllers";
 import { container } from "tsyringe";
 
 export const registerControllers = () => {
@@ -10,4 +10,5 @@ container.register<IEntityController>('EntityController', { useClass: EntityCont
 container.register<IPaymentController>('PaymentController', { useClass: PaymentController });
 container.register<IProviderController>('ProviderController', { useClass: ProviderController });
 container.register<IPlanController>('PlanController', { useClass: PlanController });
+container.register<IInboxWebHookController>('InboxWebHookController', { useClass: InboxWebhookController });
 };

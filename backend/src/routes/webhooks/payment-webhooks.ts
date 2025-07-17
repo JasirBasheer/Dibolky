@@ -4,12 +4,12 @@ import { container } from "tsyringe";
 import { IPaymentController } from "@/controllers";
 import { asyncHandler } from '@/utils/async-handler-util';
 
-export const createWebHookRoutes = (): Router => {
+export const createPaymentWebHookRoutes = (): Router => {
   const router = Router();
   router.use(express.raw({ type: "application/json" }))
   
   const paymentController = container.resolve<IPaymentController>('PaymentController')
-  router.post('/stripe-webhook',  asyncHandler(paymentController.stripeWebhook))
+  router.post('/stripe',  asyncHandler(paymentController.stripeWebhook))
   
   return router;
 };

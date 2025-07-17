@@ -97,4 +97,12 @@ export const handleLinkedinAndXCallbackApi = async (
 }
 
 
-
+export const getInboxConversations = async (
+    role: string,
+    user_id: string,
+    selectedPlatforms: string[],
+    selectedPages: string[]
+) => {
+    console.log(user_id,"dsaf")
+    return await api.post(`/api/entities/inbox/${role}/${user_id}`, { selectedPages, selectedPlatforms })
+}

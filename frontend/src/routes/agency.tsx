@@ -18,6 +18,7 @@ import {
   ResetPassword
 } from '@/pages/authentication.pages/forgotPassword'
 import Layout from '@/pages/layout'
+import Integrations from '@/pages/common.pages/Integrations'
 
 
 export default function AgencyRoutes() {
@@ -31,6 +32,9 @@ export default function AgencyRoutes() {
         <Route index element={<AgencyDashboard />} />
         <Route path='analytics' element={<AgencyAnalytics />} />
         <Route path='clients' element={<Clients />} />
+        <Route path='integrations' element={<Integrations />} />
+
+        
         {/* need to check it */}
         <Route path='create-client' element={<CreateClient />} />
         <Route path='contents' element={<AgencyContent />} />

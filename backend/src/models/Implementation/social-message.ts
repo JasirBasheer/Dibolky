@@ -11,7 +11,6 @@ const mediaSchema: Schema<ISocialMessageMedia> = new Schema({
   },
   url: {
     type: String,
-    required: true
   },
   id: {
     type: String,
@@ -22,18 +21,23 @@ const mediaSchema: Schema<ISocialMessageMedia> = new Schema({
 
 export const socialMessageSchema: Schema<ISocialMessage> = new Schema({
   senderId: {
-    type: Schema.Types.ObjectId,
-    ref: 'SocialUser',
+    type: String,
     required: true
   },
   userId: {
     type: String,
-    ref: 'SocialUser',
+    required: true
+  },
+  linkedPage:{
+    type: String,
+    required: true
+  },
+  conversationId:{
+    type: String,
     required: true
   },
   platform: {
     type: String,
-    enum: ['facebook', 'instagram'],
     required: true
   },
   isFromMe: {
@@ -42,8 +46,6 @@ export const socialMessageSchema: Schema<ISocialMessage> = new Schema({
   },
   externalMessageId: {
     type: String,
-    required: true,
-    index: true
   },
   content: String,
   media: [mediaSchema],
@@ -53,7 +55,6 @@ export const socialMessageSchema: Schema<ISocialMessage> = new Schema({
   },
   timestamp: {
     type: Date,
-    required: true
   },
   status: {
     type: String,

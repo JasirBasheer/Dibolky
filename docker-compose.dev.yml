@@ -34,7 +34,7 @@ services:
       logstash:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5050/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5050/api/health"]
       interval: 90s
       timeout: 10s
       retries: 3

@@ -39,5 +39,11 @@ export class SocialMessageRepository extends BaseRepository<ISocialMessage> impl
         await model.insertMany(messages)
     }
 
+    async getMessages(orgId: string, userId: string, platform: string, conversationId: string): Promise<any> {
+        const model = await this.getModel(orgId);
+        const messages = await model.find({userId,platform,conversationId})
+        return messages
+    }
+
 
 }

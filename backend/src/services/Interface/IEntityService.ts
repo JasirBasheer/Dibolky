@@ -19,4 +19,5 @@ export interface IEntityService {
     getScheduledContent(orgId: string, user_id: string): Promise<IBucket[]>
     getConnections(orgId: string, entity: string, user_id: string): Promise<any>
     getInbox(orgId: string, entity: string,  userId: string, selectedPlatforms: string[], selectedPages: string[]): Promise<any>
+    getInboxMessages(orgId: string,  userId: string, platform: string, conversationId: string): Promise<any>
 }

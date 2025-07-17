@@ -55,3 +55,14 @@ export const fetchConnections = async (entity:string,user_id:string) => {
 export const getPlanDetailsApi = async(planId:string) =>{
     return await api.get(`/api/public/plans/${planId}`);
 }
+
+
+
+export const getInboxMessagesApi = async (
+    user_id: string,
+    platform: string,
+    conversationId: string
+) => {
+    console.log(user_id,"dsaf")
+    return await api.get(`/api/entities/inboxMessages/${platform}/${user_id}/${conversationId}`)
+}

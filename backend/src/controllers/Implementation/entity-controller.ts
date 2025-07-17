@@ -153,10 +153,35 @@ export class EntityController implements IEntityController {
     ): Promise<void> => {
 
             if (!req.details) throw new NotFoundError("request details not found")
-            const { entity, userId } = req.params
+            const { entity, user_id } = req.params
             const { selectedPlatforms, selectedPages } = req.body
-            const chats = await this._entityService.getInbox(req.details.orgId as string,entity, userId, selectedPlatforms, selectedPages)
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { chats })
+            const users = await this._entityService.getInbox(req.details.orgId as string,entity, user_id, selectedPlatforms, selectedPages)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { users })
+        
+    }
+
+    sendMessage = async(
+        req: Request,
+        res: Response,
+    ): Promise<void> => {
+
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { conversation_id, access_token, message, type, media_url  } = req.body
+            // const users = await this._entityService.getInbox(req.details.orgId as string,conversation_id, access_token, message, type, media_url)
+            // SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { users })
+        
+    }
+
+
+    getInboxMessages = async(
+        req: Request,
+        res: Response,
+    ): Promise<void> => {
+
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { user_id, platform, conversationId } = req.params
+            const messages = await this._entityService.getInboxMessages(req.details.orgId as string, user_id, platform, conversationId)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { messages })
         
     }
 
@@ -277,7 +302,7 @@ export class EntityController implements IEntityController {
             if (!req.details) throw new NotFoundError("request details not found")
             const { platform, user_id } = req.params
             const { files, platforms, metadata, contentType } = req.body
-            await this._entityService.saveContent({orgId:req.details.orgId as string, platform, platforms, user_id, files, metadata, contentType})
+            // await this._entityService.saveContent({orgId:req.details.orgId as string, platform, platforms, user_id, files, metadata, contentType})
 
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
        

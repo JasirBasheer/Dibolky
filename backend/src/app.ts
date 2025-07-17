@@ -5,18 +5,19 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import { requestLogger } from "@/middlewares";
 import { limiter } from "mern.common";
-import { createWebHookRoutes } from "./routes/payment/webhook-routes";
+import { createMetaWebHookRoutes, createPaymentWebHookRoutes } from "@/routes";
 
 
 export const createApp = () => {
   const app = express();
 
   app.use(cors({
-      origin: process.env.CORS_ORIGINS?.split(',') || [],
+      origin: ["http://localhost:5173","http://frontend:5173"],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       credentials: true,
   }))
-  app.use('/api/payment/webhook', createWebHookRoutes()); 
+  app.use('/api/payment/webhook', createPaymentWebHookRoutes()); 
+  app.use('/api/inbox/webhook', createMetaWebHookRoutes()); 
   app.use(helmet());
   // app.use(limiter);
   app.use(compression());

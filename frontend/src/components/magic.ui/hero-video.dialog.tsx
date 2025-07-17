@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { XIcon } from "lucide-react";
 
-import { cn } from "@/utils/shardcn.utils";
+import { cn } from "@/utils/shardcn";
 
 type AnimationStyle =
   | "from-bottom"

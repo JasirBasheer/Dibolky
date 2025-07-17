@@ -2,7 +2,7 @@
 
 import React, { forwardRef, useRef } from "react";
 
-import { cn } from "@/utils/shardcn.utils";
+import { cn } from "@/utils/shardcn";
 import { AnimatedBeam } from "../magic.ui/animation.beam";
 import { Check } from "lucide-react";
 import { useState } from "react";

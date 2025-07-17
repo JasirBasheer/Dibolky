@@ -31,25 +31,22 @@ export interface IMenuItems {
     subItems: ISubItem[];
 }
 
-export type validityType = "monthly" | "yearly" | "lifetime";
-export type planType = "agency" | "influencer";
+export type validityType = "monthly" | "yearly" ;
 export interface IPlan {
     _id?:string;
-    planName: string;
-    planType:planType;
-    planDescription:string;
+    name: string;
+    description:string;
     price: number;
     features: string[];
-    validity:  validityType;
-    totalProjects?: number;
-    totalManagers?: number;
+    billingCycle:  validityType;
+    maxProjects?: number;
+    maxClients?: number;
     menu?: {
         smm?: IMenuItems;
         crm?: IMenuItems;
         accounting?: IMenuItems;
     };
     isActive:boolean;
-    deactivationDate:Date
 }
 
 

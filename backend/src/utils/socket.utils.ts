@@ -3,7 +3,7 @@ import { Server as HTTPSServer } from "https";
 import { Server } from 'socket.io';
 import { container } from 'tsyringe';
 import mongoose from 'mongoose';
-import { IChat } from "../types/chat.types";
+import { IChat } from "../types/chat";
 import { IChatService } from "../services/Interface/IChatService";
 
 

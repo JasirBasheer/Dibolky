@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
 import Clients from '@/pages/agency.pages/Clients'
-import Layout from '@/pages/agency.pages/Layout'
 import Login from '@/pages/authentication.pages/login'
 import Inbox from '@/components/common.components/inbox'
 import AgencyCalendar from '@/pages/agency.pages/Calendar'
@@ -18,6 +17,8 @@ import {
   ForgotPassword,
   ResetPassword
 } from '@/pages/authentication.pages/forgotPassword'
+import Layout from '@/pages/layout'
+import Integrations from '@/pages/common.pages/Integrations'
 
 
 export default function AgencyRoutes() {
@@ -31,6 +32,9 @@ export default function AgencyRoutes() {
         <Route index element={<AgencyDashboard />} />
         <Route path='analytics' element={<AgencyAnalytics />} />
         <Route path='clients' element={<Clients />} />
+        <Route path='integrations' element={<Integrations />} />
+
+        
         {/* need to check it */}
         <Route path='create-client' element={<CreateClient />} />
         <Route path='contents' element={<AgencyContent />} />

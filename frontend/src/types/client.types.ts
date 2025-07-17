@@ -21,7 +21,7 @@ interface platform {
 interface credentials {
     facebook: platform;
     instagram: platform;
-    tiktok: platform;
+    linkedin: platform;
     x: platform;
 }
 

@@ -1,4 +1,4 @@
-import { IBucket } from "../../types/common.types"
+import { IBucket } from "../../types/common"
 
 export interface IContentRepository {
     saveContent(details: Partial<IBucket>): Promise<IBucket>

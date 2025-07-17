@@ -5,6 +5,7 @@ import { message } from 'antd'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { IClient } from '@/types/client.types'
+import CustomBreadCrumbs from '@/components/ui/custom-breadcrumbs'
 
 
 const AdminDashboard = () => {
@@ -15,7 +16,7 @@ const AdminDashboard = () => {
       console.log(response)
 
       if (response && response.status == 200) {
-        setRecentClients([...response.data.clients.Agency])
+        setRecentClients([...response.data.clients])
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { error?: string } } };
@@ -32,6 +33,12 @@ const AdminDashboard = () => {
   }, 0)
   return (
     <div className='w-full p-9'>
+        <CustomBreadCrumbs
+        breadCrumbs={[
+          ["Influencers", "/influencers"],
+          ["Search", ""],
+        ]}
+      />
       <div className="w-full ">
         <h1 className='text-2xl cantarell font-semibold'>Dashbord Overview</h1>
         <div className="flex flex-wrap items-center lg:justify-start justify-center w-full mt-5 gap-5 ">

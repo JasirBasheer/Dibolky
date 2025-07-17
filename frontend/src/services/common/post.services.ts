@@ -16,10 +16,9 @@ export const savePlatformTokenApi = async (
 
 export const checkIsMailExistsApi = async (
     mail:string,
-    platform:string
 ) => {
-    return await api.post('/api/entities/check-mail', {
-        mail,platform
+    return await api.post('/api/public/check-mail', {
+        mail
     });
 }
 
@@ -87,4 +86,23 @@ export const fetchChatsApi = async (
     chatId: string,
 ) => {
     return await api.post(`/api/entities/chats`, { chatId })
+}
+
+export const handleLinkedinAndXCallbackApi = async (
+    code: string,
+    state: string,
+    provider: string,
+) => {
+    return await api.post(`/api/entities/${provider}/callback`, { code,state })
+}
+
+
+export const getInboxConversations = async (
+    role: string,
+    user_id: string,
+    selectedPlatforms: string[],
+    selectedPages: string[]
+) => {
+    console.log(user_id,"dsaf")
+    return await api.post(`/api/entities/inbox/${role}/${user_id}`, { selectedPages, selectedPlatforms })
 }

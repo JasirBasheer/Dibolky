@@ -47,6 +47,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
 
 
   useEffect(() => {
+    console.log(agency.user_id)
     if (!agency?.user_id) return;
 
     const selectedClient = localStorage.getItem('selectedClient');
@@ -106,6 +107,8 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
         organizationName: details.organizationName,
         facebookAccessToken: details?.socialMedia_credentials?.facebook?.accessToken || "",
         instagramAccessToken: details?.socialMedia_credentials?.instagram?.accessToken || "",
+        linkedinAccessToken: details?.socialMedia_credentials?.linkedin?.accessToken || "",
+        xAccessToken: details?.socialMedia_credentials?.x?.accessToken || "",
         profile: details.profile || "",
         bio: details.bio || "",
         role: role,

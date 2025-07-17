@@ -7,15 +7,13 @@ import { IPlan, IPlans } from '@/types/admin.types';
 import { RootState } from '@/types/common.types';
 
 const Plans = () => {
-    const [plans, setPlans] = useState<IPlans | null>(null); 
-    const [isAgency, setIsAgency] = useState(true); 
-    const [sortedPlans, setSortedPlans] = useState<IPlan[]>([]); 
+    const [plans, setPlans] =  useState<IPlan[]>([]); 
     const currency = useSelector((state:RootState)=>state.portal)
     const navigate = useNavigate();
 
     const getPlans = async () => {
         try {
-            const response = await axios.get('/api/entities/get-all-plans');  
+            const response = await axios.get('/api/public/plans');  
             setPlans(response.data.plans);           
         } catch (error) {
             console.error('Error fetching plans:', error);
@@ -26,13 +24,6 @@ const Plans = () => {
         getPlans();
     }, [currency]);
 
-
-    useEffect(() => {
-        if (plans) {
-            console.log(plans)
-            setSortedPlans(plans[isAgency ? 'Agency' : 'Influencer'] || []); 
-        }
-    }, [isAgency, plans]); 
 
     const handlePurchasePlan = (planId: string) => {
         navigate(`/purchase/${planId}`);
@@ -51,44 +42,22 @@ const Plans = () => {
                 </div>
             </div>
 
-            <div className="col-span-12 flex items-center justify-center">
-                <div className="relative dark:bg-[#bdb5b5fb] bg-white px-2 py-2 rounded-lg shadow-md">
-                    <div className="flex relative font-lazare font-bold">
-                        <button
-                            className={`relative z-10 transition-colors duration-300 md:w-44 w-36 h-9 rounded-md ${isAgency ? "text-white" : "text-gray-700"
-                                }`}
-                            onClick={() => setIsAgency(true)}
-                        >
-                            Agency
-                        </button>
-                        <button
-                            className={`relative z-10 transition-colors duration-300 md:w-44 w-36 h-9 rounded-md ${!isAgency ? "text-white" : "text-gray-700"
-                                }`}
-                            onClick={() => setIsAgency(false)}
-                        >
-                            Influencer
-                        </button>
-                        <div 
-                        className={`absolute top-0 h-9 w-36 md:w-44 dark:bg-[#1f2b40] bg-[#1c1e21f3] rounded-md transition-all duration-300 ${isAgency ? "left-0" : "left-[144px] md:left-44"
-                                }`} />
-                    </div>
-                </div>
-            </div>
 
-            <div className="col-span-12 flex items-center justify-center px-4 md:px-10 mt-10 lg:px-20">
+
+            <div className="col-span-12 flex items-center justify-center px-4 md:px-10 lg:px-20">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-7 w-full font-lazare font-bold">
-                    {sortedPlans.map((plan, i) => (
+                    {plans?.map((plan, i) => (
                         i<3 ? ( <div
                             key={i}
                             className={`relative ${i !== 1 ? "mt-0 md:mt-4" : ""}
                                  light:bg-white rounded-xl shadow-md dark:bg-[#1f2b40] hover:shadow-xl transition-all duration-300 p-6 flex flex-col`}
                                 >
                                 <div className="flex-grow">
-                                    <h2 className="text-2xl font-bold">{plan.planName}</h2>
-                                    <p className="text-gray-500 mt-2">{plan.planDescription}</p>
+                                    <h2 className="text-2xl font-bold">{plan.name}</h2>
+                                    <p className="text-gray-500 mt-2">{plan.description}</p>
                                     <div className="flex items-baseline mt-4">
                                         <span className="text-3xl font-bold">{currency.currencySymbol}{plan.price.toLocaleString()}</span>
-                                        <span className="text-gray-500 ml-2">/{plan.validity}</span>
+                                        <span className="text-gray-500 ml-2">/{plan.billingCycle}</span>
                                     </div>
                                     <div className="space-y-4 mt-6">
                                         {plan.features.map((feature: string, index: number) => (
@@ -109,7 +78,6 @@ const Plans = () => {
                                     Purchase Plan
                                 </button>
                             </div>):(<></>)
-                       
                     ))}
                 </div>
             </div>

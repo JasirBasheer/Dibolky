@@ -7,4 +7,7 @@ RUN adduser -D nodeuser && chown -R nodeuser:nodeuser /app
 USER nodeuser
 ENV NODE_ENV=development
 EXPOSE 5050
-CMD ["npm", "run", "dev", "start"]
+CMD ["npm", "run", "start"]
+
+
+

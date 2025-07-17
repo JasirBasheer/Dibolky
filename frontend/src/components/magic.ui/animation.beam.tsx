@@ -2,7 +2,7 @@
  
 import { RefObject, useEffect, useId, useState } from "react";
 import { motion } from "framer-motion";
-import { cn } from "@/utils/shardcn.utils";
+import { cn } from "@/utils/shardcn";
 
 export interface AnimatedBeamProps {
   className?: string;

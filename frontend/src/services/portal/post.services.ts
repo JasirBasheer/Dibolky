@@ -6,7 +6,7 @@ export const createAgencyApi = async (
     transaction_id?: string
 ) => {
     return await api.post(
-        `/api/entities/create-agency`,
+        `/api/public/agency`,
         {
             details,
             transaction_id
@@ -19,7 +19,7 @@ export const createInfluencerApi = async (
     transaction_id?: string
 ) => {
     return await api.post(
-        `/api/entities/create-influencer`,
+        `/api/public/create-influencer`,
         {
             details,
             transaction_id

@@ -71,7 +71,7 @@ const PurchasePlan: React.FC = () => {
     }
 
     const validateMail = async (mail: string): Promise<boolean> => {
-        const response = await  checkIsMailExistsApi(mail,plan?.planType as string)
+        const response = await  checkIsMailExistsApi(mail)
         return response.data.isExists
     }
 
@@ -95,7 +95,7 @@ const PurchasePlan: React.FC = () => {
     const fetchPlanDetails = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`/api/entities/get-plan/${plan_id}`)
+            const response = await axios.get(`/api/public/plans/${plan_id}`)
             setPlan(response.data.plan)
         } catch (error) {
             console.log(error)
@@ -113,6 +113,7 @@ const PurchasePlan: React.FC = () => {
             await handleRazorpayPayment(formData, plan as IPlan, navigate, currency.selectedCurrency);
         } else if (paymentMethod == 'stripe') {
             const response = await handleStripePayment(formData, plan as IPlan, currency.selectedCurrency)
+            console.log(response)
             if (response.url) window.location.href = response.url
         }
     };
@@ -148,16 +149,16 @@ const PurchasePlan: React.FC = () => {
                 return (
                     <div className="space-y-4 animate-fadeIn">
                         <div className="text-center border-b pb-6">
-                            <h2 className="text-3xl text-gray-900 font-lazare font-bold">{plan?.planName}
+                            <h2 className="text-3xl text-gray-900 font-lazare font-bold">{plan?.name}
                             </h2>
                             <div className="mt-4">
                                 <span className="text-4xl  dark:text-white text-black font-lazare font-bold">{currency.currencySymbol} {plan.price.toLocaleString()}</span>
-                                <span className="text-gray-600 ml-2 font-lazare font-bold" >/ {plan.validity}</span>
+                                <span className="text-gray-600 ml-2 font-lazare font-bold" >/ {plan.billingCycle}</span>
                             </div>
                         </div>
 
                         <div className="pt-6">
-                            <p className="text-gray-500 text-center mb-6 font-lazare font-bold">{plan.planDescription}</p>
+                            <p className="text-gray-500 text-center mb-6 font-lazare font-bold">{plan.description}</p>
                             <div className="space-y-4">
                                 {plan.features?.map((feature, index) => (
                                     <div key={index} className="flex items-center font-lazare font-bold">
@@ -227,7 +228,7 @@ const PurchasePlan: React.FC = () => {
                                 <span className="text-gray-600">Total Amount</span>
                                 <div className="text-right">
                                     <span className="text-2xl font-bold text-gray-900">{currency.currencySymbol} {(plan?.price * (formData?.validity ?? 1) || 0).toLocaleString()}{ }</span>
-                                    <span className="text-gray-500 text-sm ml-1">/ {plan?.validity}</span>
+                                    <span className="text-gray-500 text-sm ml-1">/ {plan?.billingCycle}</span>
                                 </div>
                             </div>
                         </div>

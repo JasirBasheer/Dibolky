@@ -1,4 +1,4 @@
-import { IChat, IChatDetails, IGroupDetails, Participant } from "../../types/chat.types";
+import { IChat, IChatDetails, IGroupDetails, Participant } from "../../types/chat";
 
 export interface IChatRepository {
     createNewChat(orgId: string, details: IChatDetails): Promise<IChat | null>;

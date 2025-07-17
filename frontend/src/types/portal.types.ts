@@ -30,7 +30,6 @@ export interface FormData {
 export interface IStripeDetails extends FormData{
     name:string;
     plan:IPlan;
-    platform:string;
     amount:number;
     currency:string;
     description:string;

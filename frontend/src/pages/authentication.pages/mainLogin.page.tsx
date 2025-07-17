@@ -15,19 +15,7 @@ const MainLoginPage:React.FC = () => {
       description: "View your client portal",
       link: "/client/login",
       icon: <UserCircle className="w-12 h-12 text-orange-500" />
-    },
-    {
-      title: "Influencer",
-      description: "Access your influencer dashboard",
-      link: "/influencer/login",
-      icon: <User className="w-12 h-12 text-purple-500" />
-    },
-    {
-      title: "Account Manager",
-      description: "Access your manager dashboard",
-      link: "/manager/login",
-      icon: <Users className="w-12 h-12 text-purple-500" />
-    },
+    }
   ];
 
   return (
@@ -45,7 +33,7 @@ const MainLoginPage:React.FC = () => {
         <p className="font-bold font-lazare text-gray-600 dark:text-gray-300">Choose your login portal to continue</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         {options.map((item) => (
           <Link
             key={item.title}

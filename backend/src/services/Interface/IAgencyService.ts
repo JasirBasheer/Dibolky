@@ -1,18 +1,19 @@
-import { IProject } from "../../models/project.model";
-import { IAgency, IAgencyTenant } from "../../types/agency.types";
-import { IAvailableClients, ServicesData } from "../../types/chat.types";
-import { IClientTenant } from "../../types/client.types";
-import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common.types";
+import { IProject } from "../../models/Implementation/project";
+import { IAgencyType, IAgencyTenant } from "../../types/agency";
+import { IAvailableClients, ServicesData } from "../../types/chat";
+import { IClientTenantType } from "../../types/client";
+import { IClientTenant } from "@/models";
+import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common";
 
 export interface IAgencyService {
-    verifyOwner(agency_id: string): Promise<IAgency | null>;
+    verifyOwner(agency_id: string): Promise<Partial<IAgencyType> | null>;
     getAgencyOwnerDetails(orgId: string): Promise<IAgencyTenant | null>;
     agencyLoginHandler(email: string, password: string): Promise<string>;
     getProjectsCount(orgId: string): Promise<object>
     getClientsCount(orgId: string): Promise<object>
     getAllAvailableClients(orgId: string): Promise<IAvailableClients[]>
     createClient(orgId: string, name: string, email: string, industry: string, services: ServicesData, menu: string[], organizationName: string): Promise<IClientTenant | null>;
-    getAllClients(orgId: string): Promise<IClientTenant[] | null>
+    getAllClients(orgId: string): Promise<IClientTenantType[] | null>
     getClient(orgId: string, client_id: string): Promise<IClientTenant | null>
     saveContentToDb(client_id: string, orgId: string, files: IFiles[], platforms: IPlatforms[], contentType: string, caption: string): Promise<IBucket | null>
     getContent(orgId: string, contentId: string): Promise<IBucket | null>

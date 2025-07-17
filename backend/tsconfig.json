@@ -8,7 +8,15 @@
     "strict": true,
     "skipLibCheck": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types/@declarations"
+    ],
   },
   "include": ["src/**/*", "src/tests"],           
   "exclude": ["node_modules", "dist"]  

@@ -9,10 +9,12 @@ interface IAgency {
     ownerName: string;
     email: string;
     industry: string;
-    facebookAccessToken: string,
-    facebookUsername:string,
-    instagramAccessToken:string,
-    instagramUsername:string,
+    facebookAccessToken: string;
+    facebookUsername:string;
+    instagramAccessToken:string;
+    instagramUsername:string;
+    linkedinAccessToken: string;
+    xAccessToken: string;
     logo:string;
     remainingProjects: string;
     remainingClients: string;
@@ -30,6 +32,8 @@ const initialState: IAgency = {
     facebookUsername:"",
     instagramAccessToken:"",
     instagramUsername:"",
+    linkedinAccessToken:"",
+    xAccessToken:"",
     logo:"",
     remainingProjects: "",
     remainingClients: ""

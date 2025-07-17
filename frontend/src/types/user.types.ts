@@ -4,9 +4,12 @@ export interface ReduxIUser {
   role: string;
   profile:string;
   bio:string;
+  permissions: string[];
   planId: string;
   facebookAccessToken: string;
   instagramAccessToken: string;
+  linkedinAccessToken: string;
+  xAccessToken: string;
   email: string;
   name: string;
   organizationName: string;

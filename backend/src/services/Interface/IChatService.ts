@@ -1,5 +1,5 @@
-import { IAgencyTenant } from "../../types/agency.types";
-import { IChat, IGroupDetails, IMessage, Participant } from "../../types/chat.types";
+import { IAgencyTenant } from "../../types/agency";
+import { IChat, IGroupDetails, IMessage, Participant } from "../../types/chat";
 import { Connection } from "mongoose";
 
 export interface IChatService {
@@ -15,4 +15,4 @@ export interface IChatService {
     createCommonMessage(orgId: string, message: object): Promise<IMessage | null>
     findChatByMembers(orgId: string, userId: string, targetUserId: string): Promise<IChat | null>
     setSeenMessage(orgId:string, chatId:string, userId:string, userName:string):Promise<void>
-}
+} 

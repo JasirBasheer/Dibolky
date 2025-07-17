@@ -1,29 +1,23 @@
-import { IProject } from "../../models/project.model";
-import { IPlan } from "../../types/admin.types";
-import { AddressType, IAgency, IAgencyTenant } from "../../types/agency.types";
-import { IClientTenant } from "../../types/client.types";
-import { IFiles, IIntegratePaymentType, IMenuCategory, IMetadata, IPlatforms, IBucket, IUpdateProfile } from "../../types/common.types";
-import { IInfluencer } from "../../types/influencer.types";
+import { IAgencyRegistrationDto } from "@/dto";
+import { IProject } from "../../models/Implementation/project";
+import {  IAgencyType, IAgencyTenant } from "../../types/agency";
+import { IMenu, IBucket, IUpdateProfile } from "../../types/common";
+import { SaveContentDto } from "@/dto/content";
+import { IClientTenant } from "@/models";
 
 export interface IEntityService {
-    getAllPlans(): Promise<Record<string, IPlan[]>>;
-    getAllTrailPlans(): Promise<IPlan[]>;
-    getPlan(plan_id: string): Promise<IPlan | null>;
     fetchAllProjects(orgId: string, page?: number): Promise<{ projects: IProject[], totalPages: number } | null>;
-    IsMailExists(mail: string, platform: string): Promise<boolean>;
-    registerAgency(organizationName: string, name: string, email: string, address: AddressType, websiteUrl: string, industry: string,
-        contactNumber: number, logo: string, password: string, planId: string, validity: number, planPurchasedRate: number,
-        transactionId: string, paymentGateway: string, description: string, currency: string): Promise<Partial<IAgency> | null>;
-    createInfluencer(organizationName: string, name: string, email: string, address: AddressType, websiteUrl: string, industry: string,
-        contactNumber: number, logo: string, password: string, planId: string, validity: number, planPurchasedRate: number,
-        transactionId: string, paymentGateway: string, description: string, currency: string): Promise<Partial<IInfluencer> | null>;
-    getMenu(planId: string): Promise<IMenuCategory>;
-    getClientMenu(orgId: string, client_id: string): Promise<IMenuCategory>;
+    IsMailExists(mail: string): Promise<boolean>;
+    createAgency(payload: IAgencyRegistrationDto): Promise<Partial<IAgencyType> | null>;
+    getMenu(planId: string): Promise<IMenu[]>;
+    getClientMenu(orgId: string, client_id: string): Promise<IMenu[]>;
     getOwner(orgId: string): Promise<IAgencyTenant[]>
-    saveContent(orgId: string, platform: string, platforms: IPlatforms[], user_id: string, files: IFiles[], metadata: IMetadata, contentType: string): Promise<IBucket>;
+    saveContent(payload: SaveContentDto): Promise<IBucket>;
     getS3ViewUrl(key: string): Promise<string>
     fetchContents(orgId: string, user_id: string): Promise<IBucket[]>
     updateProfile(orgId: string, role: string, requestRole: string, details: IUpdateProfile): Promise<IAgencyTenant | IClientTenant>
     getScheduledContent(orgId: string, user_id: string): Promise<IBucket[]>
-    getConnections(orgId: string, entity: string, user_id: string): Promise<object[]>
+    getConnections(orgId: string, entity: string, user_id: string): Promise<any>
+    getInbox(orgId: string, entity: string,  userId: string, selectedPlatforms: string[], selectedPages: string[]): Promise<any>
+    getInboxMessages(orgId: string,  userId: string, platform: string, conversationId: string): Promise<any>
 }

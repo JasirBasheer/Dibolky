@@ -1,5 +1,5 @@
-import { IAgencyTenant } from "../../types/agency.types"
-import { IIntegratePaymentType, IUpdateProfile } from "../../types/common.types"
+import { IAgencyTenant } from "../../types/agency"
+import { IIntegratePaymentType, IUpdateProfile } from "../../types/common"
 
 export interface IAgencyTenantRepository {
     setSocialMediaTokens(orgId: string, provider: string, token: string): Promise<void>

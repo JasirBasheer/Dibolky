@@ -21,3 +21,19 @@ const AdminLayout = () => {
 }
 
 export default AdminLayout
+
+
+
+
+//Professional
+// Ideal for growing agencies with established clients
+// Up to 5 clients
+// Advanced analytics
+// Social media scheduling
+// Priority support
+// Custom reporting
+// API access
+// Team collaboration
+
+
+// 

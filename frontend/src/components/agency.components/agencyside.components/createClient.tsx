@@ -6,6 +6,8 @@ import { X } from "lucide-react";
 import { SERVICES } from "../../../utils/services";
 import { APIError, RootState } from "@/types/common.types";
 import { createClientApi } from "@/services/agency/post.services";
+import { useQueryClient } from "@tanstack/react-query";
+import CustomBreadCrumbs from "@/components/ui/custom-breadcrumbs";
 
 const CreateClient = () => {
   const [name, setName] = useState("jasir");
@@ -13,6 +15,7 @@ const CreateClient = () => {
   const [email, setEmail] = useState("jasirbinbasheerpp@gmail.com");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const orgId = useSelector((state: RootState) => state?.agency?.orgId);
 
   const [servicesPreview, setServicesPreview] = useState<string[]>([]);
@@ -77,6 +80,7 @@ const CreateClient = () => {
 
       if (response.status === 201) {
         message.success("Client created successfully");
+        await queryClient.invalidateQueries({ queryKey: ["get-nav-clients"] });
         navigate("/agency/clients");
         return;
       }
@@ -93,6 +97,13 @@ const CreateClient = () => {
   };
 
   return (
+    <>
+       <CustomBreadCrumbs
+        breadCrumbs={[
+          ["Client Management", "/agency/clients"],
+          ["Create Client", ""],
+        ]}
+      />
     <div className="w-full h-full flex items-center justify-center bg-gray-100">
       <div className="w-[50rem] p-6 bg-white shadow-lg rounded-md mb-24 overflow-x-auto">
         <h2 className="text-xl font-bold mb-4 text-gray-800">Create Client</h2>
@@ -208,6 +219,8 @@ const CreateClient = () => {
         )}
       </div>
     </div>
+            </>
+
   );
 };
 const ServiceModal = ({
@@ -276,6 +289,7 @@ const ServiceModal = ({
         </div>
       </div>
     </div>
+
   );
 };
 

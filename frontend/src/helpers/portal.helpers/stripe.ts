@@ -9,13 +9,13 @@ export  const handleStripePayment = async (formData:FormData,plan:IPlan,selected
             name: formData.firstName + ' ' + formData.lastName,
             ...formData,
             plan,
-            platform:plan.planType,
             amount:plan?.price * formData.validity || 0,
             currency:selectedCurrency,
-            description: plan?.planDescription || "Plan Subscription"
+            description: plan?.description || "Plan Subscription"
         }
-        const response = await axios.post('api/payment/stripe',{details,success_url:`http://localhost:5173/${platform.toLowerCase()}/login?new=true`,cancel_url:`http://localhost:5173/payment/failed`})
-        return response.data.url
+        console.log('reachedhere')
+        const response = await axios.post('api/payment/stripe',{details,success_url:`http://localhost:5173/agency/login?new=true`,cancel_url:`http://localhost:5173/payment/failed`})
+        return {url:response.data.url}
 
     } catch (error) {
         console.error('Payment initiation failed:', error);

@@ -10,7 +10,7 @@ export async function getS3ViewUrl(
 ): Promise<string> {
 
     const getObjectParams = {
-        Bucket: AWS_S3_BUCKET_NAME,
+        Bucket: "dibolky-test-app",
         Key: key,
     };
 
@@ -23,7 +23,7 @@ export async function getS3ViewUrl(
 export async function getS3PublicUrl(
     key: string
 ): Promise<string> {
-    return `https://${AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${encodeURIComponent(key)}`;
+    return `https://dibolky-test-app.s3.amazonaws.com/${encodeURIComponent(key)}`;
 }
 
 export async function deleteS3Object(

@@ -1,4 +1,4 @@
-import { cn } from "@/utils/shardcn.utils"; 
+import { cn } from "@/utils/shardcn"; 
 import { ComponentPropsWithoutRef } from "react";
 
 interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {

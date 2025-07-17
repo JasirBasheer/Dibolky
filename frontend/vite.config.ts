@@ -5,9 +5,9 @@ import path from "path"
 
 export default defineConfig({
   plugins: [react()],
-  // server: {
-  // allowedHosts: ['fs1mkl8ixe.loclx.io'],
-  // },
+  server: {
+  allowedHosts: ['dibolky.vercel.app'],
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

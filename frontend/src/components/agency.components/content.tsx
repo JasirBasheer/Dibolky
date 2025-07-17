@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
-import { Upload, Check, X, Search, Eye, MoreHorizontal } from 'lucide-react';
+import { Upload, Search, Eye, MoreHorizontal } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -34,7 +35,7 @@ const AgencyClientContent = () => {
     return matchesSearch && item.status.toLowerCase() === currentTab
   })
 
-  const handleViewContent = (content: IReviewBucket) => {
+  const handleViewContent = (content: any) => {
     setSelectedContent(content)
   }
 

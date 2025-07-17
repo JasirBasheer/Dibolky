@@ -89,7 +89,7 @@ export function FeaturesCard() {
       (entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            const index = parseInt(entry.target.dataset.index);
+          const index = parseInt((entry.target as HTMLElement).dataset.index);
             setVisibleItems(prev => {
               if (!prev.includes(index)) {
                 return [...prev, index];

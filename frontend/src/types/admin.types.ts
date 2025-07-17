@@ -37,6 +37,7 @@ export interface IPlan {
     name: string;
     description:string;
     price: number;
+    planType: string;
     features: string[];
     billingCycle:  validityType;
     maxProjects?: number;

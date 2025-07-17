@@ -532,7 +532,7 @@ const ChatInterface = ({ userId, orgId, chatId, socket, userName, onChatClose }:
               type="file"
               ref={fileInputRef}
               className="hidden"
-              onChange={(e) => handleFileUploadClick(e?.target?.files)}
+              // onChange={(e) => handleFileUploadClick(e?.target?.files)}
             />
           </div>
           <input

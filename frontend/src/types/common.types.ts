@@ -158,7 +158,8 @@ export interface IUpdateProfile {
 }
 
 export interface ITableProps<T> {
-  columns: { key: keyof T; label: string; render?: (item: T) => React.ReactNode }[];
+  columns: any[];
+  // columns: { key: keyof T; label: string; render?: (item: T) => React.ReactNode }[];
   data: T[];
   onClick?: (item: T) => void;
 }

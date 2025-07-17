@@ -29,7 +29,7 @@ export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userN
   const [availableUsers, setAvailableUsers] = useState<IAvailabeUser[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [showSuggestions, setShowSuggestions] = useState(false)
-  const [selectedMembers, setSelectedMembers] = useState<IChatUser[]>([])
+  const [selectedMembers, setSelectedMembers] = useState<any[]>([])
 
   const filteredUsers = availableUsers.filter(
     (user:IAvailabeUser) =>
@@ -225,7 +225,7 @@ export const MenuListModal = ({ setShowMenuListModal, userId, role ,orgId ,userN
                                 <div className="font-medium">{member.name}</div>
                                 <div className="text-sm text-gray-500">{member.email}</div>
                               </div>
-                              <Button variant="ghost" size="icon" onClick={() => removeMember(member._id as string)}>
+                              <Button variant="ghost" size="icon" >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </div>

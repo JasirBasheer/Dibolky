@@ -12,7 +12,7 @@ const ClientMessages: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  return <Chat user={client} ownerId={client.ownerId} isAdmin={false} />;
+  return <Chat user={client}  isAdmin={false} />;
 };
 
 export default ClientMessages;

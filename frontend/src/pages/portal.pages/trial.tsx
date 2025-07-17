@@ -52,7 +52,7 @@ export default function FreeTrialCards() {
                   <Card className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 md:w-[22rem]">
                     <CardHeader className="pb-4 space-y-4">
                       <div className="flex justify-between items-center">
-                        <CardTitle className="text-xl font-bold text-black">{trialPlan.planName}</CardTitle>
+                        <CardTitle className="text-xl font-bold text-black">{trialPlan.name}</CardTitle>
                         <div className="p-2 rounded-full bg-gray-100">
                           {trialPlan.planType == "influencer" ?
                             (
@@ -63,7 +63,7 @@ export default function FreeTrialCards() {
                         </div>
                       </div>
                       <p className="text-sm text-gray-600">
-                        {trialPlan.planDescription}
+                        {trialPlan.description}
                       </p>
                     </CardHeader>
                     <CardContent className="space-y-6">

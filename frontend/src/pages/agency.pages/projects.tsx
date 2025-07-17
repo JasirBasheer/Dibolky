@@ -176,8 +176,8 @@ export default function AgencyProject() {
               <CardContent className="pt-6">
                 <h3 className="text-lg font-semibold mb-4">Service Details</h3>
                 <div className="space-y-3">
-                  {selectedProject?.serviceDetails &&
-                    Object.entries(selectedProject.serviceDetails).map(([key, value]) => (
+                  {selectedProject?.service_details &&
+                    Object.entries(selectedProject.service_details).map(([key, value]) => (
                       <div key={key} className="flex items-center gap-2 text-sm">
                         <span className="font-medium capitalize">{key}:</span>
                         <span className="text-gray-600">{value}</span>

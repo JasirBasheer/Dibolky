@@ -5,7 +5,7 @@
     "outDir": "./dist",               
     "rootDir": "./src",               
     "esModuleInterop": true,
-    "strict": true,
+    "strict": false,
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

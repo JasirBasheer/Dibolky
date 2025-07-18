@@ -96,10 +96,6 @@ export const clientTenantSchema: Schema<IClientTenant> = new mongoose.Schema({
       }
     }
   },
-  menu: {
-    type: Object,
-    required: true
-  },
   isSocialMediaInitialized: {
     type: Boolean,
     default: false

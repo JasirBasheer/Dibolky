@@ -12,7 +12,6 @@ export interface IClientTenant extends Document {
     industry?: string;
     password?: string;
     socialMedia_credentials?: credentials;
-    menu?: IMenu[];
     isSocialMediaInitialized: boolean,
     isPaymentInitialized: boolean,
     createdAt?:string | number;

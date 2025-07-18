@@ -65,7 +65,7 @@ const planSchema: Schema<IPlan> = new Schema(
             type: Number
         },
         menu: { 
-            type: [menuItemSchema],
+            type: Object as unknown as typeof Schema.Types.Mixed,
             required:true
         },
         isActive: { 

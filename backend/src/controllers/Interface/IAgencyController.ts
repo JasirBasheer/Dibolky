@@ -8,6 +8,7 @@ export interface IAgencyController {
     getAgencyOwnerDetails(req: Request, res: Response): Promise<void>
     createClient(req: Request, res: Response): Promise<void>
     getAllClients(req: Request, res: Response): Promise<void>
+    getAllPlans(req: Request, res: Response): Promise<void>
     getClient(req: Request, res: Response): Promise<void>
     uploadContent(req: Request, res: Response): Promise<void>
     getAvailableUsers(req: Request, res: Response): Promise<void>

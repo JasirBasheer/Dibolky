@@ -181,5 +181,15 @@ export class AgencyController implements IAgencyController {
             const paymentIntegrationStatus = await this._agencyService.createInvoice(req.details.orgId,details)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { paymentIntegrationStatus })
     }
+
+    getAllPlans = async(
+        req: Request,
+        res: Response
+    ): Promise<void> => {
+            
+            const upgradablePlans = await this._agencyService.getUpgradablePlans(req.details.orgId)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { upgradablePlans })
+    }
+
 }
 

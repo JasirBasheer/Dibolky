@@ -24,4 +24,6 @@ export interface IAgencyService {
     integratePaymentGateWay(orgId: string, provider: string, details: IIntegratePaymentType): Promise<IAgencyTenant>;
     getPaymentIntegrationStatus(orgId: string): Promise<Record<string, boolean>>;
     createInvoice(orgId:string,details:Partial<IInvoiceType>): Promise<void>
+    getUpgradablePlans(orgId:string): Promise<any>
+    
 }

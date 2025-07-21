@@ -31,8 +31,9 @@ import { AgencyMapper } from "@/mappers/agency/agency-mapper";
 import { IAgency } from "@/models/Interface/agency";
 import { IClientTenant } from "@/models";
 import { createNewMenuForClient } from "@/utils/menu.utils";
-import { InoviceRepository } from "@/repositories";
+import { InoviceRepository, IPlanRepository } from "@/repositories";
 import { IInvoiceType } from "@/types/invoice";
+import { IPlan } from "@/models/Interface/plan";
 
 @injectable()
 export class AgencyService implements IAgencyService {
@@ -43,6 +44,7 @@ export class AgencyService implements IAgencyService {
   private _projectRepository: IProjectRepository;
   private _contentRepository: IContentRepository;
   private _invoiceRepository: InoviceRepository;
+  private _planRepository: IPlanRepository;
 
   constructor(
     @inject("AgencyRepository") agencyRepository: IAgencyRepository,
@@ -54,6 +56,7 @@ export class AgencyService implements IAgencyService {
     @inject("ProjectRepository") projectRepository: IProjectRepository,
     @inject("ContentRepository") contentRepository: IContentRepository,
     @inject("InvoiceRepository") invoiceRepository: InoviceRepository,
+    @inject("PlanRepository") planRepository: IPlanRepository,
 
   ) {
     this._agencyRepository = agencyRepository,
@@ -63,6 +66,8 @@ export class AgencyService implements IAgencyService {
     this._projectRepository = projectRepository;
     this._contentRepository = contentRepository;
     this._invoiceRepository = invoiceRepository;
+    this._planRepository = planRepository;
+    
   }
 
   async agencyLoginHandler(email: string, password: string): Promise<string> {
@@ -378,4 +383,48 @@ export class AgencyService implements IAgencyService {
     }
     await this._invoiceRepository.createInvoice(orgId,invoice)
   }
+
+  async getUpgradablePlans(orgId: string): Promise<(IPlan & { proratedPrice: number })[]> {
+  const agency = await this._agencyTenantRepository.getOwnerWithOrgId(orgId);
+  const currentPlan = await this._planRepository.getPlan(agency.planId);
+
+  if (!currentPlan || currentPlan.price === 0) return [];
+
+  const allPlans = await this._planRepository.getPlans();
+
+  const upgradablePlans = allPlans
+    .filter(plan =>
+      plan.isActive &&
+      plan.price > currentPlan.price &&
+      plan._id.toString() !== currentPlan._id.toString()
+    )
+    .map(plan => {
+      const proratedPrice = this.calculateProratedPrice(plan.price, agency.createdAt, plan.billingCycle);
+      return { ...plan.toObject(), proratedPrice };
+    });
+
+  return upgradablePlans;
+}
+
+
+
+
+
+
+
+  private calculateProratedPrice(fullPrice: number, planStartDate: Date, billingClycle: string): number {
+    const now = new Date();
+    const usedDays = Math.floor((now.getTime() - new Date(planStartDate).getTime()) / (1000 * 60 * 60 * 24));
+
+    const billingCycleDays = billingClycle  == "monthly" ? 30 :365
+    const remainingDays = Math.max(0, billingCycleDays - usedDays);
+
+    const pricePerDay = fullPrice / billingCycleDays;
+    const discount = pricePerDay * remainingDays;
+
+    return parseFloat((fullPrice - discount).toFixed(2));
+  }
+
+
+
 }

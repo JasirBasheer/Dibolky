@@ -30,7 +30,7 @@ import Skeleton from "react-loading-skeleton";
 import axios from "@/utils/axios";
 import { ITransactionType } from "@/types/transaction";
 
-const Payments = () => {
+const BillingHistory = () => {
   const user = useSelector((state: RootState) => state.user);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<ITransactionType | null>(
@@ -46,7 +46,7 @@ const Payments = () => {
   const debouncedFilter = useFilter(filter, 900);
 
   const { data, isLoading: isInvoicesLoading } = useQuery({
-    queryKey: ["get-invoices", page, debouncedFilter],
+    queryKey: ["get-all-billing-transactions", page, debouncedFilter],
     queryFn: () => {
       const searchParams = new URLSearchParams({
         page: page.toString(),
@@ -55,8 +55,7 @@ const Payments = () => {
         status: debouncedFilter.status,
         sortBy: debouncedFilter.sortBy,
         sortOrder: debouncedFilter.sortOrder,
-        type:"invoice_payment"
-
+        type:"plan_transactions"
       }).toString();
       return getAllTransactions(user.role, user.user_id, `?${searchParams}`);
     },
@@ -133,7 +132,7 @@ const Payments = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Invoices</CardTitle>
+            <CardTitle>Transaction History</CardTitle>
           </CardHeader>
           <CardContent>
           {!isInvoicesLoading
@@ -147,13 +146,13 @@ const Payments = () => {
                   render: (transaction) => transaction._id,
                 },
                 {
-                  header: "Email",
+                  header: "Description",
                   render: (transaction) => (
                     <div className="flex items-center gap-2">
                       <User className="h-4 w-4 text-gray-400" />
                       <div>
                         <div className="font-medium">
-                          {transaction.email}
+                          {transaction.description}
                         </div>
                       </div>
                     </div>
@@ -241,6 +240,6 @@ const Payments = () => {
   );
 };
 
-export default Payments;
+export default BillingHistory;
 
 

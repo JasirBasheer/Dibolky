@@ -28,4 +28,5 @@ export interface FilterType{
     sortBy: string,
     sortOrder: string,
     overdues?:boolean | string,
+    type?:string
 }

@@ -352,6 +352,7 @@ export class EntityController implements IEntityController {
         sortBy: String(query.sortBy || 'createdAt'),
         sortOrder: String(query.sortOrder || 'desc'),
         overdues: String(query?.overdues || false),
+        type: String(query.type || '')
       };
     }
 

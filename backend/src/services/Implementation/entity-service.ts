@@ -166,6 +166,7 @@ export class EntityService implements IEntityService {
       amount: planPurchasedRate,
       description,
       currency,
+      transactionType:"plan_transactions"
     };
 
     const activity = {
@@ -218,8 +219,8 @@ export class EntityService implements IEntityService {
   }
 
     async getAllTransactions(orgId: string,role: string, user_id: string,query:FilterType): Promise<any>{
-    const { page, limit, sortBy, sortOrder } = query;
-    const filter = this._buildTransactionFilter(query,role,user_id,"invoice_payment")
+    const { page, limit, sortBy, sortOrder , type} = query;
+    const filter = this._buildTransactionFilter(query,role,user_id,type)
     const options = { page, limit, sort: sortBy ? { [sortBy]: sortOrder === "desc" ? -1 : 1 } : {}};
     const transactions = await this._transactionTenantRepository.getAllTransactions(orgId,filter,options) 
     return transactions

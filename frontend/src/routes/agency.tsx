@@ -23,6 +23,8 @@ import Dashboard from '@/pages/agency/Dashoard'
 import Payments from '@/pages/common/Payments'
 import CreateInvoice from '@/pages/agency/CreateInvoice'
 import Overdues from '@/pages/common/Overdues'
+import UpgradePlan from '@/pages/agency/UpgradePlan'
+import BillingHistory from '@/pages/agency/BillingHistory'
 
 
 export default function AgencyRoutes() {
@@ -41,6 +43,8 @@ export default function AgencyRoutes() {
         <Route path='invoices/payments' element={<Payments />} />
         <Route path='invoices/create' element={<CreateInvoice />} />
         <Route path='invoices/overdue' element={<Overdues />} />
+        <Route path='billing/upgrade' element={<UpgradePlan />} />
+        <Route path='billing/history' element={<BillingHistory />} />
 
         
         {/* need to check it */}

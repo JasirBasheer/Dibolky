@@ -26,6 +26,18 @@ export const clientSchema: Schema<IClient> = new mongoose.Schema({
 export default mongoose.model<IClient>('Client', clientSchema);
 
 
+const itemSchema = new Schema({
+  title: { type: String, required: true },
+  url: { type: String, required: true },
+});
+
+const menuSchema = new Schema({
+  title: { type: String, required: true },
+  icon: { type: String, required: true },
+  items: { type: [itemSchema], required: true },
+});
+
+
 
 export const clientTenantSchema: Schema<IClientTenant> = new mongoose.Schema({
   main_id:{
@@ -95,6 +107,10 @@ export const clientTenantSchema: Schema<IClientTenant> = new mongoose.Schema({
         default: ""
       }
     }
+  },
+  menu: {
+    type: [menuSchema],
+    required: true
   },
   isSocialMediaInitialized: {
     type: Boolean,

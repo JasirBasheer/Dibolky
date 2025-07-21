@@ -9,6 +9,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { v4 as uuidv4 } from 'uuid';
 import { CountryToCurrency } from '../../utils/currency-conversion.utils';
+import { ParsedQs } from 'qs';
 import {
     findCountryByIp,
     HTTPStatusCodes,
@@ -18,6 +19,7 @@ import {
 } from 'mern.common';
 import { linkedInAuthCallback } from '@/providers/linkedin';
 import { xAuthCallback } from '@/providers/x';
+import { FilterType } from '@/types/invoice';
 
 
 @injectable()
@@ -302,7 +304,7 @@ export class EntityController implements IEntityController {
             if (!req.details) throw new NotFoundError("request details not found")
             const { platform, user_id } = req.params
             const { files, platforms, metadata, contentType } = req.body
-            // await this._entityService.saveContent({orgId:req.details.orgId as string, platform, platforms, user_id, files, metadata, contentType})
+            await this._entityService.saveContent({orgId:req.details.orgId as string, platform, platforms, user_id, files, metadata, contentType})
 
             SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED)
        
@@ -328,8 +330,40 @@ export class EntityController implements IEntityController {
             const { user_id } = req.params
             const contents = await this._entityService.fetchContents(req.details.orgId as string, user_id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { contents })
+    }
 
-       
+     getAllInvoices = async(
+        req: Request,
+        res: Response,
+    ): Promise<void> => {
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { user_id, entity } = req.params
+            const query = this._parseFilterQuery(req.query);
+            const result = await this._entityService.getAllInvoices(req.details.orgId,entity, user_id,query)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS,  result )
+    }
+
+      private _parseFilterQuery(query: ParsedQs): FilterType {
+      return {
+        page: Number(query.page) || 1,
+        limit: Number(query.limit) || 10,
+        query: String(query.query || ''),
+        status: String(query.status || ''),
+        sortBy: String(query.sortBy || 'createdAt'),
+        sortOrder: String(query.sortOrder || 'desc'),
+        overdues: String(query?.overdues || false),
+      };
+    }
+
+     getAllTransactions = async(
+        req: Request,
+        res: Response,
+    ): Promise<void> => {
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { user_id, entity } = req.params
+            const query = this._parseFilterQuery(req.query);
+            const result = await this._entityService.getAllTransactions(req.details.orgId,entity, user_id,query)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS,  result )
     }
 
 

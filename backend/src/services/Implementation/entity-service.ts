@@ -28,10 +28,11 @@ import { isXAccessTokenValid } from "@/providers/x";
 import { IAgencyRegistrationDto } from "@/dto";
 import { SaveContentDto } from "@/dto/content";
 import { IClientTenant } from "@/models";
-import { IActivityRepository, ISocialMessageRepository, ISocialUserRepository } from "@/repositories";
+import { IActivityRepository, IInvoiceRepository, ISocialMessageRepository, ISocialUserRepository, ITransactionTenantRepository } from "@/repositories";
 import { getPages } from "@/media-service/shared";
 import { getIGConversations, getIGMessages, getIGMessageSenderDetails } from "@/inbox-integrations";
 import { InstagramConversation, InstagramMessage, ISocialUserType } from "@/types";
+import { FilterType } from "@/types/invoice";
 
 @injectable()
 export class EntityService implements IEntityService {
@@ -48,6 +49,8 @@ export class EntityService implements IEntityService {
   private _activityRepository: IActivityRepository;
   private _socialUserRepository: ISocialUserRepository;
   private _socialMessageRepository: ISocialMessageRepository;
+  private _invoiceRepository: IInvoiceRepository;
+  private _transactionTenantRepository: ITransactionTenantRepository
 
   constructor(
     @inject("EntityRepository") entityRepository: IEntityRepository,
@@ -63,6 +66,8 @@ export class EntityService implements IEntityService {
     @inject("ActivityRepository") activityRepository: IActivityRepository,
     @inject("SocialUserRepository") socialUserRepository: ISocialUserRepository,
     @inject("SocialMessageRepository") socialMessageRepository: ISocialMessageRepository,
+    @inject("InvoiceRepository") invoiceRepository: IInvoiceRepository,
+    @inject("TransactionTenantRepository") transactionTenantRepository: ITransactionTenantRepository,
 
   ) {
     this._entityRepository = entityRepository;
@@ -78,6 +83,8 @@ export class EntityService implements IEntityService {
     this._activityRepository = activityRepository;
     this._socialUserRepository = socialUserRepository;
     this._socialMessageRepository = socialMessageRepository;
+    this._invoiceRepository = invoiceRepository;
+    this._transactionTenantRepository = transactionTenantRepository;
   }
 
   async fetchAllProjects(
@@ -199,6 +206,85 @@ export class EntityService implements IEntityService {
       throw new CustomError("Client menu not found", 500);
     return client?.menu;
   }
+
+
+
+  async getAllInvoices(orgId: string,role: string, user_id: string, query:FilterType): Promise<any>{
+    const { page, limit, sortBy, sortOrder } = query;
+    const filter = this._buildInvoiceFilter(query,role,user_id,)
+    const options = { page, limit, sort: sortBy ? { [sortBy]: sortOrder === "desc" ? -1 : 1 } : {}};
+    const invoices = await this._invoiceRepository.getAllInvoices(orgId,filter,options) 
+    return invoices
+  }
+
+    async getAllTransactions(orgId: string,role: string, user_id: string,query:FilterType): Promise<any>{
+    const { page, limit, sortBy, sortOrder } = query;
+    const filter = this._buildTransactionFilter(query,role,user_id,"invoice_payment")
+    const options = { page, limit, sort: sortBy ? { [sortBy]: sortOrder === "desc" ? -1 : 1 } : {}};
+    const transactions = await this._transactionTenantRepository.getAllTransactions(orgId,filter,options) 
+    return transactions
+  }
+  
+private _buildInvoiceFilter(
+  query: FilterType,
+  role: string,
+  user_id: string
+): Record<string, unknown> {
+  const { query: searchText, status, overdues } = query;
+  const filter: Record<string, unknown> = {};
+
+  if (searchText) {
+    filter.$or = [
+      { "client.clientName": { $regex: searchText, $options: "i" } },
+      { "client.email": { $regex: searchText, $options: "i" } },
+      { invoiceNumber: { $regex: searchText, $options: "i" } },
+    ];
+  }
+
+  if (status === "paid") filter.isPaid = true;
+  if (status === "unpaid") filter.isPaid = false;
+
+  if (role !== "agency") {
+    filter["client.clientId"] = user_id;
+  }
+
+  if (overdues === "true" || overdues === true) {
+    filter.dueDate = { $lt: new Date() };
+    filter.isPaid = false; 
+  }
+
+  return filter;
+}
+
+
+private _buildTransactionFilter(
+  query: FilterType,
+  role: string,
+  user_id: string,
+  transactionType:string
+): Record<string, unknown> {
+  const { query: searchText } = query;
+  const filter: Record<string, unknown> = {};
+
+  if (searchText) {
+    filter.$or = [
+      { email: { $regex: searchText, $options: "i" } },
+      { transactionId: { $regex: searchText, $options: "i" } },
+      { description: { $regex: searchText, $options: "i" } },
+      { paymentGateway: { $regex: searchText, $options: "i" } },
+      { transactionType: { $regex: searchText, $options: "i" } },
+    ];
+  }
+  filter.transactionType = transactionType
+  if (role !== "agency") {
+    filter.userId = user_id;
+  }
+
+  return filter;
+}
+
+
+
 
   async getOwner(orgId: string): Promise<IAgencyTenant[]> {
     const tenantDb = await connectTenantDB(orgId);

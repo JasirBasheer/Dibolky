@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-export type ActivityType = 'account_created' | 'plan_upgraded' | 'client_created' | 'project_created' | 'content_approved' | 'content_rejected';
+export type ActivityType = 'account_created' | 'plan_upgraded' | 'client_created' | 'project_created' | 'content_approved' | 'content_rejected' | 'invoice_payment';
 type EntityType = 'client' | 'agency' | null;
 
 export interface ActivityUser {
@@ -11,7 +11,7 @@ export interface ActivityUser {
 
 export interface ActivityEntity {
   type: string;
-  id?: Types.ObjectId;
+  id?: string;
 }
 
 export interface IActivityType {

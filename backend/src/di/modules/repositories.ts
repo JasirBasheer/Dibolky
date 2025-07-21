@@ -1,5 +1,5 @@
 import { container } from "tsyringe";
-import { ActivityRepository, AdminRepository, AgencyRepository, AgencyTenantRepository, ChatRepository, ClientRepository, ClientTenantRepository, ContentRepository, EntityRepository, IActivityRepository, IAdminRepository, IAgencyRepository, IAgencyTenantRepository, IChatRepository, IClientRepository, IClientTenantRepository, IContentRepository, IEntityRepository, IMessageRepository, INoteRepository, IPlanRepository, IProjectRepository, ISocialMessageRepository, ISocialUserRepository, ITransactionRepository, MessageRepository, NoteRepository, PlanRepository, ProjectRepository, SocialMessageRepository, SocialUserRepository, TransactionRepository } from "@/repositories";
+import { ActivityRepository, AdminRepository, AgencyRepository, AgencyTenantRepository, ChatRepository, ClientRepository, ClientTenantRepository, ContentRepository, EntityRepository, IActivityRepository, IAdminRepository, IAgencyRepository, IAgencyTenantRepository, IChatRepository, IClientRepository, IClientTenantRepository, IContentRepository, IEntityRepository, IInvoiceRepository, IMessageRepository, INoteRepository, InoviceRepository, IPlanRepository, IProjectRepository, ISocialMessageRepository, ISocialUserRepository, ITransactionRepository, ITransactionTenantRepository, MessageRepository, NoteRepository, PlanRepository, ProjectRepository, SocialMessageRepository, SocialUserRepository, TransactionRepository, TransactionTenantRepository } from "@/repositories";
 
 export const registerRepositories = () => {
 container.register<IAdminRepository>('AdminRepository', { useClass: AdminRepository });
@@ -19,4 +19,6 @@ container.register<INoteRepository>('NoteRepository', { useClass: NoteRepository
 container.register<IActivityRepository>('ActivityRepository', { useClass: ActivityRepository });
 container.register<ISocialUserRepository>('SocialUserRepository', { useClass: SocialUserRepository });
 container.register<ISocialMessageRepository>('SocialMessageRepository', { useClass: SocialMessageRepository });
+container.register<IInvoiceRepository>('InvoiceRepository', { useClass: InoviceRepository });
+container.register<ITransactionTenantRepository>('TransactionTenantRepository', { useClass: TransactionTenantRepository });
 };

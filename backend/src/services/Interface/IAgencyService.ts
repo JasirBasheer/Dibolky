@@ -1,9 +1,10 @@
 import { IProject } from "../../models/Implementation/project";
 import { IAgencyType, IAgencyTenant } from "../../types/agency";
 import { IAvailableClients, ServicesData } from "../../types/chat";
-import { IClientTenantType } from "../../types/client";
+import { IClientTenantType, IClientTenantWithProjectDetailsType } from "../../types/client";
 import { IClientTenant } from "@/models";
 import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common";
+import { IInvoiceType } from "@/types/invoice";
 
 export interface IAgencyService {
     verifyOwner(agency_id: string): Promise<Partial<IAgencyType> | null>;
@@ -13,7 +14,7 @@ export interface IAgencyService {
     getClientsCount(orgId: string): Promise<object>
     getAllAvailableClients(orgId: string): Promise<IAvailableClients[]>
     createClient(orgId: string, name: string, email: string, industry: string, services: ServicesData, menu: string[], organizationName: string): Promise<IClientTenant | null>;
-    getAllClients(orgId: string): Promise<IClientTenantType[] | null>
+    getAllClients(orgId: string, options?:{includeDetails:boolean, page?: number, limit?: number}): Promise<{  clients: IClientTenantType[] | IClientTenantWithProjectDetailsType[];totalPages: number;currentPage: number;totalCount: number;}>
     getClient(orgId: string, client_id: string): Promise<IClientTenant | null>
     saveContentToDb(client_id: string, orgId: string, files: IFiles[], platforms: IPlatforms[], contentType: string, caption: string): Promise<IBucket | null>
     getContent(orgId: string, contentId: string): Promise<IBucket | null>
@@ -22,4 +23,5 @@ export interface IAgencyService {
     getInitialSetUp(orgId: string): Promise<object>;
     integratePaymentGateWay(orgId: string, provider: string, details: IIntegratePaymentType): Promise<IAgencyTenant>;
     getPaymentIntegrationStatus(orgId: string): Promise<Record<string, boolean>>;
+    createInvoice(orgId:string,details:Partial<IInvoiceType>): Promise<void>
 }

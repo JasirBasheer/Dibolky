@@ -14,4 +14,5 @@ export * from "./transaction-repository"
 export * from "./admin-repository"
 export * from "./social-user-repository"
 export * from "./social-message-repository"
-
+export * from "./invoice-repository"
+export * from "./transaction-tenant-repository"

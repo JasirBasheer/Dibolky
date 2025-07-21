@@ -17,4 +17,5 @@ export interface IAgencyController {
     getInitialSetUp(req: Request, res: Response): Promise<void>
     IntegratePaymentGateWay(req: Request, res: Response): Promise<void>
     getPaymentIntegrationStatus(req: Request, res: Response): Promise<void>
+    createInvoice(req: Request, res: Response): Promise<void>
 }

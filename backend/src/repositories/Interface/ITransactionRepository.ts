@@ -1,4 +1,4 @@
-import { ITransaction } from "../../models/Implementation/transaction";
+import { ITransaction } from "@/models";
 
 export interface ITransactionRepository {
     createTransaction(transaction: object): Promise<ITransaction | null>;

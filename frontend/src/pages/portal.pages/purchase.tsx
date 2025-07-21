@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { handleRazorpayPayment } from '../../helpers/portal.helpers/razporpay';
 import { FormData, Plan, ValidationError } from '../../types/portal.types';
-import { renderInputField } from '../../components/portal.components/Input';
+import { renderInputField } from '../../components/portal/Input';
 import { handleStripePayment } from '@/helpers/portal.helpers/stripe';
-import Navbar from '../../components/portal.components/Navbar';
-import { RootState } from '@/types/common.types';
+import Navbar from '../../components/portal/Navbar';
+import { RootState } from '@/types/common';
 import Skeleton from 'react-loading-skeleton'
 import { useSelector } from 'react-redux';
 import axios from '../../utils/axios';

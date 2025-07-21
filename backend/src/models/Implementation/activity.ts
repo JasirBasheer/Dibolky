@@ -10,12 +10,12 @@ export const activitySchema: Schema<IActivity> = new Schema({
   activityType: {
     type: String,
     required: true,
-    enum: ['account_created', 'plan_upgraded', 'client_created', 'project_created', 'content_approved', 'content_rejected'],
+    enum: ['account_created', 'plan_upgraded', 'client_created', 'project_created', 'content_approved', 'content_rejected', 'invoice_payment'],
     index: true,
   },
   entity: {
     type: { type: String, enum: ['client', 'agency', null] },
-    id: { type: Schema.Types.ObjectId },
+    id: { type: String },
   },
   activity: {
     type: String,

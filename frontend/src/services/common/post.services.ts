@@ -1,4 +1,4 @@
-import { IContentData, IFilesMetaData, INote, IUpdateProfile } from "@/types/common.types";
+import { IContentData, IFilesMetaData, INote, IUpdateProfile } from "@/types/common";
 import api from "@/utils/axios";
 
 export const savePlatformTokenApi = async (

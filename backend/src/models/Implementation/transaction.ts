@@ -1,16 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { ITransaction } from '../Interface';
 
-export interface ITransaction extends Document {
-    orgId: string;
-    planId?: string
-    userId?: string;
-    email: string;
-    transactionId: string;
-    paymentGateway: string;
-    amount: number;
-    description: string;
-    currency: string;
-}
 
 export const transactionSchema: Schema<ITransaction> = new Schema({
     orgId: {
@@ -29,6 +19,9 @@ export const transactionSchema: Schema<ITransaction> = new Schema({
         type: String,
         default: "razorpay"
     },
+    transactionType:{
+        type:String,
+    },
     transactionId: {
         type: String
     },
@@ -44,7 +37,7 @@ export const transactionSchema: Schema<ITransaction> = new Schema({
         type: String,
         required: true
     }
-});
+},{timestamps:true});
 
 const Transaction = mongoose.model<ITransaction>('transaction', transactionSchema);
 export default Transaction

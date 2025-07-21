@@ -18,9 +18,23 @@ export const createEntityRoutes = (): Router => {
 
   // get
   router.get("/owner",asyncHandler(entityController.getOwner));
+
   router.get("/get-tasks",asyncHandler(entityController.getAllProjects));
+
   router.get("/projects/:page",asyncHandler(entityController.getAllProjects));
+
   router.get("/get-chats/:userId",asyncHandler(entityController.getChats));
+  
+  router
+  .route("/connect/:provider")
+  .get(asyncHandler(providerController.connectSocialPlatforms))
+
+  
+  router.get("/invoices/:entity/:user_id",asyncHandler(entityController.getAllInvoices))
+  
+  router.get("/payments/:entity/:user_id",asyncHandler(entityController.getAllTransactions))
+
+  
   router.get("/connect/:provider",asyncHandler(providerController.connectSocialPlatforms));
   router.get("/get-meta-pages/:access_token",asyncHandler(providerController.getMetaPagesDetails));
   router.get("/contents/:user_id",asyncHandler(entityController.fetchContents));

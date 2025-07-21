@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import FreeTrialPurchase from "@/components/portal.components/free-trail.purchase"
+import FreeTrialPurchase from "@/components/portal/free-trail.purchase"
 import { Check, Building2, UserCircle2, CircleArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"

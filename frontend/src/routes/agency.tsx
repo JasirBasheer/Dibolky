@@ -1,24 +1,28 @@
 import { Route, Routes } from 'react-router-dom'
-import Clients from '@/pages/agency.pages/Clients'
+import Clients from '@/pages/agency/Clients'
 import Login from '@/pages/authentication.pages/login'
-import Inbox from '@/components/common.components/inbox'
-import AgencyCalendar from '@/pages/agency.pages/Calendar'
-import AgencyLeads from '@/pages/agency.pages/Leads'
-import AgencyContent from '@/pages/agency.pages/Content'
-import AgencyMessages from '@/pages/agency.pages/message'
-import AgencyProject from '@/pages/agency.pages/projects'
-import AgencyAnalytics from '@/pages/agency.pages/Analytics'
-import SettingsPage from '@/components/agency.components/settings'
+import Inbox from '@/components/common/inbox'
+import AgencyCalendar from '@/pages/agency/Calendar'
+import AgencyLeads from '@/pages/agency/Leads'
+import AgencyContent from '@/pages/agency/Content'
+import AgencyMessages from '@/pages/agency/message'
+import AgencyProject from '@/pages/agency/projects'
+import AgencyAnalytics from '@/pages/agency/Analytics'
+import SettingsPage from '@/components/agency/settings'
 import ProtectedRoute from '@/pages/authentication.pages/protected.route'
 import UnProtectedRoute from '@/pages/authentication.pages/unProtected.route'
-import CreateClient from '@/components/agency.components/agencyside.components/createClient'
-import AgencyDashboard from '@/components/agency.components/agencyside.components/agencyDashoard'
+import CreateClient from '@/components/agency/agencyside.components/createClient'
 import {
   ForgotPassword,
   ResetPassword
 } from '@/pages/authentication.pages/forgotPassword'
-import Layout from '@/pages/layout'
-import Integrations from '@/pages/common.pages/Integrations'
+import Layout from '@/pages/agency/Layout'
+import Integrations from '@/pages/common/Integrations'
+import Invoices from '@/pages/common/Invoices'
+import Dashboard from '@/pages/agency/Dashoard'
+import Payments from '@/pages/common/Payments'
+import CreateInvoice from '@/pages/agency/CreateInvoice'
+import Overdues from '@/pages/common/Overdues'
 
 
 export default function AgencyRoutes() {
@@ -29,10 +33,14 @@ export default function AgencyRoutes() {
           <Layout />
         </ProtectedRoute>
       } >
-        <Route index element={<AgencyDashboard />} />
+        <Route index element={<Dashboard />} />
         <Route path='analytics' element={<AgencyAnalytics />} />
         <Route path='clients' element={<Clients />} />
         <Route path='integrations' element={<Integrations />} />
+        <Route path='invoices' element={<Invoices />} />
+        <Route path='invoices/payments' element={<Payments />} />
+        <Route path='invoices/create' element={<CreateInvoice />} />
+        <Route path='invoices/overdue' element={<Overdues />} />
 
         
         {/* need to check it */}

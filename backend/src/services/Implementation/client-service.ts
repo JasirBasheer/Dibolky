@@ -10,6 +10,10 @@ import { IAgencyTenant } from "../../types/agency";
 import { IClient } from "@/models/Interface/client";
 import { ClientMapper } from "@/mappers/client/client-mapper";
 import { IClientTenant } from "@/models";
+import { IRazorpayOrder } from "@/types/payment";
+import { IActivityRepository, IInvoiceRepository, ITransactionTenantRepository } from "@/repositories";
+import { IPaymentService } from "../Interface";
+import crypto from "node:crypto"
 
 @injectable()
 export class ClientService implements IClientService {
@@ -17,12 +21,20 @@ export class ClientService implements IClientService {
   private _clientTenantRepository: IClientTenantRepository
   private _contentRepository: IContentRepository
   private _agencyTenantRepository: IAgencyTenantRepository
+  private _invoiceRepository: IInvoiceRepository
+  private _transactionTenantRepository: ITransactionTenantRepository
+  private _paymentService: IPaymentService
+  private _activityRepository: IActivityRepository
 
   constructor(
     @inject('ClientRepository') clientRepository: IClientRepository,
     @inject('ClientTenantRepository') clientTenantRepository: IClientTenantRepository,
     @inject('ContentRepository') contentRepository: IContentRepository,
     @inject('AgencyTenantRepository') agencyTenantRepository: IAgencyTenantRepository,
+    @inject('InvoiceRepository') invoiceRepository: IInvoiceRepository,
+    @inject('PaymentService') paymentService: IPaymentService,
+    @inject('TransactionTenantRepository') transactionTenantRepository: ITransactionTenantRepository,
+    @inject('ActivityRepository') activityRepository: IActivityRepository,
     
 
   ) {
@@ -30,6 +42,10 @@ export class ClientService implements IClientService {
     this._clientTenantRepository = clientTenantRepository
     this._contentRepository = contentRepository
     this._agencyTenantRepository = agencyTenantRepository
+    this._invoiceRepository = invoiceRepository
+    this._paymentService = paymentService
+    this._transactionTenantRepository = transactionTenantRepository
+    this._activityRepository = activityRepository
   }
 
   async clientLoginHandler(
@@ -82,5 +98,57 @@ export class ClientService implements IClientService {
     const client = await this._clientRepository.findClientWithMail(email)
     return client
   }
+
+  async initiateRazorpayPayment(orgId:string,invoice_id:string):Promise<IRazorpayOrder | null>{
+    const owner = await this._agencyTenantRepository.getOwners(orgId)
+    const invoice = await this._invoiceRepository.getInvoiceById(orgId,invoice_id)
+    const paymentCredentials = owner[0].paymentCredentials.razorpay
+    return await this._paymentService.razorpay({amount:invoice.pricing,currency:"USD"},paymentCredentials.secret_id,paymentCredentials.secret_key)
+
+  }
+
+  async verifyInvoicePayment(orgId:string,invoice_id:string,response:IRazorpayOrder):Promise<void>{
+    const invoice = await this._invoiceRepository.getInvoiceById(orgId,invoice_id)
+    if(!invoice)throw new NotFoundError("invoice not found.")
+    const owner = await this._agencyTenantRepository.getOwners(orgId)
+    const paymentCredentials = owner[0].paymentCredentials.razorpay
+
+    const generatedSignature = crypto
+      .createHmac('sha256', paymentCredentials.secret_key)
+      .update(`${response.razorpay_order_id}|${response.razorpay_payment_id}`)
+      .digest('hex');
+
+    if (generatedSignature !== response.razorpay_signature) throw new CustomError("Invalid payment signature",400)
+    
+      await this._invoiceRepository.updateInvoiceStatus(orgId,invoice_id)
+      const transaction = {
+        orgId,
+        userId: invoice.client.clientId,
+        email: invoice.client.email,
+        transactionId:response.razorpay_order_id,
+        amount:invoice.pricing,
+        description:`Invoice ${invoice.invoiceNumber} from ${invoice.client.clientName} has been paid`,
+        currency:"USD",
+        transactionType:"invoice_payment"
+      }
+      await this._transactionTenantRepository.createTransaction(orgId,transaction)
+      const activity = {
+        user:{
+          userId:invoice.client.clientId,
+          username:invoice.client.clientName,
+          email:invoice.client.email
+        },
+        activityType:"invoice_payment",
+        activity:`Invoice ${invoice.invoiceNumber} from ${invoice.client.clientName} has been paid`,
+        redirectUrl:"/invoices/payments",
+        entity:{
+          type:"client",
+          id:invoice.client.clientId
+        }
+      }
+      await this._activityRepository.createActivity(orgId,activity)
+
+  }
+  
 
 }

@@ -2,10 +2,14 @@ import { ForgotPassword, ResetPassword } from "@/pages/authentication.pages/forg
 import Login from "@/pages/authentication.pages/login";
 import ProtectedRoute from "@/pages/authentication.pages/protected.route";
 import UnProtectedRoute from "@/pages/authentication.pages/unProtected.route";
-import ClientContent from "@/pages/client.pages/client.content";
-import ClientDashboard from "@/pages/client.pages/client.dashboard";
-import ClientLayout from "@/pages/client.pages/client.layout";
-import ClientMessages from "@/pages/client.pages/client.message";
+import ClientContent from "@/pages/client/client.content";
+import ClientDashboard from "@/pages/client/client.dashboard";
+import ClientMessages from "@/pages/client/client.message";
+import Layout from "@/pages/client/Layout";
+import Integrations from "@/pages/common/Integrations";
+import Invoices from "@/pages/common/Invoices";
+import Overdues from "@/pages/common/Overdues";
+import Payments from "@/pages/common/Payments";
 import { Route, Routes } from "react-router-dom";
 
 
@@ -14,12 +18,16 @@ export default function ClientRoutes() {
       <Routes>
         <Route path='/' element={
           <ProtectedRoute role={"client"} >
-            <ClientLayout />
+            <Layout />
           </ProtectedRoute>
         } >
           <Route index element={<ClientDashboard />} />
           <Route path='contents' element={<ClientContent />} />
           <Route path='message' element={<ClientMessages />} />
+          <Route path='invoices' element={<Invoices />} />
+          <Route path='invoices/payments' element={<Payments />} />
+          <Route path='invoices/overdue' element={<Overdues />} />
+          <Route path='integrations' element={<Integrations />} />
         </Route>
   
         <Route path='/login' element={<UnProtectedRoute role={"client"} ><Login role={"client"} /></UnProtectedRoute>} />

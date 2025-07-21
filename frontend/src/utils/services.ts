@@ -90,7 +90,7 @@ type Input = {
     GADSPPC: {
       label: "Google Ads and PPC",
       inputs: [
-        { name: "Budget", label: "Budget", type: "number", placeholder: "Enter amount" },
+        { name: "budget", label: "Budget", type: "number", placeholder: "Enter amount" },
         { name: "targetLocations", label: "Target Locations", type: "text", placeholder: "eg: USA, Canada" },
         {
           name: "goals", label: "Campaign Goals", type: "select",

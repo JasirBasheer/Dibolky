@@ -1,5 +1,7 @@
 export interface IRazorpayOrder {
   razorpay_payment_id?:string;
+  razorpay_order_id?:string;
+  razorpay_signature?:string;
   amount: number;
   amount_due: number;
   amount_paid: number;

@@ -5,7 +5,8 @@
   "scripts": {
     "test": "jest",
     "start": "nodemon --exec ts-node -r tsconfig-paths/register ./src/server.ts",
-    "dev": "nodemon ./src/server.ts"
+    "dev": "nodemon ./src/server.ts",
+    "build":"tsc --noEmitOnError false"
   },
   "keywords": [],
   "author": "",

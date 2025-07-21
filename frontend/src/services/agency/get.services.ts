@@ -12,8 +12,8 @@ export const fetchInitialSetUpApi = async() =>{
     return await api.get('/api/agency/get-initial-set-up')
 }
 
-export const fetchAllClientsApi = async() =>{
-    return await api.get('/api/agency/clients')
+export const fetchAllClientsApi = async(query: string = '' ) =>{
+    return await api.get(`/api/agency/clients${query}`)
 }
 
 export const fetchAgencyMenuApi = async(role:string,planId:string) =>{

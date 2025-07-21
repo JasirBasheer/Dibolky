@@ -69,9 +69,13 @@ export class AgencyController implements IAgencyController {
         res: Response
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
-            const clients = await this._agencyService.getAllClients(req.details.orgId as string)
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { clients })
+            const includeDetails = req.query.include === 'details';
+            const page = req.query.page ? parseInt(req.query.page as string) : undefined;
+            const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
 
+            let result = await this._agencyService.getAllClients(req.details.orgId as string,{includeDetails, page, limit}) 
+            console.log(result)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {result})
     }
 
 
@@ -79,7 +83,6 @@ export class AgencyController implements IAgencyController {
         req: Request,
         res: Response
     ): Promise<void> => {
-            if (!req.details) throw new NotFoundError("Details Not Fount")
             const { id } = req.params
             const details = await this._agencyService.getClient(req.details.orgId as string, id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })
@@ -167,6 +170,15 @@ export class AgencyController implements IAgencyController {
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const paymentIntegrationStatus = await this._agencyService.getPaymentIntegrationStatus(req.details.orgId as string)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { paymentIntegrationStatus })
+    }
+
+    createInvoice = async(
+        req: Request,
+        res: Response
+    ): Promise<void> => {
+            const { details } = req.body
+            const paymentIntegrationStatus = await this._agencyService.createInvoice(req.details.orgId,details)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { paymentIntegrationStatus })
     }
 }

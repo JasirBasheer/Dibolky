@@ -51,6 +51,14 @@ export const fetchConnections = async (entity:string,user_id:string) => {
     return await api.get(`/api/entities/get-connections/${entity}/${user_id}`)
 }
 
+export const getInvoices = async (entity:string,user_id:string,query ="") => {
+    return await api.get(`/api/entities/invoices/${entity}/${user_id}${query}`)
+}
+
+export const getAllTransactions = async (entity:string,user_id:string,query ="") => {
+    return await api.get(`/api/entities/payments/${entity}/${user_id}${query}`)
+}
+
 
 export const getPlanDetailsApi = async(planId:string) =>{
     return await api.get(`/api/public/plans/${planId}`);

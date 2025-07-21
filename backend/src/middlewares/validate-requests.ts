@@ -10,7 +10,7 @@ export const validateRequest = (schema: ZodSchema) => {
       
 
       if (!result.success) {
-        const firstError = result.error.errors[0];
+        const firstError = result.error[0];
         const message = `${firstError.message}`;
         return next(new CustomError(message,500));
       }

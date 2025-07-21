@@ -26,7 +26,7 @@ export class PaymentController implements IPaymentController {
     ): Promise<void> => {
             const { amount , currency }: { amount: number, currency:string } = req.body
 
-            const response = await this._paymentService.razorpay({ amount, currency})
+            const response = await this._paymentService.razorpay({ amount, currency},"rzp_test_fKh2fGYnPvSVrM","hSMt3HNxZBv4csbZMtVdaEBB")
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.CREATED, { data: response })
     }
 

@@ -44,6 +44,28 @@ export class ClientController implements IClientController {
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { owners })
     }
 
+    initiateRazorpayPayment = async(
+        req: Request, 
+        res: Response, 
+    ): Promise<void> => {
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const { invoice_id } = req.params
+        console.log(req.details.orgId,'orgd')
+            const data = await this._clientService.initiateRazorpayPayment(req.details.orgId,invoice_id)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { data })
+    }
+
+    verifyInvoicePayment = async(
+        req: Request, 
+        res: Response, 
+    ): Promise<void> => {
+            if(!req.details)throw new NotFoundError("Details Not Fount")
+            const { invoiceId, response } = req.body
+            console.log(req.details.orgId,'orgd')
+            const data = await this._clientService.verifyInvoicePayment(req.details.orgId,invoiceId,response)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { data })
+    }
+
 
 
 }

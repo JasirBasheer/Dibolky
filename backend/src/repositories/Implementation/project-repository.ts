@@ -2,7 +2,7 @@ import { inject, injectable } from "tsyringe";
 import { IProject } from "../../models/Implementation/project";
 import { BaseRepository } from "mern.common";
 import { IProjectRepository } from "../Interface/IProjectRepository";
-import { Model, Schema } from "mongoose";
+import { Model, Schema, Types } from "mongoose";
 import { connectTenantDB } from "../../config/db.config";
 
 
@@ -79,6 +79,14 @@ export class ProjectRepository extends BaseRepository<IProject> implements IProj
     ):Promise<IProject | null>{
         const model = await this.getModel(orgId);
         return null
+    }
+
+    async getProjectsByClientId(
+        orgId:string,
+        clientId:string
+    ):Promise<IProject[] | null>{
+        const model = await this.getModel(orgId);
+        return await model.find({ "client.clientId": new Types.ObjectId(clientId)});
     }
 
 }

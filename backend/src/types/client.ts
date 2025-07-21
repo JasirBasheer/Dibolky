@@ -1,4 +1,5 @@
-import { IMenuCategory } from "./common";
+import { IProject } from "@/models";
+import { IMenu } from "./common";
 
 export interface IClientTenantType {
     _id:string;
@@ -15,6 +16,22 @@ export interface IClientTenantType {
     updatedAt?:string | number;
 }
 
+export interface IClientTenantWithProjectDetailsType extends IProject {
+    _id:string;
+    orgId?: string;
+    main_id?:string;
+    name?: string;
+    email?: string;
+    profile?:string;
+    bio?:string;
+    industry?: string;
+    isSocialMediaInitialized: boolean,
+    isPaymentInitialized: boolean,
+    createdAt?:string | number;
+    updatedAt?:string | number;
+}
+
+
 export interface IClientDetailsType {
     _id:string;
     orgId?: string;
@@ -26,7 +43,7 @@ export interface IClientDetailsType {
     industry?: string;
     password?: string;
     socialMedia_credentials?: credentials;
-    menu?: IMenuCategory;
+    menu?: IMenu[];
     isSocialMediaInitialized: boolean,
     isPaymentInitialized: boolean,
     createdAt?:string | number;

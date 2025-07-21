@@ -4,7 +4,7 @@ import { IRazorpayOrder, IUserDetails } from "../../types/payment";
 import { IPaymentService } from "../Interface/IPaymentService";
 import { inject, injectable } from "tsyringe";
 import { IEntityService } from "../Interface/IEntityService";
-import razorpayInstance from "../../config/razorpay.config";
+import { createRazorpayInstance } from "@/config/razorpay.config";
 
 @injectable()
 export class PaymentService implements IPaymentService {
@@ -17,13 +17,16 @@ export class PaymentService implements IPaymentService {
     }
 
     async razorpay(
-        details: { amount: number; currency: string }
+        details: { amount: number; currency: string },
+        key_id:string,key_secret:string
     ): Promise<IRazorpayOrder> {
         const { amount, currency } = details;
         const options = {
             amount: amount * 100,
             currency: currency || 'INR',
         };
+
+        const razorpayInstance = createRazorpayInstance(key_id,key_secret)
 
         const order = await razorpayInstance.orders.create(options);
         return order as IRazorpayOrder

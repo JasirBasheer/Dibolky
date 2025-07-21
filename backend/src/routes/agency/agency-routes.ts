@@ -30,8 +30,17 @@ router
 .get(asyncHandler(agencyController.getAllClients))
 .post(asyncHandler(agencyController.createClient))
 
+router
+.route("/projects")
+.patch(asyncHandler(agencyController.editProjectStatus))
+.post(asyncHandler(agencyController.createClient)) // TODO: create new supparate project for existing client
 
-router.patch('/edit-project-status', asyncHandler(agencyController.editProjectStatus))
+router
+.route("/invoices")
+.patch(asyncHandler(agencyController.getAllClients))
+.post(asyncHandler(agencyController.createInvoice))
+
+
 router.post('/upload', asyncHandler(agencyController.uploadContent))
 router.post('/integrate-payment-gateway', asyncHandler( agencyController.IntegratePaymentGateWay))
 

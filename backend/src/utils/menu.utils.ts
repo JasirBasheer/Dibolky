@@ -6,15 +6,15 @@ const dashboard = {
   items: [
     {
       title: "Overview",
-      url: "/agency",
+      url: "/",
     },
     {
       title: "Analytics",
-      url: "/agency/analytics",
+      url: "/analytics",
     },
     {
       title: "Reports",
-      url: "/agency/reports",
+      url: "/reports",
     },
   ],
 };
@@ -25,19 +25,19 @@ const ourWork = {
   items: [
     {
       title: "Portfolio",
-      url: "/agency/work/portfolio",
+      url: "/work/portfolio",
     },
     {
       title: "Case Studies",
-      url: "/agency/work/case-studies",
+      url: "/work/case-studies",
     },
     {
       title: "Client Testimonials",
-      url: "/agency/work/testimonials",
+      url: "/work/testimonials",
     },
     {
       title: "Before & After",
-      url: "/agency/work/before-after",
+      url: "/work/before-after",
     },
   ],
 };
@@ -48,15 +48,15 @@ const clientManagement = {
   items: [
     {
       title: "All Clients",
-      url: "/agency/clients",
+      url: "/clients",
     },
     {
       title: "Create Client",
-      url: "/agency/create-client",
+      url: "/create-client",
     },
     {
       title: "Client Reports",
-      url: "/agency/client-reports",
+      url: "/client-reports",
     },
   ],
 };
@@ -67,19 +67,19 @@ const contentAndProjects = {
   items: [
     {
       title: "All Projects",
-      url: "/agency/projects",
+      url: "/projects",
     },
     {
       title: "Content Library",
-      url: "/agency/contents",
+      url: "/contents",
     },
     {
       title: "Comments",
-      url: "/agency/comments",
+      url: "/comments",
     },
     {
       title: "Media",
-      url: "/agency/media",
+      url: "/media",
     },
   ],
 };
@@ -90,7 +90,7 @@ const projects = {
   items: [
     {
       title: "All Projects",
-      url: "/agency/projects",
+      url: "/projects",
     },
   ],
 };
@@ -101,15 +101,15 @@ const communications = {
   items: [
     {
       title: "Messages",
-      url: "/agency/messages",
+      url: "/messages",
     },
     {
       title: "Inbox",
-      url: "/agency/inbox",
+      url: "/inbox",
     },
     {
       title: "Leads",
-      url: "/agency/leads",
+      url: "/leads",
     },
   ],
 };
@@ -120,7 +120,7 @@ const clientCommunications = {
   items: [
     {
       title: "Messages",
-      url: "/agency/messages",
+      url: "/messages",
     }
   ],
 };
@@ -131,19 +131,19 @@ const invoiceManagement = {
   items: [
     {
       title: "All Invoices",
-      url: "/agency/invoices",
+      url: "/invoices",
     },
     {
       title: "Create Invoice",
-      url: "/agency/invoices/create",
+      url: "/invoices/create",
     },
     {
       title: "Payments",
-      url: "/agency/invoices/payments",
+      url: "/invoices/payments",
     },
     {
       title: "Overdue Invoices",
-      url: "/agency/invoices/recurring",
+      url: "/invoices/recurring",
     },
   ],
 };
@@ -155,15 +155,15 @@ const clientInvoiceManagement = {
   items: [
     {
       title: "All Invoices",
-      url: "/agency/invoices",
+      url: "/invoices",
     },
     {
       title: "Payments",
-      url: "/agency/invoices/payments",
+      url: "/invoices/payments",
     },
     {
       title: "Overdue Invoices",
-      url: "/agency/invoices/recurring",
+      url: "/invoices/overdue",
     },
   ],
 };
@@ -174,15 +174,15 @@ const performance = {
   items: [
     {
       title: "Social Insights",
-      url: "/agency/performance/social",
+      url: "/performance/social",
     },
     {
       title: "Website Analytics",
-      url: "/agency/performance/website",
+      url: "/performance/website",
     },
     {
       title: "Conversion Reports",
-      url: "/agency/performance/conversions",
+      url: "/performance/conversions",
     },
   ],
 };
@@ -193,15 +193,15 @@ const billingAndPlans = {
   items: [
     {
       title: "Your Plan",
-      url: "/agency/billing/plan",
+      url: "/billing/plan",
     },
     {
       title: "Upgrade Plan",
-      url: "/agency/billing/upgrade",
+      url: "/billing/upgrade",
     },
     {
       title: "Payment History",
-      url: "/agency/billing/history",
+      url: "/billing/history",
     },
   ],
 };
@@ -212,15 +212,15 @@ const toolsAndSettings = {
   items: [
     {
       title: "Calendar",
-      url: "/agency/calendar",
+      url: "/calendar",
     },
     {
       title: "Settings",
-      url: "/agency/settings",
+      url: "/settings",
     },
     {
       title: "Integrations",
-      url: "/agency/integrations",
+      url: "/integrations",
     },
   ],
 };

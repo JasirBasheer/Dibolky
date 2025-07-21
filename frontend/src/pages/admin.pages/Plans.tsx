@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { ListFilterPlus } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import AddPlan from '@/components/admin.components/AddPlan';
-import PlanDetails from '@/components/admin.components/planDetails';
+import AddPlan from '@/components/admin/AddPlan';
+import PlanDetails from '@/components/admin/planDetails';
 import axios from '../../utils/axios';
 import { IPlan } from '@/types/admin.types';
 

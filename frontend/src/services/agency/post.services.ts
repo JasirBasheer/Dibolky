@@ -1,4 +1,5 @@
-import { IIntegratePaymentType } from "@/types/common.types";
+import { InvoiceType } from "@/types";
+import { IIntegratePaymentType } from "@/types/common";
 import api from "@/utils/axios";
 
 export const createClientApi = async(orgId:string,name:string,industry:string,email:string,services:object,menu:string[]) => {
@@ -19,5 +20,11 @@ export const IntegratePaymentApi = async (
   details: IIntegratePaymentType
 ) => {
   return await api.post(`/api/agency/integrate-payment-gateway`, { provider, details })
+}
+
+export const createInvoiceApi = async (
+  details: Partial<InvoiceType>
+) => {
+  return await api.post(`/api/agency/invoices`, { details })
 }
 

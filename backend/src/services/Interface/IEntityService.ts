@@ -4,6 +4,7 @@ import {  IAgencyType, IAgencyTenant } from "../../types/agency";
 import { IMenu, IBucket, IUpdateProfile } from "../../types/common";
 import { SaveContentDto } from "@/dto/content";
 import { IClientTenant } from "@/models";
+import { FilterType } from "@/types/invoice";
 
 export interface IEntityService {
     fetchAllProjects(orgId: string, page?: number): Promise<{ projects: IProject[], totalPages: number } | null>;
@@ -11,6 +12,8 @@ export interface IEntityService {
     createAgency(payload: IAgencyRegistrationDto): Promise<Partial<IAgencyType> | null>;
     getMenu(planId: string): Promise<IMenu[]>;
     getClientMenu(orgId: string, client_id: string): Promise<IMenu[]>;
+    getAllInvoices(orgId: string,role: string, user_id: string,query:FilterType): Promise<any>;
+    getAllTransactions(orgId: string,role: string, user_id: string, query:FilterType): Promise<any>;
     getOwner(orgId: string): Promise<IAgencyTenant[]>
     saveContent(payload: SaveContentDto): Promise<IBucket>;
     getS3ViewUrl(key: string): Promise<string>

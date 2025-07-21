@@ -48,11 +48,24 @@ export class ClientTenantRepository extends BaseRepository<IClientTenant> implem
     }
 
     async getAllClients(
-        orgId: string
-    ): Promise<IClientTenant[]> {
+        orgId: string,
+        options?: { page?: number; limit?: number }
+    ): Promise<{ data: IClientTenant[]; totalCount: number }> {
         const model = await this.getModel(orgId);
-        return await model.find({})
+        const totalCount = await model.countDocuments();
+
+        let data: IClientTenant[];
+
+        if (options?.page && options?.limit) {
+            const skip = (options.page - 1) * options.limit;
+            data = await model.find({}).skip(skip).limit(options.limit);
+        } else {
+            data = await model.find({});
+        }
+
+        return { data, totalCount };
     }
+
 
     async getClientById(
         orgId: string,

@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import Plans from '@/pages/admin.pages/Plans'
 import AdminLayout from '@/pages/admin.pages/Layout '
-import AgencyLeads from '@/pages/agency.pages/Leads'
+import AgencyLeads from '@/pages/agency/Leads'
 import Login from '@/pages/authentication.pages/login'
 import AdminClients from '@/pages/admin.pages/Clients'
 import AdminDashboard from '@/pages/admin.pages/DashBoard'

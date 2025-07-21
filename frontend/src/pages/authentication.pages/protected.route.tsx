@@ -52,7 +52,7 @@ const ProtectedRoute = ({ children, role }: { children: ReactNode, role: string 
           }))
 
         } else if (role == "client" && response?.data.details.orgId && response?.data.details.email) {
-          const res = await axios.get(`/api/client/get-client-details`);
+          const res = await axios.get(`/api/client/details`);
           dispatch(setUser({
             name: res.data.client?.name || "",
             email: res.data.client?.email || "",
@@ -73,7 +73,7 @@ const ProtectedRoute = ({ children, role }: { children: ReactNode, role: string 
 
 
         const roleRedirects: IRedirectionUrls = {
-          "agency": '/agency',
+          "agency": '/agency/',
           "admin": '/admin/'
         };
 

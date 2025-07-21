@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import LoginForm from '@/components/common.components/auth/login'
+import LoginForm from '@/components/common/auth/login'
 
 const Login = ({ role }: {role:string}) => {
   return (

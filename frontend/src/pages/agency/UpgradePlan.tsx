@@ -16,7 +16,6 @@ import { setAgency } from "@/redux/slices/agency.slice"
 
 
 const UpgradePlan = () => {
-  const user = useSelector((state:RootState) => state.user)
   const dispatch = useDispatch()
   const queryClient = useQueryClient();
   const { data: upgradableplans, isLoading: isUpgradablePlansLoading } = useQuery({

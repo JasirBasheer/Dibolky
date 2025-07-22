@@ -1,0 +1,30 @@
+name: Deploy to GCE
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.GCE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.GCE_INSTANCE_IP }} >> ~/.ssh/known_hosts
+
+    - name: Deploy on GCE VM
+      run: |
+        ssh ${{ secrets.GCE_SSH_USER }}@${{ secrets.GCE_INSTANCE_IP }} << 'EOF'
+          cd /opt/Dibolky
+          sudo git pull origin main
+          sudo docker compose down --remove-orphans
+          sudo docker compose up --build -d
+        EOF

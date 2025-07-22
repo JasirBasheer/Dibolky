@@ -44,26 +44,6 @@ services:
         tag: "backend"
         gelf-compression-type: "none"
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    restart: unless-stopped
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    ports:
-      - "5173:5173"
-    environment: 
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
-    networks:
-      dibolky-tool:
-        aliases:
-          - frontend
-    stdin_open: true
-    tty: true
-
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
     container_name: elasticsearch
@@ -158,20 +138,10 @@ services:
       start_period: 40s
       
   nginx:
-    image: nginx:alpine
-    container_name: nginx
-    depends_on:
-      - frontend
-      - backend
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/ssl:/etc/letsencrypt
-      - ./nginx/www:/var/www/html
-    networks:
-      - dibolky-tool
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+
 
   certbot:
     image: certbot/certbot

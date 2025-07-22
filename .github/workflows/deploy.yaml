@@ -26,5 +26,6 @@ jobs:
           cd /opt/Dibolky
           sudo git pull origin main
           sudo docker compose down --remove-orphans
-          sudo docker compose up --build -d
+          sudo docker compose rm -sf nginx backend
+          sudo docker compose up --build -d nginx backend
         EOF

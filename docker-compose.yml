@@ -147,6 +147,8 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+    volumes:
+      - ./nginx/www:/var/www/html
     networks:
       dibolky-tool:
         aliases:

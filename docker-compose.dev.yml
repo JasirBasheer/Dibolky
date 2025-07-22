@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build:
@@ -28,10 +26,6 @@ services:
           - backend
     depends_on:
       redis:
-        condition: service_healthy
-      elasticsearch:
-        condition: service_healthy
-      logstash:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5050/api/health"]
@@ -84,116 +78,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
-    container_name: elasticsearch
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - es_data:/usr/share/elasticsearch/data
-      - ./elk/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-    ports:
-      - "9200:9200"
-    networks:
-      dibolky-tool:
-        aliases:
-          - elasticsearch
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:9200"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-
-  logstash:
-    image: docker.elastic.co/logstash/logstash:8.15.1
-    container_name: logstash
-    volumes:
-      - ./elk/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      - ./elk/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
-    ports:
-      - "5044:5044"
-      - "12201:12201/udp"
-      - "9600:9600"
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
-    networks:
-      dibolky-tool:
-        aliases:
-          - logstash
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:9600"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.15.1
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    volumes:
-      - ./elk/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
-    ports:
-      - "5601:5601"
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
-    networks:
-      dibolky-tool:
-        aliases:
-          - kibana
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:5601/api/status"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    depends_on:
-      - frontend
-      - backend
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/ssl:/etc/letsencrypt
-      - ./nginx/www:/var/www/html
-    networks:
-      - dibolky-tool
-
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    env_file: .env
-    depends_on:
-      - nginx
-    environment:
-      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
-      - LETSENCRYPT_DOMAIN=${LETSENCRYPT_DOMAIN}
-    volumes:
-      - ./nginx/ssl:/etc/letsencrypt
-      - ./nginx/www:/var/www/html
-    entrypoint: >
-      sh -c "certbot certonly --webroot --webroot-path=/var/www/html
-      --email $${LETSENCRYPT_EMAIL} --agree-tos --no-eff-email
-      -d $${LETSENCRYPT_DOMAIN}"
-    networks:
-      - dibolky-tool
-
 
 networks:
   dibolky-tool:

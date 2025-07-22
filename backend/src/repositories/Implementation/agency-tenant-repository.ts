@@ -73,7 +73,14 @@ export class AgencyTenantRepository extends BaseRepository<IAgencyTenant> implem
             },
             { new: true }
         );
+    }
 
+    async upgradePlan(orgId: string,planId:string):Promise<IAgencyTenant | null>{
+        const model = await this.getModel(orgId);
+        return await model.findOneAndUpdate(
+            { orgId: orgId },
+            {planId}
+        );
     }
 
     async integratePaymentGateWay(

@@ -16,6 +16,11 @@ export const fetchAllClientsApi = async(query: string = '' ) =>{
     return await api.get(`/api/agency/clients${query}`)
 }
 
+export const getAllUpgradablePlansApi = async() =>{
+    return await api.get(`/api/agency/plans`)
+}
+
+
 export const fetchAgencyMenuApi = async(role:string,planId:string) =>{
     return await api.get(`/api/entities/${role}/${planId}`)
 }

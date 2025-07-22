@@ -34,6 +34,14 @@ export class AgencyRepository extends BaseRepository<IAgency> implements IAgency
         return this.findOne({ orgId });
     }
 
+    async upgradePlanWithOrgId(
+        orgId: string,
+        planId: string,
+        validity: Date,
+    ): Promise<IAgency | null> {
+        return await this.update({orgId},{planId,validity})
+    }
+
     async changePassword(
         agency_id: string,
         password: string

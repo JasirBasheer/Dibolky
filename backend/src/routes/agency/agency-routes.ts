@@ -44,7 +44,7 @@ router
 router
 .route("/plans")
 .get(asyncHandler(agencyController.getAllPlans))
-.post(asyncHandler(agencyController.getAllClients))
+.post(asyncHandler(agencyController.upgradePlan))
 
 router.post('/upload', asyncHandler(agencyController.uploadContent))
 router.post('/integrate-payment-gateway', asyncHandler( agencyController.IntegratePaymentGateWay))

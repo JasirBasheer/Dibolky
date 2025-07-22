@@ -186,9 +186,18 @@ export class AgencyController implements IAgencyController {
         req: Request,
         res: Response
     ): Promise<void> => {
-            
             const upgradablePlans = await this._agencyService.getUpgradablePlans(req.details.orgId)
+            console.log(upgradablePlans)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { upgradablePlans })
+    }
+
+    upgradePlan = async(
+        req: Request,
+        res: Response
+    ): Promise<void> => {
+            const {planId} = req.body
+            await this._agencyService.upgradePlan(req.details.orgId,planId)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
 
 }

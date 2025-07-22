@@ -31,9 +31,10 @@ import { AgencyMapper } from "@/mappers/agency/agency-mapper";
 import { IAgency } from "@/models/Interface/agency";
 import { IClientTenant } from "@/models";
 import { createNewMenuForClient } from "@/utils/menu.utils";
-import { InoviceRepository, IPlanRepository } from "@/repositories";
+import { IActivityRepository, InoviceRepository, IPlanRepository, ITransactionRepository, ITransactionTenantRepository, TransactionRepository, TransactionTenantRepository } from "@/repositories";
 import { IInvoiceType } from "@/types/invoice";
 import { IPlan } from "@/models/Interface/plan";
+import { addMonthsToDate } from "@/utils/date-utils";
 
 @injectable()
 export class AgencyService implements IAgencyService {
@@ -45,6 +46,9 @@ export class AgencyService implements IAgencyService {
   private _contentRepository: IContentRepository;
   private _invoiceRepository: InoviceRepository;
   private _planRepository: IPlanRepository;
+  private _transactionRepository: ITransactionRepository;
+  private _transactiontenantRepository: ITransactionTenantRepository;
+  private _activityRepository: IActivityRepository;
 
   constructor(
     @inject("AgencyRepository") agencyRepository: IAgencyRepository,
@@ -57,6 +61,9 @@ export class AgencyService implements IAgencyService {
     @inject("ContentRepository") contentRepository: IContentRepository,
     @inject("InvoiceRepository") invoiceRepository: InoviceRepository,
     @inject("PlanRepository") planRepository: IPlanRepository,
+    @inject("TransactionRepository") transactionRepository: ITransactionRepository,
+    @inject("TransactionTenantRepository") transactiontenantRepository: ITransactionTenantRepository,
+    @inject("ActivityRepository") activityRepository: IActivityRepository,
 
   ) {
     this._agencyRepository = agencyRepository,
@@ -67,6 +74,9 @@ export class AgencyService implements IAgencyService {
     this._contentRepository = contentRepository;
     this._invoiceRepository = invoiceRepository;
     this._planRepository = planRepository;
+    this._transactionRepository = transactionRepository;
+    this._transactiontenantRepository = transactiontenantRepository;
+    this._activityRepository = activityRepository;
     
   }
 
@@ -385,7 +395,7 @@ export class AgencyService implements IAgencyService {
   }
 
   async getUpgradablePlans(orgId: string): Promise<(IPlan & { proratedPrice: number })[]> {
-  const agency = await this._agencyTenantRepository.getOwnerWithOrgId(orgId);
+  const agency = await this._agencyRepository.findAgencyWithOrgId(orgId)
   const currentPlan = await this._planRepository.getPlan(agency.planId);
 
   if (!currentPlan || currentPlan.price === 0) return [];
@@ -424,6 +434,62 @@ export class AgencyService implements IAgencyService {
 
     return parseFloat((fullPrice - discount).toFixed(2));
   }
+
+
+async upgradePlan(orgId: string, planId: string): Promise<void> {
+  const plan = await this._planRepository.getPlan(planId);
+  if (!plan || !plan.isActive) {
+    throw new CustomError("Selected plan is not available", 400);
+  }
+
+  const agency = await this._agencyTenantRepository.getOwnerWithOrgId(orgId);
+  if (!agency) {
+    throw new CustomError("Agency not found", 404);
+  }
+
+  const proratedPrice = this.calculateProratedPrice(
+    plan.price,
+    agency.createdAt,
+    plan.billingCycle
+  );
+
+  const validityInDate = addMonthsToDate(plan.billingCycle == "monthly"?30:365);
+  await this._agencyRepository.upgradePlanWithOrgId(orgId, plan._id as string,validityInDate);
+  await this._agencyTenantRepository.upgradePlan(orgId, plan._id as string);
+
+  const transaction = {
+    orgId,
+    email: agency.email,
+    userId: agency._id,
+    planId: plan._id,
+    paymentGateway: "razorpay",
+    transactionId: `upgrade-${Date.now()}`,
+    amount: proratedPrice,
+    description: `Upgraded to ${plan.name} plan`,
+    currency: "USD",
+    transactionType: "plan_transactions",
+  };
+
+  await this._transactionRepository.createTransaction(transaction);
+  await this._transactiontenantRepository.createTransaction(orgId, transaction);
+
+  const activity = {
+    user: {
+      userId: agency._id.toString(),
+      username: agency.organizationName,
+      email: agency.email,
+    },
+    activityType: "plan_upgraded",
+    activity: `Agency upgraded to ${plan.name} plan`,
+    entity: {
+      type: "agency",
+    },
+    redirectUrl: "/agency/settings",
+  };
+
+  await this._activityRepository.createActivity(orgId, activity);
+}
+
 
 
 

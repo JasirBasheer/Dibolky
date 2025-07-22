@@ -184,6 +184,7 @@ export class EntityService implements IEntityService {
     };
 
     this._transactionRepository.createTransaction(newTransaction);
+    this._transactionTenantRepository.createTransaction(orgId,newTransaction);
     this._activityRepository.createActivity(orgId, activity);
     await this._entityRepository.saveDetailsInAgencyDb(
       newTenantAgency,

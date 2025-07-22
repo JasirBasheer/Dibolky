@@ -25,5 +25,6 @@ export interface IAgencyService {
     getPaymentIntegrationStatus(orgId: string): Promise<Record<string, boolean>>;
     createInvoice(orgId:string,details:Partial<IInvoiceType>): Promise<void>
     getUpgradablePlans(orgId:string): Promise<any>
+    upgradePlan(orgId:string, planId:string): Promise<void>
     
 }

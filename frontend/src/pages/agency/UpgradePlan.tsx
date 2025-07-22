@@ -2,74 +2,75 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { useQuery } from "@tanstack/react-query"
-import { Check, Star } from "lucide-react"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { Check } from "lucide-react"
 import CustomBreadCrumbs from "@/components/ui/custom-breadcrumbs"
+import { getAllUpgradablePlansApi } from "@/services/agency/get.services"
+import axios from "@/utils/axios"
+import { IRazorpayOrder } from "@/types/payment.types"
+import { toast } from "sonner"
+import { RootState } from "@/types"
+import { useDispatch, useSelector } from "react-redux"
+import { setUser } from "@/redux/slices/user.slice"
+import { setAgency } from "@/redux/slices/agency.slice"
 
-// Mock API function - replace with your actual API call
-const getAllPlansApi = async () => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-
-  return [
-    {
-      id: 1,
-      name: "Basic",
-      price: 9.99,
-      billing: "monthly",
-      description: "Perfect for individuals getting started",
-      features: ["5 Projects", "10GB Storage", "Email Support", "Basic Analytics"],
-      popular: false,
-    },
-    {
-      id: 2,
-      name: "Pro",
-      price: 19.99,
-      billing: "monthly",
-      description: "Best for growing teams and businesses",
-      features: [
-        "25 Projects",
-        "100GB Storage",
-        "Priority Support",
-        "Advanced Analytics",
-        "Team Collaboration",
-        "Custom Integrations",
-      ],
-      popular: true,
-    },
-    {
-      id: 3,
-      name: "Enterprise",
-      price: 49.99,
-      billing: "monthly",
-      description: "For large organizations with advanced needs",
-      features: [
-        "Unlimited Projects",
-        "1TB Storage",
-        "24/7 Phone Support",
-        "Advanced Security",
-        "Custom Branding",
-        "API Access",
-        "Dedicated Account Manager",
-      ],
-      popular: false,
-    },
-  ]
-}
 
 const UpgradePlan = () => {
-  const {
-    data: plans,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["plans"],
-    queryFn: getAllPlansApi,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+  const user = useSelector((state:RootState) => state.user)
+  const dispatch = useDispatch()
+  const queryClient = useQueryClient();
+  const { data: upgradableplans, isLoading: isUpgradablePlansLoading } = useQuery({
+    queryKey: ["get-upgradable-plans"],
+    queryFn: () => {
+      return getAllUpgradablePlansApi()
+    },
+    select: (data) => data?.data.upgradablePlans,
+    staleTime: 1000 * 60 * 60,
   })
 
-  if (isLoading) {
+
+  const upgradePlan = async(plan) =>{
+
+          const response = await axios.post('/api/payment/razorpay', {
+            amount: plan?.price || 0,
+            currency: "USD",
+        });
+
+        const { id: order_id, amount, currency } = response.data.data;
+
+        const options = {
+            key: "rzp_test_fKh2fGYnPvSVrM",
+            amount: amount,
+            currency: currency,
+            name: plan?.name || "Subscription Plan",
+            description: plan?.description || "Plan Subscription",
+            order_id: order_id,
+            handler: async(response: IRazorpayOrder) => {
+                if (response) {
+                const response =  await axios.post('/api/agency/plans',{planId:plan._id})
+                if(response.status == 200){
+                  dispatch(setUser({planId:plan._id}))
+                  dispatch(setAgency({planId:plan._id}))
+                  queryClient.invalidateQueries({ queryKey: ["get-upgradable-plans"] });
+                  toast.success('plan upgraded successfully.')
+                }else{
+                  toast.error("an unexpected error occured during plan upgradation please try again later..")
+                }
+                }
+            },
+            theme: {
+                color: "#3399cc",
+            },
+        };
+
+        const paymentObject = new window.Razorpay(options);
+        paymentObject.open();
+  }
+
+
+
+
+  if (isUpgradablePlansLoading) {
     return (
       <div className="container mx-auto p-6">
         <h1 className="text-3xl font-bold text-center mb-8">Choose Your Plan</h1>
@@ -95,18 +96,7 @@ const UpgradePlan = () => {
     )
   }
 
-  if (error) {
-    return (
-      <div className="container mx-auto p-6">
-        <Card className="max-w-md mx-auto">
-          <CardContent className="p-6 text-center">
-            <p className="text-red-600 mb-4">Failed to load plans. Please try again.</p>
-            <Button onClick={() => window.location.reload()}>Retry</Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
+
 
   return (
     <>
@@ -120,7 +110,7 @@ const UpgradePlan = () => {
 
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        {plans?.map((plan) => (
+        {upgradableplans?.map((plan) => (
           <Card
             key={plan.id}
             className={`relative transition-all duration-200 hover:shadow-lg`}
@@ -132,7 +122,7 @@ const UpgradePlan = () => {
               <CardDescription className="text-sm">{plan.description}</CardDescription>
               <div className="mt-4">
                 <span className="text-4xl font-bold">${plan.price}</span>
-                <span className="text-muted-foreground">/{plan.billing}</span>
+                <span className="text-muted-foreground">/{plan.billingCycle}</span>
               </div>
             </CardHeader>
 
@@ -149,6 +139,7 @@ const UpgradePlan = () => {
               <Button
                 className={`w-full variant-outline`}
                 size="lg"
+                onClick={() => upgradePlan(plan)}
               >
               Upgrade now
               </Button>

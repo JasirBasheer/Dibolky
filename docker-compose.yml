@@ -136,12 +136,22 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-      
+
   nginx:
     build:
       context: .
       dockerfile: nginx/Dockerfile
-
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      dibolky-tool:
+        aliases:
+          - nginx
+    restart: unless-stopped
 
   certbot:
     image: certbot/certbot

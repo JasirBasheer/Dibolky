@@ -149,6 +149,7 @@ services:
         condition: service_healthy
     volumes:
       - ./nginx/www:/var/www/html
+      - ./nginx/ssl:/etc/letsencrypt
     networks:
       dibolky-tool:
         aliases:

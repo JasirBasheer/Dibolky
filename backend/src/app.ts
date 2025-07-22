@@ -6,13 +6,14 @@ import compression from 'compression';
 import { requestLogger } from "@/middlewares";
 import { limiter } from "mern.common";
 import { createMetaWebHookRoutes, createPaymentWebHookRoutes } from "@/routes";
+import { CORS_ORIGINS } from "./config";
 
 
 export const createApp = () => {
   const app = express();
 
   app.use(cors({
-      origin: ["http://localhost:5173","http://frontend:5173"],
+      origin: CORS_ORIGINS.split(","),
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       credentials: true,
   }))

@@ -138,22 +138,6 @@ services:
       retries: 3
       start_period: 60s
 
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    depends_on:
-      - frontend
-      - backend
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/ssl:/etc/letsencrypt
-      - ./nginx/www:/var/www/html
-    networks:
-      - dibolky-tool
-
   redis:
     image: redis:alpine
     container_name: redis
@@ -172,6 +156,22 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+      
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/letsencrypt
+      - ./nginx/www:/var/www/html
+    networks:
+      - dibolky-tool
 
   certbot:
     image: certbot/certbot

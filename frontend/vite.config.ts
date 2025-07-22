@@ -6,7 +6,7 @@ import path from "path"
 export default defineConfig({
   plugins: [react()],
   server: {
-  allowedHosts: ['dibolky.vercel.app'],
+  allowedHosts: ['tool.dibolky.com'],
   },
   resolve: {
     alias: {

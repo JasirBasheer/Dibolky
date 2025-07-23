@@ -23,6 +23,7 @@
 @tailwind utilities;
 
 
+
 @layer base {
   :root {
     --font-lazare: 'Lazare', sans-serif;
@@ -123,4 +124,20 @@
 
 .group:hover .group-hover\:opacity-100 {
   opacity: 1;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s ease-in-out infinite;
 }

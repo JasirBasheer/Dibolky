@@ -9,8 +9,8 @@ export const createMetaWebHookRoutes = (): Router => {
   const router = Router();
   const inboxWebHookController = container.resolve<IInboxWebHookController>('InboxWebHookController')
 
-  router.get("/meta", inboxWebHookController.handleMetaWebHookVerification);
-  router.post("/meta",verifyMetaSignature ,asyncHandler(inboxWebHookController.handleMetaWebHook));
+  router.get("/meta/instagram", inboxWebHookController.handleMetaWebHookVerification);
+  router.post("/meta/instagram",verifyMetaSignature ,asyncHandler(inboxWebHookController.handleMetaWebHook));
 
 // processWebhookQueue();
 

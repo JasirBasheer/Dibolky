@@ -30,8 +30,9 @@ export class InboxWebhookController implements IInboxWebHookController {
     req: Request,
     res: Response
   ): Promise<void> => {
-    const redisClient = getRedisClient()
-    await redisClient.lPush("webhook_queue", JSON.stringify(req.body));
+    // const redisClient = getRedisClient()
+    // await redisClient.lPush("webhook_queue", JSON.stringify(req.body));
+    console.log('Webhook payload:', JSON.stringify(req.body, null, 2));
     logger.info("Webhook payload queued", { payload: req.body });
     res.sendStatus(200);
   }

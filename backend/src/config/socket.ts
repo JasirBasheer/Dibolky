@@ -4,7 +4,8 @@ import { FRONTEND_BASE_URL } from './env';
 export const config = {
   socketOptions: {
     cors: {
-      origin: [FRONTEND_BASE_URL],
+      origin: "*",
+      // origin: [FRONTEND_BASE_URL],
       methods: ['GET', 'POST'],
       credentials: true,
     },

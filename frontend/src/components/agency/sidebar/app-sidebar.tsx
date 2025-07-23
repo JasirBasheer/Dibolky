@@ -35,7 +35,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const selectedUser = localStorage.getItem('selectedClient') as string
 
   const { data: menu, isLoading } = useQuery({
-    queryKey: ["get-agency-menu", user.role, user.user_id,user.planId], 
+    queryKey: ["get-agency-menu", user.role, user.user_id], 
     queryFn: () => {
       return fetchAgencyMenuApi(user.role, user.role === "agency" ? user.planId : selectedUser);
     },

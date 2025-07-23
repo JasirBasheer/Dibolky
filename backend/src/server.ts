@@ -3,12 +3,17 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { registerRoutes } from "./app/registerRoutes";
 import { registerDependencies } from "@/di";
-import { errorHandler } from "@/middlewares";
+import { errorHandler, socketAuthMiddleware } from "@/middlewares";
+import { registerSocketEventHandlers } from "./app/socketHandlers";
+import { PORT, connectRedis } from "@/config";
+import { startCronJobs } from "./infrastructure/cron/startCronJobs";
 import { createApp } from "@/app";
 import { connectDB } from "@/utils";
 import logger from "@/logger";
-import { PORT, connectRedis } from "@/config";
-import { startCronJobs } from "./infrastructure/cron/startCronJobs";
+import http from "http";
+import { Server } from "socket.io";
+import { config } from "./config/socket";
+
 
 async function bootstrap() {
   try {
@@ -21,7 +26,17 @@ async function bootstrap() {
     registerRoutes(app);
     app.use(errorHandler);
     
-    app.listen(PORT, () => {
+    const server = http.createServer(app);
+    const io = new Server(server, config.socketOptions);
+    io.use(socketAuthMiddleware);
+    
+    io.on("connection", (socket) => {
+      console.log(`Socket connected: ${socket.id}`);
+      registerSocketEventHandlers(io, socket);
+    });
+
+
+    server.listen(PORT, () => {
       logger.info(`Server running on port ${PORT}`);
     });
   } catch (err) {

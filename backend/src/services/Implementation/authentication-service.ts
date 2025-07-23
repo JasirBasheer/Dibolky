@@ -3,7 +3,7 @@ import { inject, injectable } from "tsyringe";
 import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepository";
 import { IAdminRepository } from "../../repositories/Interface/IAdminRepository";
 import { CustomError, generateToken, hashPassword, NotFoundError, sendMail, verifyToken } from "mern.common";
-import { JWT_RESET_PASSWORD_SECRET } from "../../config/env.config";
+import { JWT_RESET_PASSWORD_SECRET } from "../../config/env";
 import { IAdminType } from "../../types/admin";
 import { IAgencyType } from "../../types/agency";
 import { createForgotPasswordData } from "../../utils/mail.datas";

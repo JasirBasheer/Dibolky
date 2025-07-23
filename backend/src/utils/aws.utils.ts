@@ -2,13 +2,13 @@ import s3Client from "../config/aws.config";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { AWS_S3_BUCKET_NAME } from "../config/env.config";
+import { AWS_S3_BUCKET_NAME } from "../config/env";
 
 
 export async function getS3ViewUrl(
     key: string
 ): Promise<string> {
-
+    if(key == "")return 
     const getObjectParams = {
         Bucket: "dibolky-test-app",
         Key: key,

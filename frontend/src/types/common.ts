@@ -110,7 +110,7 @@ export interface Seen {
 export interface IMessage {
   _id?: string;
   chatId?: string;
-  type?: 'text' | 'common' | 'deleted';
+  type?: string;
   senderId?: string;
   senderName?: string;
   text?: string;

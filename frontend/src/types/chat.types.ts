@@ -39,7 +39,7 @@ export interface ChatItemProps {
   isGroup?: boolean;
   messages: IMessage[];
   userId: string;
-  socket: ISocketRef | null;
+  socket: Socket | null;
   chat_id:string;
   isMemberActive?:boolean;
   activeMemberCount?:number;

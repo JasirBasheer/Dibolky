@@ -2,9 +2,9 @@ import { ForgotPassword, ResetPassword } from "@/pages/authentication.pages/forg
 import Login from "@/pages/authentication.pages/login";
 import ProtectedRoute from "@/pages/authentication.pages/protected.route";
 import UnProtectedRoute from "@/pages/authentication.pages/unProtected.route";
+import ChatPage from "@/pages/chat/chatPage";
 import ClientContent from "@/pages/client/client.content";
 import ClientDashboard from "@/pages/client/client.dashboard";
-import ClientMessages from "@/pages/client/client.message";
 import Layout from "@/pages/client/Layout";
 import Integrations from "@/pages/common/Integrations";
 import Invoices from "@/pages/common/Invoices";
@@ -23,7 +23,7 @@ export default function ClientRoutes() {
         } >
           <Route index element={<ClientDashboard />} />
           <Route path='contents' element={<ClientContent />} />
-          <Route path='message' element={<ClientMessages />} />
+          <Route path='messages' element={<ChatPage />} />
           <Route path='invoices' element={<Invoices />} />
           <Route path='invoices/payments' element={<Payments />} />
           <Route path='invoices/overdue' element={<Overdues />} />

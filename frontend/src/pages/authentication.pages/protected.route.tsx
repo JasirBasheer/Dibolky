@@ -6,6 +6,9 @@ import { ScaleLoader } from 'react-spinners';
 import { useDispatch } from 'react-redux';
 import { setAgency } from '../../redux/slices/agency.slice';
 import { setUser } from '../../redux/slices/user.slice';
+import socket from '@/sockets';
+import { registerChatHandlers } from '@/sockets/handlers/message-handler';
+import { registerUserHandlers } from '@/sockets/handlers/user-handler';
 
 interface IRedirectionUrls {
   agency: string;
@@ -25,7 +28,10 @@ const ProtectedRoute = ({ children, role }: { children: ReactNode, role: string 
       if (response.data) {
         if (role == "agency") {
           const res = await axios.get(`/api/agency/owner-details`);
-          console.log(res,"response")
+          socket.connect()
+          registerUserHandlers(res.data.details?.orgId,res.data.details?._id)
+          registerChatHandlers()
+
           dispatch(setAgency({
             user_id:res.data.details?._id || "",
             main_id: response.data.details._id,
@@ -50,21 +56,26 @@ const ProtectedRoute = ({ children, role }: { children: ReactNode, role: string 
             role,user_id:res.data.details?._id || "",
             main_id: res.data.details?.main_id || ""
           }))
+  
 
         } else if (role == "client" && response?.data.details.orgId && response?.data.details.email) {
           const res = await axios.get(`/api/client/details`);
+          console.log(res.data._id,'asdfjklasdjf')
+              socket.connect()
+          console.log(res.data.client?.orgId,res.data.client?._id,"userIddddd")
+          registerUserHandlers(res.data.client?.orgId,res.data.client?._id,)
+          registerChatHandlers()
           dispatch(setUser({
             name: res.data.client?.name || "",
             email: res.data.client?.email || "",
             orgId: res.data.client?.orgId || "",
-            organizationName: res.data.client?.organizationName || "",
-            facebookAccessToken: res.data.client?.socialMedia_credentials?.facebook?.accessToken || "",
-            instagramAccessToken: res.data.client?.socialMedia_credentials?.instagram?.accessToken || "",
             profile: res.data.client?.profile || "",
             bio: res.data.client?.bio || "",
-            role,user_id:res.data.client?._id || "",
+            role,
+            user_id:res.data.client?._id || "",
             main_id: res.data.client?.main_id || ""
           }))
+          console.log(res.data)
         } else if (role == "Employee" && response?.data.details.orgId && response?.data.details.email) {
           console.log(response?.data);
 
@@ -79,6 +90,7 @@ const ProtectedRoute = ({ children, role }: { children: ReactNode, role: string 
 
         dispatch(setUser({ role: response.data.role, planId: response.data.details.planId }))
 
+        
         setIsAuthenticated(true);
         if (response.data.role !== role) {
           navigate(roleRedirects[response.data.role as keyof typeof roleRedirects])

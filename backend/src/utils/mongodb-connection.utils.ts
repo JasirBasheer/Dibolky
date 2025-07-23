@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import logger from "../logger";
-import { DB_URI } from "@/config/env.config";
+import { DB_URI } from "@/config/env";
 
 export async function connectDB(): Promise<void> {
     try {

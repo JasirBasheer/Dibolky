@@ -171,7 +171,7 @@ export function TeamSwitcher({
             <DropdownMenuSeparator />
 
         <DropdownMenuLabel className="text-xs text-muted-foreground">Clients</DropdownMenuLabel>
-            {clients.map((client, index) => (
+            {clients?.map((client, index) => (
               <DropdownMenuItem key={client._id} onClick={() => handleSelect(client._id)} className="gap-2 p-2">
              <Avatar className="h-8 w-8 rounded-lg ">
                 <AvatarImage src={client.profile || "/placeholder.svg"} alt={client.name} />

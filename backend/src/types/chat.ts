@@ -30,7 +30,7 @@ export interface Seen {
   
   export interface IChat extends Document {
     name?: string;
-    participants?: Participant[];
+    participants: Participant[];
     createdAt?: Date;
     updatedAt?: Date;
   }

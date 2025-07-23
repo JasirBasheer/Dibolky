@@ -1,4 +1,4 @@
-import { META_API_VERSION } from "../config/env.config";
+import { META_API_VERSION } from "../config/env";
 import { SocialMediaResponse } from "../types/common";
 
 export async function getPages(

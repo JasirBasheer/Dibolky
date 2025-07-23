@@ -4,7 +4,7 @@ import { container } from "tsyringe";
 import { IAgencyService } from "../services/Interface/IAgencyService";
 import { IAdminService } from "../services/Interface/IAdminService";
 import { IClientService } from "../services/Interface/IClientService";
-import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../config/env.config";
+import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../config/env";
 import { isTokenBlacklisted } from "../config/redis.config";
 import { IAgencyType } from "../types/agency";
 import { IAdminType } from "../types/admin";

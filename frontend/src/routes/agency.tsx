@@ -5,7 +5,6 @@ import Inbox from '@/components/common/inbox'
 import AgencyCalendar from '@/pages/agency/Calendar'
 import AgencyLeads from '@/pages/agency/Leads'
 import AgencyContent from '@/pages/agency/Content'
-import AgencyMessages from '@/pages/agency/message'
 import AgencyProject from '@/pages/agency/projects'
 import AgencyAnalytics from '@/pages/agency/Analytics'
 import SettingsPage from '@/components/agency/settings'
@@ -25,6 +24,7 @@ import CreateInvoice from '@/pages/agency/CreateInvoice'
 import Overdues from '@/pages/common/Overdues'
 import UpgradePlan from '@/pages/agency/UpgradePlan'
 import BillingHistory from '@/pages/agency/BillingHistory'
+import ChatPage from '@/pages/chat/chatPage'
 
 
 export default function AgencyRoutes() {
@@ -45,13 +45,13 @@ export default function AgencyRoutes() {
         <Route path='invoices/overdue' element={<Overdues />} />
         <Route path='billing/upgrade' element={<UpgradePlan />} />
         <Route path='billing/history' element={<BillingHistory />} />
+        <Route path='messages' element={<ChatPage />} />
 
         
         {/* need to check it */}
         <Route path='create-client' element={<CreateClient />} />
         <Route path='contents' element={<AgencyContent />} />
         <Route path='leads' element={<AgencyLeads />} />
-        <Route path='messages' element={<AgencyMessages />} />
         <Route path='projects' element={<AgencyProject />} />
         <Route path='settings' element={<SettingsPage />} />
         {/* need to check it */}

@@ -66,23 +66,22 @@ const ChatInterface = ({
     fileInputRef.current?.click();
   };
 
-useEffect(() => {
-  const handleBeforeUnload = () => {
-    const payload = JSON.stringify({ userId, orgId });
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const payload = JSON.stringify({ userId, orgId });
 
-    navigator.sendBeacon(
-      `${import.meta.env.VITE_BACKEND}/api/socket/set-offline`,
-      new Blob([payload], { type: 'application/json' })
-    );
-  };
+      navigator.sendBeacon(
+        `${import.meta.env.VITE_BACKEND}/api/socket/set-offline`,
+        new Blob([payload], { type: "application/json" })
+      );
+    };
 
-  window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
-  return () => {
-    window.removeEventListener('beforeunload', handleBeforeUnload);
-  };
-}, [userId, orgId]);
-
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [userId, orgId]);
 
   const handleFileUploadClick = async (files: File[]) => {
     const file = files[0];
@@ -698,7 +697,11 @@ useEffect(() => {
               type="file"
               ref={fileInputRef}
               className="hidden"
-              onChange={(e) => handleFileUploadClick(e?.target?.files)}
+              onChange={(e) => {
+                if (e.target.files) {
+                  handleFileUploadClick(Array.from(e.target.files));
+                }
+              }}
             />
           </div>
           <input

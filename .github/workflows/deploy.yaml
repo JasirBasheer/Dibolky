@@ -25,7 +25,10 @@ jobs:
         ssh ${{ secrets.GCE_SSH_USER }}@${{ secrets.GCE_INSTANCE_IP }} << 'EOF'
           cd /opt/Dibolky
           sudo git pull origin main
-          sudo docker compose down --remove-orphans
-          sudo docker compose rm -sf nginx backend
-          sudo docker compose up --build -d nginx backend
+          sudo docker container stop $(sudo docker container ls -aq) || true
+          sudo docker container rm $(sudo docker container ls -aq) || true
+          sudo docker image rm -f $(sudo docker image ls -aq) || true
+          sudo docker system prune -af --volumes || true
+          sudo docker compose rm -sf nginx backend || true
+          sudo docker compose up --build -d 
         EOF

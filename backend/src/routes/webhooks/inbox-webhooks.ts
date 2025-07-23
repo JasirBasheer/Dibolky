@@ -8,9 +8,10 @@ import { verifyMetaSignature } from '@/middlewares/meta-webhook';
 export const createMetaWebHookRoutes = (): Router => {
   const router = Router();
   const inboxWebHookController = container.resolve<IInboxWebHookController>('InboxWebHookController')
-
   router.get("/meta/instagram", inboxWebHookController.handleMetaWebHookVerification);
-  router.post("/meta/instagram" ,asyncHandler(inboxWebHookController.handleMetaWebHook));
+  
+  router.use(express.json()); 
+  router.post("/meta/instagram",verifyMetaSignature ,asyncHandler(inboxWebHookController.handleMetaWebHook));
 
 // processWebhookQueue();
 

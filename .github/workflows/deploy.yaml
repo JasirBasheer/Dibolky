@@ -26,7 +26,6 @@ jobs:
           cd /opt/Dibolky
           sudo git pull origin main
           sudo docker container stop 
-          docker rm $(docker ps -aq)
-          docker rmi -f $(docker images -q)
+          docker system prune -f -a --volumes
           sudo docker compose up --build -d 
         EOF

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { META_API_VERSION } from "@/config";
+import { isErrorWithMessage } from "@/validators";
 
 export async function getFBConversations(
   pageId: string,
@@ -14,8 +15,9 @@ export async function getFBConversations(
       },
     });
     return response.data;
-  } catch (error: any) {
-    console.error("Error fetching FB conversations:", error?.response?.data || error.message);
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    console.error("Error fetching FB conversations:", errorMessage);
     throw new Error("Failed to fetch FB conversations");
   }
 }
@@ -34,8 +36,9 @@ export async function getFBMessages(
       },
     });
     return response.data;
-  } catch (error: any) {
-    console.error("Error fetching FB messages:", error?.response?.data || error.message);
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    console.error("Error fetching FB messages:", errorMessage);
     throw new Error("Failed to fetch FB messages");
   }
 }

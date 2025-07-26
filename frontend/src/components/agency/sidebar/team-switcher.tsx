@@ -46,7 +46,7 @@ export function TeamSwitcher({
 
 
   React.useEffect(() => {
-    console.log(agency.user_id)
+    
     if (!agency?.user_id) return;
 
     const selectedClient = localStorage.getItem('selectedClient');
@@ -186,7 +186,7 @@ export function TeamSwitcher({
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2" onClick={()=> navigate('/agency/create-client')}>
+            <DropdownMenuItem className="gap-2 p-2" onClick={()=> navigate('/agency/clients/create')}>
               <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                 <Plus className="size-4" />
               </div>

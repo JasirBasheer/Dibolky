@@ -140,7 +140,7 @@ export class ClientService implements IClientService {
         },
         activityType:"invoice_payment",
         activity:`Invoice ${invoice.invoiceNumber} from ${invoice.client.clientName} has been paid`,
-        redirectUrl:"/invoices/payments",
+        redirectUrl:"invoices/payments",
         entity:{
           type:"client",
           id:invoice.client.clientId

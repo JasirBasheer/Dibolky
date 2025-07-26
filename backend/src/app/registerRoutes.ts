@@ -11,3 +11,4 @@ export const registerRoutes = (app: Express) => {
   app.use("/api/client", createClientRoutes());
   app.use("/api/payment", createPaymentRouter());  
 };
+ 

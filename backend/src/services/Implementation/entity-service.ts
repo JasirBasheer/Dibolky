@@ -33,6 +33,8 @@ import { getPages } from "@/media-service/shared";
 import { getIGConversations, getIGMessages, getIGMessageSenderDetails } from "@/inbox-integrations";
 import { InstagramConversation, InstagramMessage, ISocialUserType } from "@/types";
 import { FilterType } from "@/types/invoice";
+import { META_API_VERSION } from "@/config";
+import { fetchIGAccountId } from "@/providers/instagram";
 
 @injectable()
 export class EntityService implements IEntityService {
@@ -180,7 +182,7 @@ export class EntityService implements IEntityService {
       entity: {
         type: "agency",
       },
-      redirectUrl: "/agnecy/settings",
+      redirectUrl: "settings",
     };
 
     this._transactionRepository.createTransaction(newTransaction);
@@ -226,6 +228,19 @@ export class EntityService implements IEntityService {
     const transactions = await this._transactionTenantRepository.getAllTransactions(orgId,filter,options) 
     return transactions
   }
+
+    async getAllActivities(orgId: string,entity: string, user_id: string): Promise<any>{
+      let activities;
+      if(entity == "agency"){
+        activities = await this._activityRepository.getActivities({orgId}) 
+      }else{
+        activities = await this._activityRepository.getActivitiesByUserId(orgId,user_id) 
+      }
+        
+    return activities
+  }
+
+  
   
 private _buildInvoiceFilter(
   query: FilterType,
@@ -428,7 +443,7 @@ private _buildTransactionFilter(
         "User details not found please try again later.."
       );
 
-    const credentials = details.socialMedia_credentials;
+    const credentials = details.social_credentials;
     const platforms = [
       { key: "facebook", token: credentials?.facebook?.accessToken, connectedAt: credentials?.facebook?.connectedAt, checkStatus: getMetaAccessTokenStatus },
       { key: "instagram", token: credentials?.instagram?.accessToken, connectedAt: credentials?.instagram?.connectedAt, checkStatus: getMetaAccessTokenStatus },
@@ -474,7 +489,7 @@ async getInbox(
       let platformUsers: ISocialUserType[] = [];
 
       if (platform === 'instagram') {
-      if (!user?.socialMedia_credentials?.instagram?.accessToken) return []
+      if (!user?.social_credentials?.instagram?.accessToken) return []
         
         platformUsers = (
           await Promise.all(
@@ -490,7 +505,7 @@ async getInbox(
         const pagesWithNoUsers = selectedPages.filter((pageId) => !platformUsers.some((u) => u.linkedPage === pageId));
         console.log(pagesWithNoUsers.length)
         if (pagesWithNoUsers.length > 0) {
-          const pages = await getPages(user.socialMedia_credentials.instagram.accessToken);
+          const pages = await getPages(user.social_credentials.instagram.accessToken);
           const validPages = pages.data.filter((page) => pagesWithNoUsers.includes(page.id));
           const pageUsers = await Promise.all(
             validPages.map(async (page) => {
@@ -583,6 +598,8 @@ async getInbox(
 
 
 
+
+
    async getInboxMessages(orgId: string,  userId: string, platform: string, conversationId: string): Promise<any>{
       const messages = await this._socialMessageRepository.getMessages(orgId,userId,platform,conversationId)
       return messages
@@ -590,4 +607,368 @@ async getInbox(
    }
 
 
+
+
+
+async getMedia(
+  orgId: string,
+  entity: string,
+  userId: string,
+  selectedPlatforms: string[],
+  selectedPages: string[]
+): Promise<any[]> {
+  try {
+    const user = entity === 'agency'
+      ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
+      : await this._clientTenantRepository.getClientById(orgId, userId);
+
+    const medias: any[] = [];
+
+    for (const platform of selectedPlatforms) {
+      let contents: any[] = [];
+
+      if (platform === 'instagram') {
+        if (!user?.social_credentials?.instagram?.accessToken) return [];
+
+        const pages = await getPages(user.social_credentials.instagram.accessToken);
+        const selectedPagesDetails = pages.data.filter((item) => selectedPages.includes(item.id));
+
+        for (const selectedPage of selectedPagesDetails) {
+          const pageAccessToken = selectedPage.access_token;
+          const pageId = selectedPage.id;
+          const pageName = selectedPage.name
+
+          const igAccountData = await fetchIGAccountId(pageId,pageAccessToken)
+
+          if (igAccountData.isBusiness) {
+            const igUserId = igAccountData.id;
+          const igProfileResponse = await fetch(`https://graph.facebook.com/${igUserId}?fields=id,username,name,profile_picture_url&access_token=${pageAccessToken}`);
+            const igProfile = await igProfileResponse.json();
+
+
+            let allMedia = [];
+            let nextUrl = `https://graph.facebook.com/${igUserId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${pageAccessToken}`;
+
+            while (nextUrl) {
+              const response = await fetch(nextUrl);
+              const data = await response.json();
+
+              allMedia.push(...(data?.data || []));
+              nextUrl = data?.paging?.next || null;
+            }
+
+            contents = allMedia.map((content) => ({
+              ...content,
+              platform: "instagram",
+              pageId,
+              profileName: igProfile.username,
+              profilePicture: igProfile.profile_picture_url
+            }));
+            medias.push(...contents);
+          }
+        }
+      } else if (platform === 'facebook') {
+        if (!user?.social_credentials?.facebook?.accessToken) return [];
+
+         const pagesResponse = await fetch(`https://graph.facebook.com/${META_API_VERSION}/me/accounts?access_token=${user.social_credentials.facebook.accessToken}`);
+        const pagesData = await pagesResponse.json();
+
+        const selectedPagesDetails = (pagesData.data || []).filter((page: any) => selectedPages.includes(page.id));
+
+        for (const selectedPage of selectedPagesDetails) {
+          const pageAccessToken = selectedPage.access_token;
+          const pageId = selectedPage.id;
+
+            const pageInfoResponse = await fetch(`https://graph.facebook.com/${META_API_VERSION}/${pageId}?fields=name,picture&access_token=${pageAccessToken}`);
+            const pageInfo = await pageInfoResponse.json();
+           let allPosts = [];
+          let nextUrl = `https://graph.facebook.com/${META_API_VERSION}/${pageId}/posts?fields=id,message,created_time,permalink_url,attachments{subattachments,media,type,url},story&access_token=${pageAccessToken}`;
+
+          while (nextUrl) {
+            const response = await fetch(nextUrl);
+            const data = await response.json();
+            console.log(data,'data')
+            allPosts.push(...(data?.data || []));
+            nextUrl = data?.paging?.next || null;
+          }
+
+           contents = allPosts.map(post => ({
+            id: post.id,
+            caption: post.message || post.story || '',
+            media_type: post.attachments?.data[0]?.type == "photo"? "IMAGE":"VIDEO", 
+            media_url: post.attachments?.data[0]?.media?.image?.src || post.attachments?.data[0]?.media?.source || '',
+            permalink: post.permalink_url,
+            timestamp: post.created_time,
+            platform: 'facebook',
+            pageId,
+            profileName: pageInfo.name,
+            profilePicture: pageInfo.picture?.data?.url || null
+
+          }));
+
+          medias.push(...contents);
+        }
+      }
+    }
+
+    return medias;
+  } catch (error: any) {
+    console.error('Error fetching inbox:', error);
+    throw new CustomError('Error while fetching chats', 500);
+  }
 }
+
+
+
+
+async getContentDetails(
+  orgId: string,
+  entity: string,
+  userId: string,
+  platform: string,
+  mediaId: string,
+  mediaType: string,
+  pageId:string
+): Promise<any> {
+  try {
+    const user = entity === 'agency'
+      ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
+      : await this._clientTenantRepository.getClientById(orgId, userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    let contentDetails: any = {};
+
+    if (platform === "instagram") {
+      const accessToken = user.social_credentials.instagram?.accessToken;
+      if (!accessToken) throw new Error('Instagram access token missing');
+      const pages = await getPages(accessToken)
+      const page = pages.data.find((p)=> p.id == pageId)
+
+      const commentsRes = await fetch(
+        `https://graph.facebook.com/${mediaId}/comments?fields=id,text,username,timestamp&access_token=${page.access_token}`
+      );
+      const commentsData = await commentsRes.json();
+      console.log(commentsData,"commentdata")
+      if (commentsData.error) throw new Error(`Instagram comments error: ${JSON.stringify(commentsData.error)}`);
+
+      const mediaRes = await fetch(
+        `https://graph.facebook.com/${mediaId}?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,username,children&access_token=${page.access_token}`
+      );
+      const mediaData = await mediaRes.json();
+      console.log(mediaData,"mediaData")
+
+      if (mediaData.error) throw new Error(`Instagram media error: ${JSON.stringify(mediaData.error)}`);
+
+      const getSupportedMetrics = (type: string) => {
+        switch(type.toUpperCase()){
+          case 'VIDEO': return ['reach','likes','comments'];
+          case 'IMAGE': return ['reach','saved','likes','comments'];
+          case 'REELS': return ['views','likes','comments','saved'];
+          case 'STORY': return ['replies','exits','taps_forward','taps_back'];
+          default:      return ['reach','likes','comments'];
+        }
+      };
+      const metrics = getSupportedMetrics(mediaData.media_type || mediaType);
+
+      const insightsRes = await fetch(
+        `https://graph.facebook.com/${mediaId}/insights?metric=${metrics.join(',')}&access_token=${page.access_token}`
+      );
+      const insightsData = await insightsRes.json();
+      console.log(insightsData,"insightsDatasss")
+
+      if (insightsData.error) throw new Error(`Instagram insights error: ${JSON.stringify(insightsData.error)}`);
+
+      contentDetails = {
+        media: {
+          id: mediaData.id,
+          caption: mediaData.caption,
+          media_type: mediaData.media_type,
+          media_url: mediaData.media_url,
+          thumbnail_url: mediaData.thumbnail_url,
+          permalink: mediaData.permalink,
+          timestamp: mediaData.timestamp,
+          username: mediaData.username,
+          platform:"instagram",
+          pageId
+        },
+        comments: commentsData.data || [],
+        insights: insightsData.data || []
+      };
+
+    } else if (platform === "facebook") {
+       const accessToken = user.social_credentials.facebook?.accessToken;
+      if (!accessToken) throw new Error('Facebook access token missing');
+      const pages = await getPages(accessToken)
+      const page = pages.data.find((p)=> p.id == pageId)
+
+      const commentsRes = await fetch(
+        `https://graph.facebook.com/${mediaId}/comments?fields=id,message,from,created_time,like_count,comment_count&access_token=${page.access_token}`
+      );
+      const commentsData = await commentsRes.json();
+      console.log(commentsData,"comments")
+      if (commentsData.error) throw new Error(`Facebook comments error: ${JSON.stringify(commentsData.error)}`);
+
+      const postDetailsRes = await fetch(
+        `https://graph.facebook.com/${META_API_VERSION}/${mediaId}?fields=id,message,created_time,permalink_url,attachments{subattachments,media_type,url,media{image,source}},story&access_token=${page.access_token}`
+      );
+      const postData = await postDetailsRes.json();
+      console.log(postData, "postData for details");
+
+      if (postData.error) throw new Error(`Facebook post details error: ${JSON.stringify(postData.error)}`);
+
+      let media_type = 'UNKNOWN';
+      let media_url = '';
+
+      if (postData.attachments && postData.attachments.data && postData.attachments.data.length > 0) {
+        const firstAttachment = postData.attachments.data[0];
+
+        media_type = firstAttachment.media_type || 'UNKNOWN';  
+        if (media_type === 'video' && firstAttachment.media && firstAttachment.media.source) {
+            media_url = firstAttachment.media.source;  
+        } else if (firstAttachment.media && firstAttachment.media.image && firstAttachment.media.image.src) {
+            media_url = firstAttachment.media.image.src;  
+        } else if (firstAttachment.url) {
+            media_url = firstAttachment.url;  
+        }
+
+        if (firstAttachment.subattachments && firstAttachment.subattachments.data && firstAttachment.subattachments.data.length > 0) {
+            const firstSubAttachment = firstAttachment.subattachments.data[0];
+            if (firstSubAttachment.media && firstSubAttachment.media.image && firstSubAttachment.media.image.src) {
+                media_url = firstSubAttachment.media.image.src;
+                media_type = firstSubAttachment.media_type || media_type;
+            } else if (firstSubAttachment.media && firstSubAttachment.media.source) {
+                media_url = firstSubAttachment.media.source;
+                media_type = firstSubAttachment.media_type || media_type;
+            } else if (firstSubAttachment.url) {
+                media_url = firstSubAttachment.url;
+                media_type = firstSubAttachment.media_type || media_type;
+            }
+        }
+      }
+
+
+const insightsRes = await fetch(
+  `https://graph.facebook.com/${mediaId}/insights?metric=post_impressions_organic&access_token=${page.access_token}`
+);
+      const insightsData = await insightsRes.json();
+      console.log(insightsData,"insigit dataaaaa")
+      if (insightsData.error) throw new Error(`Facebook insights error: ${JSON.stringify(insightsData.error)}`);
+
+      contentDetails = {
+        media: {
+          id: postData.id,
+          caption: postData.message || postData.story || '',
+          media_type: ["video","reel"].includes(media_type) ? "VIDEO":"IMAGE",
+          media_url: media_url,   
+          permalink: postData.permalink_url,
+          timestamp: postData.created_time,
+          thumbnail_url: media_url,
+          platform: "facebook",
+          pageId: page.id,
+          pageName:page.name,
+          username:page.name,
+        },
+        comments: commentsData.data || [],
+        insights: insightsData.data || []
+      };
+    }
+
+    return contentDetails;
+  } catch (error: any) {
+    console.error('Error fetching content details:', error);
+    throw new CustomError('Error while fetching content details', 500);
+  }
+}
+
+
+async replayToComments(
+  orgId: string,
+  entity: string,
+  userId: string,
+  platform: string,
+  commentId: string,
+  pageId:string,
+  replyMessage: string
+): Promise<any> {
+  try {
+    const user = entity === 'agency'
+      ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
+      : await this._clientTenantRepository.getClientById(orgId, userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (!replyMessage || replyMessage.trim() === '') {
+      throw new Error('Reply message cannot be empty');
+    }
+
+    if (platform === "instagram") {
+      const instagramAccessToken = user.social_credentials.instagram?.accessToken;
+      if (!instagramAccessToken) {
+        throw new Error('Instagram access token missing');
+      }
+
+      const pages = await getPages(instagramAccessToken)
+      const page = pages.data.find((p)=> p.id == pageId)
+
+      const response = await fetch(`https://graph.facebook.com/v19.0/${commentId}/replies?message=${replyMessage}`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  body: new URLSearchParams({
+    access_token: page.access_token,
+  }),
+});
+
+      const data = await response.json();
+
+      if (data.error) {
+        throw new Error(`Instagram API error: ${data.error.message}`);
+      }
+
+      return data;  
+
+    } else if (platform === "facebook") {
+      const facebookAccessToken = user.social_credentials.facebook?.accessToken;
+      if (!facebookAccessToken) {
+        throw new Error('Facebook access token missing');
+      }
+
+      const pages = await getPages(facebookAccessToken)
+      const page = pages.data.find((p)=> p.id == pageId)
+
+
+     const response = await fetch(`https://graph.facebook.com/${commentId}/comments?message=${encodeURIComponent(replyMessage)}&access_token=${page.access_token}`, {
+        method: 'POST',
+      });
+
+
+      const data = await response.json();
+
+      if (data.error) {
+        throw new Error(`Facebook API error: ${data.error.message}`);
+      }
+
+      return data; // returns the newly created comment ID
+
+    } else {
+      throw new Error(`Unsupported platform: ${platform}`);
+    }
+
+  } catch (error: any) {
+    console.error('Error replying to comment:', error);
+    throw new CustomError('Error while replying to comment', 500);
+  }
+}
+
+
+
+}
+
+
+
+
+

@@ -24,6 +24,11 @@ export const X_CLIENT_ID = process.env.X_CLIENT_ID as string
 export const X_CLIENT_SECRET = process.env.X_CLIENT_SECRET as string
 export const X_REDIRECT_URI = process.env.X_REDIRECT_URI as string
 
+// GOOGLE
+export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID as string
+export const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET as string
+export const GOOGLE_REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI as string
+
 
 // AWS S3 BUCKET
 export const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME as string

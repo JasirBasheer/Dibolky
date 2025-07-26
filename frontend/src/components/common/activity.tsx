@@ -4,6 +4,8 @@ import { Clock, User, ActivityIcon, Building2, Users, CreditCard, CheckCircle, X
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { IActivityType } from "@/types"
+import { Link } from "react-router-dom"
 // import { useRouter } from "next/navigation"
 
 const getActivityIcon = (activityType: string) => {
@@ -77,7 +79,7 @@ const formatActivityType = (activityType: string) => {
 }
 
 interface ActivityFeedProps {
-  activities: any[]
+  activities: IActivityType[]
   showLoadMore?: boolean
   onLoadMore?: () => void
   emptyStateTitle?: string
@@ -107,7 +109,7 @@ export default function ActivityFeed({
       ) : (
         <div className="w-full space-y-4">
           <div className="space-y-3">
-            {activities.map((activity) => (
+            {activities?.map((activity) => (
               <Card
                 key={activity._id}
                 className="transition-all duration-200  border-x-transparent border-t-transparent rounded-none shadow-none cursor-pointer"
@@ -131,13 +133,15 @@ export default function ActivityFeed({
                           <span className="ml-1 capitalize">{activity.entity.type}</span>
                         </Badge>
 
-                        <span className="text-xs text-gray-500 flex items-center gap-1 ml-auto">
+                        {activity.timestamp &&
+                          <span className="text-xs text-gray-500 flex items-center gap-1 ml-auto">
                           <Clock className="h-3 w-3" />
-                          {formatTimeAgo(activity.createdAt)}
+                        { formatTimeAgo(activity.timestamp)}
                         </span>
+                      }
                       </div>
 
-                      <p className="text-sm text-gray-800 leading-relaxed mb-2 hover:text-blue-600 transition-colors">
+                      <p className="text-sm text-gray-800 leading-relaxed mb-2 transition-colors">
                         {activity.activity}
                       </p>
 
@@ -149,7 +153,7 @@ export default function ActivityFeed({
                           <span className="text-gray-400">{activity.user.email}</span>
                         </div>
 
-                        <div className="text-xs text-blue-600 hover:text-blue-800 font-medium">View details →</div>
+                        <Link to={activity.redirectUrl} className="text-xs text-blue-600 hover:text-blue-800 font-medium">View details →</Link>
                       </div>
                     </div>
                   </div>
@@ -157,7 +161,7 @@ export default function ActivityFeed({
               </Card>
             ))}
           </div>
-
+{/* 
           {showLoadMore && (
             <div className="flex justify-center pt-4">
               <button
@@ -167,7 +171,7 @@ export default function ActivityFeed({
                 Load more activities
               </button>
             </div>
-          )}
+          )} */}
         </div>
       )}
     </div>

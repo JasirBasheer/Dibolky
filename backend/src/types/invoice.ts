@@ -23,10 +23,10 @@ export interface IInvoiceType {
 export interface FilterType{
     page: number,
     limit: number,
-    query: string,
-    status: string,
-    sortBy: string,
-    sortOrder: string,
+    query?: string,
+    status?: string,
+    sortBy?: string,
+    sortOrder?: string,
     overdues?:boolean | string,
     type?:string
 }

@@ -37,11 +37,12 @@ export interface IClientTenant  {
     email?: string;
     industry?: string;
     password?: string;
-    socialMedia_credentials?: credentials;
+    social_credentials?: credentials;
     menu?: IMenuCategory;
     isSocialMediaInitialized: boolean,
     isPaymentInitialized: boolean,
     createdAt?:string | number;
+    projects?:any[]
 }
 
 

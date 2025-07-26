@@ -37,14 +37,15 @@ export class AgencyTenantRepository extends BaseRepository<IAgencyTenant> implem
     async setSocialMediaTokens(
         orgId: string,
         provider: string,
-        token: string
+        accesstoken: string,
+        refreshToken: string =""
     ): Promise<void> {
         const model = await this.getModel(orgId);
 
         const details = await model.find({})
         if (!details) throw new NotFoundError('Agency not found')
         const agency = details[0]
-        return await agency.setSocialMediaToken!(provider, token);
+        return await agency.setSocialMediaToken!(provider, accesstoken, refreshToken);
     }
 
 

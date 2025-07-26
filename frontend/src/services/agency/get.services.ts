@@ -1,12 +1,9 @@
 import api from "@/utils/axios";
 
 export const fetchProjectsCountApi = async() => {
-    return await api.get('/api/agency/projects-count')
+    return await api.get('/api/agency/projects')
 }
 
-export const fetchClientsCountApi = async() =>{
-    return await api.get('/api/agency/clients-count')
-}
 
 export const fetchInitialSetUpApi = async() =>{
     return await api.get('/api/agency/get-initial-set-up')
@@ -30,11 +27,11 @@ export const fetchAgencyOwnerDetailsApi = async() =>{
 }
 
 export const fetchClientApi = async(client_id :string) =>{
-    return await api.get(`/api/agency/client/${client_id}`)
+    return await api.get(`/api/agency/clients/${client_id}`)
 }
 
 export const fetchAvailableUsersApi = async() =>{
-    return await api.get("/api/agency/availabe-users")
+    return await api.get("/api/agency/users")
 }
 
 export const getPaymentIntegrationsStatus = async () => {

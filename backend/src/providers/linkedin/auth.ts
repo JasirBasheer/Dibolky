@@ -13,7 +13,7 @@ export async function createLinkedInOAuthURL(
   return authUrl;
 }
 
-export async function linkedInAuthCallback(code: string, state: string): Promise<string> {
+export async function linkedInAuthCallback(code: string, state: string): Promise<{accessToken:string}> {
   const params = new URLSearchParams({
     grant_type: "authorization_code",
     code,
@@ -44,7 +44,7 @@ const tokenParams = {
   try {
     const accessToken = await client.getToken(tokenParams);
     await new Promise((resolve) => setTimeout(resolve, 15000));
-    return accessToken.token.access_token as string
+    return {accessToken: accessToken.token.access_token.toString() }
   } catch (error:any) {
     console.error("LinkedIn OAuth Error:", error.message);
     throw new Error("Failed to get access token");

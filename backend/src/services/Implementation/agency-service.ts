@@ -15,7 +15,11 @@ import {
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { IProjectRepository } from "../../repositories/Interface/IProjectRepository";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
-import { IClientTenantType, IClientTenantWithProjectDetailsType, IClientType } from "../../types/client";
+import {
+  IClientTenantType,
+  IClientTenantWithProjectDetailsType,
+  IClientType,
+} from "../../types/client";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
 import {
@@ -31,10 +35,20 @@ import { AgencyMapper } from "@/mappers/agency/agency-mapper";
 import { IAgency } from "@/models/Interface/agency";
 import { IClientTenant } from "@/models";
 import { createNewMenuForClient } from "@/utils/menu.utils";
-import { IActivityRepository, InoviceRepository, IPlanRepository, ITransactionRepository, ITransactionTenantRepository, TransactionRepository, TransactionTenantRepository } from "@/repositories";
+import {
+  IActivityRepository,
+  InoviceRepository,
+  IPlanRepository,
+  ITransactionRepository,
+  ITransactionTenantRepository,
+  TransactionRepository,
+  TransactionTenantRepository,
+} from "@/repositories";
 import { IInvoiceType } from "@/types/invoice";
 import { IPlan } from "@/models/Interface/plan";
 import { addMonthsToDate } from "@/utils/date-utils";
+import { FilterType } from "@/utils";
+import { sendGoogleMail } from "@/providers/google/mail";
 
 @injectable()
 export class AgencyService implements IAgencyService {
@@ -61,23 +75,23 @@ export class AgencyService implements IAgencyService {
     @inject("ContentRepository") contentRepository: IContentRepository,
     @inject("InvoiceRepository") invoiceRepository: InoviceRepository,
     @inject("PlanRepository") planRepository: IPlanRepository,
-    @inject("TransactionRepository") transactionRepository: ITransactionRepository,
-    @inject("TransactionTenantRepository") transactiontenantRepository: ITransactionTenantRepository,
-    @inject("ActivityRepository") activityRepository: IActivityRepository,
-
+    @inject("TransactionRepository")
+    transactionRepository: ITransactionRepository,
+    @inject("TransactionTenantRepository")
+    transactiontenantRepository: ITransactionTenantRepository,
+    @inject("ActivityRepository") activityRepository: IActivityRepository
   ) {
-    this._agencyRepository = agencyRepository,
-    this._agencyTenantRepository = agencyTenantRepository;
-    this._clientRepository = clientRepository,
-    this._clientTenantRepository = clientTenantRepository,
-    this._projectRepository = projectRepository;
+    (this._agencyRepository = agencyRepository),
+      (this._agencyTenantRepository = agencyTenantRepository);
+    (this._clientRepository = clientRepository),
+      (this._clientTenantRepository = clientTenantRepository),
+      (this._projectRepository = projectRepository);
     this._contentRepository = contentRepository;
     this._invoiceRepository = invoiceRepository;
     this._planRepository = planRepository;
     this._transactionRepository = transactionRepository;
     this._transactiontenantRepository = transactiontenantRepository;
     this._activityRepository = activityRepository;
-    
   }
 
   async agencyLoginHandler(email: string, password: string): Promise<string> {
@@ -97,32 +111,27 @@ export class AgencyService implements IAgencyService {
     }
   }
 
-  async getProjectsCount(orgId: string): Promise<object> {
+  async getProjects(
+    orgId: string,
+    projectsFor: string = "dasboard"
+  ): Promise<object> {
     const data = await this._projectRepository.fetchAllProjects(orgId);
-    const weaklyProjects =
-      data.projects?.filter(
-        (project: IProject) =>
-          new Date(project.createdAt!).getTime() >
-          new Date().getTime() - 7 * 24 * 60 * 60 * 1000
-      ) || [];
-    return {
-      count: data?.projects.length || 0,
-      lastWeekCount: weaklyProjects?.length || 0,
-    };
+    if (projectsFor == "dasboard") {
+      const weaklyProjects =
+        data.projects?.filter(
+          (project: IProject) =>
+            new Date(project.createdAt!).getTime() >
+            new Date().getTime() - 7 * 24 * 60 * 60 * 1000
+        ) || [];
+      return {
+        count: data?.projects.length || 0,
+        lastWeekCount: weaklyProjects?.length || 0,
+      };
+    }
+    return data.projects;
   }
 
-  async getClientsCount(orgId: string): Promise<object> {
-    const clients = await this._clientTenantRepository.getAllClients(orgId);
-    const weaklyClients = clients.data.filter(
-      (client: IClientTenant) =>
-        new Date(client.createdAt!).getTime() >
-        new Date().getTime() - 7 * 24 * 60 * 60 * 1000
-    );
-    return {
-      count: clients.data.length || 0,
-      lastWeekCount: weaklyClients.length || 0,
-    };
-  }
+  
 
   async getAllAvailableClients(orgId: string): Promise<IAvailableClients[]> {
     const clients = await this._clientTenantRepository.getAllClients(orgId);
@@ -163,8 +172,16 @@ export class AgencyService implements IAgencyService {
     organizationName: string
   ): Promise<IClientTenant | null> {
     const client = await this._clientRepository.findClientWithMail(email);
-    const agencyOwner = await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
-    if(!agencyOwner.paymentCredentials.razorpay.secret_id || !agencyOwner.paymentCredentials.razorpay.secret_key) throw new NotFoundError("Payment gateway is not integrated for your agency, inorder to create a new client integrate payment methods in your integration setings.");
+    const agencyOwner = await this._agencyTenantRepository.getOwnerWithOrgId(
+      orgId
+    );
+    if (
+      !agencyOwner.paymentCredentials.razorpay.secret_id ||
+      !agencyOwner.paymentCredentials.razorpay.secret_key
+    )
+      throw new NotFoundError(
+        "Payment gateway is not integrated for your agency, inorder to create a new client integrate payment methods in your integration setings."
+      );
 
     if (client && client.orgId == orgId)
       throw new ConflictError("Client already exists with this email");
@@ -217,18 +234,24 @@ export class AgencyService implements IAgencyService {
       );
 
       const invoice = {
-        invoiceNumber: `dibolky-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-        agencyId:agencyOwner._id,
-        client:{clientId:createdClient._id, clientName:createdClient.name, email: createdClient.email}, 
-        service:{ serviceName, details},
-        pricing:Number(details.budget),
-        dueDate:new Date(deadline),
+        invoiceNumber: `dibolky-${Date.now()}-${Math.floor(
+          Math.random() * 1000
+        )}`,
+        agencyId: agencyOwner._id,
+        client: {
+          clientId: createdClient._id,
+          clientName: createdClient.name,
+          email: createdClient.email,
+        },
+        service: { serviceName, details },
+        pricing: Number(details.budget),
+        dueDate: new Date(deadline),
         orgId,
-        orgName:agencyOwner.organizationName
-      }
-      console.log(invoice,' invoiceeeee')
+        orgName: agencyOwner.organizationName,
+      };
+      console.log(invoice, " invoiceeeee");
 
-      await this._invoiceRepository.createInvoice(orgId,invoice)
+      await this._invoiceRepository.createInvoice(orgId, invoice);
     }
 
     const data = createClientMailData(
@@ -252,39 +275,90 @@ export class AgencyService implements IAgencyService {
     return createdClient;
   }
 
+  private _buildDbFilter(query: FilterType): Record<string, unknown> {
+    const { query: searchText } = query;
+    const filter: Record<string, unknown> = {};
+
+    if (searchText) {
+      filter.$or = [
+        { name: { $regex: searchText, $options: "i" } },
+        { email: { $regex: searchText, $options: "i" } },
+        { industry: { $regex: searchText, $options: "i" } },
+      ];
+    }
+    return filter;
+  }
+
   async getAllClients(
     orgId: string,
-    options?: { includeDetails: boolean; page?: number; limit?: number }
-  ): Promise<{ clients: IClientTenantType[] | IClientTenantWithProjectDetailsType[]; totalPages: number; currentPage: number; totalCount: number;}> {
-    const result =
-      await this._clientTenantRepository.getAllClients(orgId, {
-        page: options?.page,
-        limit: options?.limit,
-      });
-        const page = options?.page || 1;
-        const limit = options?.limit || result.totalCount;
-        const totalPages = Math.ceil(result.totalCount / limit);
+    includeDetails: string,
+    query: FilterType
+  ): Promise<{
+    clients:
+      | IClientTenantType[]
+      | IClientTenantWithProjectDetailsType[]
+      | { count: number; lastWeekCount: number };
+    totalPages?: number;
+    currentPage?: number;
+    totalCount?: number;
+  }> {
+    const clientsFilter = this._buildDbFilter(query);
+    const { page, limit, sortBy, sortOrder } = query;
+    const options = {
+      page,
+      limit,
+      sort: sortBy ? { [sortBy]: sortOrder === "desc" ? -1 : 1 } : {},
+    };
 
-    let clients = AgencyMapper.TenantClientMapper(result.data);
-    
-    if (options?.includeDetails) {
-       const clientsWithProjectDetails = await Promise.all(
-      clients.map(async (client) => {
-        const projects = await this._projectRepository.getProjectsByClientId(orgId,client._id);
-        return { ...client, projects};
-      })
+    const result = await this._clientTenantRepository.getAllClients(
+      orgId,
+      clientsFilter,
+      options
     );
+    const totalPages = limit ? Math.ceil(result.totalCount / limit) : 1;
+    let clients = AgencyMapper.TenantClientMapper(result.data);
 
-    clients = clientsWithProjectDetails;
+    switch (includeDetails) {
+      case "details":
+        const clientsWithProjectDetails = await Promise.all(
+          clients.map(async (client) => {
+            const projects =
+              await this._projectRepository.getProjectsByClientId(
+                orgId,
+                client._id
+              );
+            return { ...client, projects };
+          })
+        );
+        clients = clientsWithProjectDetails;
+        break;
+        
+      case "count":
+        const lastWeekClients =
+          clients?.filter(
+            (client) =>
+              new Date(client.createdAt!).getTime() >
+              new Date().getTime() - 7 * 24 * 60 * 60 * 1000
+          ) || [];
+        return {
+          clients: {
+            count: clients?.length || 0,
+            lastWeekCount: lastWeekClients?.length || 0,
+          }
+        };
+
+      default:
+        break;
     }
 
-     return {
-        clients,
-        totalCount:result.totalCount,
-        totalPages,
-        currentPage:page
-      }
+    return {
+      clients,
+      totalCount: result.totalCount,
+      totalPages,
+      currentPage: page,
+    };
   }
+  
 
   async getClient(
     orgId: string,
@@ -383,50 +457,63 @@ export class AgencyService implements IAgencyService {
     };
   }
 
-  async createInvoice(orgId:string,details:Partial<IInvoiceType>): Promise<void>{
-    const agency = await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
+  async createInvoice(
+    orgId: string,
+    details: Partial<IInvoiceType>
+  ): Promise<void> {
+    const agency = await this._agencyTenantRepository.getOwnerWithOrgId(orgId);
     const invoice = {
-      invoiceNumber: `dibolky-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      agencyId:agency._id,
-      orgName:agency.organizationName,
-      ...details
-    }
-    await this._invoiceRepository.createInvoice(orgId,invoice)
+      invoiceNumber: `dibolky-${Date.now()}-${Math.floor(
+        Math.random() * 1000
+      )}`,
+      agencyId: agency._id,
+      orgName: agency.organizationName,
+      ...details,
+    };
+    await this._invoiceRepository.createInvoice(orgId, invoice);
   }
 
-  async getUpgradablePlans(orgId: string): Promise<(IPlan & { proratedPrice: number })[]> {
-  const agency = await this._agencyRepository.findAgencyWithOrgId(orgId)
-  const currentPlan = await this._planRepository.getPlan(agency.planId);
+  async getUpgradablePlans(
+    orgId: string
+  ): Promise<(IPlan & { proratedPrice: number })[]> {
+    const agency = await this._agencyRepository.findAgencyWithOrgId(orgId);
+    const currentPlan = await this._planRepository.getPlan(agency.planId);
 
-  if (!currentPlan || currentPlan.price === 0) return [];
+    if (!currentPlan || currentPlan.price === 0) return [];
 
-  const allPlans = await this._planRepository.getPlans();
+    const allPlans = await this._planRepository.getPlans();
 
-  const upgradablePlans = allPlans
-    .filter(plan =>
-      plan.isActive &&
-      plan.price > currentPlan.price &&
-      plan._id.toString() !== currentPlan._id.toString()
-    )
-    .map(plan => {
-      const proratedPrice = this.calculateProratedPrice(plan.price, agency.createdAt, plan.billingCycle);
-      return { ...plan.toObject(), proratedPrice };
-    });
+    const upgradablePlans = allPlans
+      .filter(
+        (plan) =>
+          plan.isActive &&
+          plan.price > currentPlan.price &&
+          plan._id.toString() !== currentPlan._id.toString()
+      )
+      .map((plan) => {
+        const proratedPrice = this.calculateProratedPrice(
+          plan.price,
+          agency.createdAt,
+          plan.billingCycle
+        );
+        return { ...plan.toObject(), proratedPrice };
+      });
 
-  return upgradablePlans;
-}
+    return upgradablePlans;
+  }
 
-
-
-
-
-
-
-  private calculateProratedPrice(fullPrice: number, planStartDate: Date, billingClycle: string): number {
+  private calculateProratedPrice(
+    fullPrice: number,
+    planStartDate: Date,
+    billingClycle: string
+  ): number {
     const now = new Date();
-    const usedDays = Math.floor((now.getTime() - new Date(planStartDate).getTime()) / (1000 * 60 * 60 * 24));
+    const usedDays = Math.floor(
+      (now.getTime() - new Date(planStartDate).getTime()) /
+        (1000 * 60 * 60 * 24)
+    );
 
-    const billingCycleDays = billingClycle  == "monthly" ? 30 :365
+    const billingCycleDays = billingClycle == "monthly" ? 30 : 365;
     const remainingDays = Math.max(0, billingCycleDays - usedDays);
 
     const pricePerDay = fullPrice / billingCycleDays;
@@ -435,62 +522,84 @@ export class AgencyService implements IAgencyService {
     return parseFloat((fullPrice - discount).toFixed(2));
   }
 
+  async upgradePlan(orgId: string, planId: string): Promise<void> {
+    const plan = await this._planRepository.getPlan(planId);
+    if (!plan || !plan.isActive) {
+      throw new CustomError("Selected plan is not available", 400);
+    }
 
-async upgradePlan(orgId: string, planId: string): Promise<void> {
-  const plan = await this._planRepository.getPlan(planId);
-  if (!plan || !plan.isActive) {
-    throw new CustomError("Selected plan is not available", 400);
-  }
+    const agency = await this._agencyTenantRepository.getOwnerWithOrgId(orgId);
+    if (!agency) {
+      throw new CustomError("Agency not found", 404);
+    }
 
-  const agency = await this._agencyTenantRepository.getOwnerWithOrgId(orgId);
-  if (!agency) {
-    throw new CustomError("Agency not found", 404);
-  }
+    const proratedPrice = this.calculateProratedPrice(
+      plan.price,
+      agency.createdAt,
+      plan.billingCycle
+    );
 
-  const proratedPrice = this.calculateProratedPrice(
-    plan.price,
-    agency.createdAt,
-    plan.billingCycle
-  );
+    const validityInDate = addMonthsToDate(
+      plan.billingCycle == "monthly" ? 30 : 365
+    );
+    await this._agencyRepository.upgradePlanWithOrgId(
+      orgId,
+      plan._id as string,
+      validityInDate
+    );
+    await this._agencyTenantRepository.upgradePlan(orgId, plan._id as string);
 
-  const validityInDate = addMonthsToDate(plan.billingCycle == "monthly"?30:365);
-  await this._agencyRepository.upgradePlanWithOrgId(orgId, plan._id as string,validityInDate);
-  await this._agencyTenantRepository.upgradePlan(orgId, plan._id as string);
-
-  const transaction = {
-    orgId,
-    email: agency.email,
-    userId: agency._id,
-    planId: plan._id,
-    paymentGateway: "razorpay",
-    transactionId: `upgrade-${Date.now()}`,
-    amount: proratedPrice,
-    description: `Upgraded to ${plan.name} plan`,
-    currency: "USD",
-    transactionType: "plan_transactions",
-  };
-
-  await this._transactionRepository.createTransaction(transaction);
-  await this._transactiontenantRepository.createTransaction(orgId, transaction);
-
-  const activity = {
-    user: {
-      userId: agency._id.toString(),
-      username: agency.organizationName,
+    const transaction = {
+      orgId,
       email: agency.email,
-    },
-    activityType: "plan_upgraded",
-    activity: `Agency upgraded to ${plan.name} plan`,
-    entity: {
-      type: "agency",
-    },
-    redirectUrl: "/agency/settings",
-  };
+      userId: agency._id,
+      planId: plan._id,
+      paymentGateway: "razorpay",
+      transactionId: `upgrade-${Date.now()}`,
+      amount: proratedPrice,
+      description: `Upgraded to ${plan.name} plan`,
+      currency: "USD",
+      transactionType: "plan_transactions",
+    };
 
-  await this._activityRepository.createActivity(orgId, activity);
-}
+    await this._transactionRepository.createTransaction(transaction);
+    await this._transactiontenantRepository.createTransaction(
+      orgId,
+      transaction
+    );
 
+    const activity = {
+      user: {
+        userId: agency._id.toString(),
+        username: agency.organizationName,
+        email: agency.email,
+      },
+      activityType: "plan_upgraded",
+      activity: `Agency upgraded to ${plan.name} plan`,
+      entity: {
+        type: "agency",
+      },
+      redirectUrl: "settings",
+    };
 
+    await this._activityRepository.createActivity(orgId, activity);
+  }
 
-
+  async sendMail(
+    orgId: string,
+    to: string[],
+    subject: string,
+    message: string
+  ): Promise<void> {
+    const agency = await this._agencyTenantRepository.getOwnerWithOrgId(orgId);
+    const { accessToken, refreshToken } = agency?.social_credentials?.google;
+    await sendGoogleMail(
+      accessToken,
+      refreshToken,
+      agency.email,
+      to,
+      subject,
+      message
+    );
+  }
 }

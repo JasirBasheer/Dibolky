@@ -11,9 +11,9 @@ export interface IAgencyController {
     getAllPlans(req: Request, res: Response): Promise<void>
     getClient(req: Request, res: Response): Promise<void>
     uploadContent(req: Request, res: Response): Promise<void>
+    handleSendMail(req: Request, res: Response): Promise<void>
     getAvailableUsers(req: Request, res: Response): Promise<void>
-    getProjectsCount(req: Request, res: Response): Promise<void>
-    getClientsCount(req: Request, res: Response): Promise<void>
+    getProjects(req: Request, res: Response): Promise<void>
     editProjectStatus(req: Request, res: Response): Promise<void>
     getInitialSetUp(req: Request, res: Response): Promise<void>
     IntegratePaymentGateWay(req: Request, res: Response): Promise<void>

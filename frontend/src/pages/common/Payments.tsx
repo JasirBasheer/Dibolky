@@ -46,7 +46,7 @@ const Payments = () => {
   const debouncedFilter = useFilter(filter, 900);
 
   const { data, isLoading: isInvoicesLoading } = useQuery({
-    queryKey: ["get-invoices", page, debouncedFilter],
+    queryKey: ["get-transactions", page, debouncedFilter],
     queryFn: () => {
       const searchParams = new URLSearchParams({
         page: page.toString(),

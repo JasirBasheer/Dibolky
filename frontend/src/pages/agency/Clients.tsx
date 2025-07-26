@@ -1,180 +1,480 @@
-import { Table, Column } from '@/components/shared/Table';
-import { Button } from '@/components/ui/button';
-import CustomBreadCrumbs from '@/components/ui/custom-breadcrumbs';
-import { fetchAllClientsApi } from '@/services/agency/get.services';
-import { useQuery } from '@tanstack/react-query';
-import React, { useState, useCallback, useMemo } from 'react';
-
-interface Client {
-  _id: string;
-  name: string;
-  email: string;
-  industry: string;
-  profile?: string;
-  bio?: string;
-  orgId?: string;
-  isPaymentInitialized?: boolean;
-  isSocialMediaInitialized?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-  projects?: any[];
-}
-
-const columns: Column<Client>[] = [
-  { header: "Name", accessor: "name" },
-  { header: "Email", accessor: "email" },
-  { 
-    header: "Industry", 
-    accessor: "industry",
-    render: (value) => (
-      <span className="px-2 py-1 bg-gray-100 rounded-full text-xs">
-        {value || 'Not specified'}
-      </span>
-    )
-  },
-];
+import { Label } from "@/components/ui/label";
+import CustomBreadCrumbs from "@/components/ui/custom-breadcrumbs";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  CalendarDays,
+  User,
+  Search,
+  ArrowUpDown,
+  Mail,
+  Send,
+} from "lucide-react";
+import { format } from "date-fns";
+import { toast } from "sonner";
+import { useFilter, usePagination } from "@/hooks";
+import type { RootState } from "@/types";
+import PaginationControls from "@/components/ui/PaginationControls";
+import DetailModal from "@/components/modals/details-modal";
+import SelectInput from "@/components/ui/selectInput";
+import { DataTable } from "@/components/ui/data-table";
+import Skeleton from "react-loading-skeleton";
+import { fetchAllClientsApi } from "@/services/agency/get.services";
+import { IClientTenant } from "@/types/client.types";
+import { handleSendMails } from "@/utils";
 
 const Clients = () => {
-  const [page, setPage] = useState(1);
-  const [globalSelectedRows, setGlobalSelectedRows] = useState<Set<string>>(new Set());
-  const [globalSelectedClients, setGlobalSelectedClients] = useState<Map<string, Client>>(new Map());
-  const limit = 10;
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["list-clients", page],
-    queryFn: () => fetchAllClientsApi(`?include=details&page=${page}&limit=${limit}`),
-    select: (data) => ({
-      clients: data?.data.result.clients || [],
-      totalPages: data?.data.result.totalPages || 1,
-    }),
-    staleTime: 1000 * 60 * 5, 
+  const user = useSelector((state: RootState) => state.user);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<IClientTenant | null>(
+    null
+  );
+  const [selectedClients, setSelectedClients] = useState<IClientTenant[]>([]);
+  const [mail, setMail] = useState({
+    emailSubject: "",
+    emailMessage: "",
+    isSendingEmails: false,
   });
 
-  const clientData = data?.clients || [];
-  const totalPages = data?.totalPages || 1;
+  const [filter, setFilter] = useState({
+    query: "",
+    sortBy: "createdAt",
+    sortOrder: "asc",
+  });
 
-   const currentPageSelectedRows = useMemo(() => {
-    const currentPageIds = new Set(clientData.map(client => client._id));
-    return new Set(Array.from(globalSelectedRows).filter(id => currentPageIds.has(id)));
-  }, [globalSelectedRows, clientData]);
- 
-  const handleSelectionChange = useCallback((selectedIds: string[], selectedItems: Client[]) => {
-     setGlobalSelectedRows(prev => {
-      const newGlobalSelection = new Set(prev);
-      const currentPageIds = clientData.map(client => client._id);
-      
-       currentPageIds.forEach(id => newGlobalSelection.delete(id));
-      
-       selectedIds.forEach(id => newGlobalSelection.add(id));
-      
-      return newGlobalSelection;
-    });
+  const { page, limit, nextPage, prevPage, reset } = usePagination(1, 10);
+  const debouncedFilter = useFilter(filter, 900);
 
-     setGlobalSelectedClients(prev => {
-      const newGlobalClients = new Map(prev);
-      const currentPageIds = clientData.map(client => client._id);
-      currentPageIds.forEach(id => newGlobalClients.delete(id));
-      
-      selectedItems.forEach(client => newGlobalClients.set(client._id, client));
-      
-      return newGlobalClients;
-    });
-  }, [clientData]);
+  const { data, isLoading: isClientsLoading } = useQuery({
+    queryKey: ["get-all-clients", page, debouncedFilter],
+    queryFn: () => {
+      const searchParams = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+        query: debouncedFilter.query,
+        sortBy: debouncedFilter.sortBy,
+        sortOrder: debouncedFilter.sortOrder,
+        include: "details",
+      }).toString();
+      return fetchAllClientsApi(`?${searchParams}`);
+    },
+    select: (data) => data?.data.result,
+    enabled: !!user.user_id,
+  });
+  useEffect(() => {
+    reset();
+  }, [
+    debouncedFilter.query,
+    debouncedFilter,
+    debouncedFilter.sortBy,
+    debouncedFilter.sortOrder,
+  ]);
 
-  const handleMailClients = useCallback(() => {
-    const emails = Array.from(globalSelectedClients.values())
-      .map(client => client.email)
-      .filter(Boolean);
-    console.log("Mailing clients:", emails);
-    console.log("Selected clients:", Array.from(globalSelectedClients.values()));
-  }, [globalSelectedClients]);
+  const openClientDetails = (client: IClientTenant) => {
+    setSelectedClient(client);
+    setIsDetailModalOpen(true);
+  };
 
-  const handlePageChange = useCallback((newPage: number) => {
-    setPage(newPage);
-  }, [])
+  const handleSelectClient = (client: IClientTenant, checked: boolean) => {
+    if (checked) {
+      setSelectedClients((prev) => [...prev, client]);
+    } else {
+      setSelectedClients((prev) =>
+        prev.filter((inv) => inv._id !== client._id)
+      );
+    }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked && data?.clients) {
+      setSelectedClients((prev) => {
+        const existingIds = prev.map((c) => c._id);
+        const newClients = data.clients.filter(
+          (c) => !existingIds.includes(c._id)
+        );
+        return [...prev, ...newClients];
+      });
+    } else {
+      if (data?.clients) {
+        const currentPageIds = data.clients.map((inv) => inv._id);
+        setSelectedClients((prev) =>
+          prev.filter((inv) => !currentPageIds.includes(inv._id))
+        );
+      }
+    }
+  };
+
+  const handleSendMail = async () => {
+    setMail((prev) => ({ ...prev, isSendingEmails: true }));
+    try {
+      const emails: string[] = selectedClients.map((client) => client.email);
+      await handleSendMails(emails, mail.emailMessage, mail.emailSubject);
+      setSelectedClients([]);
+      setIsEmailModalOpen(false);
+      toast.success("Mail has been successfully sended.");
+    } catch (error) {
+      console.error("Error sending mails:", error);
+      toast.error(
+        error.data.message || "Failed to send email. Please try again."
+      );
+    } finally {
+      setMail((prev) => ({ ...prev, isSendingEmails: false }));
+    }
+  };
+
+  const getSelectedClientsInfo = () => {
+    return selectedClients.map((client) => ({
+      clientName: client.name,
+      email: client.email,
+      joinedAt: client.createdAt,
+      projects: client.projects,
+    }));
+  };
+
+  const getDaysOverdue = (dueDate: string | Date) => {
+    const today = new Date();
+    const due = new Date(dueDate);
+    const diffTime = today.getTime() - due.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 0;
+  };
 
   return (
     <>
       <CustomBreadCrumbs
         breadCrumbs={[
-          ["Client Management", "/clients"],
+          ["Client Management", `/agency`],
           ["All Clients", ""],
         ]}
       />
-      <div className="p-6">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Clients</h1>
-            <p className="text-gray-600 mt-1">
-              Manage your client database
-            </p>
-          </div>
-          
-          {globalSelectedClients.size > 0 && (
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
-                {globalSelectedClients.size} selected across all pages
-              </span>
-              <Button 
-                onClick={handleMailClients}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                Mail Selected ({globalSelectedClients.size})
-              </Button>
-              <Button 
+      <div className="p-6 space-y-6">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Search by client name, client number, or service..."
+                    value={filter.query}
+                    onChange={(e) =>
+                      setFilter((prev) => ({ ...prev, query: e.target.value }))
+                    }
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+
+              <SelectInput
+                placeholder="Joine dDate"
+                value={filter.sortBy}
+                options={[
+                  { label: "Joined Date", value: "createdAt" },
+                  { label: "Name", value: "name" },
+                ]}
+                onChange={(value) =>
+                  setFilter((prev) => ({ ...prev, sortBy: value }))
+                }
+              />
+
+              <Button
                 variant="outline"
-                onClick={() => {
-                  setGlobalSelectedRows(new Set());
-                  setGlobalSelectedClients(new Map());
-                }}
-                className="text-red-600 border-red-300 hover:bg-red-50"
+                size="sm"
+                onClick={() =>
+                  setFilter((prev) => ({
+                    ...prev,
+                    sortOrder: prev.sortOrder === "asc" ? "desc" : "asc",
+                  }))
+                }
               >
-                Clear All
+                <ArrowUpDown className="h-4 w-4" />
+              </Button>
+
+              <Button
+                onClick={() => setIsEmailModalOpen(true)}
+                disabled={selectedClients.length === 0}
+              >
+                <Send className="h-4 w-4 mr-2" />
+                Send Mail ({selectedClients.length})
               </Button>
             </div>
-          )}
-        </div>
+          </CardContent>
+        </Card>
 
-        <Table
-          columns={columns}
-          data={clientData}
-          selectable={true}
-          selectedRows={currentPageSelectedRows}
-          onSelectionChange={handleSelectionChange}
-          loading={isLoading}
-          emptyMessage={error ? `Error: ${(error as Error).message}` : "No clients found"}
-          className="mb-6"
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span>All Clients</span>
+              {data?.clients && data?.clients.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    checked={
+                      data?.clients
+                        ? data.clients.every((c) =>
+                            selectedClients.some(
+                              (selected) => selected._id === c._id
+                            )
+                          )
+                        : false
+                    }
+                    onCheckedChange={handleSelectAll}
+                  />
+                  <span className="text-sm text-gray-600">Select All</span>
+                </div>
+              )}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {!isClientsLoading ? (
+              <DataTable
+                data={data?.clients || []}
+                onRowClick={openClientDetails}
+                columns={[
+                  {
+                    header: "Select",
+                    render: (client) => (
+                      <Checkbox
+                        checked={selectedClients.some(
+                          (c) => c._id === client._id
+                        )}
+                        onCheckedChange={(checked) =>
+                          handleSelectClient(client, checked as boolean)
+                        }
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    ),
+                  },
+                  {
+                    header: "Client",
+                    render: (client) => (
+                      <div className="flex items-center gap-2">
+                        <User className="h-4 w-4 text-gray-400" />
+                        <div>
+                          <div className="font-medium">{client.name}</div>
+                          <div className="text-sm text-gray-500">
+                            {client.email}
+                          </div>
+                        </div>
+                      </div>
+                    ),
+                  },
+
+                  {
+                    header: "Joined Date",
+                    render: (client) => (
+                      <div className="flex items-center gap-1">
+                        <CalendarDays className="h-4 w-4" />
+                        <span className="">
+                          {format(new Date(client.createdAt), "MMM dd, yyyy")}
+                        </span>
+                      </div>
+                    ),
+                  },
+                ]}
+              />
+            ) : (
+              <Skeleton count={5} height={48} />
+            )}
+          </CardContent>
+        </Card>
+
+        <PaginationControls
+          page={page}
+          totalPages={data?.totalPages || 1}
+          onNext={nextPage}
+          onPrev={prevPage}
         />
 
-         {totalPages > 1 && (
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-600">
-              Page {page} of {totalPages}
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                onClick={() => handlePageChange(Math.max(page - 1, 1))}
-                disabled={page === 1}
-              >
-                Previous
-              </Button>
-              
-              <div className="flex items-center space-x-1">
-             
+        <DetailModal
+          title="Client Details"
+          open={isDetailModalOpen}
+          onOpenChange={setIsDetailModalOpen}
+        >
+          {selectedClient && (
+            <>
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="text-lg font-semibold">
+                    {selectedClient.createdAt}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    Joined At:{" "}
+                    {format(new Date(selectedClient.createdAt), "MMM dd, yyyy")}
+                  </p>
+                  <Badge variant="outline">
+                    Pending: $
+                    {selectedClient.projects.reduce((acc, item) => {
+                      return item.status === "Pending"
+                        ? acc + Number(item.service_details.budget)
+                        : acc;
+                    }, 0)}
+                  </Badge>
+                </div>
+                <Badge>
+                  Total Budget $
+                  {selectedClient.projects.reduce((acc, item) => {
+                    return acc + Number(item.service_details.budget);
+                  }, 0)}
+                </Badge>
               </div>
-              
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Client Info</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex justify-between">
+                    <span>Name:</span>
+                    <span>{selectedClient.name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Email:</span>
+                    <span>{selectedClient.email}</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {selectedClient.projects.map((service) => (
+                <Card
+                  key={service._id}
+                  className="cursor-pointer hover:shadow-md transition-shadow"
+                >
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div className="flex gap-2">
+                        <Badge>{service.status}</Badge>
+                        <Badge variant="outline">{service.service_name}</Badge>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>Budget:</span>
+                        <span className="font-medium">
+                          $
+                          {parseInt(
+                            service.service_details.budget
+                          ).toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Deadline:</span>
+                        <span>
+                          {" "}
+                          {format(new Date(service.dead_line), "MMM dd, yyyy")}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Created:</span>
+                        <span>
+                          {format(new Date(service.createdAt), "MMM dd, yyyy")}
+                        </span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+
+              <div className="flex justify-end gap-3 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsDetailModalOpen(false)}
+                >
+                  Close
+                </Button>
+                <Button
+                  onClick={() => {
+                    setSelectedClients([selectedClient]);
+                    setIsEmailModalOpen(true);
+                    setIsDetailModalOpen(false);
+                  }}
+                  className=""
+                >
+                  <Mail className="h-4 w-4 mr-2" />
+                  Send Mail
+                </Button>
+              </div>
+            </>
+          )}
+        </DetailModal>
+
+        <DetailModal
+          title="Send Payment Mail"
+          open={isEmailModalOpen}
+          onOpenChange={setIsEmailModalOpen}
+        >
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-medium mb-2">
+                Selected Clients ({selectedClients.length})
+              </h4>
+              <div className="max-h-32 overflow-y-auto bg-gray-50 p-3 rounded">
+                {getSelectedClientsInfo().map((client, index) => (
+                  <div key={index} className="text-sm py-1">
+                    <span className="font-medium">{client.clientName}</span> -{" "}
+                    {client.email}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="emailSubject">Email Subject</Label>
+              <Input
+                id="emailSubject"
+                value={mail.emailSubject}
+                onChange={(e) =>
+                  setMail((prev) => ({ ...prev, emailSubject: e.target.value }))
+                }
+                placeholder="Email subject..."
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="emailMessage">Email Message</Label>
+              <textarea
+                id="emailMessage"
+                value={mail.emailMessage}
+                onChange={(e) =>
+                  setMail((prev) => ({ ...prev, emailMessage: e.target.value }))
+                }
+                className="w-full h-64 p-3 border rounded-md resize-none"
+                placeholder="Email message..."
+              />
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4 border-t">
               <Button
                 variant="outline"
-                onClick={() => handlePageChange(Math.min(page + 1, totalPages))}
-                disabled={page >= totalPages}
+                onClick={() => setIsEmailModalOpen(false)}
               >
-                Next
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSendMail}
+                disabled={mail.isSendingEmails}
+                className="bg-black"
+              >
+                {mail.isSendingEmails ? (
+                  <>Sending...</>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4 mr-2" />
+                    Send Mail ({selectedClients.length})
+                  </>
+                )}
               </Button>
             </div>
           </div>
-        )}
+        </DetailModal>
       </div>
     </>
   );

@@ -46,7 +46,7 @@ export function TeamSwitcher({
 
 
   React.useEffect(() => {
-    console.log(agency.user_id)
+    
     if (!agency?.user_id) return;
 
     const selectedClient = localStorage.getItem('selectedClient');

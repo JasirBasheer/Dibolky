@@ -10,6 +10,7 @@ import {
     ResponseMessage,
     SendResponse
 } from "mern.common";
+import { QueryParser } from "@/utils";
 
 
 
@@ -69,12 +70,10 @@ export class AgencyController implements IAgencyController {
         res: Response
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("Details Not Fount")
-            const includeDetails = req.query.include === 'details';
-            const page = req.query.page ? parseInt(req.query.page as string) : undefined;
-            const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+            const includeDetails  = req.query.include 
+            const query = QueryParser.parseFilterQuery(req.query);
 
-            let result = await this._agencyService.getAllClients(req.details.orgId as string,{includeDetails, page, limit}) 
-            console.log(result)
+            let result = await this._agencyService.getAllClients(req.details.orgId as string,includeDetails as string,query) 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {result})
     }
 
@@ -83,8 +82,8 @@ export class AgencyController implements IAgencyController {
         req: Request,
         res: Response
     ): Promise<void> => {
-            const { id } = req.params
-            const details = await this._agencyService.getClient(req.details.orgId as string, id)
+            const { client_id } = req.params
+            const details = await this._agencyService.getClient(req.details.orgId as string, client_id)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })
     }
 
@@ -115,23 +114,16 @@ export class AgencyController implements IAgencyController {
     }
 
 
-    getProjectsCount = async(
+    getProjects = async(
         req: Request,
         res: Response
     ): Promise<void> => {
-            if (!req.details) throw new NotFoundError("Details Not Fount")
-            const projects = await this._agencyService.getProjectsCount(req.details.orgId as string)
+            const { projectsFor } = req.query
+            const projects = await this._agencyService.getProjects(req.details.orgId,projectsFor as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { projects })
     }
 
-    getClientsCount = async(
-        req: Request,
-        res: Response
-    ): Promise<void> => {
-            if (!req.details) throw new NotFoundError("Details Not Fount")
-            const clients = await this._agencyService.getClientsCount(req.details.orgId as string)
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { clients })
-    }
+
 
     editProjectStatus = async(
         req: Request,
@@ -199,6 +191,17 @@ export class AgencyController implements IAgencyController {
             await this._agencyService.upgradePlan(req.details.orgId,planId)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
+
+
+    handleSendMail = async(
+        req: Request,
+        res: Response
+    ): Promise<void> => {
+            const {to, message, subject} = req.body
+            await this._agencyService.sendMail(req.details.orgId,to, subject, message)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
+    }
+
 
 }
 

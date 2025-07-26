@@ -1,5 +1,5 @@
 import { container } from "tsyringe";
-import { AdminService, AgencyService, AuthenticationService, ChatService, ClientService, EntityService, IAdminService, IAgencyService, IAuthenticationService, IChatService, IClientService, IEntityService, IPaymentService, IPlanService, IProviderService, PaymentService, PlanService, ProviderService } from "@/services";
+import { AdminService, AgencyService, AuthenticationService, ChatService, ClientService, EntityService, IAdminService, IAgencyService, IAuthenticationService, IChatService, IClientService, IEntityService, IPaymentService, IPlanService, IPortfolioService, IProviderService, PaymentService, PlanService, PortfolioService, ProviderService } from "@/services";
 
 export const registerServices = () => {
 container.register<IAuthenticationService>('AuthenticationService', { useClass: AuthenticationService });
@@ -11,4 +11,5 @@ container.register<IClientService>('ClientService', { useClass: ClientService })
 container.register<IProviderService>('ProviderService', { useClass: ProviderService });
 container.register<IChatService>('ChatService', { useClass: ChatService });
 container.register<IPlanService>('PlanService', { useClass: PlanService });
+container.register<IPortfolioService>('PortfolioService', { useClass: PortfolioService });
 };

@@ -1,30 +1,23 @@
 import { Route, Routes } from 'react-router-dom'
 import Clients from '@/pages/agency/Clients'
-import Login from '@/pages/authentication.pages/login'
 import Inbox from '@/components/common/inbox'
 import AgencyCalendar from '@/pages/agency/Calendar'
 import AgencyLeads from '@/pages/agency/Leads'
 import AgencyContent from '@/pages/agency/Content'
 import AgencyProject from '@/pages/agency/projects'
-import AgencyAnalytics from '@/pages/agency/Analytics'
 import SettingsPage from '@/components/agency/settings'
-import ProtectedRoute from '@/pages/authentication.pages/protected.route'
-import UnProtectedRoute from '@/pages/authentication.pages/unProtected.route'
 import CreateClient from '@/components/agency/agencyside.components/createClient'
-import {
-  ForgotPassword,
-  ResetPassword
-} from '@/pages/authentication.pages/forgotPassword'
-import Layout from '@/pages/agency/Layout'
 import Integrations from '@/pages/common/Integrations'
 import Invoices from '@/pages/common/Invoices'
-import Dashboard from '@/pages/agency/Dashoard'
+import Dashboard from '@/pages/dashboard/agencyDashboard'
 import Payments from '@/pages/common/Payments'
 import CreateInvoice from '@/pages/agency/CreateInvoice'
 import Overdues from '@/pages/common/Overdues'
 import UpgradePlan from '@/pages/agency/UpgradePlan'
 import BillingHistory from '@/pages/agency/BillingHistory'
 import ChatPage from '@/pages/chat/chatPage'
+import Media from '@/pages/media/MediaPage'
+import { AgencyLayout, CaseStudiesPage, ForgotPassword, Login, PortfolioPage, ProtectedRoute, ResetPassword, TestimonialsPage, UnProtectedRoute } from '@/pages'
 
 
 export default function AgencyRoutes() {
@@ -32,31 +25,42 @@ export default function AgencyRoutes() {
     <Routes>
       <Route path='/' element={
         <ProtectedRoute role={"agency"} >
-          <Layout />
+          <AgencyLayout />
         </ProtectedRoute>
       } >
         <Route index element={<Dashboard />} />
-        <Route path='analytics' element={<AgencyAnalytics />} />
+
+
         <Route path='clients' element={<Clients />} />
-        <Route path='integrations' element={<Integrations />} />
+        <Route path='clients/create' element={<CreateClient />} />
+
         <Route path='invoices' element={<Invoices />} />
         <Route path='invoices/payments' element={<Payments />} />
         <Route path='invoices/create' element={<CreateInvoice />} />
         <Route path='invoices/overdue' element={<Overdues />} />
+
         <Route path='billing/upgrade' element={<UpgradePlan />} />
         <Route path='billing/history' element={<BillingHistory />} />
-        <Route path='messages' element={<ChatPage />} />
 
-        
-        {/* need to check it */}
-        <Route path='create-client' element={<CreateClient />} />
+        <Route path='work/portfolio' element={<PortfolioPage />} />
+        <Route path='work/case-studies' element={<CaseStudiesPage />} />
+        <Route path='work/testimonials' element={<TestimonialsPage />} />
+
+        {/* <Route path='performance/social' element={<SocialPerformancePage />} />
+        <Route path='performance/conversions' element={<ConversionPerformancePage />} /> */}
+
+        <Route path='settings' element={<SettingsPage />} />
+        <Route path='integrations' element={<Integrations />} />
+        <Route path='calendar' element={<AgencyCalendar />} />
+
+        <Route path='messages' element={<ChatPage />} />
+        <Route path='media' element={<Media />} />
+        <Route path='inbox' element={<Inbox />} />
         <Route path='contents' element={<AgencyContent />} />
         <Route path='leads' element={<AgencyLeads />} />
+        
         <Route path='projects' element={<AgencyProject />} />
-        <Route path='settings' element={<SettingsPage />} />
-        {/* need to check it */}
-        <Route path='inbox' element={<Inbox />} />
-        <Route path='calendar' element={<AgencyCalendar />} />
+
       </Route>
 
 

@@ -23,7 +23,7 @@ export const MenuListModal = ({ setShowMenuListModal, userId ,orgId ,userName,pr
 
 
   const fetchAvailableUsers = async () => {
-    const res = await axios.get("/api/agency/availabe-users");
+    const res = await axios.get("/api/agency/users");
     const users = res.data.users || [];
     console.log(users)
 

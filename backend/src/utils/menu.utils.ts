@@ -32,10 +32,6 @@ const ourWork = {
       url: "/work/case-studies",
     },
     {
-      title: "Client Testimonials",
-      url: "/work/testimonials",
-    },
-    {
       title: "Before & After",
       url: "/work/before-after",
     },
@@ -52,7 +48,7 @@ const clientManagement = {
     },
     {
       title: "Create Client",
-      url: "/create-client",
+      url: "/clients/create",
     },
     {
       title: "Client Reports",

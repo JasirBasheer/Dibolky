@@ -20,6 +20,8 @@ import {
 import { linkedInAuthCallback } from '@/providers/linkedin';
 import { xAuthCallback } from '@/providers/x';
 import { FilterType } from '@/types/invoice';
+import { googleAuthCallback } from '@/providers/google/auth';
+import { QueryParser } from '@/utils/query-parser';
 
 
 @injectable()
@@ -160,6 +162,38 @@ export class EntityController implements IEntityController {
             const users = await this._entityService.getInbox(req.details.orgId as string,entity, user_id, selectedPlatforms, selectedPages)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { users })
         
+    }
+
+    getMedia = async(
+        req: Request,
+        res: Response,
+    ): Promise<void> => {
+            const { entity, user_id } = req.params
+            const { selectedPlatforms, selectedPages } = req.body
+            const contents = await this._entityService.getMedia(req.details.orgId as string,entity, user_id, selectedPlatforms, selectedPages)
+            console.log(contents,"contentssss")
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { contents })
+        
+    }
+
+     getContentDetails = async(
+        req: Request,
+        res: Response,
+    ): Promise<void> => {
+            const { entity, user_id,platform, mediaId,pageId, mediaType } = req.params
+            const content = await this._entityService.getContentDetails(req.details.orgId as string,entity, user_id, platform, mediaId,mediaType,pageId)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { content })   
+    }
+
+    replayToComments = async(
+        req: Request,
+        res: Response,
+    ): Promise<void> => {
+            const { entity, user_id,platform, commentId, replyMessage, pageId } = req.body
+            console.log(pageId,'ageid')
+            console.log(commentId,'comment id')
+            const content = await this._entityService.replayToComments(req.details.orgId as string,entity, user_id, platform, commentId, pageId, replyMessage)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { content })   
     }
 
     sendMessage = async(
@@ -336,25 +370,14 @@ export class EntityController implements IEntityController {
         req: Request,
         res: Response,
     ): Promise<void> => {
-            if (!req.details) throw new NotFoundError("request details not found")
-            const { user_id, entity } = req.params
-            const query = this._parseFilterQuery(req.query);
+
+        const { user_id, entity } = req.params
+            const query = QueryParser.parseFilterQuery(req.query);
             const result = await this._entityService.getAllInvoices(req.details.orgId,entity, user_id,query)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS,  result )
     }
 
-      private _parseFilterQuery(query: ParsedQs): FilterType {
-      return {
-        page: Number(query.page) || 1,
-        limit: Number(query.limit) || 10,
-        query: String(query.query || ''),
-        status: String(query.status || ''),
-        sortBy: String(query.sortBy || 'createdAt'),
-        sortOrder: String(query.sortOrder || 'desc'),
-        overdues: String(query?.overdues || false),
-        type: String(query.type || '')
-      };
-    }
+      
 
      getAllTransactions = async(
         req: Request,
@@ -362,9 +385,19 @@ export class EntityController implements IEntityController {
     ): Promise<void> => {
             if (!req.details) throw new NotFoundError("request details not found")
             const { user_id, entity } = req.params
-            const query = this._parseFilterQuery(req.query);
+            const query = QueryParser.parseFilterQuery(req.query);
             const result = await this._entityService.getAllTransactions(req.details.orgId,entity, user_id,query)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS,  result )
+    }
+
+
+     getAllActivities = async(
+        req: Request,
+        res: Response,
+    ): Promise<void> => {
+            const { entity, user_id } = req.params
+            const result = await this._entityService.getAllActivities(req.details.orgId,entity,user_id)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS,  {result} )
     }
 
 
@@ -426,6 +459,18 @@ export class EntityController implements IEntityController {
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { token })
 
     }
+
+      handleGoogleCallback = async(
+        req: Request,
+        res: Response,
+    ): Promise<void> => {
+            if (!req.details) throw new NotFoundError("request details not found")
+            const { code } = req.body
+            const tokens = await googleAuthCallback(code as string)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { tokens })
+
+    }
+
 
 }
 

@@ -28,3 +28,22 @@ export const createInvoiceApi = async (
   return await api.post(`/api/agency/invoices`, { details })
 }
 
+
+export const sendMailApi = async (
+  to:string[],
+  subject:string,
+  message:string,
+
+) => {
+  return await api.post(`/api/agency/mail`, { to,subject,message })
+}
+
+
+
+export const createPortfolioApi = async (
+    portfolioData: object,
+) => {
+    return await api.post(`/api/agency/portfolio`, { details:portfolioData })
+}
+
+

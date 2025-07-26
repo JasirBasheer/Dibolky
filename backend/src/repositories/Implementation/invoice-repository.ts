@@ -57,7 +57,7 @@ export class InoviceRepository
 
   let query = model.find(filter);
   if (sort) query = query.sort(sort);
-  if (page && limit) query = query.skip((page - 1) * limit).limit(limit);
+  if (limit > 0) query = query.skip((page - 1) * limit).limit(limit);
 
   const invoices = await query.exec();
   return {

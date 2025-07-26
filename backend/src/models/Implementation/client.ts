@@ -68,7 +68,7 @@ export const clientTenantSchema: Schema<IClientTenant> = new mongoose.Schema({
     type: String,
   },
 
-  socialMedia_credentials: {
+  social_credentials: {
     facebook: {
       accessToken: {
         type: String,
@@ -124,8 +124,8 @@ export const clientTenantSchema: Schema<IClientTenant> = new mongoose.Schema({
 
 
 clientTenantSchema.methods.setSocialMediaToken = async function (provider: string, token: string): Promise<void> {
-  if (this.socialMedia_credentials.hasOwnProperty(provider)) {
-    this.socialMedia_credentials[provider].accessToken = token;
+  if (this.social_credentials.hasOwnProperty(provider)) {
+    this.social_credentials[provider].accessToken = token;
     await this.save();
   } else {
     throw new Error(`Unsupported social media provider: ${provider}`);

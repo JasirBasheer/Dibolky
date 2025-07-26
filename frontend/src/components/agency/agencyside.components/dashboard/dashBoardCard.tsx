@@ -5,7 +5,7 @@ const DashboardCard = ({
   title,
   count,
   lastWeekCount,
-  isLoading,
+  isLoading
 }: {
   title: string;
   count: number | string;

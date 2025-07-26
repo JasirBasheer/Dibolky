@@ -19,21 +19,18 @@ export const handleVideoCallEvents = (
   socket.on('video-call-accept', ({ roomID, orgId }) => {
     console.log(`Video call accepted for room: ${roomID}`);
     
-    // Notify all participants that call was accepted
     socket.broadcast.to(`room_${roomID}`).emit('video-call-accepted', { roomID });
   });
 
   socket.on('video-call-reject', ({ roomID, orgId }) => {
     console.log(`Video call rejected for room: ${roomID}`);
     
-    // Notify all participants that call was rejected
     socket.broadcast.to(`room_${roomID}`).emit('video-call-rejected', { roomID });
   });
 
   socket.on('video-call-end', ({ roomID, orgId }) => {
     console.log(`Video call ended for room: ${roomID}`);
     
-    // Notify all participants that call ended
     socket.broadcast.to(`room_${roomID}`).emit('video-call-ended', { roomID });
   });
 };

@@ -15,7 +15,7 @@ export async function createXAuthURL(
 
 export async function xAuthCallback(
     code:string,state:string
-): Promise<string> {
+): Promise<{accessToken:string}> {
 console.log("reached here",code, state)
 
 const params = new URLSearchParams({
@@ -44,7 +44,7 @@ if (!response.ok) {
 
 const data = await response.json();
 
-return data.access_token
+return {accessToken:data.access_token}
 }
 
 

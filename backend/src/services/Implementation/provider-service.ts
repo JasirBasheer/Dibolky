@@ -57,22 +57,22 @@ export class ProviderService implements IProviderService {
             try {
                 switch (platform.platform) {
                     case INSTAGRAM:
-                        access_token = user?.socialMedia_credentials?.instagram?.accessToken;
+                        access_token = user?.social_credentials?.instagram?.accessToken;
                         if (!access_token) throw new Error('Instagram access token not found');
                         return response = await handleInstagramUpload(content, access_token);
 
                     case FACEBOOK:
-                        access_token = user?.socialMedia_credentials?.facebook?.accessToken;
+                        access_token = user?.social_credentials?.facebook?.accessToken;
                         if (!access_token) throw new Error('FaceBook access token not found');
                         return response = await handleFacebookUpload(content, access_token);
 
                     case LINKEDIN:
-                        access_token = user?.socialMedia_credentials?.linkedin?.accessToken;
+                        access_token = user?.social_credentials?.linkedin?.accessToken;
                         if (!access_token) throw new Error('Linkedin access token not found');
                         return response = await handleLinkedinUpload(content, access_token);
 
                     case X:
-                        access_token = user?.socialMedia_credentials?.x?.accessToken;
+                        access_token = user?.social_credentials?.x?.accessToken;
                         if (!access_token) throw new Error('Linkedin access token not found');
                         return response = await handleXUpload(content, access_token);
                         
@@ -131,21 +131,23 @@ export class ProviderService implements IProviderService {
         platform: string,
         user_id: string,
         provider: string,
-        token: string
+        accessToken: string,
+        refreshToken?:string
     ): Promise<void> {
 
         if (user_id) {
-            let longLivingAccessToken:string = token
+            let longLivingAccessToken:string = accessToken
+            console.log(accessToken,refreshToken,'toke1 and token2')
             switch (platform) {
                 case 'agency':
                     if(provider == INSTAGRAM || provider == FACEBOOK ){
-                        longLivingAccessToken = await exchangeForLongLivedToken(token)
+                        longLivingAccessToken = await exchangeForLongLivedToken(accessToken)
                     }
-                    await this._agencyTenantRepository.setSocialMediaTokens(orgId, provider, longLivingAccessToken)
+                    await this._agencyTenantRepository.setSocialMediaTokens(orgId, provider, longLivingAccessToken,refreshToken)
                     break;
                 case 'client':
                     if(provider == INSTAGRAM || provider == FACEBOOK){
-                        longLivingAccessToken = await exchangeForLongLivedToken(token)
+                        longLivingAccessToken = await exchangeForLongLivedToken(accessToken)
                     }
                     await this._clientTenantRepository.setSocialMediaTokens(orgId, user_id, provider, longLivingAccessToken)
                     break;

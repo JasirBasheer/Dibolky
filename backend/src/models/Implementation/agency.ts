@@ -141,9 +141,13 @@ export const agencyTenantSchema = new Schema<IAgencyTenant>({
             }
         }
     },
-    socialMedia_credentials: {
+    social_credentials: {
         instagram: {
             accessToken: {
+                type: String,
+                required: false,
+            },
+            refreshToken: {
                 type: String,
                 required: false,
             },
@@ -157,6 +161,10 @@ export const agencyTenantSchema = new Schema<IAgencyTenant>({
                 type: String,
                 required: false,
             },
+            refreshToken: {
+                type: String,
+                required: false,
+            },
             connectedAt:{
                 type:Date,
                 required:false
@@ -167,6 +175,24 @@ export const agencyTenantSchema = new Schema<IAgencyTenant>({
                 type: String,
                 required: false,
             },
+            refreshToken: {
+                type: String,
+                required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
+            }
+        },
+        google: {
+            accessToken: {
+                type: String,
+                required: false,
+            },
+            refreshToken: {
+                type: String,
+                required: false,
+            },
             connectedAt:{
                 type:Date,
                 required:false
@@ -174,6 +200,10 @@ export const agencyTenantSchema = new Schema<IAgencyTenant>({
         },
         linkedin: {
             accessToken: {
+                type: String,
+                required: false,
+            },
+            refreshToken: {
                 type: String,
                 required: false,
             },
@@ -195,10 +225,11 @@ export const agencyTenantSchema = new Schema<IAgencyTenant>({
 
 
 
-agencyTenantSchema.methods.setSocialMediaToken = async function(provider: string,token: string): Promise<void> {
-    if (this.socialMedia_credentials.hasOwnProperty(provider)) {
-      this.socialMedia_credentials[provider].accessToken = token;
-      this.socialMedia_credentials[provider].connectedAt = Date.now()
+agencyTenantSchema.methods.setSocialMediaToken = async function(provider: string,accessToken: string,refreshToken:string =""): Promise<void> {
+    if (this.social_credentials.hasOwnProperty(provider)) {
+      this.social_credentials[provider].accessToken = accessToken;
+      this.social_credentials[provider].refreshToken = refreshToken;
+      this.social_credentials[provider].connectedAt = Date.now()
       await this.save();
     } else {
       throw new Error(`Unsupported social media provider: ${provider}`);

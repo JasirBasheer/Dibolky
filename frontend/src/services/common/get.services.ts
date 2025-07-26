@@ -13,6 +13,7 @@ export const getAllProjects = (
 export const getConnectSocailMediaUrlApi = async(
     endpoint: string
 ) => {
+    console.log(endpoint,"endpoints")
     return await api.get(endpoint)
 }   
 
@@ -65,6 +66,12 @@ export const getPlanDetailsApi = async(planId:string) =>{
 }
 
 
+export const getActivitesApi = async(role:string,user_id:string) =>{
+    return await api.get(`/api/entities/activity/${role}/${user_id}`);
+}
+
+
+
 
 export const getInboxMessagesApi = async (
     user_id: string,
@@ -73,4 +80,15 @@ export const getInboxMessagesApi = async (
 ) => {
     console.log(user_id,"dsaf")
     return await api.get(`/api/entities/inboxMessages/${platform}/${user_id}/${conversationId}`)
+}
+
+
+export const getAllPortfoliosApi = async (query: string) => {
+    return await api.get(`/api/entities/portfolio${query}`)
+}
+
+
+
+export const getAllTestimoinalsApi = async () => {
+    return await api.get(`/api/entities/testimonials`)
 }

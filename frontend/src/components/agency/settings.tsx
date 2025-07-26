@@ -94,7 +94,7 @@ const SettingsPage = () => {
         user_id == agency?.user_id ? "agency" : "client",
         provider,
         user_id == agency.user_id ? "agency" : user_id,
-        token);
+        {accessToken:token,refreshToken:""});
 
       if (response) {
         if (provider == "instagram") {

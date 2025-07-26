@@ -44,11 +44,12 @@ const Integrations = () => {
         })
       }
     }
-    if(provider == "linkedin" || provider == "x"){
+    console.log(provider,'provider')
+    if(provider == "linkedin" || provider == "x" || provider == "google"){
     const code = searchParams.get('code');
     const state = searchParams.get('state');
     console.log(code,state,'reached')
-    if(code && state){
+    if(code ){
       handleCallback(code,provider,state).then(()=>{
              window.history.replaceState({}, "", `${window.location.pathname}?tab=social-integrations&`);
           setActiveTab('social-integrations')
@@ -89,15 +90,19 @@ const Integrations = () => {
   const handleCallback = async (
     token: string,
     provider: string,
-    status?:string
+    state?:string
   ): Promise<object | undefined> => {
     try {
-
-      if(provider == "linkedin" || provider == "x"){
-       const response = await handleLinkedinAndXCallbackApi(token,status as string,provider)
+      let tokens;
+       console.log('callback triggered')
+      if(provider == "linkedin" || provider == "x" || provider == "google"){
+       const response = await handleLinkedinAndXCallbackApi(token,provider,state)
        if(!response)throw new Error("token not found")
        console.log('reached here here is the response',response)
-       if(response)token = response.data.token
+       if(response)tokens = response.data.tokens
+       console.log(response.data.tokens)
+      }else{
+        tokens = {accessToken:token}
       }
       
 
@@ -106,7 +111,7 @@ const Integrations = () => {
         user_id == agency?.user_id ? "agency" : "client",
         provider,
         user_id == agency.user_id ? "agency" : user_id,
-        token);
+        tokens);
 
       if (response) {
         if (provider == "instagram") {
@@ -153,7 +158,7 @@ const Integrations = () => {
 
 
 
-
+// http://localhost:5173/agency/integrations?provider=google&code=4/0AVMBsJhIZCVHO1NUpjPo5JOin7XXVrvfaeAspWpak4VOEVCRfF_beQ_0wpGy5csTOI5vxw&scope=email%20https://www.googleapis.com/auth/gmail.send%20https://www.googleapis.com/auth/userinfo.email%20openid&authuser=0&prompt=consent
   const SocialIntegrationsContent = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-4">
@@ -317,7 +322,7 @@ const Integrations = () => {
           </div>
         </div>
         <button className={`px-3 py-1.5 text-sm rounded flex items-center space-x-1 $ bg-blue-700 hover:bg-blue-800" text-white transition`}>
-          <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/facebook', 'facebook')}>
+          <div className='w-full flex items-center justify-between gap-2' onClick={() => handleConnectSocailMedia('/api/entities/connect/google', 'google')}>
             <span>Connect</span>
             <ExternalLink size={14} />
           </div>

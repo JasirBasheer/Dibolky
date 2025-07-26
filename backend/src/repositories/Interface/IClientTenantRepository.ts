@@ -3,7 +3,7 @@ import { IUpdateProfile } from "../../types/common";
 
 export interface IClientTenantRepository  {
   createClient(orgId: string, details: Partial<IClientTenant>): Promise<IClientTenant>;
-  getAllClients(orgId: string, options?: { page?: number; limit?: number }): Promise<{ data: IClientTenant[]; totalCount: number }>;
+  getAllClients(orgId: string, filter?: Record<string, unknown> , options?: { page?: number, limit?: number, sort?: any }): Promise<{ data: IClientTenant[]; totalCount: number }>;
   getClientById(orgId: string, client_id: string): Promise<IClientTenant | null>;
   setSocialMediaTokens(orgId: string, client_id: string, provider: string, token: string): Promise<void>;
   getClientDetailsByMail(orgId:string, email: string): Promise<IClientTenant | null>;

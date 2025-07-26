@@ -1,16 +1,9 @@
 import { Route, Routes } from 'react-router-dom'
-import Plans from '@/pages/admin.pages/Plans'
-import AdminLayout from '@/pages/admin.pages/Layout '
+import Plans from '@/pages/admin/Plans'
 import AgencyLeads from '@/pages/agency/Leads'
-import Login from '@/pages/authentication.pages/login'
-import AdminClients from '@/pages/admin.pages/Clients'
-import AdminDashboard from '@/pages/admin.pages/DashBoard'
-import ProtectedRoute from '@/pages/authentication.pages/protected.route'
-import UnProtectedRoute from '@/pages/authentication.pages/unProtected.route'
-import {
-    ForgotPassword,
-    ResetPassword
-} from '@/pages/authentication.pages/forgotPassword'
+import AdminClients from '@/pages/admin/Clients'
+import AdminDashboard from '@/pages/dashboard/adminDashboard'
+import { AdminLayout, ForgotPassword, Login, ProtectedRoute, ResetPassword, UnProtectedRoute } from '@/pages'
 
 export default function AdminRoutes() {
     return (

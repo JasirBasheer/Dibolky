@@ -1,16 +1,15 @@
 import { Router } from "express";
 import { container } from "tsyringe";
 import { requireRoles, TenantMiddleWare, TokenMiddleWare } from "@/middlewares";
-import { IEntityController, IProviderController } from "@/controllers";
+import { IEntityController, IPortfolioController, IProviderController } from "@/controllers";
 import { asyncHandler } from "@/utils/async-handler-util";
 
 export const createEntityRoutes = (): Router => {
   const router = Router();
 
-  const entityController =
-    container.resolve<IEntityController>("EntityController");
-  const providerController =
-    container.resolve<IProviderController>("ProviderController");
+  const entityController = container.resolve<IEntityController>("EntityController");
+  const providerController = container.resolve<IProviderController>("ProviderController");
+  const portfolioController = container.resolve<IPortfolioController>("PortfolioController")
 
   router.use(TokenMiddleWare);
   router.use(TenantMiddleWare);
@@ -34,22 +33,28 @@ export const createEntityRoutes = (): Router => {
   
   router.get("/payments/:entity/:user_id",asyncHandler(entityController.getAllTransactions))
 
+  router.get("/activity/:entity/:user_id",asyncHandler(entityController.getAllActivities))
+
   
-  router.get("/connect/:provider",asyncHandler(providerController.connectSocialPlatforms));
   router.get("/get-meta-pages/:access_token",asyncHandler(providerController.getMetaPagesDetails));
   router.get("/contents/:user_id",asyncHandler(entityController.fetchContents));
   router.get("/get-scheduled-contents/:user_id",asyncHandler(entityController.fetchAllScheduledContents));
   router.get("/get-connections/:entity/:user_id",asyncHandler(entityController.getConnections));
   router.get("/:role/:planId",asyncHandler(entityController.getMenu));
   
-  // callback
   router.post("/inbox/:entity/:user_id",asyncHandler(entityController.getInbox));
+  router.post("/media/:entity/:user_id",asyncHandler(entityController.getMedia));
+  router.get("/media/:entity/:user_id/:platform/:pageId/:mediaId/:mediaType",asyncHandler(entityController.getContentDetails));
   router.post("/message",asyncHandler(entityController.getInbox));
   router.get("/inboxMessages/:platform/:user_id/:conversationId",asyncHandler(entityController.getInboxMessages));
 
-
+  router.post('/media/comments',asyncHandler(entityController.replayToComments))
+  
+  
+  // callback
   router.post("/linkedin/callback",asyncHandler(entityController.handleLinkedinCallback))
   router.post("/x/callback",asyncHandler(entityController.handleXCallback))
+  router.post("/google/callback",asyncHandler(entityController.handleGoogleCallback))
 
   // content
   router.post("/approve-content",asyncHandler(providerController.processContentApproval));
@@ -62,6 +67,8 @@ export const createEntityRoutes = (): Router => {
   // aws s3
   router.post("/get-signedUrl",asyncHandler(entityController.getS3ViewUrl));
   router.post("/get-s3Upload-url",asyncHandler(entityController.getUploadS3Url));
+  
+  router.get("/portfolio",asyncHandler(portfolioController.getPortfolios));
 
   // chat
   router.post("/chats",asyncHandler(entityController.getChat));
@@ -70,6 +77,11 @@ export const createEntityRoutes = (): Router => {
 
   // settings
   router.post("/update-profile",asyncHandler(entityController.updateProfile));
+
+  router.
+  route("/testimonials")
+  .get(asyncHandler(portfolioController.getAllTestimonials))
+  .post(asyncHandler(portfolioController.createTestimonial))
 
   return router;
 };

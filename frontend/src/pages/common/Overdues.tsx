@@ -1,7 +1,4 @@
-"use client"
-
 import { Label } from "@/components/ui/label"
-
 import CustomBreadCrumbs from "@/components/ui/custom-breadcrumbs"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
@@ -11,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
-import { CalendarDays, DollarSign, User, Search, ArrowUpDown, Mail, Send, AlertTriangle } from "lucide-react"
+import { CalendarDays, DollarSign, User, Search, ArrowUpDown, Mail, Send } from "lucide-react"
 import { format } from "date-fns"
 import { toast } from "sonner"
 import { useFilter, usePagination } from "@/hooks"
@@ -22,7 +19,7 @@ import DetailModal from "@/components/modals/details-modal"
 import SelectInput from "@/components/ui/selectInput"
 import { DataTable } from "@/components/ui/data-table"
 import Skeleton from "react-loading-skeleton"
-import axios from "@/utils/axios"
+import { handleSendMails } from "@/utils"
 
 const Overdues = () => {
   const user = useSelector((state: RootState) => state.user)
@@ -30,18 +27,11 @@ const Overdues = () => {
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false)
   const [selectedInvoice, setSelectedInvoice] = useState<InvoiceType | null>(null)
   const [selectedInvoices, setSelectedInvoices] = useState<InvoiceType[]>([])
-  const [emailSubject, setEmailSubject] = useState("Payment Reminder - Overdue Invoice")
-  const [emailMessage, setEmailMessage] = useState(`Dear [CLIENT_NAME],
-
-We hope this message finds you well. We wanted to bring to your attention that your invoice [INVOICE_NUMBER] with a total amount of $[AMOUNT] was due on [DUE_DATE] and is currently overdue.
-
-Please review the invoice details and arrange for payment at your earliest convenience. If you have any questions or concerns regarding this invoice, please don't hesitate to contact us.
-
-Thank you for your prompt attention to this matter.
-
-Best regards,
-[YOUR_COMPANY]`)
-  const [isSendingEmails, setIsSendingEmails] = useState(false)
+  const [mail, setMail] = useState({
+    emailSubject:"",
+    emailMessage:"",
+    isSendingEmails:false
+  })
 
   const [filter, setFilter] = useState({
     query: "",
@@ -57,7 +47,6 @@ Best regards,
   const {
     data,
     isLoading: isInvoicesLoading,
-    refetch,
   } = useQuery({
     queryKey: ["get-overdue-invoices", page, debouncedFilter],
     queryFn: () => {
@@ -95,14 +84,12 @@ Best regards,
 
   const handleSelectAll = (checked: boolean) => {
     if (checked && data?.invoices) {
-      // Add current page invoices to existing selections (avoid duplicates)
       setSelectedInvoices((prev) => {
         const existingIds = prev.map((inv) => inv._id)
         const newInvoices = data.invoices.filter((inv) => !existingIds.includes(inv._id))
         return [...prev, ...newInvoices]
       })
     } else {
-      // Remove current page invoices from selections
       if (data?.invoices) {
         const currentPageIds = data.invoices.map((inv) => inv._id)
         setSelectedInvoices((prev) => prev.filter((inv) => !currentPageIds.includes(inv._id)))
@@ -110,34 +97,24 @@ Best regards,
     }
   }
 
-  const handleSendReminders = async () => {
-    if (selectedInvoices.length === 0) {
-      toast.error("Please select at least one invoice to send reminders.")
-      return
-    }
-
-    setIsSendingEmails(true)
-
+const handleSendReminders = async () => {
+    setMail((prev)=>({...prev,isSendingEmails:true}))
     try {
-      const response = await axios.post("/api/invoices/send-reminders", {
-        invoiceIds: selectedInvoices.map((inv) => inv._id),
-        subject: emailSubject,
-        message: emailMessage,
-      })
-
-      if (response.data.success) {
-        toast.success(`Reminder emails sent to ${selectedInvoices.length} client(s) successfully!`)
+        const emails:string[] = selectedInvoices.map((invoice)=> invoice.client.email)
+        await handleSendMails(emails,mail.emailMessage,mail.emailSubject)
         setSelectedInvoices([])
         setIsEmailModalOpen(false)
-        refetch()
-      }
+        toast.success("Mail has been successfully sended.")
+        
     } catch (error) {
       console.error("Error sending reminders:", error)
-      toast.error("Failed to send reminder emails. Please try again.")
+      toast.error(error.data.message || "Failed to send email. Please try again.")
     } finally {
-      setIsSendingEmails(false)
+    setMail((prev)=>({...prev,isSendingEmails:false}))
+
     }
   }
+
 
   const getSelectedClientsInfo = () => {
     return selectedInvoices.map((invoice) => ({
@@ -167,9 +144,6 @@ Best regards,
       />
 
       <div className="p-6 space-y-6">
-        {/* Stats Card */}
-
-        {/* Filters */}
         <Card>
           <CardContent className="p-4">
             <div className="flex flex-col md:flex-row gap-4">
@@ -218,7 +192,6 @@ Best regards,
           </CardContent>
         </Card>
 
-        {/* Invoices Table */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
@@ -292,14 +265,14 @@ Best regards,
                       </div>
                     ),
                   },
-                  {
-                    header: "Days Overdue",
-                    render: (invoice) => <Badge variant="destructive">{getDaysOverdue(invoice.dueDate)} days</Badge>,
-                  },
-                  {
-                    header: "Status",
-                    render: (invoice) => <Badge variant="destructive">Overdue</Badge>,
-                  },
+                  // {
+                  //   header: "Days Overdue",
+                  //   render: (invoice) => <Badge variant="destructive">{getDaysOverdue(invoice.dueDate)} days</Badge>,
+                  // },
+                  // {
+                  //   header: "Status",
+                  //   render: (invoice) => <Badge variant="destructive">Overdue</Badge>,
+                  // },
                 ]}
               />
             ) : (
@@ -310,7 +283,6 @@ Best regards,
 
         <PaginationControls page={page} totalPages={data?.totalPages || 1} onNext={nextPage} onPrev={prevPage} />
 
-        {/* Invoice Detail Modal */}
         <DetailModal title="Invoice Details" open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
           {selectedInvoice && (
             <>
@@ -395,7 +367,6 @@ Best regards,
           )}
         </DetailModal>
 
-        {/* Email Reminder Modal */}
         <DetailModal title="Send Payment Reminders" open={isEmailModalOpen} onOpenChange={setIsEmailModalOpen}>
           <div className="space-y-4">
             <div>
@@ -413,8 +384,8 @@ Best regards,
               <Label htmlFor="emailSubject">Email Subject</Label>
               <Input
                 id="emailSubject"
-                value={emailSubject}
-                onChange={(e) => setEmailSubject(e.target.value)}
+                value={mail.emailSubject}
+                onChange={(e) => setMail((prev)=>({...prev,emailSubject:e.target.value}))}
                 placeholder="Email subject..."
               />
             </div>
@@ -423,14 +394,11 @@ Best regards,
               <Label htmlFor="emailMessage">Email Message</Label>
               <textarea
                 id="emailMessage"
-                value={emailMessage}
-                onChange={(e) => setEmailMessage(e.target.value)}
+                value={mail.emailMessage}
+                onChange={(e) => setMail((prev)=>({...prev,emailMessage:e.target.value}))}
                 className="w-full h-64 p-3 border rounded-md resize-none"
                 placeholder="Email message..."
               />
-              <p className="text-xs text-gray-500 mt-1">
-                Use placeholders: [CLIENT_NAME], [INVOICE_NUMBER], [AMOUNT], [DUE_DATE], [YOUR_COMPANY]
-              </p>
             </div>
 
             <div className="flex justify-end gap-3 pt-4 border-t">
@@ -439,10 +407,10 @@ Best regards,
               </Button>
               <Button
                 onClick={handleSendReminders}
-                disabled={isSendingEmails}
-                className="bg-blue-600 hover:bg-blue-700"
+                disabled={mail.isSendingEmails}
+                className="bg-black"
               >
-                {isSendingEmails ? (
+                {mail.isSendingEmails ? (
                   <>Sending...</>
                 ) : (
                   <>

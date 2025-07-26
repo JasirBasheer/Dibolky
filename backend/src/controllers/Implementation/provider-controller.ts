@@ -6,10 +6,11 @@ import { IProviderService } from "../../services/Interface/IProviderService";
 import { createInstagramOAuthURL } from "@/providers/instagram";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
 import { IBucket } from "../../types/common";
-import { FACEBOOK, INSTAGRAM, LINKEDIN, X } from "../../utils/constants";
+import { FACEBOOK, GOOGLE, INSTAGRAM, LINKEDIN, X } from "../../utils/constants";
 import { createLinkedInOAuthURL } from "@/providers/linkedin";
 import { createXAuthURL } from "@/providers/x";
 import { createFacebookOAuthURL } from "@/providers/facebook";
+import { createGoogleOAuthURL } from "@/providers/google/auth";
 
 
 
@@ -69,9 +70,7 @@ export class ProviderController implements IProviderController {
     ): Promise<void> =>{
             const { provider } = req.params
             const redirectUri: string = req.query.redirectUri as string;
-            console.log(X, provider)
             let url;
-
             if (provider == INSTAGRAM) {
                 url = await createInstagramOAuthURL(redirectUri);
             } else if (provider == FACEBOOK) {
@@ -80,8 +79,9 @@ export class ProviderController implements IProviderController {
                 url = await createLinkedInOAuthURL(redirectUri)
             }else if (provider == X){
                 url = await createXAuthURL(redirectUri)
+            }else if (provider == GOOGLE){
+                url = await createGoogleOAuthURL(redirectUri)
             }
-
             res.send({ url: url });
     }
 
@@ -93,9 +93,9 @@ export class ProviderController implements IProviderController {
     ): Promise<void> =>{
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const { platform, provider, user_id } = req.params
-            const { token } = req.body
+            const { accessToken, refreshToken } = req.body
 
-            await this._providerService.saveSocialMediaToken(req.details.orgId as string, platform, user_id, provider, token)
+            await this._providerService.saveSocialMediaToken(req.details.orgId as string, platform, user_id, provider, accessToken, refreshToken)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
 

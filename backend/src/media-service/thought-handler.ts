@@ -5,6 +5,7 @@ import { publishFaceBookThought } from "@/providers/facebook";
 import { publishXThought } from "@/providers/x";
 import { getUserURN } from "@/providers/linkedin";
 import { publishLinkedinThought } from "@/providers/linkedin/thought";
+import { isErrorWithMessage } from "@/validators";
 
 // FACEBOOK THOUGHT
 export async function uploadFaceBookThought(
@@ -51,8 +52,9 @@ export async function uploadLinkedinThought(
   try {
     const userURN = await getUserURN(accessToken);
     return await publishLinkedinThought(content,accessToken,userURN)
-  } catch (error: any) {
-    return { name: "linkedin", status: "failed", id: content._id as string, error: error.message };
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    return { name: "linkedin", status: "failed", id: content._id as string, error: errorMessage };
   }
 }
 

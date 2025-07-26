@@ -11,7 +11,7 @@ export interface IClientTenant extends Document {
     bio?:string;
     industry?: string;
     password?: string;
-    socialMedia_credentials?: credentials;
+    social_credentials?: credentials;
     menu: IMenu[];
     isSocialMediaInitialized: boolean,
     isPaymentInitialized: boolean,

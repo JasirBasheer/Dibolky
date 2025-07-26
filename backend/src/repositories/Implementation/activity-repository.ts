@@ -55,6 +55,6 @@ export class ActivityRepository extends BaseRepository<IActivity> implements IAc
         user_id: string
     ): Promise<IActivity[] | null> {
         const model = await this.getModel(orgId);
-        return await model.findById({"user.userId":user_id})
+        return await model.find({"user.userId":user_id})
     }
 }

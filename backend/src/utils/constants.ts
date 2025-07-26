@@ -10,6 +10,7 @@ export const INSTAGRAM = 'instagram'
 export const FACEBOOK = 'facebook'
 export const X = 'x'
 export const LINKEDIN = 'linkedin'
+export const GOOGLE = 'google'
 
 
 export const CONTENT_TYPE = {

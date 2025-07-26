@@ -11,4 +11,5 @@ export interface IActivity extends Document {
   entity: ActivityEntity;
   activity: string;
   redirectUrl?: string;
+  timestamp:string;
 }

@@ -42,7 +42,7 @@ export interface IInfluncerTenant {
       key_secret?: string;
     };
   };
-  socialMedia_credentials?: {
+  social_credentials?: {
     instagram?: {
       accessToken?: string;
       apiKey?: string;

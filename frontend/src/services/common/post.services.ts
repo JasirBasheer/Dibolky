@@ -5,11 +5,12 @@ export const savePlatformTokenApi = async (
     platform: string,
     provider: string,
     user_id: string,
-    token: string
+    tokens: {accessToken:string,refreshToken?:string}
 ) => {
+    console.log(tokens,'tokens fomrdlfksjlfslkjfksj')
     return await api.post(
         `/api/entities/save-platform-token/${platform}/${provider}/${user_id}`,
-        { token }
+        { accessToken:tokens.accessToken,refreshToken:tokens.refreshToken || "" }
     );
 }
 
@@ -90,9 +91,10 @@ export const fetchChatsApi = async (
 
 export const handleLinkedinAndXCallbackApi = async (
     code: string,
-    state: string,
     provider: string,
+    state?: string,
 ) => {
+    console.log('calling api')
     return await api.post(`/api/entities/${provider}/callback`, { code,state })
 }
 
@@ -105,4 +107,34 @@ export const getInboxConversations = async (
 ) => {
     console.log(user_id,"dsaf")
     return await api.post(`/api/entities/inbox/${role}/${user_id}`, { selectedPages, selectedPlatforms })
+}
+
+
+export const getMediaApi = async (
+    role: string,
+    user_id: string,
+    selectedPlatforms: string[],
+    selectedPages: string[]
+) => {
+    return await api.post(`/api/entities/media/${role}/${user_id}`, { selectedPages, selectedPlatforms })
+}
+
+export const getMediaDetailsApi = async (
+    role: string,
+    user_id: string,
+    media: {platform:string, id:string,type:string, pageId:string},
+) => {
+    return await api.get(`/api/entities/media/${role}/${user_id}/${media.platform}/${media.pageId}/${media.id}/${media.type}`,)
+}
+
+
+
+
+export const replayCommentApi = async (
+    entity:string,  user_id: string,
+    platform:string, commentId:string, replyMessage:string,pageId:string
+) => {
+    return await api.post(`/api/entities/media/comments`,{
+        entity,user_id,platform,commentId,replyMessage, pageId
+    })
 }

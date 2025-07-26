@@ -55,21 +55,30 @@ export interface IAgencyTenant extends Document {
             webhook_url?: string;
         };
     };
-    socialMedia_credentials?: {
+    social_credentials?: {
         instagram?: {
             accessToken?: string;
+            refreshToken?: string
             connectedAt?: string;
         };
         facebook?: {
             accessToken?: string;
+            refreshToken?: string
             connectedAt?: string;
         };
         x?: {
             accessToken?: string;
+            refreshToken?: string
+            connectedAt?: string;
+        };
+        google?: {
+            accessToken?: string;
+            refreshToken?: string;
             connectedAt?: string;
         };
         linkedin?: {
             accessToken?: string;
+            refreshToken?: string
             connectedAt?: string;
         };
     };
@@ -77,7 +86,7 @@ export interface IAgencyTenant extends Document {
     updatedAt?: Date;
     isSocialMediaInitialized?:boolean;
     isPaymentInitialized?:boolean;
-    setSocialMediaToken?(provider: string,token: string): Promise<void>;
+    setSocialMediaToken?(provider: string,accesstoken: string,refreshtoken?: string): Promise<void>;
     integratePaymentGateway(provider: string,key1:string,key2:string,webhookUrl?:string): Promise<void>;
 }
 

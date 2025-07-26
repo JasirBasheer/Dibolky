@@ -49,21 +49,30 @@ export class ClientTenantRepository extends BaseRepository<IClientTenant> implem
 
     async getAllClients(
         orgId: string,
-        options?: { page?: number; limit?: number }
+        filter: Record<string, unknown> , 
+        options?: { page?: number, limit?: number, sort?: any }
     ): Promise<{ data: IClientTenant[]; totalCount: number }> {
         const model = await this.getModel(orgId);
+        const { page, limit, sort } = options || {};
         const totalCount = await model.countDocuments();
 
         let data: IClientTenant[];
 
         if (options?.page && options?.limit) {
-            const skip = (options.page - 1) * options.limit;
-            data = await model.find({}).skip(skip).limit(options.limit);
+        let query = model.find(filter);
+        if (sort) query = query.sort(sort);
+        if (page && limit) query = query.skip((page - 1) * limit).limit(limit);
+
+        data = await query.exec();
+        
         } else {
             data = await model.find({});
         }
 
-        return { data, totalCount };
+        return { 
+            data, 
+            totalCount,
+         };
     }
 
 
@@ -102,7 +111,7 @@ export class ClientTenantRepository extends BaseRepository<IClientTenant> implem
 
         return await model.find({}, {
             orgId: 0,
-            'socialMedia_credentials': 0,
+            'social_credentials': 0,
         });
     }
 

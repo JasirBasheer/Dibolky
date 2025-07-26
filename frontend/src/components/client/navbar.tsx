@@ -152,10 +152,10 @@ const ClientNavBar: React.FC<ClientNavBarProps> = ({ isOpen, setIsOpen }) => {
             <div className="border-t pt-3">
               <p className="font-medium mb-2">Connect Platforms</p>
               <div className="flex flex-wrap gap-2">
-                {Object.keys(client?.socialMedia_credentials || {})
+                {Object.keys(client?.social_credentials || {})
                   .filter(platform =>
-                    client?.socialMedia_credentials &&
-                    client.socialMedia_credentials[platform as keyof typeof client.socialMedia_credentials]?.accessToken === undefined
+                    client?.social_credentials &&
+                    client.social_credentials[platform as keyof typeof client.social_credentials]?.accessToken === undefined
                   )
                   .map((platform, index) => (
                     <motion.div

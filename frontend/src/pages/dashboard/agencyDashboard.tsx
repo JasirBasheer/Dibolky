@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
-import { fetchAllClientsApi, fetchClientsCountApi, fetchInitialSetUpApi, fetchProjectsCountApi } from '@/services/agency/get.services'
+import { fetchAllClientsApi, fetchInitialSetUpApi, fetchProjectsCountApi } from '@/services/agency/get.services'
 const InitialSetUp = React.lazy(() => import('@/components/common/initial-set-up'));
 import DashboardCard from '@/components/agency/agencyside.components/dashboard/dashBoardCard'; 
 import Skeleton from 'react-loading-skeleton';

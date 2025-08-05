@@ -1,11 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "@/utils/axios";
-import { formatDateTime, stringToIntegerHash } from "@/utils/utils";
+import { formatDateTime } from "@/utils/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IMessage, IParticipant, RootState } from "@/types/common";
 import { EmojiClickData, IChat } from "@/types/chat.types";
-import AgoraRTC from "agora-rtc-sdk-ng";
-import AgoraRTM from "agora-rtm-sdk";
 import {
   ChevronLeft,
   LucideCheckCheck,
@@ -14,13 +12,8 @@ import {
   Smile,
   Trash,
   Users,
-  Video,
   X,
   Phone,
-  PhoneOff,
-  Mic,
-  MicOff,
-  VideoOff,
   VideoIcon,
 } from "lucide-react";
 import { message } from "antd";
@@ -36,8 +29,7 @@ import Picker from "@emoji-mart/react";
 import { Socket } from "socket.io-client";
 import { SOCKET_EVENTS } from "@/constants";
 import { ChatDetails } from "./chatDetails";
-import { setInCall, setOutgoingCall } from "@/redux/slices/ui.slice";
-import { getRtmClient, isRtmLoggedIn } from "@/utils/rtmSingleton";
+import { setOutgoingCall } from "@/redux/slices/ui.slice";
 
 const ChatInterface = ({
   userId,
@@ -73,7 +65,6 @@ const ChatInterface = ({
   const [isMessageSending, setIsMessageSending] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const rtmClient = useSelector((state: RootState) => state.ui.rtmClient);
   const dispatch = useDispatch();
 
   // Media upload handlers (no change)

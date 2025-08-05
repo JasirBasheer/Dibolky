@@ -26,7 +26,7 @@ const Inbox = () => {
 
   const user = useSelector((state: RootState) => state.user);
 
-  const { data: connections } = useQuery({
+  const { data: connections, isLoading } = useQuery({
     queryKey: ["get-connections-status"],
     queryFn: () => {
       return fetchConnections(user.role, user.user_id);
@@ -96,6 +96,7 @@ useEffect(() => {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-slate-800">My Inbox</h1>
             <PlatformFilter
+              isLoading={isLoading}
               connections={connections}
               onFilterChange={handleFilterChange}
               selectedConnections={selectedConnections}

@@ -18,9 +18,8 @@ export const createEntityRoutes = (): Router => {
   // get
   router.get("/owner",asyncHandler(entityController.getOwner));
 
-  router.get("/get-tasks",asyncHandler(entityController.getAllProjects));
 
-  router.get("/projects/:page",asyncHandler(entityController.getAllProjects));
+  router.get("/projects/:role/:userId",asyncHandler(entityController.getAllProjects));
 
   router.get("/get-chats/:userId",asyncHandler(entityController.getChats));
   
@@ -37,8 +36,8 @@ export const createEntityRoutes = (): Router => {
 
   
   router.get("/get-meta-pages/:access_token",asyncHandler(providerController.getMetaPagesDetails));
-  router.get("/contents/:user_id",asyncHandler(entityController.fetchContents));
-  router.get("/get-scheduled-contents/:user_id",asyncHandler(entityController.fetchAllScheduledContents));
+  router.get("/contents/:role/:userId",asyncHandler(entityController.fetchContents));
+  // router.get("/get-scheduled-contents/:userId",asyncHandler(entityController.fetchAllScheduledContents));
   router.get("/get-connections/:entity/:user_id",asyncHandler(entityController.getConnections));
   router.get("/:role/:planId",asyncHandler(entityController.getMenu));
   
@@ -48,18 +47,27 @@ export const createEntityRoutes = (): Router => {
   router.post("/message",asyncHandler(entityController.getInbox));
   router.get("/inboxMessages/:platform/:user_id/:conversationId",asyncHandler(entityController.getInboxMessages));
 
-  router.post('/media/comments',asyncHandler(entityController.replayToComments))
-  
+  router.
+  route("/media/comment")
+  .post(asyncHandler(entityController.replayToComments))
+  .delete(asyncHandler(entityController.deleteComment))
+  .patch(asyncHandler(entityController.hideComment))
   
   // callback
   router.post("/linkedin/callback",asyncHandler(entityController.handleLinkedinCallback))
   router.post("/x/callback",asyncHandler(entityController.handleXCallback))
-  router.post("/google/callback",asyncHandler(entityController.handleGoogleCallback))
+  router.post("/gmail/callback",asyncHandler(entityController.handleGmaileCallback))
+
+  router.
+  route('/content/scheduled/:userId')
+  .get(asyncHandler(entityController.fetchAllScheduledContents))
+  .patch(asyncHandler(providerController.rescheduleContent))
+  .delete(asyncHandler(providerController.deleteScheduledContent))
 
   // content
   router.post("/approve-content",asyncHandler(providerController.processContentApproval));
   router.post("/reject-content",asyncHandler(providerController.processContentReject));
-  router.post("/reschedulec-content",asyncHandler(providerController.reScheduleContent));
+
   router.post("/content/save/:platform/:user_id",asyncHandler(entityController.saveContent));
   router.post("/initiate-s3-batch-upload",asyncHandler(entityController.initiateS3BatchUpload));
   router.post("/save-platform-token/:platform/:provider/:user_id",asyncHandler(providerController.saveSocialPlatformToken));
@@ -81,6 +89,11 @@ export const createEntityRoutes = (): Router => {
   router.
   route("/testimonials")
   .get(asyncHandler(portfolioController.getAllTestimonials))
+  .post(asyncHandler(portfolioController.createTestimonial))
+
+  router.
+  route("/agora")
+  .get(asyncHandler(entityController.getAgoraTokens))
   .post(asyncHandler(portfolioController.createTestimonial))
 
   return router;

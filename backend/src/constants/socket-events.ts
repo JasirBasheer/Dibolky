@@ -24,11 +24,11 @@ export const SOCKET_EVENTS = {
     REJECT_CALL: "reject-video-call",
     END_CALL: "end-video-call",
     CALL_ACCEPTED: "call-accepted", 
-    CALL_REJECTED: "call-rejected", // Emitted to caller when receiver rejects
-    CALL_ENDED: "call-ended", // Emitted to all participants when call ends
-    RECEIVER_OFFLINE: "receiver-offline", // New: Notify caller if receiver is offline
-    CANCEL_CALL: "cancel-call", // New: Caller cancels before receiver accepts
-    CALL_CANCELLED: "call-cancelled", // New: Notify receiver if caller cancels
+    CALL_REJECTED: "call-rejected", 
+    CALL_ENDED: "call-ended", 
+    RECEIVER_OFFLINE: "receiver-offline", 
+    CANCEL_CALL: "cancel-call",  
+    CALL_CANCELLED: "call-cancelled",  
   },
 
 };

@@ -1,4 +1,5 @@
 import { Types, Document } from "mongoose";
+import { IBucket, IFiles, IPlatforms } from "./common";
 
 export interface Media {
   type: "image" | "video" | "file";
@@ -17,4 +18,22 @@ export interface INote extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface IBucketWithReason {
+  _id?: string;
+  user_id?: string;
+  orgId: string;
+  files: IFiles[];
+  status: string;
+  metaAccountId: string;
+  platforms: IPlatforms[];
+  title: string;
+  contentType: string;
+  caption: string;
+  tags: string[];
+  isPublished?: boolean;
+  reason: INote | null;
+  createdAt?:string;
+}
+
 

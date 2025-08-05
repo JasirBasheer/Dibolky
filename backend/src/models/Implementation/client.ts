@@ -69,45 +69,77 @@ export const clientTenantSchema: Schema<IClientTenant> = new mongoose.Schema({
   },
 
   social_credentials: {
-    facebook: {
-      accessToken: {
-        type: String,
-        required: false,
-        default: ""
-      },
-      userName: {
-        type: String,
-        required: false,
-        default: ""
-      }
+        instagram: {
+            accessToken: {
+                type: String,
+                required: false,
+            },
+            refreshToken: {
+                type: String,
+                required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
+            }
+        },
+        facebook: {
+            accessToken: {
+                type: String,
+                required: false,
+            },
+            refreshToken: {
+                type: String,
+                required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
+            }
+        },
+        x: {
+            accessToken: {
+                type: String,
+                required: false,
+            },
+            refreshToken: {
+                type: String,
+                required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
+            }
+        },
+        gmail: {
+            accessToken: {
+                type: String,
+                required: false,
+            },
+            refreshToken: {
+                type: String,
+                required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
+            }
+        },
+        linkedin: {
+            accessToken: {
+                type: String,
+                required: false,
+            },
+            refreshToken: {
+                type: String,
+                required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
+            }
+        }
     },
-    instagram: {
-      accessToken: {
-        type: String,
-        required: false,
-        default: ""
-      },
-      userName: {
-        type: String,
-        required: false,
-        default: ""
-      }
-    },
-    linkedin: {
-      accessToken: {
-        type: String,
-        required: false,
-        default: ""
-      }
-    },
-    x: {
-      accessToken: {
-        type: String,
-        required: false,
-        default: ""
-      }
-    }
-  },
   menu: {
     type: [menuSchema],
     required: true
@@ -123,14 +155,14 @@ export const clientTenantSchema: Schema<IClientTenant> = new mongoose.Schema({
 }, { timestamps: true });
 
 
-clientTenantSchema.methods.setSocialMediaToken = async function (provider: string, token: string): Promise<void> {
-  if (this.social_credentials.hasOwnProperty(provider)) {
-    this.social_credentials[provider].accessToken = token;
-    await this.save();
-  } else {
-    throw new Error(`Unsupported social media provider: ${provider}`);
-  }
+clientTenantSchema.methods.setSocialMediaToken = async function(provider: string,accessToken: string,refreshToken:string =""): Promise<void> {
+    if (this.social_credentials.hasOwnProperty(provider)) {
+      this.social_credentials[provider].accessToken = accessToken;
+      this.social_credentials[provider].refreshToken = refreshToken;
+      this.social_credentials[provider].connectedAt = Date.now()
+      await this.save();
+    } else {
+      throw new Error(`Unsupported social media provider: ${provider}`);
+    }
 };
-
-
 

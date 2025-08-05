@@ -1,26 +1,31 @@
+import { env } from "@/config";
 import axios from "axios";
 import { AuthorizationCode } from "simple-oauth2";
 
 export async function createLinkedInOAuthURL(
-  redirectUri: string
+  redirectUri: string,
+  state?: string
 ): Promise<string> {
-  const state = "RANDOM_STRING";
   const SCOPE = "openid profile email w_member_social";
 
-  const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=860d6lbkibt1yl&redirect_uri=${encodeURIComponent(
-    "http://localhost:5173/agency/settings?provider=linkedin"
-  )}&scope=${encodeURIComponent(SCOPE)}&state=${state}`;
+  const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=860d6lbkibt1yl&redirect_uri=${redirectUri}&scope=${encodeURIComponent(SCOPE)}&state=${state}`;
   return authUrl;
 }
 
 export async function linkedInAuthCallback(code: string, state: string): Promise<{accessToken:string}> {
-  const params = new URLSearchParams({
+
+  let redirect_uri = "";
+  if (state === "client") {
+    redirect_uri = `${env.BASE_URLS.FRONTEND}/client/integrations?provider=linkedin`;
+  } else {
+    redirect_uri = `${env.BASE_URLS.FRONTEND}/agency/integrations?provider=linkedin`;
+  }
+  
+  const params = {
     grant_type: "authorization_code",
     code,
-    redirect_uri: "http://localhost:5173/agency/settings?provider=linkedin",
-    client_id: "860d6lbkibt1yl",
-    client_secret: "WPL_AP1.49hDNsCUCE92QHKR.BCD4wQ=="
-  });
+    redirect_uri: redirect_uri,
+  };
 
   const client = new AuthorizationCode({
     client: {
@@ -36,13 +41,11 @@ export async function linkedInAuthCallback(code: string, state: string): Promise
       authorizationMethod: "body"
     }
   });
-const tokenParams = {
-    code,
-    redirect_uri: "http://localhost:5173/agency/settings?provider=linkedin"
-  };
+
 
   try {
-    const accessToken = await client.getToken(tokenParams);
+    const accessToken = await client.getToken(params);
+    console.log(accessToken,"acess toke form linkedin")
     await new Promise((resolve) => setTimeout(resolve, 15000));
     return {accessToken: accessToken.token.access_token.toString() }
   } catch (error:any) {
@@ -69,11 +72,11 @@ export async function getUserURN(accessToken: string): Promise<string> {
   return `urn:li:person:${data.sub}`;
 }
 
-export async function getLinkedInTokenStatus(accessToken: string): Promise<boolean> {
+export async function getLinkedInTokenStatus(tokens: {accessToken?:string,refreshToken?:string}): Promise<boolean> {
   try {
     const response = await axios.get("https://api.linkedin.com/v2/userinfo", {
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${tokens.accessToken}`,
       "LinkedIn-Version": "202506",
       "X-Restli-Protocol-Version": "2.0.0",
     },

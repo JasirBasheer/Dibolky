@@ -23,7 +23,7 @@ export function GridPattern({
   className,
   ...props
 }: GridPatternProps) {
-  const id = useId() // Generates a unique ID for the pattern [^1]
+  const id = useId() 
 
   return (
     <svg

@@ -1,4 +1,4 @@
-import { META_API_VERSION } from "@/config";
+import { env } from "@/config";
 
 // Reel 
 export async function uploadIGReelContent(
@@ -15,7 +15,7 @@ export async function uploadIGReelContent(
         access_token: accessToken
     });
     
-    const url = `https://graph.facebook.com/${META_API_VERSION}/${pageId}/media?${params.toString()}`;
+    const url = `https://graph.facebook.com/${env.META.API_VERSION}/${pageId}/media?${params.toString()}`;
     console.log("Request URL:", url);
     
     const publishResponse = await fetch(url, { method: 'POST' });
@@ -38,7 +38,7 @@ export async function checkIGContainerStatus(
     containerId: string
 ): Promise<{status_code: string; id: string}> {
     console.log("containerId", containerId);
-    const url = `https://graph.facebook.com/${META_API_VERSION}/${containerId}?fields=status_code&access_token=${accessToken}`;
+    const url = `https://graph.facebook.com/${env.META.API_VERSION}/${containerId}?fields=status_code&access_token=${accessToken}`;
 
     while (true) {
         const response = await fetch(url);
@@ -69,7 +69,7 @@ export async function publishInstagramContent(
     businessId: string, 
     creationId: string
 ): Promise<{id:string}> {
-    const url = `https://graph.facebook.com/${META_API_VERSION}/${businessId}/media_publish?creation_id=${creationId}&access_token=${accessToken}`;
+    const url = `https://graph.facebook.com/${env.META.API_VERSION}/${businessId}/media_publish?creation_id=${creationId}&access_token=${accessToken}`;
     const publishResponse = await fetch(url, { method: 'POST' });
     const data = await publishResponse.json();
     if (data && !data.error) return data;

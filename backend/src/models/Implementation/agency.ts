@@ -74,7 +74,7 @@ const agencySchema: Schema<IAgency> = new mongoose.Schema({
         type:String
     }
 
-});
+},{ timestamps: true });
 
 export default mongoose.model<IAgency>('Agency', agencySchema);
 
@@ -184,7 +184,7 @@ export const agencyTenantSchema = new Schema<IAgencyTenant>({
                 required:false
             }
         },
-        google: {
+        gmail: {
             accessToken: {
                 type: String,
                 required: false,
@@ -220,6 +220,10 @@ export const agencyTenantSchema = new Schema<IAgencyTenant>({
     isPaymentInitialized: {
         type: Boolean,
         default : false
+    },
+    permissions:{
+        type:[String],
+        default: []
     }
 }, { timestamps: true });
 

@@ -15,6 +15,8 @@ export interface IEntityController {
     getMedia(req: Request, res: Response): Promise<void>
     getContentDetails(req: Request, res: Response): Promise<void>
     replayToComments(req: Request, res: Response): Promise<void>
+    deleteComment(req: Request, res: Response): Promise<void>
+    hideComment(req: Request, res: Response): Promise<void>
     sendMessage(req: Request, res: Response): Promise<void>
     getInboxMessages(req: Request, res: Response): Promise<void>
     getChat(req: Request, res: Response): Promise<void>
@@ -34,6 +36,8 @@ export interface IEntityController {
     getConnections(req:Request,res:Response):Promise<void>
     handleLinkedinCallback(req:Request,res:Response):Promise<void>
     handleXCallback(req:Request,res:Response):Promise<void>
-    handleGoogleCallback(req:Request,res:Response):Promise<void>
+    handleGmaileCallback(req:Request,res:Response):Promise<void>
+    getAgoraTokens(req: Request, res: Response): Promise<void>
+
     
 }

@@ -110,8 +110,8 @@ export class ClientService implements IClientService {
   async verifyInvoicePayment(orgId:string,invoice_id:string,response:IRazorpayOrder):Promise<void>{
     const invoice = await this._invoiceRepository.getInvoiceById(orgId,invoice_id)
     if(!invoice)throw new NotFoundError("invoice not found.")
-    const owner = await this._agencyTenantRepository.getOwners(orgId)
-    const paymentCredentials = owner[0].paymentCredentials.razorpay
+    const owner = await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
+    const paymentCredentials = owner.paymentCredentials.razorpay
 
     const generatedSignature = crypto
       .createHmac('sha256', paymentCredentials.secret_key)
@@ -143,7 +143,7 @@ export class ClientService implements IClientService {
         redirectUrl:"invoices/payments",
         entity:{
           type:"client",
-          id:invoice.client.clientId
+          id:owner._id.toString()
         }
       }
       await this._activityRepository.createActivity(orgId,activity)

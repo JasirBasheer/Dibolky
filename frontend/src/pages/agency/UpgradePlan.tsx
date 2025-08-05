@@ -29,7 +29,7 @@ const UpgradePlan = () => {
 
 
   const upgradePlan = async(plan) =>{
-
+    console.log(plan)
           const response = await axios.post('/api/payment/razorpay', {
             amount: plan?.price || 0,
             currency: "USD",

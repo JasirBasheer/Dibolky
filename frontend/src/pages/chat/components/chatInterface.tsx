@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import axios from "@/utils/axios";
-import { formatDateTime } from "@/utils/utils";
+import { formatDateTime, stringToIntegerHash } from "@/utils/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IMessage, IParticipant, RootState } from "@/types/common";
 import { EmojiClickData, IChat } from "@/types/chat.types";
+import AgoraRTC from "agora-rtc-sdk-ng";
+import AgoraRTM from "agora-rtm-sdk";
 import {
   ChevronLeft,
   LucideCheckCheck,
@@ -12,10 +14,17 @@ import {
   Smile,
   Trash,
   Users,
+  Video,
   X,
+  Phone,
+  PhoneOff,
+  Mic,
+  MicOff,
+  VideoOff,
+  VideoIcon,
 } from "lucide-react";
 import { message } from "antd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   fetchChatsApi,
   getSignedUrlApi,
@@ -27,6 +36,8 @@ import Picker from "@emoji-mart/react";
 import { Socket } from "socket.io-client";
 import { SOCKET_EVENTS } from "@/constants";
 import { ChatDetails } from "./chatDetails";
+import { setInCall, setOutgoingCall } from "@/redux/slices/ui.slice";
+import { getRtmClient, isRtmLoggedIn } from "@/utils/rtmSingleton";
 
 const ChatInterface = ({
   userId,
@@ -44,6 +55,7 @@ const ChatInterface = ({
   onChatClose: () => void;
 }) => {
   const user = useSelector((state: RootState) => state.user);
+  // State declarations
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [newMessage, setNewMessage] = useState<{
     text: string;
@@ -61,27 +73,13 @@ const ChatInterface = ({
   const [isMessageSending, setIsMessageSending] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const rtmClient = useSelector((state: RootState) => state.ui.rtmClient);
+  const dispatch = useDispatch();
 
+  // Media upload handlers (no change)
   const handleMediaClick = () => {
     fileInputRef.current?.click();
   };
-
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      const payload = JSON.stringify({ userId, orgId });
-
-      navigator.sendBeacon(
-        `${import.meta.env.VITE_BACKEND}/api/socket/set-offline`,
-        new Blob([payload], { type: "application/json" })
-      );
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [userId, orgId]);
 
   const handleFileUploadClick = async (files: File[]) => {
     const file = files[0];
@@ -393,14 +391,22 @@ const ChatInterface = ({
     setShowEmojiPicker(false);
   };
 
+
+
+  async function startCall({callType, recipientId }) {
+    console.log('called ')
+  dispatch(setOutgoingCall({ recipientId, callType }));
+  }
+
+
   return (
-    <div className="flex flex-col h-[40rem] w-full">
+    <div className="flex flex-col h-[40rem] w-full relative">
       <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
         <div className="flex items-center gap-3">
           <ChevronLeft onClick={onChatClose} className="cursor-pointer" />
           {chatDetails.participants && chatDetails?.participants?.length < 3 ? (
             <Avatar
-              className="w-10 h-10 rounded-full overflow-hidden flex items-center bg-slate-500   justify-center"
+              className="w-10 h-10 rounded-full overflow-hidden flex items-center bg-slate-500 justify-center"
               onClick={() => setShowChatDetails(true)}
             >
               <AvatarImage
@@ -431,7 +437,7 @@ const ChatInterface = ({
               />
             </div>
           )}
-          <div>
+          <div className="flex-1">
             <h2 className="font-medium text-slate-800">
               {chatDetails.name ||
                 chatDetails.participants?.find(
@@ -439,12 +445,49 @@ const ChatInterface = ({
                 )?.name ||
                 "Unknown"}
             </h2>
-
             <p className="text-sm text-slate-500"></p>
           </div>
+          
+<button
+  onClick={ () => {
+    const recipient = participantsWithProfiles.find((p) => p.userId !== userId);
+    if (recipient) {
+       startCall({
+        callType: "video",
+        recipientId: recipient.userId,
+      });
+    } else {
+      message.error("No recipient found for the call");
+    }
+  }}
+  className="p-2 hover:bg-gray-100 rounded-full"
+  title="Start video call"
+>
+  <VideoIcon size={20} className="text-slate-600" />
+</button>
+
+<button
+  onClick={() => {
+    const recipient = participantsWithProfiles.find((p) => p.userId !== userId);
+    if (recipient) {
+       startCall({
+        callType: "audio",
+        recipientId: recipient.userId,
+      });
+    } else {
+      message.error("No recipient found for the call");
+    }
+  }}
+  className="p-2 hover:bg-gray-100 rounded-full"
+  title="Start audio call"
+>
+  <Phone size={20} className="text-slate-600" />
+</button>
+
         </div>
       </div>
 
+      {/* Messages Container */}
       <div ref={messageContainerRef} className="flex-1 overflow-y-auto">
         {messages.map((msg: IMessage, index: React.Key | null | undefined) => {
           const seenMembers =
@@ -480,7 +523,7 @@ const ChatInterface = ({
               className="flex items-start max-w-full bg-[#c3bdbd1c] px-7"
               onClick={() => setShowDeleteMessage("")}
             >
-              <Avatar className="w-10 h-10 rounded-md overflow-hidden flex items-center bg-slate-500 mt-4  justify-center">
+              <Avatar className="w-10 h-10 rounded-md overflow-hidden flex items-center bg-slate-500 mt-4 justify-center">
                 <AvatarImage
                   src={
                     participantsWithProfiles?.find(
@@ -585,7 +628,7 @@ const ChatInterface = ({
               key={index}
               className="flex items-start max-w-full bg-[#ffffffe0] px-7 py-2"
             >
-              <Avatar className="w-10 h-10 rounded-md overflow-hidden flex items-center bg-slate-500 mt-4  justify-center">
+              <Avatar className="w-10 h-10 rounded-md overflow-hidden flex items-center bg-slate-500 mt-4 justify-center">
                 <AvatarImage
                   src={
                     participantsWithProfiles?.find(
@@ -632,6 +675,8 @@ const ChatInterface = ({
           );
         })}
       </div>
+
+      {/* Chat Details Modal */}
       {showChatDetails && (
         <ChatDetails
           setShowChatDetails={setShowChatDetails}
@@ -643,11 +688,14 @@ const ChatInterface = ({
         />
       )}
 
+      {/* Emoji Picker */}
       {showEmojiPicker && (
         <div className="absolute z-10 bottom-56">
           <Picker data={data} onEmojiSelect={handleEmojiSelect} />
         </div>
       )}
+
+      {/* Message Input */}
       <div className="p-4 border-t border-slate-200">
         {newMessage.file && (
           <div className="flex items-center mb-2 bg-slate-100 rounded-lg px-3 py-1 text-sm text-slate-700">

@@ -48,7 +48,7 @@ import { IInvoiceType } from "@/types/invoice";
 import { IPlan } from "@/models/Interface/plan";
 import { addMonthsToDate } from "@/utils/date-utils";
 import { FilterType } from "@/utils";
-import { sendGoogleMail } from "@/providers/google/mail";
+import { sendGMail } from "@/providers/google";
 
 @injectable()
 export class AgencyService implements IAgencyService {
@@ -253,6 +253,25 @@ export class AgencyService implements IAgencyService {
 
       await this._invoiceRepository.createInvoice(orgId, invoice);
     }
+
+
+    const activity = {
+      user: {
+        userId: createdClient._id.toString(),
+        username: createdClient.name,
+        email: createdClient.email,
+      },
+      activityType: "account_created",
+      activity: `new client ${clientDetails.name} has been created with ${menu.length} services`,
+      entity: {
+        type: "agency",
+        id: Agency._id.toString()
+      },
+      redirectUrl: "clients",
+    };
+
+    await this._activityRepository.createActivity(orgId, activity);
+
 
     const data = createClientMailData(
       email,
@@ -482,6 +501,7 @@ export class AgencyService implements IAgencyService {
     if (!currentPlan || currentPlan.price === 0) return [];
 
     const allPlans = await this._planRepository.getPlans();
+    console.log(agency)
 
     const upgradablePlans = allPlans
       .filter(
@@ -498,6 +518,7 @@ export class AgencyService implements IAgencyService {
         );
         return { ...plan.toObject(), proratedPrice };
       });
+    console.log(upgradablePlans)
 
     return upgradablePlans;
   }
@@ -529,6 +550,7 @@ export class AgencyService implements IAgencyService {
     }
 
     const agency = await this._agencyTenantRepository.getOwnerWithOrgId(orgId);
+    console.log(agency,'agency')
     if (!agency) {
       throw new CustomError("Agency not found", 404);
     }
@@ -578,6 +600,7 @@ export class AgencyService implements IAgencyService {
       activity: `Agency upgraded to ${plan.name} plan`,
       entity: {
         type: "agency",
+        id: agency._id.toString()
       },
       redirectUrl: "settings",
     };
@@ -592,8 +615,8 @@ export class AgencyService implements IAgencyService {
     message: string
   ): Promise<void> {
     const agency = await this._agencyTenantRepository.getOwnerWithOrgId(orgId);
-    const { accessToken, refreshToken } = agency?.social_credentials?.google;
-    await sendGoogleMail(
+    const { accessToken, refreshToken } = agency?.social_credentials?.gmail;
+    await sendGMail(
       accessToken,
       refreshToken,
       agency.email,

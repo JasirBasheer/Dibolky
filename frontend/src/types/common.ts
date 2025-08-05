@@ -42,6 +42,7 @@ export interface IMetadata {
 }
 
 export interface IPlatforms {
+  _id?:string;
   platform: string;
   scheduledDate?: string | Date;
   status?: string

@@ -5,7 +5,6 @@ import { IAdminService } from '../../services/Interface/IAdminService';
 import { IAgencyService } from '../../services/Interface/IAgencyService';
 import { IAuthenticationService } from '../../services/Interface/IAuthenticationService';
 import { IClientService } from '../../services/Interface/IClientService';
-import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from '../../config/env';
 import { blacklistToken } from '../../config/redis.config';
 import {
     createTokens,
@@ -15,6 +14,7 @@ import {
     SendResponse
 } from 'mern.common';
 import { ROLES } from '../../utils/constants';
+import { env } from '@/config';
 
 @injectable()
 /** Implementation of Authentication Controller */
@@ -74,8 +74,8 @@ export class AuthenticationController implements IAuthenticationController {
                     throw new Error('Invalid role specified');
             }
 
-            let accessTokenSecret = JWT_ACCESS_SECRET || 'defaultAccessSecret';
-            let refreshTokenSecret = JWT_REFRESH_SECRET || 'defaultRefreshSecret';
+            let accessTokenSecret = env.JWT.ACCESS_SECRET || 'defaultAccessSecret';
+            let refreshTokenSecret = env.JWT.REFRESH_SECRET || 'defaultRefreshSecret';
 
             let tokens = await createTokens(accessTokenSecret, refreshTokenSecret, { id, role })
             res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true, secure: false, maxAge: 7 * 24 * 60 * 60 * 1000 })

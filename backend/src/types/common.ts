@@ -46,6 +46,7 @@ export interface IBucket extends Document {
     tags: string[];
     isPublished?: boolean;
     reason?:INote | null;
+    createdAt?: string;
     changePlatformPublishStatus(platform: string, value: boolean): Promise<void>;
 }
 
@@ -68,7 +69,7 @@ export interface SocialMediaPage {
 }
 
 export interface SocialMediaResponse {
-    data: SocialMediaPage[];
+    data: SocialMediaPage[] 
     
 }
 
@@ -145,17 +146,3 @@ export interface IIntegratePaymentType {
 
 
 
-  // socail integrations
-
- export interface credentials {
-    facebook: platform;
-    instagram: platform;
-    linkedin: platform;
-    x: platform;
-}
-
-
-export interface platform {
-    accessToken: string;
-    connectedAt: string;
-}

@@ -16,6 +16,10 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/c
 import { authLogoutApi } from "@/services/auth/post.services"
 import { useNavigate } from "react-router-dom"
 import { message } from 'antd';
+import socket from "@/sockets";
+import { SOCKET_EVENTS } from "@/constants"
+import { useSelector } from "react-redux"
+import { RootState } from "@/types"
 
 
 export function NavUser({
@@ -30,10 +34,13 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   const navigate = useNavigate()
+  const userData = useSelector((state:RootState)=> state.user)
+  const agency = useSelector((state:RootState)=> state.agency)
 
   const handleLogout = async () => {
       try {
         const response = await authLogoutApi()
+        socket.emit(SOCKET_EVENTS.USER.SET_OFFLINE,{ orgId: userData.orgId, userId: userData.role == "client" ? userData.user_id: agency.user_id})
         if (response) navigate('/login')
       } catch (error: unknown) {
         if (error instanceof Error) {
@@ -53,8 +60,8 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.profile || "/placeholder.svg"} alt={user.name} />
+              <Avatar className="h-8 w-8 rounded-lg overflow-hidden">
+                <AvatarImage src={user.profile || "/placeholder.svg"} alt={user.name}  className="object-cover"/>
                 <AvatarFallback className="rounded-lg">
                   {user.name
                     .split(" ")
@@ -77,8 +84,10 @@ export function NavUser({
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.profile || "/placeholder.svg"} alt={user.name} />
+                <Avatar className="h-8 w-8 rounded-lg overflow-hidden">
+                  <AvatarImage src={user.profile || "/placeholder.svg"} alt={user.name}
+                  className="object-cover"
+                  />
                   <AvatarFallback className="rounded-lg">
                     {user.name
                       .split(" ")
@@ -95,7 +104,7 @@ export function NavUser({
             <DropdownMenuSeparator />
           {user.role == "agency" && 
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={()=> navigate('/agency/billing/upgrade')}>
                 <Sparkles />
                 Upgrade to Pro
               </DropdownMenuItem>
@@ -103,12 +112,12 @@ export function NavUser({
           }
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={()=> navigate('/agency/settings')}> 
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
               {user.role == "agency" && 
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={()=> navigate('/agency/billing/history')}>
                 <CreditCard />
                 Billing
               </DropdownMenuItem>
@@ -119,7 +128,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={()=> handleLogout}>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               Log out
             </DropdownMenuItem>

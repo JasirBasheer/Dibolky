@@ -1,11 +1,11 @@
 import { ServerOptions } from 'socket.io';
-import { FRONTEND_BASE_URL } from './env';
+import { env } from './env';
 
 export const config = {
   socketOptions: {
     cors: {
       origin: "*",
-      // origin: [FRONTEND_BASE_URL],
+      // origin: [env.BASE_URLS.FRONTEND],
       methods: ['GET', 'POST'],
       credentials: true,
     },

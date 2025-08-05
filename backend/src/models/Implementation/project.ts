@@ -12,7 +12,7 @@ export interface IProject extends Document {
 
 export const projectSchema: Schema<IProject> = new mongoose.Schema({
     client: {
-        type: [Schema.Types.Mixed],
+        type: Schema.Types.Mixed,
         required: true
     },
     service_name: {

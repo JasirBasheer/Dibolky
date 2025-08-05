@@ -3,7 +3,6 @@ import { inject, injectable } from "tsyringe";
 import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepository";
 import { IAdminRepository } from "../../repositories/Interface/IAdminRepository";
 import { CustomError, generateToken, hashPassword, NotFoundError, sendMail, verifyToken } from "mern.common";
-import { JWT_RESET_PASSWORD_SECRET } from "../../config/env";
 import { IAdminType } from "../../types/admin";
 import { IAgencyType } from "../../types/agency";
 import { createForgotPasswordData } from "../../utils/mail.datas";
@@ -11,6 +10,7 @@ import { ROLES } from "../../utils/constants";
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { UserMapper } from "@/mappers/shared/shared-mapper";
 import { IClientType } from "@/types/client";
+import { env } from "@/config";
 
 @injectable()
 export class AuthenticationService implements IAuthenticationService {
@@ -48,8 +48,8 @@ export class AuthenticationService implements IAuthenticationService {
                 throw new NotFoundError("Role not found please try again, later..")
         }
 
-        if(!JWT_RESET_PASSWORD_SECRET)throw new NotFoundError("Jwt reset password key is not found")
-        let jwtSecret = JWT_RESET_PASSWORD_SECRET 
+        if(!env.JWT.RESET_PASSWORD_SECRET)throw new NotFoundError("Jwt reset password key is not found")
+        let jwtSecret = env.JWT.RESET_PASSWORD_SECRET 
         if (!details) throw new NotFoundError('Account not found');
         let resetToken = await generateToken(jwtSecret,{id:details._id?.toString() || '', role:role})
         let data = createForgotPasswordData(details.name, email, `http://localhost:5173/${role.toLowerCase()}/reset-password/${resetToken}`)
@@ -70,8 +70,8 @@ export class AuthenticationService implements IAuthenticationService {
         token: string, 
         password: string
     ): Promise<IAgencyType | IAdminType | IClientType> {
-        if(!JWT_RESET_PASSWORD_SECRET)throw new NotFoundError("Jwt reset password key is not found")
-        let jwtSecret = JWT_RESET_PASSWORD_SECRET 
+        if(!env.JWT.RESET_PASSWORD_SECRET)throw new NotFoundError("Jwt reset password key is not found")
+        let jwtSecret = env.JWT.RESET_PASSWORD_SECRET 
         let changedPassword;
         const isValid = await verifyToken(jwtSecret,token)
         let hashedPassword = await hashPassword(password) || 'password'

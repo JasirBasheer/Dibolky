@@ -2,9 +2,9 @@ import {
   UnauthorizedError,
   verifyToken,
 } from "mern.common";
-import { JWT_ACCESS_SECRET } from "../config/env";
 import { ExtendedError, Socket } from "socket.io";
 import cookie from "cookie";
+import { env } from "@/config";
 
 export const socketAuthMiddleware = async (
   socket: Socket,
@@ -14,7 +14,7 @@ export const socketAuthMiddleware = async (
     const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
     const token = cookies.accessToken;
 
-    let accessTokenSecret = JWT_ACCESS_SECRET || "defaultAccessSecret";
+    let accessTokenSecret = env.JWT.ACCESS_SECRET || "defaultAccessSecret";
     if (!token) throw new UnauthorizedError("Access Denied");
 
     const { id, role } = await verifyToken(accessTokenSecret, token ?? "");

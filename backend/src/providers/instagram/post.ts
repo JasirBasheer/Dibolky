@@ -1,7 +1,7 @@
 import { IBucket } from "@/types";
 import { getS3PublicUrl } from "../../utils/aws.utils";
 import { VIDEO_EXTENSIONS } from "../../utils/video-dimensions.utils";
-import { META_API_VERSION } from "@/config";
+import { env } from "@/config";
 
 
 
@@ -12,7 +12,7 @@ export async function createInstaPostContainer(
     isVideo: boolean
 ): Promise<string> {
     try {
-        const url = `https://graph.facebook.com/${META_API_VERSION}/${accountId}/media`;
+        const url = `https://graph.facebook.com/${env.META.API_VERSION}/${accountId}/media`;
         
         const params = new URLSearchParams({
             access_token,
@@ -56,7 +56,7 @@ export async function createInstaCarousel(
 ): Promise<string> {
     try { 
         const containerIdsString = containerIds.join(',')
-        const url = `https://graph.facebook.com/${META_API_VERSION}/${businessId}/media`
+        const url = `https://graph.facebook.com/${env.META.API_VERSION}/${businessId}/media`
         const params = new URLSearchParams({
             media_type:'CAROUSEL',
             children:containerIdsString,
@@ -82,7 +82,7 @@ export async function uploadSinglePost(
     content:IBucket
 ): Promise<string> {
     try { 
-        const url = `https://graph.facebook.com/${META_API_VERSION}/${businessId}/media`;
+        const url = `https://graph.facebook.com/${env.META.API_VERSION}/${businessId}/media`;
         let params;
         const contentUrl = await getS3PublicUrl(content.files[0].key)
         const contentExtension = content.files[0].fileName.split('.').pop()

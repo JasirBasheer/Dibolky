@@ -1,5 +1,5 @@
 import axios from "axios";
-import { META_API_VERSION } from "@/config";
+import { env } from "@/config";
 
 export async function sendFBMessage(
   conversation_id: string,
@@ -8,7 +8,7 @@ export async function sendFBMessage(
   type: "text" | "image" | "video" = "text",
   media_url?: string
 ): Promise<any> {
-  const url = `https://graph.facebook.com/${META_API_VERSION}/${conversation_id}/messages`;
+  const url = `https://graph.facebook.com/${env.META.API_VERSION}/${conversation_id}/messages`;
   try {
     const payload: any = {
       recipient: { id: conversation_id },

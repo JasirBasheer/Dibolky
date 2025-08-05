@@ -71,7 +71,7 @@ export interface IAgencyTenant extends Document {
             refreshToken?: string
             connectedAt?: string;
         };
-        google?: {
+        gmail?: {
             accessToken?: string;
             refreshToken?: string;
             connectedAt?: string;
@@ -82,6 +82,7 @@ export interface IAgencyTenant extends Document {
             connectedAt?: string;
         };
     };
+    permissions:string[];
     createdAt?: Date;
     updatedAt?: Date;
     isSocialMediaInitialized?:boolean;

@@ -1,32 +1,62 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Check, ChevronLeft, ChevronRight, Clock, Hash, X, XCircle } from "lucide-react"
+import { useState } from "react";
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Hash,
+  X,
+  XCircle,
+} from "lucide-react";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Separator } from "@radix-ui/react-select" 
-import type { IPlatforms, IReviewBucket } from "@/types/common"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Separator } from "@radix-ui/react-select";
+import type { IPlatforms, IReviewBucket } from "@/types/common";
+import RescheduleContent from "./reschedule-modal";
 
 interface ContentDetailModalProps {
-  content: IReviewBucket
-  contentUrls: Record<string, string>
-  onClose: () => void
-  onApprove: (id: string) => void
-  onReject: (id: string) => void
+  content: IReviewBucket;
+  contentUrls: Record<string, string>;
+  onClose: () => void;
+  onApprove: (id: string) => void;
+  onReject: (id: string) => void;
+  onReschedule: (contentId: string,platformId:string,date:string) => void;
+  onPlatformDelete: (contentId: string,platformId:string) => void;
 }
 
-export function ContentDetailModal({ content, contentUrls, onClose, onApprove, onReject }: ContentDetailModalProps) {
-  const [currentFileIndex, setCurrentFileIndex] = useState(0)
+export function ContentDetailModal({
+  content,
+  contentUrls,
+  onClose,
+  onApprove,
+  onReject,
+  onReschedule,
+  onPlatformDelete
+}: ContentDetailModalProps) {
+  const [currentFileIndex, setCurrentFileIndex] = useState(0);
+  const [isRescheduleModalOpen, setIsRescheduleModalOpen] = useState(false);
+  const [selectedPlatform, setSelectedPlatform] = useState(null);
 
   const handlePrevious = () => {
-    setCurrentFileIndex((prev) => (prev === 0 ? content.files.length - 1 : prev - 1))
-  }
+    setCurrentFileIndex((prev) =>
+      prev === 0 ? content.files.length - 1 : prev - 1
+    );
+  };
 
   const handleNext = () => {
-    setCurrentFileIndex((prev) => (prev === content.files.length - 1 ? 0 : prev + 1))
-  }
+    setCurrentFileIndex((prev) =>
+      prev === content.files.length - 1 ? 0 : prev + 1
+    );
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -34,51 +64,67 @@ export function ContentDetailModal({ content, contentUrls, onClose, onApprove, o
       month: "long",
       day: "numeric",
       year: "numeric",
-    })
-  }
+    });
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Approved":
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Approved</Badge>
+        return (
+          <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
+            Approved
+          </Badge>
+        );
       case "Rejected":
-        return <Badge className="bg-red-100 text-red-800 hover:bg-red-200">Rejected</Badge>
+        return (
+          <Badge className="bg-red-100 text-red-800 hover:bg-red-200">
+            Rejected
+          </Badge>
+        );
       default:
-        return <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-200">Pending</Badge>
+        return (
+          <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-200">
+            Pending
+          </Badge>
+        );
     }
-  }
+  };
 
-  const currentFile = content.files[currentFileIndex]
-  const isVideo = currentFile?.contentType.startsWith("video")
+  const currentFile = content.files[currentFileIndex];
+  const isVideo = currentFile?.contentType.startsWith("video");
 
   const renderReason = () => {
-    if (!content.reason) return null
+    if (!content.reason) return null;
 
-    const reasonText = content.reason?.note?.toString() ?? ""
+    const reasonText = content.reason?.note?.toString() ?? "";
 
-    const bulletPoints: string[] = []
-    const lines = reasonText.split("\n")
+    const bulletPoints: string[] = [];
+    const lines = reasonText.split("\n");
 
-    let additionalNotes = ""
+    let additionalNotes = "";
 
-    let inBulletPoints = false
+    let inBulletPoints = false;
 
     for (const line of lines) {
-      const trimmedLine = line.trim()
+      const trimmedLine = line.trim();
 
       if (trimmedLine.startsWith("Rejection reasons:")) {
-        inBulletPoints = true
-        continue
+        inBulletPoints = true;
+        continue;
       }
 
       if (inBulletPoints && trimmedLine.startsWith("•")) {
-        bulletPoints.push(trimmedLine.substring(1).trim())
+        bulletPoints.push(trimmedLine.substring(1).trim());
       } else if (trimmedLine === "") {
         if (bulletPoints.length > 0) {
-          inBulletPoints = false
+          inBulletPoints = false;
         }
-      } else if (!inBulletPoints && trimmedLine !== "" && !trimmedLine.startsWith("Rejection reasons:")) {
-        additionalNotes += (additionalNotes ? " " : "") + trimmedLine
+      } else if (
+        !inBulletPoints &&
+        trimmedLine !== "" &&
+        !trimmedLine.startsWith("Rejection reasons:")
+      ) {
+        additionalNotes += (additionalNotes ? " " : "") + trimmedLine;
       }
     }
 
@@ -102,19 +148,24 @@ export function ContentDetailModal({ content, contentUrls, onClose, onApprove, o
 
         {additionalNotes && (
           <div className="mt-3 pt-3 border-t border-gray-200">
-            <p className="text-sm font-medium text-gray-700 mb-1">Additional Notes:</p>
+            <p className="text-sm font-medium text-gray-700 mb-1">
+              Additional Notes:
+            </p>
             <p className="text-sm text-gray-600">{additionalNotes}</p>
           </div>
         )}
       </div>
-    )
-  }
+    );
+  };
 
   return (
+   <>
     <Dialog open={!!content} onOpenChange={() => onClose()}>
       <DialogContent className="sm:max-w-3xl p-0 overflow-hidden">
         <DialogHeader className="p-6 pb-0">
-          <DialogTitle className="text-xl font-semibold text-gray-800">Content Details</DialogTitle>
+          <DialogTitle className="text-xl font-semibold text-gray-800">
+            Content Details
+          </DialogTitle>
         </DialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
@@ -161,7 +212,11 @@ export function ContentDetailModal({ content, contentUrls, onClose, onApprove, o
                       {content.files.map((_, index) => (
                         <button
                           key={index}
-                          className={`w-2 h-2 rounded-full ${index === currentFileIndex ? "bg-white" : "bg-white/50"}`}
+                          className={`w-2 h-2 rounded-full ${
+                            index === currentFileIndex
+                              ? "bg-white"
+                              : "bg-white/50"
+                          }`}
                           onClick={() => setCurrentFileIndex(index)}
                         />
                       ))}
@@ -184,7 +239,9 @@ export function ContentDetailModal({ content, contentUrls, onClose, onApprove, o
             </div>
 
             <h3 className="text-lg font-medium text-gray-800 mb-2">Caption</h3>
-            <p className="text-gray-600 mb-4">{content.caption || "No caption provided"}</p>
+            <p className="text-gray-600 mb-4">
+              {content.caption || "No caption provided"}
+            </p>
 
             {content.tags && content.tags.length > 0 && (
               <>
@@ -201,21 +258,63 @@ export function ContentDetailModal({ content, contentUrls, onClose, onApprove, o
             )}
 
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-sm font-medium text-gray-700">Platform:</span>
+              <span className="text-sm font-medium text-gray-700">
+                Platform:
+              </span>
 
               {content.platforms.map((item: IPlatforms, index: number) => {
                 return (
                   <Badge key={index} variant="outline" className="capitalize">
                     {item.platform || "Unknown"}
                   </Badge>
-                )
+                );
               })}
             </div>
 
             <div className="flex items-center gap-2 mb-4">
+              <span className="text-sm font-medium text-gray-700">
+                is Scheduled:
+              </span>
+              {content.platforms.find((p) => p.scheduledDate != "") ? (
+                <Badge variant="default">Scheduled</Badge>
+              ) : (
+                <Badge variant="outline">Not Scheduled</Badge>
+              )}
+            </div>
+            {content.platforms.some((p) => p.scheduledDate) && (
+              <div className="space-y-2 mt-2">
+                <div className="flex items-center gap-2 text-sm text-gray-700">
+                  <Clock className="h-4 w-4 text-gray-600" />
+                  <span className="font-medium">Scheduled Timings</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+                  {content.platforms
+                    .filter((p) => p.scheduledDate)
+                    .map((p) => (
+                      <div
+                        key={p.platform}
+                        className="flex items-center gap-2 bg-gray-100 p-2 rounded-md"
+                      >
+                        <p onClick={()=> {
+                          setIsRescheduleModalOpen(true)
+                          setSelectedPlatform(p._id)
+                          }}> edit</p>
+                        <Badge>{p.platform}</Badge>
+                        <Badge variant="outline">
+                          {formatDate(p.scheduledDate.toString())}
+                        </Badge>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center gap-2 mb-4">
               <span className="text-sm font-medium text-gray-700">Files:</span>
               <span className="text-sm text-gray-600">
-                {content.files.length} {content.files.length === 1 ? "file" : "files"}
+                {content.files.length}{" "}
+                {content.files.length === 1 ? "file" : "files"}
               </span>
             </div>
 
@@ -229,8 +328,8 @@ export function ContentDetailModal({ content, contentUrls, onClose, onApprove, o
                   variant="outline"
                   className="flex-1 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
                   onClick={() => {
-                    onReject(content._id)
-                    onClose()
+                    onReject(content._id);
+                    onClose();
                   }}
                 >
                   <X className="h-4 w-4 mr-2" />
@@ -239,8 +338,8 @@ export function ContentDetailModal({ content, contentUrls, onClose, onApprove, o
                 <Button
                   className="flex-1 bg-green-600 hover:bg-green-700"
                   onClick={() => {
-                    onApprove(content._id)
-                    onClose()
+                    onApprove(content._id);
+                    onClose();
                   }}
                 >
                   <Check className="h-4 w-4 mr-2" />
@@ -252,6 +351,21 @@ export function ContentDetailModal({ content, contentUrls, onClose, onApprove, o
         </div>
       </DialogContent>
     </Dialog>
-  )
+    {isRescheduleModalOpen && 
+    <RescheduleContent 
+    platform={content.platforms.find((p)=> p._id == selectedPlatform)}
+    onSave={onReschedule}
+    />
+    }
+    </>
+  );
 }
-
+// interface ContentDetailModalProps {
+//   content: IReviewBucket;
+//   contentUrls: Record<string, string>;
+//   onClose: () => void;
+//   onApprove: (id: string) => void;
+//   onReject: (id: string) => void;
+//   onReschedule: (contentId: string,platformId:string,date:string) => void;
+//   onPlatformDelete: (contentId: string,platformId:string) => void;
+// }

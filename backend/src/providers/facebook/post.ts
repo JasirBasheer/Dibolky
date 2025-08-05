@@ -1,4 +1,4 @@
-import { META_API_VERSION } from "@/config";
+import { env } from "@/config";
 import axios from "axios";
 
 export async function uploadImageToFacebook(
@@ -7,7 +7,7 @@ export async function uploadImageToFacebook(
     imageUrl: string,
 ): Promise<string> {
     try {
-        const uploadUrl = `https://graph.facebook.com/${META_API_VERSION}/${pageId}/photos`;
+        const uploadUrl = `https://graph.facebook.com/${env.META.API_VERSION}/${pageId}/photos`;
         const response = await axios.post(uploadUrl,{
             url:imageUrl,
             published:false,
@@ -34,7 +34,7 @@ export async function createCarouselPost(
     caption?: string
 ): Promise<string> {
     try {
-        const postUrl = `https://graph.facebook.com/${META_API_VERSION}/${pageId}/feed`;
+        const postUrl = `https://graph.facebook.com/${env.META.API_VERSION}/${pageId}/feed`;
 
         const attachedMedia = mediaIds.map(id => ({ media_fbid: id }));
         const payload: { message?: string; attached_media: Array<{ media_fbid: string }>; access_token: string } = {

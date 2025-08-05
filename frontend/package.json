@@ -37,11 +37,13 @@
     "@tanstack/react-query-devtools": "^5.66.5",
     "@types/js-cookie": "^3.0.6",
     "@zegocloud/zego-uikit-prebuilt": "^2.15.1",
+    "agora-react-uikit": "^1.2.0",
     "antd": "^5.23.0",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "crypto-js": "^4.2.0",
     "date-fns": "^3.6.0",
     "embla-carousel-autoplay": "^8.5.2",
     "embla-carousel-react": "^8.5.2",
@@ -70,8 +72,7 @@
     "spinners-react": "^1.0.10",
     "tailwind-merge": "^2.6.0",
     "tailwind-scrollbar-hide": "^2.0.0",
-    "tailwindcss-animate": "^1.0.7",
-    "zego-express-engine-webrtc": "^3.10.0"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

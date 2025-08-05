@@ -1,12 +1,8 @@
-import {
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  GOOGLE_REDIRECT_URI,
-} from "@/config";
+import { env } from "@/config";
 import base64url from "base64url";
 import { google } from "googleapis";
 
-export async function sendGoogleMail(
+export async function sendGMail(
   accessToken: string,
   refreshToken: string,
   from: string,
@@ -28,9 +24,9 @@ export async function sendGoogleMail(
 
   try {
     const oauth2Client = new google.auth.OAuth2(
-      GOOGLE_CLIENT_ID,
-      GOOGLE_CLIENT_SECRET,
-      GOOGLE_REDIRECT_URI
+      env.GOOGLE.MAIL.CLIENT_ID,
+      env.GOOGLE.MAIL.CLIENT_SECRET,
+      env.GOOGLE.MAIL.REDIRECT_URI
     );
 
     oauth2Client.setCredentials({

@@ -54,13 +54,11 @@ export default function PlanExpiredModal({
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
 
   const handleRenewCurrentPlan = () => {
-    // Handle renewal logic here
     console.log("Renewing current plan:", currentPlan.name)
     onClose()
   }
 
   const handleUpgradePlan = () => {
-    // Handle upgrade logic here
     console.log("Upgrading to plan:", selectedPlan)
     onClose()
   }

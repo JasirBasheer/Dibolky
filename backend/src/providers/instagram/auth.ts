@@ -1,11 +1,11 @@
-import { META_API_VERSION, META_CLIENTID, META_SECRETID } from "@/config";
+import { env } from "@/config";
 
 export async function createInstagramOAuthURL(
     redirectUri: string
 ): Promise<string> {
     const baseUrl = 'https://www.facebook.com/dialog/oauth';
     const params = new URLSearchParams({
-        client_id: META_CLIENTID,
+        client_id: env.META.CLIENT_ID,
         display: 'page',
         extras: JSON.stringify({ setup: { channel: 'IG_API_ONBOARDING' } }),
         redirect_uri: redirectUri,
@@ -24,11 +24,11 @@ export async function createInstagramOAuthURL(
 export async function exchangeForLongLivedToken(
     shortLivedToken: string
 ): Promise<string> {
-    const baseUrl = `https://graph.facebook.com/${META_API_VERSION}/oauth/access_token`
+    const baseUrl = `https://graph.facebook.com/${env.META.API_VERSION}/oauth/access_token`
     const params = new URLSearchParams({
         grant_type: 'fb_exchange_token',
-        client_id: META_CLIENTID,
-        client_secret: META_SECRETID,
+        client_id: env.META.CLIENT_ID,
+        client_secret: env.META.SECRET_ID,
         fb_exchange_token: shortLivedToken
     });
 
@@ -53,7 +53,7 @@ export async function fetchIGAccountId(
     pageId: string, 
     accessToken: string
 ): Promise<{isBusiness:boolean;id:string}> {
-    const url = `https://graph.facebook.com/${META_API_VERSION}/${pageId}?fields=instagram_business_account&access_token=${accessToken}`;
+    const url = `https://graph.facebook.com/${env.META.API_VERSION}/${pageId}?fields=instagram_business_account&access_token=${accessToken}`;
     try {
       const response = await fetch(url);
       const data = await response.json();

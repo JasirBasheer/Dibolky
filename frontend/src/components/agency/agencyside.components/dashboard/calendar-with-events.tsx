@@ -7,36 +7,37 @@ import { Card, CardContent } from "@/components/ui/card"
 
 const events = [
   {
+    _id:1,
     title: "Team Sync Meeting",
     from: "2025-06-12T09:00:00",
     to: "2025-06-12T10:00:00",
   },
   {
+    _id:2,
     title: "Design Review",
     from: "2025-06-12T11:30:00",
     to: "2025-06-12T12:30:00",
   },
   {
+    _id:3,
     title: "Client Presentation",
     from: "2025-06-12T14:00:00",
     to: "2025-06-12T15:00:00",
   },
     {
+    _id:4,
     title: "Client Presentation",
     from: "2025-06-12T14:00:00",
     to: "2025-06-12T15:00:00",
   },
    {
+    _id:5,
     title: "Client Presentation",
     from: "2025-06-12T14:00:00",
     to: "2025-06-12T15:00:00",
   },
    {
-    title: "Client Presentation",
-    from: "2025-06-12T14:00:00",
-    to: "2025-06-12T15:00:00",
-  },
-   {
+    _id:6,
     title: "Client Presentation",
     from: "2025-06-12T14:00:00",
     to: "2025-06-12T15:00:00",
@@ -71,7 +72,7 @@ export function CalendarWithEvents() {
               <div className="flex flex-col gap-2 h-[17rem] overflow-hidden  overflow-y-auto">
                 {events.map((event) => (
                   <div
-                    key={event.title}
+                    key={event._id}
                     className="bg-muted after:bg-primary/70 relative rounded-md p-2 pl-6 text-sm after:absolute after:inset-y-2 after:left-2 after:w-1 after:rounded-full"
                   >
                     <div className="font-medium">{event.title}</div>

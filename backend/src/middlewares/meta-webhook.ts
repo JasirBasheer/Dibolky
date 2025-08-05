@@ -1,4 +1,4 @@
-import { META_API_VERSION } from "@/config";
+import { env } from "@/config";
 import { Request, Response, NextFunction } from "express";
 import crypto from 'node:crypto'
 
@@ -13,7 +13,7 @@ console.log('meta signature 2')
 
   const [, hash] = signature.split("=");
   const expectedHash = crypto
-    .createHmac("sha1", META_API_VERSION)
+    .createHmac("sha1", env.META.API_VERSION)
     .update(JSON.stringify(req.body))
     .digest("hex");
 

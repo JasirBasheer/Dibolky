@@ -27,6 +27,6 @@ export interface FilterType{
     status?: string,
     sortBy?: string,
     sortOrder?: string,
-    overdues?:boolean | string,
+    overdues?:boolean,
     type?:string
 }

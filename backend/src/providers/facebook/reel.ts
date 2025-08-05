@@ -1,4 +1,4 @@
-import { META_API_VERSION } from "@/config";
+import { env } from "@/config";
 import { IReelUploadStatus } from "@/types";
 import { CustomError } from "mern.common";
 
@@ -9,7 +9,7 @@ export async function initializeReelUpload(
     pageAccessToken: string
 ): Promise<{video_id?:string;video_url:string;upload_url:string}> {
     try {
-        const inititUrl = `https://graph.facebook.com/${META_API_VERSION}/${pageId}/video_reels`;
+        const inititUrl = `https://graph.facebook.com/${env.META.API_VERSION}/${pageId}/video_reels`;
 
         const response = await fetch(inititUrl, {
             method: "POST",

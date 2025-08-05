@@ -8,8 +8,7 @@ import {
     ResponseMessage,
     SendResponse
 } from 'mern.common';
-import { PlanDetailsDTO } from '@/dto';
-import { IPlanType } from '@/types/admin';
+
 
 @injectable()
 /** Implementation of AdminController Controller */

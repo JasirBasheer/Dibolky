@@ -25,7 +25,7 @@ import {
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '../ui/command';
 import { Button } from '../ui/button';
 import { useTheme } from '@/provider/theme.provider';
-import CreateContent from '../common/create-content.modal';
+import CreateContent from '../../pages/contents/components/create-content.modal';
 import { openCreateContentModal } from '@/redux/slices/ui.slice';
 import PlanExpiredModal from '../common/plan-expired.modal';
 

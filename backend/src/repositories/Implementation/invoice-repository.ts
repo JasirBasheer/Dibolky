@@ -49,7 +49,7 @@ export class InoviceRepository
   async getAllInvoices(
   orgId: string,
   filter: Record<string, unknown> = {},
-  options?: { page?: number; limit?: number; sort?: any }
+  options?: { page?: number; limit?: number; sort?: Record<string, 1 | -1> }
 ): Promise<{ invoices: IInvoice[]; totalCount: number; totalPages: number }> {
   const model = await this.getModel(orgId);
   const { page, limit, sort } = options || {};

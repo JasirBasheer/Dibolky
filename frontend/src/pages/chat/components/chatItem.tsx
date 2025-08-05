@@ -6,12 +6,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import axios from 'axios';
 
 
-export const ChatItem: React.FC<ChatItemProps> = ({ name, active, onClick, isGroup = false, messages, userId, socket, chat_id, isMemberActive = false, activeMemberCount = 0, participants }) => {
+export const ChatItem: React.FC<ChatItemProps> = ({ name, active, onClick, messages, userId, socket, chat_id, isMemberActive = false, participants }) => {
   const [unreadMessageCount, setUnreadMessageCount] = useState<number>(0);
   const [profileUrl, setProfileUrl] = useState<string>("")
 
   useEffect(() => {
-    if (isGroup) return;
 
     const foundMember = participants?.find((item) => item.userId !== userId);
     if (!foundMember?.userId) return;
@@ -69,14 +68,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, active, onClick, isGro
       className={`flex items-center gap-3 p-3 cursor-pointer transition-colors ${active ? 'bg-slate-200' : 'hover:bg-slate-100'}`}
     >
       <div className="w-10 h-10 rounded-md bg-slate-700 flex items-center justify-center overflow-hidden">
-        {isGroup ? (
-          <div className="relative">
-            <Briefcase className="text-slate-400" size={20} />
-            {activeMemberCount > 0 && (
-              <div className="absolute -bottom-1 -right-1 z-50 w-4 h-4 flex items-center justify-center bg-green-600 border-2 text-white rounded-full"><p className='text-[0.6rem] font-extrabold'>{activeMemberCount}</p></div>
-            )}
-          </div>
-        ) : (
+  
           <div className="relative">
             <Avatar className="h-16 w-16 border-4 border-background">
               <AvatarImage src={String(profileUrl as string)}
@@ -89,7 +81,6 @@ export const ChatItem: React.FC<ChatItemProps> = ({ name, active, onClick, isGro
               <div className="absolute bottom-4 right-3 z-50 w-3 h-3 bg-green-600 border-2 border-white rounded-full"></div>
             )}
           </div>
-        )}
       </div>
 
       <div className="flex-1 min-w-0">

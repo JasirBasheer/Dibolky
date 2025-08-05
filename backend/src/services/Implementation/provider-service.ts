@@ -135,6 +135,8 @@ export class ProviderService implements IProviderService {
         refreshToken?:string
     ): Promise<void> {
 
+        console.log(platform,'plaaatfrom')
+        console.log(user_id,'user idddddddd')
         if (user_id) {
             let longLivingAccessToken:string = accessToken
             console.log(accessToken,refreshToken,'toke1 and token2')
@@ -159,12 +161,16 @@ export class ProviderService implements IProviderService {
     }
 
     
-    async reScheduleContent(
-        orgId:string,
-        content_id:string,
-        date:string
+    async rescheduleContent(
+        orgId: string, contentId: string,platformId:string, date: string
     ):Promise<void>{
-        await this._contentRepository.reScheduleContent(orgId,content_id,date)
+        await this._contentRepository.rescheduleContent(orgId,contentId,platformId,date)
+    }
+
+    async deleteScheduledContent(
+        orgId: string, contentId: string,platformId:string
+    ):Promise<void>{
+        await this._contentRepository.deleteScheduledContent(orgId,contentId,platformId)
     }
 
     async rejectContent(

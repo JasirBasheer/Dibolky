@@ -15,6 +15,7 @@
   "devDependencies": {
     "@types/aws-sdk": "^0.0.42",
     "@types/cookie": "^0.6.0",
+    "@types/crypto-js": "^4.2.2",
     "@types/jest": "^29.5.14",
     "@types/multer": "^1.4.12",
     "@types/node": "^22.10.10",
@@ -42,6 +43,7 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/morgan": "^1.9.9",
     "@types/nodemailer": "^6.4.17",
+    "agora-token": "^2.0.5",
     "axios": "^1.10.0",
     "base64url": "^3.0.1",
     "bcryptjs": "^3.0.2",
@@ -51,6 +53,7 @@
     "console-log-colors": "^0.5.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",

@@ -3,7 +3,7 @@ import { inject, injectable } from "tsyringe";
 import { HTTPStatusCodes, ResponseMessage, SendResponse } from "mern.common";
 import { IInboxWebHookController } from "@/controllers/Interface/IInboxWebHookController";
 import logger from "@/logger";
-import { getRedisClient, META_WEBHOOK_VERIFY_TOKEN } from "@/config";
+import { getRedisClient, env } from "@/config";
 
 @injectable()
 export class InboxWebhookController implements IInboxWebHookController {
@@ -17,7 +17,7 @@ export class InboxWebhookController implements IInboxWebHookController {
       "hub.verify_token": token,
       "hub.challenge": challenge,
     } = req.query;
-    if (mode === "subscribe" && token === META_WEBHOOK_VERIFY_TOKEN) {
+    if (mode === "subscribe" && token === env.META.WEBHOOK_VERIFY_TOKEN) {
       logger.info("Webhook verification successful", { challenge });
       res.status(200).send(challenge);
     } else {

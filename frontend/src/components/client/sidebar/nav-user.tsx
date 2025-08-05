@@ -16,6 +16,10 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/c
 import { authLogoutApi } from "@/services/auth/post.services"
 import { useNavigate } from "react-router-dom"
 import { message } from 'antd';
+import socket from "@/sockets"
+import { SOCKET_EVENTS } from "@/constants"
+import { useSelector } from "react-redux"
+import { RootState } from "@/types"
 
 
 export function NavUser({
@@ -30,10 +34,15 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   const navigate = useNavigate()
+  const userData = useSelector((state:RootState)=> state.user)
+  const agency = useSelector((state:RootState)=> state.agency)
 
+
+ 
   const handleLogout = async () => {
       try {
         const response = await authLogoutApi()
+        socket.emit(SOCKET_EVENTS.USER.SET_OFFLINE,{ orgId: userData.orgId, userId: userData.role == "client" ? userData.user_id: agency.user_id})
         if (response) navigate('/login')
       } catch (error: unknown) {
         if (error instanceof Error) {
@@ -119,7 +128,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={()=> handleLogout}>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               Log out
             </DropdownMenuItem>

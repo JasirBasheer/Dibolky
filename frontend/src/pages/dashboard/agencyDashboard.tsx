@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { fetchAllClientsApi, fetchInitialSetUpApi, fetchProjectsCountApi } from '@/services/agency/get.services'
 const InitialSetUp = React.lazy(() => import('@/components/common/initial-set-up'));
-import DashboardCard from '@/components/agency/agencyside.components/dashboard/dashBoardCard'; 
+import DashboardCard from '@/pages/dashboard/components/dashBoardCard'; 
 import Skeleton from 'react-loading-skeleton';
 import CustomBreadCrumbs from '@/components/ui/custom-breadcrumbs';
 import { Separator } from '@radix-ui/react-separator';
@@ -58,7 +58,7 @@ const Dashboard: React.FC = () => {
     });
 
       const { data: activities, isLoading: isActivitiesLoading } = useQuery({
-        queryKey: ["getAllActivites"],
+        queryKey: ["getAllActivites",user.role, user.user_id],
         queryFn: () => {
           return getActivitesApi(user.role, user.user_id);
         },
@@ -77,7 +77,6 @@ const Dashboard: React.FC = () => {
         enabled: !!user.user_id,
       });
 
-    console.log(transactions)
 
 
   useEffect(() => {
@@ -152,7 +151,7 @@ const quickActions = [
             <DashboardCard title="Total Projects" count={project?.count} lastWeekCount={project?.lastWeekCount} isLoading={isProjectsLoading}  />
             <DashboardCard title="Total Clients" count={clients?.count} lastWeekCount={clients?.lastWeekCount} isLoading={isClientsLoading} />
             <DashboardCard title="Total Invoices" count={invoices?.totalCount} lastWeekCount={invoices?.totalCount} isLoading={isInvoicesLoading} />
-            <DashboardCard title="Total Revenue" count={`$ ${transactions?.reduce((acc,item)=> acc+=item.amount,0)}`} lastWeekCount={clients?.lastWeekCount} isLoading={isClientsLoading} />
+            <DashboardCard title="Total Revenue" count={`$ ${transactions?.reduce((acc,item)=> acc+=item.amount,0) || 0}`} lastWeekCount={clients?.lastWeekCount} isLoading={isClientsLoading} />
           </div>
           <div className="w-full flex lg:justify-start justify-center mt-6">
             <div className="w-full h-[20rem]  border rounded-xl  bg-white p-5 shadow-sm  transition-all duration-300 mt">

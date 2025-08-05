@@ -1,4 +1,4 @@
-import { META_API_VERSION } from "@/config";
+import { env } from "@/config";
 import { IBucket } from "@/types";
 import axios from "axios";
 
@@ -9,7 +9,7 @@ export async function publishFaceBookVideo(
   content: IBucket
 ): Promise<{ name: string, status: string, id: string, error?: string, postId?: string }> {
   try {
-    const postUrl = `https://graph.facebook.com/${META_API_VERSION}/${pageId}/videos`;
+    const postUrl = `https://graph.facebook.com/${env.META.API_VERSION}/${pageId}/videos`;
 
     const { data: postData } = await axios.post(postUrl, {
       file_url: videoUrl,

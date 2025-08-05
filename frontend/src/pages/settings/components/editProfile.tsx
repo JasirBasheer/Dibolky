@@ -33,7 +33,7 @@ const ProfileContents = () => {
         name: user.name,
         email: user.email,
         bio: user?.bio || "bio",
-        profile: user.profile || "",
+        profile: user.profile ,
     })
 
 
@@ -46,29 +46,6 @@ const ProfileContents = () => {
             bio: user?.bio || '',
             profile: user.profile || '',
         });
-
-        const loadProfileImage = async () => {
-            try {
-                if (userData.profile && userData.profile !== "") {
-                    setIsProfileLoading(true)
-                    const signedUrlRes = await getSignedUrlApi(user.profile as string)
-
-                    if (signedUrlRes.data && signedUrlRes.data.signedUrl) {
-                        setUserData((prev) => ({
-                            ...prev,
-                            profile: signedUrlRes.data.signedUrl
-                        }));
-                        setIsProfileLoading(false)
-
-                    }
-                }
-            } catch (error) {
-                setIsProfileLoading(false)
-                console.error("Error loading profile image:", error);
-            }
-        };
-
-        loadProfileImage();
     }, [user]);
 
 
@@ -151,6 +128,19 @@ const ProfileContents = () => {
                     bio: updateResponse.data.details.bio,
                     profile: updateResponse.data.details.profile,
                 };
+
+                if (updatedUser.profile && updatedUser.profile !== ""  && !updatedUser.profile.startsWith("http")) {
+                    setIsProfileLoading(true)
+                    const signedUrlRes = await getSignedUrlApi(updateResponse.data.details.profile as string)
+                    if (signedUrlRes.data && signedUrlRes.data.signedUrl) {
+                    console.log(signedUrlRes.data.signedUrl)
+
+                        updatedUser.profile = signedUrlRes.data.signedUrl
+                        setIsProfileLoading(false)
+
+                    }
+                }
+
                 dispatch(setUser({ name: updatedUser.name, bio: updatedUser.bio, profile: updatedUser.profile }));
 
                 setIsEditing(false);
@@ -161,6 +151,7 @@ const ProfileContents = () => {
             toast.error("Failed to update profile.")
         } finally {
             setIsLoading(false);
+            setIsProfileLoading(false)
         }
     };
     return (

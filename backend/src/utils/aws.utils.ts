@@ -2,7 +2,7 @@ import s3Client from "../config/aws.config";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { AWS_S3_BUCKET_NAME } from "../config/env";
+import { env } from "@/config";
 
 
 export async function getS3ViewUrl(
@@ -31,7 +31,7 @@ export async function deleteS3Object(
 ): Promise<boolean> {
     try {
         const deleteParams = {
-            Bucket: AWS_S3_BUCKET_NAME,
+            Bucket: env.AWS.S3.BUCKET_NAME,
             Key: key,
         };
 

@@ -10,7 +10,7 @@ export const INSTAGRAM = 'instagram'
 export const FACEBOOK = 'facebook'
 export const X = 'x'
 export const LINKEDIN = 'linkedin'
-export const GOOGLE = 'google'
+export const GMAIL = 'gmail'
 
 
 export const CONTENT_TYPE = {
@@ -19,4 +19,12 @@ export const CONTENT_TYPE = {
     REEL: "reel",
     POST: "post",
     STORY: "story"
+}
+
+export const PLATFORMS = {
+    INSTAGRAM : 'instagram',
+    FACEBOOK : 'facebook',
+    X : 'x',
+    LINKEDIN : 'linkedin',
+    GMAIL : 'gmail'
 }

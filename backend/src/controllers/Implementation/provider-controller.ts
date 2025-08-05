@@ -6,11 +6,11 @@ import { IProviderService } from "../../services/Interface/IProviderService";
 import { createInstagramOAuthURL } from "@/providers/instagram";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
 import { IBucket } from "../../types/common";
-import { FACEBOOK, GOOGLE, INSTAGRAM, LINKEDIN, X } from "../../utils/constants";
+import { FACEBOOK, GMAIL, INSTAGRAM, LINKEDIN, X } from "../../utils/constants";
 import { createLinkedInOAuthURL } from "@/providers/linkedin";
 import { createXAuthURL } from "@/providers/x";
 import { createFacebookOAuthURL } from "@/providers/facebook";
-import { createGoogleOAuthURL } from "@/providers/google/auth";
+import { createGoogleOAuthURL } from "@/providers/google";
 
 
 
@@ -70,16 +70,17 @@ export class ProviderController implements IProviderController {
     ): Promise<void> =>{
             const { provider } = req.params
             const redirectUri: string = req.query.redirectUri as string;
+            const state: string = req.query.state as string;
             let url;
             if (provider == INSTAGRAM) {
                 url = await createInstagramOAuthURL(redirectUri);
             } else if (provider == FACEBOOK) {
                 url = await createFacebookOAuthURL(redirectUri)
             }else if(provider == LINKEDIN){
-                url = await createLinkedInOAuthURL(redirectUri)
+                url = await createLinkedInOAuthURL(redirectUri,state)
             }else if (provider == X){
-                url = await createXAuthURL(redirectUri)
-            }else if (provider == GOOGLE){
+                url = await createXAuthURL(redirectUri,state)
+            }else if (provider == GMAIL){
                 url = await createGoogleOAuthURL(redirectUri)
             }
             res.send({ url: url });
@@ -94,19 +95,27 @@ export class ProviderController implements IProviderController {
             if (!req.details) throw new NotFoundError("Details Not Fount")
             const { platform, provider, user_id } = req.params
             const { accessToken, refreshToken } = req.body
-
             await this._providerService.saveSocialMediaToken(req.details.orgId as string, platform, user_id, provider, accessToken, refreshToken)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
 
 
-    reScheduleContent = async(
+    rescheduleContent = async(
         req: Request,
         res: Response,
     ): Promise<void> =>{
-            if (!req.details) throw new NotFoundError("Details Not Fount")
-            const { content_id, date } = req.body
-            await this._providerService.reScheduleContent(req.details.orgId as string, content_id, date)
+            const { contentId, platformId, date } = req.body
+            await this._providerService.rescheduleContent(req.details.orgId, contentId, platformId, date)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
+    }
+
+    deleteScheduledContent = async(
+        req: Request,
+        res: Response,
+    ): Promise<void> =>{
+            const { contentId, platformId } = req.body
+            await this._providerService.deleteScheduledContent(req.details.orgId, contentId, platformId)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
 
     processContentReject = async(

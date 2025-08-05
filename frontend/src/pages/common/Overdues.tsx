@@ -38,7 +38,7 @@ const Overdues = () => {
     status: "unpaid",  
     sortBy: "dueDate",
     sortOrder: "asc",
-    overdues: "true",
+    type: "true",
   })
 
   const { page, limit, nextPage, prevPage, reset } = usePagination(1, 10)
@@ -57,7 +57,7 @@ const Overdues = () => {
         status: debouncedFilter.status,
         sortBy: debouncedFilter.sortBy,
         sortOrder: debouncedFilter.sortOrder,
-        overdues: debouncedFilter.overdues,
+        type: debouncedFilter.type,
       }).toString()
       return getInvoices(user.role, user.user_id, `?${searchParams}`)
     },
@@ -165,7 +165,7 @@ const handleSendReminders = async () => {
                 options={[
                   { label: "Due Date", value: "dueDate" },
                   { label: "Date Created", value: "createdAt" },
-                  { label: "Client Name", value: "clientName" },
+                  { label: "Client Name", value: "client.clientName" },
                   { label: "Amount", value: "pricing" },
                 ]}
                 onChange={(value) => setFilter((prev) => ({ ...prev, sortBy: value }))}

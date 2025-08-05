@@ -1,12 +1,12 @@
 import axios from "axios";
-import { META_API_VERSION } from "@/config";
+import { env } from "@/config";
 import { isErrorWithMessage } from "@/validators";
 
 export async function getFBConversations(
   pageId: string,
   access_token: string
 ): Promise<any> {
-  const url = `https://graph.facebook.com/${META_API_VERSION}/${pageId}/conversations`;
+  const url = `https://graph.facebook.com/${env.META.API_VERSION}/${pageId}/conversations`;
   try {
     const response = await axios.get(url, {
       params: {
@@ -27,7 +27,7 @@ export async function getFBMessages(
   conversation_id: string,
   access_token: string
 ): Promise<any> {
-  const url = `https://graph.facebook.com/${META_API_VERSION}/${conversation_id}/messages`;
+  const url = `https://graph.facebook.com/${env.META.API_VERSION}/${conversation_id}/messages`;
   try {
     const response = await axios.get(url, {
       params: {
@@ -47,7 +47,7 @@ export async function getFBMessageSenderDetails(
   userId: string,
   access_token: string
 ): Promise<any> {
-  const url = `https://graph.facebook.com/${META_API_VERSION}/${userId}`;
+  const url = `https://graph.facebook.com/${env.META.API_VERSION}/${userId}`;
   try {
     const response = await axios.get(url, {
       params: {

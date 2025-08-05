@@ -7,15 +7,7 @@ const dashboard = {
     {
       title: "Overview",
       url: "/",
-    },
-    {
-      title: "Analytics",
-      url: "/analytics",
-    },
-    {
-      title: "Reports",
-      url: "/reports",
-    },
+    }
   ],
 };
 
@@ -32,8 +24,8 @@ const ourWork = {
       url: "/work/case-studies",
     },
     {
-      title: "Before & After",
-      url: "/work/before-after",
+      title: "Clients Testimonials",
+      url: "/work/testimonials",
     },
   ],
 };
@@ -50,10 +42,6 @@ const clientManagement = {
       title: "Create Client",
       url: "/clients/create",
     },
-    {
-      title: "Client Reports",
-      url: "/client-reports",
-    },
   ],
 };
 
@@ -68,10 +56,6 @@ const contentAndProjects = {
     {
       title: "Content Library",
       url: "/contents",
-    },
-    {
-      title: "Comments",
-      url: "/comments",
     },
     {
       title: "Media",
@@ -139,7 +123,7 @@ const invoiceManagement = {
     },
     {
       title: "Overdue Invoices",
-      url: "/invoices/recurring",
+      url: "/invoices/overdue",
     },
   ],
 };
@@ -171,10 +155,6 @@ const performance = {
     {
       title: "Social Insights",
       url: "/performance/social",
-    },
-    {
-      title: "Website Analytics",
-      url: "/performance/website",
     },
     {
       title: "Conversion Reports",

@@ -12,6 +12,7 @@ import { InitiateS3BatchUpload } from "@/services/common/post.services"
 import { IFile, RootState } from "@/types/common"
 import { rejectContentApi } from "@/services/common/post.services"
 import { useSelector } from "react-redux"
+import { useQueryClient } from "@tanstack/react-query"
 
 interface MediaItem {
   type: "image" | "video" | "file"
@@ -42,7 +43,7 @@ export function RejectContentModal({ contentId, onClose }: ContentDetailModalPro
   const [error, setError] = useState<string | null>(null)
   const [selectedReasons, setSelectedReasons] = useState<string[]>([])
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-
+  const queryClient = useQueryClient()
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (!files || files.length === 0) return
@@ -184,6 +185,7 @@ export function RejectContentModal({ contentId, onClose }: ContentDetailModalPro
        };
 
       await rejectContentApi(contentId,combinedNote);
+      await queryClient.invalidateQueries({ queryKey: ["contents"] });
 
       setIsSubmitting(false)
       setTimeout(()=> onClose(),500)

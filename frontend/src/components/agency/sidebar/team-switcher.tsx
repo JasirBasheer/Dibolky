@@ -74,6 +74,7 @@ export function TeamSwitcher({
         response = await fetchClientApi(selectedClient as string)
         if (!response.data) return null
       }
+
       const details = response.data.details || {};
       let profile = ""
       if (details.profile && details.profile !== "") {
@@ -92,7 +93,7 @@ export function TeamSwitcher({
         organizationName: details.organizationName,
         profile: profile || "",
         bio: details.bio || "",
-        role: role,
+        role,
         main_id: details.main_id || "",
       }));
       if(role == "agency")dispatch(setAgency({logo:profile}))
@@ -136,8 +137,8 @@ export function TeamSwitcher({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-                <Avatar className="h-8 w-8 rounded-lg ">
-                <AvatarImage src={user.profile || "/placeholder.svg"} alt={user.name} />
+                <Avatar className="h-8 w-8 rounded-lg overflow-hidden">
+                <AvatarImage src={user.profile || "/placeholder.svg"} alt={user.name}  className="object-cover"/>
                 <AvatarFallback className="rounded-lg">
               {user.name[0]}
                 </AvatarFallback>
@@ -157,8 +158,8 @@ export function TeamSwitcher({
           >
             <DropdownMenuLabel className="text-xs text-muted-foreground">Owner</DropdownMenuLabel>
             <DropdownMenuItem key={agency.user_id} onClick={() => handleSelect(agency.user_id)} className="gap-2 p-2">
-               <Avatar className="h-8 w-8 rounded-lg ">
-                <AvatarImage src={agency.logo || "/placeholder.svg"} alt={agency.organizationName} />
+               <Avatar className="h-8 w-8 rounded-lg overflow-hidden">
+                <AvatarImage src={agency.logo || "/placeholder.svg"} alt={agency.organizationName} className="object-cover"/>
                 <AvatarFallback className="rounded-lg">
                   {agency.organizationName[0]}
                 </AvatarFallback>
@@ -173,8 +174,8 @@ export function TeamSwitcher({
         <DropdownMenuLabel className="text-xs text-muted-foreground">Clients</DropdownMenuLabel>
             {clients?.map((client, index) => (
               <DropdownMenuItem key={client._id} onClick={() => handleSelect(client._id)} className="gap-2 p-2">
-             <Avatar className="h-8 w-8 rounded-lg ">
-                <AvatarImage src={client.profile || "/placeholder.svg"} alt={client.name} />
+             <Avatar className="h-8 w-8 rounded-lg overflow-hidden">
+                <AvatarImage src={client.profile || "/placeholder.svg"} alt={client.name} className="object-cover"/>
                 <AvatarFallback className="rounded-lg">
           {client.name[0]}
                 </AvatarFallback>

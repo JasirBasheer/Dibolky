@@ -1,4 +1,4 @@
-import { META_API_VERSION, META_CLIENTID, META_SECRETID } from "@/config";
+import { env } from "@/config";
 import { IMetaAccount } from "@/types";
 import axios from "axios";
 
@@ -7,7 +7,7 @@ export async function createFacebookOAuthURL(
 ): Promise<string> {
     const baseUrl = 'https://www.facebook.com/dialog/oauth';
     const params = new URLSearchParams({
-        client_id: META_CLIENTID,
+        client_id: env.META.CLIENT_ID,
         display: 'page',
         redirect_uri: redirectUri,
         response_type: 'token',
@@ -16,9 +16,8 @@ export async function createFacebookOAuthURL(
             'pages_manage_posts', 'pages_manage_metadata','instagram_content_publish',
             'pages_manage_engagement', 'pages_messaging', 'instagram_basic',
             'business_management', 'pages_read_user_content',
-            'read_insights', 'ads_management',
-            'ads_read', 'pages_read_engagement',
-            'publish_video',
+            'read_insights', 'ads_management','ads_read', 
+            'pages_read_engagement', 'publish_video',
         ].join(',')
     });
 
@@ -30,7 +29,7 @@ export async function getMetaPagesDetails(
     access_token: string
 ): Promise<IMetaAccount[]> {
     try {
-        const pagesUrl = `https://graph.facebook.com/${META_API_VERSION}/me/accounts?access_token=${access_token}`;
+        const pagesUrl = `https://graph.facebook.com/${env.META.API_VERSION}/me/accounts?access_token=${access_token}`;
         const response = await fetch(pagesUrl);
         const data = await response.json();
         const pages = data?.data || [];
@@ -39,7 +38,7 @@ export async function getMetaPagesDetails(
 
         return await Promise.all(
             pages.map(async (page: { id: string; name: string; }) => {
-                const pageDetailsUrl = `https://graph.facebook.com/${META_API_VERSION}/${page.id}?fields=picture&access_token=${access_token}`;
+                const pageDetailsUrl = `https://graph.facebook.com/${env.META.API_VERSION}/${page.id}?fields=picture&access_token=${access_token}`;
                 const pageDetailsResponse = await fetch(pageDetailsUrl);
                 const pageDetailsData = await pageDetailsResponse.json();
                 
@@ -58,10 +57,10 @@ export async function getMetaPagesDetails(
 }
 
 export async function getMetaAccessTokenStatus(
-    access_token: string, 
+    tokens: {accessToken?:string,refreshToken?:string}, 
 ): Promise<boolean> {
     try {
-        const response = await fetch(`https://graph.facebook.com/debug_token?input_token=${access_token}&access_token=${META_CLIENTID}|${META_SECRETID}`, {
+        const response = await fetch(`https://graph.facebook.com/debug_token?input_token=${tokens.accessToken}&access_token=${env.META.CLIENT_ID}|${env.META.SECRET_ID}`, {
             method: "GET"
         });
         
@@ -79,7 +78,7 @@ export async function getMetaAccessTokenStatus(
 export async function getIGTokenDetails(pageId: string, accessToken: string) {
   try {
     const igAccountResponse = await axios.get(
-      `https://graph.facebook.com/${META_API_VERSION}/${pageId}`,
+      `https://graph.facebook.com/${env.META.API_VERSION}/${pageId}`,
       {
         params: {
           fields: "instagram_business_account",
@@ -93,7 +92,7 @@ export async function getIGTokenDetails(pageId: string, accessToken: string) {
     }
 
     const response = await axios.get(
-      `https://graph.facebook.com/${META_API_VERSION}/${igAccountId}`,
+      `https://graph.facebook.com/${env.META.API_VERSION}/${igAccountId}`,
       {
         params: {
           fields: "id,username,name,profile_picture_url",

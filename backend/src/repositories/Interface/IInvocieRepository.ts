@@ -6,7 +6,7 @@ export interface IInvoiceRepository extends IBaseRepository<IInvoice> {
   getAllInvoices(
     orgId: string,
     filter: Record<string, unknown>,
-    options?: { page?: number; limit?: number; sort?: any }
+    options?: { page?: number; limit?: number; sort?: Record<string, 1 | -1> }
   ): Promise<{ invoices: IInvoice[]; totalCount: number; totalPages: number }>;
   getInvoiceById(orgId: string, invoice_id: string): Promise<IInvoice | null>;
   updateInvoiceStatus(orgId: string, invoice_id: string): Promise<IInvoice >;

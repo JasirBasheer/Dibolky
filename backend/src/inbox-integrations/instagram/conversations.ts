@@ -1,11 +1,11 @@
 import axios from "axios";
-import { META_API_VERSION } from "@/config";
+import { env } from "@/config";
 
 export async function getIGConversations(
   pageId: string,
   access_token: string
 ): Promise<any> {
-  const url = `https://graph.facebook.com/${META_API_VERSION}/${pageId}/conversations`;
+  const url = `https://graph.facebook.com/${env.META.API_VERSION}/${pageId}/conversations`;
 
  try {
     const response = await axios.get(url, {
@@ -27,7 +27,7 @@ export async function getIGMessages(
   conversation_id: string,
   access_token: string
 ): Promise<any> {
-  const url = `https://graph.facebook.com/${META_API_VERSION}/${conversation_id}/messages`;
+  const url = `https://graph.facebook.com/${env.META.API_VERSION}/${conversation_id}/messages`;
 
   try {
     const response = await axios.get(url, {

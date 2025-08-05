@@ -10,6 +10,7 @@ export interface IProviderService {
     getMetaPagesDetails(access_token: string): Promise<IMetaAccount[]>;
     getContentById(orgId: string, contentId: string): Promise<IBucket | null>;
     saveSocialMediaToken(orgId: string, platform: string, user_id: string, provider: string, accessToken: string, refreshToken?: string): Promise<void>;
-    reScheduleContent(orgId: string, content_id: string, date: string): Promise<void>;
+    rescheduleContent(orgId: string, contentId: string,platformId:string, date: string): Promise<void>;
+    deleteScheduledContent(orgId: string, contentId: string,platformId:string): Promise<void>;
     rejectContent(orgId: string, content_id: string, reason: INote): Promise<void>;
 }

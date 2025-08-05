@@ -5,7 +5,7 @@ import { registerRoutes } from "./app/registerRoutes";
 import { registerDependencies } from "@/di";
 import { errorHandler, socketAuthMiddleware } from "@/middlewares";
 import { registerSocketEventHandlers } from "./app/socketHandlers";
-import { PORT, connectRedis } from "@/config";
+import { env, connectRedis } from "@/config";
 import { startCronJobs } from "./infrastructure/cron/startCronJobs";
 import { createApp } from "@/app";
 import { connectDB } from "@/utils";
@@ -36,8 +36,8 @@ async function bootstrap() {
     });
 
 
-    server.listen(PORT, () => {
-      logger.info(`Server running on port ${PORT}`);
+    server.listen(env.CONFIG.PORT, () => {
+      logger.info(`Server running on port ${env.CONFIG.PORT}`);
     });
   } catch (err) {
     console.error('Error caught by bootstrap : ',err)

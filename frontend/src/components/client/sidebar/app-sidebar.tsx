@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import { NavMain } from "./nav-main"
 import { NavUser } from "./nav-user"
@@ -8,14 +6,16 @@ import { RootState } from "@/types/common"
 import { useDispatch, useSelector } from "react-redux"
 import { useQuery } from "@tanstack/react-query"
 import Skeleton from "react-loading-skeleton"
-import CreateContentModal from "@/components/common/create-content.modal"
+import CreateContentModal from "@/pages/contents/components/create-content.modal"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ChevronsUpDown } from "lucide-react"
 import { getClientDetailsApi } from "@/services/client/get.services"
+import { getSignedUrlApi } from "@/services"
+import { setUser } from "@/redux/slices/user.slice"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = useSelector((state: RootState) => state.user);
   const ui = useSelector((state: RootState) => state.ui);
+  const dispatch = useDispatch()
 
 
   const { data: menu, isLoading } = useQuery({
@@ -27,10 +27,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     retry: true,
   });
 
-  console.log(menu,"clients menuuu")
+  React.useEffect(() => {
+    const fetchProfile = async () => {
+      if (user.profile && user.profile !== "") {
+        try {
+          const signedUrlRes = await getSignedUrlApi(user.profile as string);
+          
+          if (signedUrlRes.data && signedUrlRes.data.signedUrl) {
+            const profile = signedUrlRes.data.signedUrl;
+            dispatch(setUser({ profile }));
+          }
+        } catch (error) {
+          console.error("Error fetching profile signed URL:", error);
+        }
+      }
+    };
 
-
-
+    fetchProfile();
+  }, []);
+        
 
 
   return (

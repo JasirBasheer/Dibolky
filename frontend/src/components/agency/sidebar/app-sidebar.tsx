@@ -10,12 +10,14 @@ import { useDispatch, useSelector } from "react-redux"
 import { fetchAgencyMenuApi, fetchAllClientsApi } from "@/services/agency/get.services"
 import { useQuery } from "@tanstack/react-query"
 import Skeleton from "react-loading-skeleton"
-import CreateContentModal from "@/components/common/create-content.modal"
+import CreateContentModal from "@/pages/contents/components/create-content.modal"
 import { openCreateContentModal } from "@/redux/slices/ui.slice"
+import { getSignedUrlApi } from "@/services"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = useSelector((state: RootState) => state.user);
   const ui = useSelector((state: RootState) => state.ui);
+  const [clientsWithProfile, setClientsWithProfile] = React.useState([])
   const dispatch = useDispatch()
 
 
@@ -54,9 +56,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       staleTime: 1000 * 60 * 60,
     })
 
+    React.useEffect(() => {
+  const fetchClientProfiles = async () => {
+    try {
+      const updatedClients = await Promise.all(
+        clients.map(async (client) => {
+          if (client.profile && !client.profile.startsWith("http")) {
+            if(client.profile == "")return client 
+            const signedUrlRes = await getSignedUrlApi(client.profile)
+            return {
+              ...client,
+              profile: signedUrlRes?.data?.signedUrl || "",
+            }
+          }
+          return client
+        })
+      )
+      setClientsWithProfile(updatedClients)
+    } catch (err) {
+      console.error("Error fetching client profiles", err)
+    }
+  }
 
-
-
+  fetchClientProfiles()
+}, [clients])
 
 
 
@@ -66,7 +89,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
           {isClientsLoading ? (
        <Skeleton height={50} count={1} />
-      ): <TeamSwitcher clients={clients} />}
+      ): <TeamSwitcher clients={clientsWithProfile} />}
       </SidebarHeader>
       <SidebarContent>
         {isLoading ? (

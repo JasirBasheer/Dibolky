@@ -18,6 +18,8 @@ import { ChatItem } from "./components/chatItem";
 import { MenuListModal } from "./components/menuListModal";
 import ChatInterface from "./components/chatInterface";
 import { SOCKET_EVENTS } from "@/constants";
+import { Skeleton } from "@/components/ui/skeleton";
+import CustomBreadCrumbs from "@/components/ui/custom-breadcrumbs";
 
 const ChatPage = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -28,6 +30,7 @@ const ChatPage = () => {
   const [showMenuListModal, setShowMenuListModal] = useState(false);
   const initialFetchDone = useRef<boolean>(false);
   const [sortedChats, setSortedChats] = useState<IChat[]>([]);
+  const [isMessagesLoading, setIsMessagesLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setChats((prevChats) =>
@@ -59,6 +62,7 @@ const ChatPage = () => {
           messages: finalMessages,
         };
       })
+
     );
 
     return () => {
@@ -98,6 +102,7 @@ const ChatPage = () => {
   const fetchAllChats = async () => {
     if (!user.user_id) return;
     try {
+      setIsMessagesLoading(true)
       const response = await fetchAllChatsApi(user.user_id);
       const formattedChats =
         response.data.chats?.map((chat: IChat) => {
@@ -109,6 +114,8 @@ const ChatPage = () => {
       setChats(formattedChats);
     } catch (error) {
       console.error("Error fetching chats:", error);
+    }finally{
+      setIsMessagesLoading(false)
     }
   };
 
@@ -238,17 +245,19 @@ const ChatPage = () => {
     socket.on("active-users", handleAcitiveMembers);
     socket.on("member-removed", handleRemovedMember);
     socket.on(SOCKET_EVENTS.CHAT.DELETE_MESSAGE, handleDeletedMessage);
+    socket.emit(SOCKET_EVENTS.USER.SET_ONLINE, { orgId: user.orgId, userId: user.user_id });
 
-    return () => {
-      socket?.emit("set-member-offline", {
-        userId: user.user_id,
-        orgId: user.orgId,
-      });
-      socket?.off(SOCKET_EVENTS.CHAT.RECEIVE_MESSAGE, handleNewMessage);
-      socket?.off(SOCKET_EVENTS.CHAT.CREATE_CHAT, handleNewChat);
-      socket?.off("active-users", handleAcitiveMembers);
-      socket?.disconnect();
-    };
+
+    // return () => {
+    //   socket?.emit("set-member-offline", {
+    //     userId: user.user_id,
+    //     orgId: user.orgId,
+    //   });
+    //   socket?.off(SOCKET_EVENTS.CHAT.RECEIVE_MESSAGE, handleNewMessage);
+    //   socket?.off(SOCKET_EVENTS.CHAT.CREATE_CHAT, handleNewChat);
+    //   socket?.off("active-users", handleAcitiveMembers);
+    //   socket?.disconnect();
+    // };
   }, [user.orgId, user.user_id]);
 
   useEffect(() => {
@@ -275,7 +284,16 @@ const ChatPage = () => {
   }, [chats, searchTerm]);
 
   
-  return (
+  return (<>
+        <CustomBreadCrumbs
+        breadCrumbs={[
+          [
+            "Communications",
+            `/${user.role == "agency" ? "agency" : "client"}/messages`,
+          ],
+          ["Messages", ""],
+        ]}
+      />
     <div className="w-full flex flex-wrap min-h-screen bg-slate-100  rounded-3xl">
       <div
         className={`md:w-1/3 w-full md:h-[40rem] h-screen overflow-y-auto md:border-r-2 pb-20 border-[#cbcbcb32] p-6 ${
@@ -311,7 +329,21 @@ const ChatPage = () => {
             <CustomTabsTrigger value="chats">Chats</CustomTabsTrigger>
           </CustomTabsList>
           <CustomTabsContent value="chats">
-            {sortedChats.length > 0 && (
+            {
+              isMessagesLoading ? (
+                    [1,2,3].map((item,index)=>{
+                  return (
+                    <div key={index} className="flex mb-4 items-center space-x-4">
+                    <Skeleton className="h-12 w-12 rounded-full" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-[250px]" />
+                      <Skeleton className="h-4 w-[200px]" />
+                    </div>
+                  </div>
+                  )
+                })
+              ):(
+                sortedChats.length > 0 && (
               <div className="space-y-6">
                 <div>
                   <div className="space-y-2">
@@ -330,7 +362,6 @@ const ChatPage = () => {
                           name={chat.name as string}
                           active={selectedChat === chat._id}
                           onClick={() => setSelectedChat(chat._id as string)}
-                          isGroup={false}
                           messages={chat.messages!}
                           userId={user.user_id}
                           socket={socket as Socket}
@@ -343,7 +374,9 @@ const ChatPage = () => {
                   </div>
                 </div>
               </div>
-            )}
+            )
+              )
+            }
           </CustomTabsContent>
         </CustomTabs>
       </div>
@@ -385,6 +418,7 @@ const ChatPage = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

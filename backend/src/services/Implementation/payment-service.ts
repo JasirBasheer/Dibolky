@@ -21,16 +21,22 @@ export class PaymentService implements IPaymentService {
         key_id:string,key_secret:string
     ): Promise<IRazorpayOrder> {
         const { amount, currency } = details;
+        console.log(amount,currency,'amount and currency',key_id,key_secret)
         const options = {
             amount: amount * 100,
             currency: currency || 'INR',
         };
 
+        console.log(options,"options")
+
         const razorpayInstance = createRazorpayInstance(key_id,key_secret)
 
         const order = await razorpayInstance.orders.create(options);
+        console.log(order,"options")
+
         return order as IRazorpayOrder
     }
+    
     async stripe(
         details: IUserDetails,
         success_url: string, 

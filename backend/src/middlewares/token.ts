@@ -4,7 +4,6 @@ import { container } from "tsyringe";
 import { IAgencyService } from "../services/Interface/IAgencyService";
 import { IAdminService } from "../services/Interface/IAdminService";
 import { IClientService } from "../services/Interface/IClientService";
-import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../config/env";
 import { isTokenBlacklisted } from "../config/redis.config";
 import { IAgencyType } from "../types/agency";
 import { IAdminType } from "../types/admin";
@@ -12,6 +11,7 @@ import { ITokenDetails } from "../types/common";
 import { ROLES } from "../utils/constants";
 import { IPlanService } from "@/services/Interface/IPlanService";
 import { IClientType } from "@/types/client";
+import { env } from "@/config";
 
 declare global {
     namespace Express {
@@ -43,8 +43,8 @@ export const TokenMiddleWare = async (
             throw new UnauthorizedError('Token blacklisted please login to continue')
         }
 
-        let refreshTokenSecret = JWT_REFRESH_SECRET || 'defaultRefreshSecret';
-        let accessTokenSecret = JWT_ACCESS_SECRET || 'defaultAccessSecret';
+        let refreshTokenSecret = env.JWT.REFRESH_SECRET || 'defaultRefreshSecret';
+        let accessTokenSecret = env.JWT.ACCESS_SECRET || 'defaultAccessSecret';
         if (!token && !refreshToken) throw new UnauthorizedError('Access Denied')
 
 

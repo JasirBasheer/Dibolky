@@ -42,7 +42,7 @@ const planSchema: Schema<IPlan> = new Schema(
         },
         description:{
             type:String,
-            requried:true,
+            required:true,
         },
         price: { 
             type: Number, 
@@ -65,7 +65,7 @@ const planSchema: Schema<IPlan> = new Schema(
             type: Number
         },
         menu: { 
-            type: Object as unknown as typeof Schema.Types.Mixed,
+            type: [menuItemSchema], 
             required:true
         },
         isActive: { 

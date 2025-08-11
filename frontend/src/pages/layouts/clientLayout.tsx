@@ -13,7 +13,6 @@ export function ClientLayout() {
     <>
       <SidebarProvider>
         {isAuthenticated && <VideoCall />}
-
         <AppSidebar />
         <SidebarInset>
           <main className="flex-1 bg-gray-50">

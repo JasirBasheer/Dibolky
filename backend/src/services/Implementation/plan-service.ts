@@ -25,15 +25,9 @@ export class PlanService implements IPlanService {
     this._agencyRepository = agencyRepository;
   }
 
-  async getAllPlans(userCountry: string): Promise<Partial<IPlanType>[]> {
+  async getPlans(): Promise<Partial<IPlanType>[]> {
     const plans = await this._planRepository.getPlans();
-
-    let PriceConverisonFunc = getPriceConversionFunc(userCountry);
-    const convertedPlans = plans?.map((item: IPlan) => ({
-      ...item.toObject(),
-      price: PriceConverisonFunc(item.price as number),
-    })) as IPlan[];
-    return PortalMapper.PlansMapper(convertedPlans);
+    return PortalMapper.PlansMapper(plans);
   }
 
   async getAllTrailPlans(): Promise<Partial<IPlan>[]> {
@@ -41,22 +35,12 @@ export class PlanService implements IPlanService {
     return PortalMapper.TrailPlansMapper(trailPlans);
   }
 
-  async getPlan(plan_id: string, userCountry?:string): Promise<Partial<IPlanType>> {
-    console.log(plan_id)
+  async getPlan(plan_id: string): Promise<Partial<IPlanType>> {
     const plan = await this._planRepository.getPlan(plan_id);
     if (!plan)throw new CustomError("Plan is not found please try again",400)
-    if(userCountry){
-    let PriceConverisonFunc = getPriceConversionFunc(userCountry);
-    const convertedPlanPrice = PriceConverisonFunc(plan.price as number);
-    plan.price = convertedPlanPrice;
-    }
     return PortalMapper.PlanMapper(plan);
   }
 
-  async getPlans(): Promise<IPlan[]> {
-    let plans = await this._planRepository.getPlans();
-    return plans ?? [];
-  }
 
   async createPlan(details: PlanDetailsDTO): Promise<void> {
     let menu = createMenu(details.menu as string[]);
@@ -69,6 +53,8 @@ export class PlanService implements IPlanService {
   async editPlan(details: PlanDetailsDTO): Promise<void> {
     let editedPlan;
     let menu = createMenu(details.menu as string[]) as IMenu[]
+    details.permissions = details.menu as string[];
+    console.log(details)
     details.menu = menu as unknown as IMenu | string[];
     editedPlan = await this._planRepository.editPlan(details);
     if (!editedPlan) throw new CustomError("Error While editing Plan", 500);

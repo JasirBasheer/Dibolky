@@ -15,7 +15,8 @@ export class AdminRepository extends BaseRepository<IAdmin> implements IAdminRep
     async findAdminWithMail(
         email: string
     ): Promise<IAdmin | null> {
-        return await this.findOne({ email });
+            return await this.findOne({ email });
+
     }
 
     async findAdminWithId(

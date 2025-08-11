@@ -11,6 +11,6 @@ export interface IProviderService {
     getContentById(orgId: string, contentId: string): Promise<IBucket | null>;
     saveSocialMediaToken(orgId: string, platform: string, user_id: string, provider: string, accessToken: string, refreshToken?: string): Promise<void>;
     rescheduleContent(orgId: string, contentId: string,platformId:string, date: string): Promise<void>;
-    deleteScheduledContent(orgId: string, contentId: string,platformId:string): Promise<void>;
     rejectContent(orgId: string, content_id: string, reason: INote): Promise<void>;
+    getOAuthUrl(provider:string,redirectUri:string,state?:string):Promise<string>
 }

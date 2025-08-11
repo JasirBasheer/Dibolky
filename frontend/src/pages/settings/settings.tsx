@@ -39,7 +39,7 @@ const SettingsPage = () => {
   const { data: connections, isLoading } = useQuery({
     queryKey: ["get-connections-status"],
     queryFn: () => {
-      return fetchConnections(user.role, user.user_id);
+      return fetchConnections(user.role, user.user_id,`?includes=pages`);
     },
     select: (data) => data?.data?.connections,
     enabled: !!user.user_id,
@@ -119,7 +119,7 @@ const SettingsPage = () => {
                       )}
                     </TableCell>
                     <TableCell>
-                      {formatRelativeTime(connection.createdAt)}
+                      {formatRelativeTime(connection.connectedAt)}
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>

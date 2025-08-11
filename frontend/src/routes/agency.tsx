@@ -1,9 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Clients from "@/pages/agency/Clients";
 import Inbox from "@/components/common/inbox";
-import AgencyCalendar from "@/pages/agency/Calendar";
-import AgencyLeads from "@/pages/agency/Leads";
-import AgencyContent from "@/pages/agency/Content";
+import AgencyLeads from "@/pages/leads/LeadsPage";
 import Projects from "@/pages/agency/projects";
 import SettingsPage from "@/pages/settings/settings";
 import CreateClient from "@/components/agency/agencyside.components/createClient";
@@ -28,6 +26,7 @@ import {
   TestimonialsPage,
   UnProtectedRoute,
 } from "@/pages";
+import Contents from "@/pages/contents/contentsPage";
 
 export default function AgencyRoutes() {
   return (
@@ -58,16 +57,15 @@ export default function AgencyRoutes() {
         <Route path="work/testimonials" element={<TestimonialsPage />} />
 
         {/* <Route path='performance/social' element={<SocialPerformancePage />} />
-        <Route path='performance/conversions' element={<ConversionPerformancePage />} /> */}
+        <Route path='performance/competitor-analysis' element={<ConversionPerformancePage />} /> */}
 
         <Route path="settings" element={<SettingsPage />} />
         <Route path="integrations" element={<Integrations />} />
-        <Route path="calendar" element={<AgencyCalendar />} />
 
         <Route path="messages" element={<ChatPage />} />
         <Route path="media" element={<Media />} />
         <Route path="inbox" element={<Inbox />} />
-        <Route path="contents" element={<AgencyContent />} />
+        <Route path="contents" element={<Contents />} />
         <Route path="leads" element={<AgencyLeads />} />
 
         <Route path="projects" element={<Projects />} />

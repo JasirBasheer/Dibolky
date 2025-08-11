@@ -4,12 +4,15 @@ import axios from "axios";
 export async function createGoogleOAuthURL(
     redirectUri: string
 ): Promise<string> {
-    const SCOPES = ['https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/userinfo.email'];
+const scopes = [
+  'https://www.googleapis.com/auth/gmail.send',
+  'https://www.googleapis.com/auth/userinfo.email'
+];
      const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
     `client_id=${env.GOOGLE.MAIL.CLIENT_ID}` +
     `&redirect_uri=${redirectUri}` +
     `&response_type=code` +
-    `&scope=${encodeURIComponent(SCOPES.join(' '))}` +
+    `&scope=${encodeURIComponent(scopes.join(' '))}` +
     `&access_type=offline` +
     `&prompt=consent`;
     console.log(oauthUrl,"oauthurllll")
@@ -86,7 +89,9 @@ export async function isGmailAccessTokenValid(
     tokens: {accessToken?:string,refreshToken?:string}
 ): Promise<boolean> {
     try {
+        console.log(tokens,'tokens form gmail')
         const response = await fetch(`https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${tokens.accessToken}`, { method: "GET" });
+        console.log(response)
         
         if (!response.ok) return false;
         

@@ -1,3 +1,3 @@
 export * from "./auth"
 export * from "./handler"
-export * from "./thought"
+export * from "./contents/thought"

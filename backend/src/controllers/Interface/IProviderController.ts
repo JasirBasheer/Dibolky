@@ -10,5 +10,4 @@ export interface IProviderController {
     connectSocialPlatforms(req: Request, res: Response): Promise<void>;
     getMetaPagesDetails(req: Request, res: Response): Promise<void>;
     rescheduleContent(req: Request, res: Response): Promise<void>;
-    deleteScheduledContent(req: Request, res: Response): Promise<void>;
 }

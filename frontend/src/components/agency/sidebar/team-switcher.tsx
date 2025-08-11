@@ -116,7 +116,7 @@ export function TeamSwitcher({
       user_id: user_id,
       role: user_id === agency?.user_id ? "agency" : "agency-client"
     }));
-    navigate('/agency');
+    navigate('/agency/');
   };
 
 

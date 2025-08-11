@@ -8,6 +8,8 @@ import { createClientApi } from "@/services/agency/post.services";
 import { useQueryClient } from "@tanstack/react-query";
 import CustomBreadCrumbs from "@/components/ui/custom-breadcrumbs";
 import { toast } from 'sonner';
+import CustomInput from "@/components/common/Input";
+import { Button } from "@/components/ui/button";
 
 const CreateClient = () => {
   const [name, setName] = useState("jasir");
@@ -109,50 +111,37 @@ const CreateClient = () => {
         <h2 className="text-xl font-bold mb-4 text-gray-800">Create Client</h2>
 
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Name
-            </label>
-            <input
+          <CustomInput 
               onChange={(e) => setName(e.target.value)}
               type="text"
               id="name"
-              name="name"
+              label="name"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter your name"
               value={name}
-            />
-          </div>
 
-          <div>
-            <label htmlFor="industry" className="block text-sm font-medium text-gray-700 mb-1">
-              Industry
-            </label>
-            <input
+          />
+
+          <CustomInput 
               onChange={(e) => setIndustry(e.target.value)}
               type="text"
               id="industry"
-              name="industry"
+              label="industry"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter the industry"
               value={industry}
-            />
-          </div>
 
-          <div className="col-span-2">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-              id="email"
-              name="email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter your email"
-              value={email}
-            />
-          </div>
+          />
+ 
+          <CustomInput 
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          id="email"
+          label="email"
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Enter your email"
+          value={email}
+          />
 
           <div className="col-span-2">
             <label className="block text-sm font-medium text-gray-700">Selected Services</label>
@@ -199,13 +188,10 @@ const CreateClient = () => {
           </div>
 
           <div className="col-span-1 md:mt-[1.4rem]">
-            <button
-              onClick={handleSubmit}
-              type="button"
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
-            >
-              {isLoading ? "Creating..." : "Create Client"}
-            </button>
+            <Button 
+            onClick={handleSubmit}
+            className="w-full  text-white py-2 px-4 rounded-md">
+              Create Client</Button> 
           </div>
         </div>
 
@@ -219,7 +205,7 @@ const CreateClient = () => {
         )}
       </div>
     </div>
-            </>
+  </>
 
   );
 };

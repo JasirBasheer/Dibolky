@@ -3,10 +3,9 @@ import { IPlan } from "@/models/Interface/plan";
 import { IPlanType } from "@/types";
 
 export interface IPlanService {
-    getAllPlans(userCountry:string): Promise<Partial<IPlanType>[]>;
+    getPlans(): Promise<Partial<IPlanType>[]>;
     getAllTrailPlans(): Promise<Partial<IPlan>[]>;
-    getPlan(plan_id: string, userCountry?:string): Promise<Partial<IPlanType> >;
-    getPlans():Promise<IPlan[]>;
+    getPlan(plan_id: string): Promise<Partial<IPlanType> >;
 
     createPlan(details: PlanDetailsDTO): Promise<void>
     editPlan(details: PlanDetailsDTO): Promise<void>

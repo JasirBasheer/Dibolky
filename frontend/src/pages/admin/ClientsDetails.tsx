@@ -12,7 +12,7 @@ const AdminClientDetails = ({
   if (!client) return null;
   return (
     <div
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 bg-black/50  backdrop-blur-sm flex items-center justify-center p-4 z-50"
       onClick={() => setIsClicked(false)}
     >
       <div

@@ -70,7 +70,6 @@ export async function isXAccessTokenValid(tokens: {accessToken?:string,refreshTo
     });
 
     if (response.ok) {
-      console.log('X access token is valid');
       return true;
     }
 

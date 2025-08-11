@@ -18,19 +18,18 @@ export const createAdminRoutes = (): Router => {
 
   router.get("/", asyncHandler(adminController.verifyAdmin));
   router.get("/clients", asyncHandler(adminController.recentClients));
-  router.get("/recent-clients", asyncHandler(adminController.recentClients));
-  router.get("/get-client/:client_id", asyncHandler(adminController.getClient));
+  router.get("/client/:client_id", asyncHandler(adminController.getClient));
 
   router
   .route("/plans/:plan_id")
   .get(asyncHandler(planController.getPlanWithConsumers))
   .patch(asyncHandler(planController.changePlanStatus))
+  .put(asyncHandler(planController.editPlan))
   
   router
   .route("/plans")
   .get(asyncHandler(planController.getPlans))
   .post(asyncHandler(planController.createPlan))
-  .put(asyncHandler(planController.editPlan))
 
 
   return router;

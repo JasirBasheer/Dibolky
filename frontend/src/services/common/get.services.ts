@@ -38,8 +38,8 @@ export const fetchAllSchduledContentsApi = async (userId: string) => {
   return await api.get(`/api/entities/content/scheduled/${userId}`);
 };
 
-export const fetchConnections = async (entity: string, user_id: string) => {
-  return await api.get(`/api/entities/get-connections/${entity}/${user_id}`);
+export const fetchConnections = async (entity: string, user_id: string, query = "") => {
+  return await api.get(`/api/entities/get-connections/${entity}/${user_id}${query}`);
 };
 
 export const getInvoices = async (
@@ -84,3 +84,22 @@ export const getAllPortfoliosApi = async (query: string) => {
 export const getAllTestimoinalsApi = async () => {
   return await api.get(`/api/entities/testimonials`);
 };
+
+
+export const getAnalyticsByAdSetId = async(
+  role: string,
+  user_id: string,
+  platform: string,
+  adsetId: string
+) => {
+    const queryString = new URLSearchParams({adsetId,platform}).toString();
+
+  return await api.get(
+    `/api/entities/ads/analytics/${role}/${user_id}?${queryString}`
+  );
+};
+
+
+export const getAllCalenderEventsApi = async(role: string,userId:string) =>{
+  return await api.get(`/api/entities/calender/${role}/${userId}`)
+}

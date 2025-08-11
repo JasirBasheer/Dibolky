@@ -12,7 +12,7 @@ import { createPlanApi } from '@/services/admin/post.services';
 import { memo } from 'react';
 
 const PRESET_MENUS = ["Dashboard", "Our Work", "Client Management", "Content & Projects",
-  "Communications", "Invoice Management", "Performance", "Billing & Plans", "Tools & Settings" ];
+  "Communications", "Invoice Management", "Billing & Plans", "Tools & Settings" ];
 
 interface AddPlanProps {
   setIsAddPlan: Dispatch<SetStateAction<boolean>>;

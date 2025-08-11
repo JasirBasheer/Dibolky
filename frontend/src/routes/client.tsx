@@ -10,7 +10,6 @@ import {
   UnProtectedRoute,
 } from "@/pages";
 import ChatPage from "@/pages/chat/chatPage";
-import ClientContent from "@/pages/client/client.content";
 import ClientDashboard from "@/pages/dashboard/clientDashboard";
 import Integrations from "@/pages/integrations/IntegrationsPage";
 import Invoices from "@/pages/common/Invoices";
@@ -21,6 +20,8 @@ import Media from "@/pages/media/MediaPage";
 import Inbox from "@/components/common/inbox";
 import SettingsPage from "@/pages/settings/settings";
 import Projects from "@/pages/agency/projects";
+import LeadsPage from "@/pages/leads/LeadsPage";
+import Contents from "@/pages/contents/contentsPage";
 
 export default function ClientRoutes() {
   return (
@@ -34,7 +35,7 @@ export default function ClientRoutes() {
         }
       >
         <Route index element={<ClientDashboard />} />
-        <Route path="contents" element={<ClientContent />} />
+        <Route path="contents" element={<Contents />} />
         <Route path="messages" element={<ChatPage />} />
         <Route path="invoices" element={<Invoices />} />
         <Route path="invoices/payments" element={<Payments />} />
@@ -48,6 +49,7 @@ export default function ClientRoutes() {
         <Route path="inbox" element={<Inbox />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="projects" element={<Projects />} />
+        <Route path="leads" element={<LeadsPage />} />
       </Route>
 
       <Route

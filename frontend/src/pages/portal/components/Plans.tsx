@@ -47,7 +47,7 @@ const Plans = () => {
             <div className="col-span-12 flex items-center justify-center px-4 md:px-10 lg:px-20">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-7 w-full font-lazare font-bold">
                     {plans?.map((plan, i) => (
-                        i<3 ? ( <div
+                        i<3 && plan.isActive ? ( <div
                             key={i}
                             className={`relative ${i !== 1 ? "mt-0 md:mt-4" : ""}
                                  light:bg-white rounded-xl shadow-md dark:bg-[#1f2b40] hover:shadow-xl transition-all duration-300 p-6 flex flex-col`}

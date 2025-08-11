@@ -2,14 +2,14 @@ import SocialConnectCard from "./socialConnectCard";
 
 
 type SocialIntegrationsContentProps = {
-  handleConnectSocailMedia: (url: string, platform: string) => void;
+  handleConnectSocials: (url: string, platform: string) => void;
   connections:{is_valid:boolean,platform:string, connectedAt:Date}[],
   required: string[];
   isConnectionLoading: boolean
 };
 
 export const SocialIntegrationsContent = ({
-  handleConnectSocailMedia,
+  handleConnectSocials,
   connections,
   required,
   isConnectionLoading
@@ -27,7 +27,7 @@ export const SocialIntegrationsContent = ({
         required={required}
         isLoading={isConnectionLoading}
         onConnect={(platform) =>
-          handleConnectSocailMedia(`/api/entities/connect/${platform}`, platform)
+          handleConnectSocials(`/api/entities/connect/${platform}`, platform)
         }
         onDisconnect={()=>{console.log("disconnected")}}
       />
@@ -39,7 +39,7 @@ export const SocialIntegrationsContent = ({
         required={required}
         isLoading={isConnectionLoading}
         onConnect={(platform) =>
-          handleConnectSocailMedia(`/api/entities/connect/${platform}`, platform)
+          handleConnectSocials(`/api/entities/connect/${platform}`, platform)
         }
         onDisconnect={()=>{console.log("disconnected")}}
       />
@@ -52,7 +52,7 @@ export const SocialIntegrationsContent = ({
         required={required}
         isLoading={isConnectionLoading}
         onConnect={(platform) =>
-          handleConnectSocailMedia(`/api/entities/connect/${platform}`, platform)
+          handleConnectSocials(`/api/entities/connect/${platform}`, platform)
         }
         onDisconnect={()=>{console.log("disconnected")}}
       />
@@ -65,7 +65,7 @@ export const SocialIntegrationsContent = ({
         required={required}
         isLoading={isConnectionLoading}
         onConnect={(platform) =>
-          handleConnectSocailMedia(`/api/entities/connect/${platform}`, platform)
+          handleConnectSocials(`/api/entities/connect/${platform}`, platform)
         }
         onDisconnect={()=>{console.log("disconnected")}}
       />

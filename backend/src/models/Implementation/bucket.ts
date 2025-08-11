@@ -70,7 +70,7 @@ bucketSchema.methods.changePlatformPublishStatus = async function (
     const platformEntry = this.platforms.find((p: { platform: string }) => p.platform === platform);
 
     if (platformEntry) {
-        platformEntry.status = value;
+        platformEntry.status = value ? "success" : "failed";
         await this.save();
     } else {
         throw new Error(`Error while updating scheduled posts: ${platform}`);

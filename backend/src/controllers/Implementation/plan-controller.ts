@@ -37,14 +37,6 @@ export class PlanController implements IPlanController {
         SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS,{plans})
     }
 
-    getPlansWithPricing = async(
-        req: Request,
-        res: Response,
-    ): Promise<void> => {
-            const plans = await this._planService.getAllPlans(req.cookies?.userCountry)
-            if (plans) return SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plans })
-            SendResponse(res, HTTPStatusCodes.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR)
-    }
 
     getAllTrialPlans = async(
         req: Request,
@@ -54,12 +46,12 @@ export class PlanController implements IPlanController {
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { trialPlans })
     }
 
-    getPlanWithPricing = async(
+    getPlan = async(
         req: Request,
         res: Response,
     ): Promise<void> => {
             const { plan_id } = req.params
-            const plan = await this._planService.getPlan(plan_id,req.cookies.userCountry);
+            const plan = await this._planService.getPlan(plan_id);
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plan })
     }
 
@@ -77,6 +69,7 @@ export class PlanController implements IPlanController {
         res: Response,
     ): Promise<void> => {
             const { details }: {details: PlanDetailsDTO } = req.body
+            console.log(details,'ddddd')
             await this._planService.editPlan(details)
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)

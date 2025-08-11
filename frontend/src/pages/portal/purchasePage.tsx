@@ -261,7 +261,7 @@ export const PurchasePlan: React.FC = () => {
                                 </div> */}
                                 <div className="absolute inset-0 rounded-lg border-2 border-transparent peer-checked:border-blue-500"></div>
                             </label>
-                            <label className="relative flex p-4 cursor-pointer border rounded-lg hover:border-blue-500 transition-all" onClick={() => setPaymentMethod('stripe')}>
+                            {/* <label className="relative flex p-4 cursor-pointer border rounded-lg hover:border-blue-500 transition-all" onClick={() => setPaymentMethod('stripe')}>
                                 <input
                                     type="radio"
                                     name="payment-method"
@@ -281,11 +281,11 @@ export const PurchasePlan: React.FC = () => {
                                         <p className="text-sm text-gray-500">Pay securely with Stripe</p>
                                     </div>
                                 </div>
-                                {/* <div className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 border-2 rounded-full peer-checked:border-blue-500 peer-checked:bg-blue-50">
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 border-2 rounded-full peer-checked:border-blue-500 peer-checked:bg-blue-50">
                                     <Check className="w-4 h-4 text-blue-500 opacity-0 peer-checked:opacity-100 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-                                </div> */}
+                                </div>
                                 <div className="absolute inset-0 rounded-lg border-2 border-transparent peer-checked:border-blue-500"></div>
-                            </label>
+                            </label> */}
                         </div>
                     </div>
                 );

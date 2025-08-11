@@ -83,7 +83,7 @@ const Integrations = () => {
   const { data: connections, isLoading: isConnectionLoading } = useQuery({
     queryKey: ["get-connections-status", role, userId, selectedClient],
     queryFn: () => {
-      return fetchConnections(role, userId);
+      return fetchConnections(role, userId, `?includes=all`);
     },
     select: (data) => data?.data.connections,
     enabled: !!userId,
@@ -141,12 +141,12 @@ const Integrations = () => {
     }
   };
 
-  const handleConnectSocailMedia = async (
+  const handleConnectSocials = async (
     connectionEndpoint: string,
     platform: string
   ): Promise<void> => {
     try {
-      const futureIntegrations = ["outlook", "googleads"];
+      const futureIntegrations = ["outlook", "google_ads"];
       if (futureIntegrations.includes(platform)) {
         setIsFutureModalOpen(true);
         return;
@@ -176,7 +176,7 @@ const Integrations = () => {
           <SocialIntegrationsContent
             required={required}
             connections={connections}
-            handleConnectSocailMedia={handleConnectSocailMedia}
+            handleConnectSocials={handleConnectSocials}
             isConnectionLoading={isConnectionLoading}
           />
         );
@@ -186,7 +186,7 @@ const Integrations = () => {
         return (
           <MailIntegrationsContent
             required={required}
-            handleConnectSocailMedia={handleConnectSocailMedia}
+            handleConnectSocials={handleConnectSocials}
             connections={connections}
             isConnectionLoading={isConnectionLoading}
           />
@@ -195,7 +195,7 @@ const Integrations = () => {
         return (
           <LeadIntegrationsContent
             required={required}
-            handleConnectSocailMedia={handleConnectSocailMedia}
+            handleConnectSocials={handleConnectSocials}
             connections={connections}
             isConnectionLoading={isConnectionLoading}
           />

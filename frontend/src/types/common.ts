@@ -211,7 +211,7 @@ export interface IIntegratePaymentType {
 export interface IConnection {
   platform: string,
   is_valid: boolean,
-  createdAt: Date
+  connectedAt: Date
 }
 
 

@@ -1,186 +1,261 @@
 import { inject, injectable } from "tsyringe";
 import { IProviderService } from "../Interface/IProviderService";
-import { handleFacebookUpload } from "@/providers/facebook";
-import { exchangeForLongLivedToken, handleInstagramUpload } from "@/providers/instagram";
+import {
+  createFacebookOAuthURL,
+  createMetaAdsOAuthURL,
+  handleFacebookUpload,
+} from "@/providers/meta";
+import {
+  createInstagramOAuthURL,
+  exchangeForLongLivedToken,
+  handleInstagramUpload,
+} from "@/providers/meta/instagram";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
 import { IAgencyTenant } from "../../types/agency";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
-import { IMetaAccount, IPlatforms, IBucket, ISocialMediaUploadResponse } from "../../types/common";
+import {
+  IMetaAccount,
+  IPlatforms,
+  IBucket,
+  ISocialMediaUploadResponse,
+} from "../../types/common";
 import { IInfluncerTenant } from "../../types/influencer";
-import { FACEBOOK, INSTAGRAM, LINKEDIN, X } from "../../utils/constants";
+import {
+  FACEBOOK,
+  INSTAGRAM,
+  LINKEDIN,
+  PLATFORMS,
+  X,
+} from "../../utils/constants";
 import { INote } from "../../types/note";
 import { INoteRepository } from "../../repositories/Interface/INoteRepository";
 import { CustomError } from "mern.common";
 import { handleLinkedinUpload } from "@/providers/linkedin/handler";
-import { handleXUpload } from "@/providers/x";
-import { getMetaPagesDetails } from "@/providers/facebook";
+import { createXAuthURL, handleXUpload } from "@/providers/x";
+import { getMetaPagesDetails } from "@/providers/meta/facebook";
 import { IClientTenant } from "@/models";
-
+import { createLinkedInOAuthURL } from "@/providers/linkedin";
+import { createGoogleOAuthURL } from "@/providers/google";
 
 @injectable()
 export class ProviderService implements IProviderService {
-    private _clientTenantRepository: IClientTenantRepository;
-    private _contentRepository: IContentRepository;
-    private _agencyTenantRepository: IAgencyTenantRepository;
-    private _noteRepository: INoteRepository;
+  private _clientTenantRepository: IClientTenantRepository;
+  private _contentRepository: IContentRepository;
+  private _agencyTenantRepository: IAgencyTenantRepository;
+  private _noteRepository: INoteRepository;
 
-    constructor(
-        @inject('ClientTenantRepository') clientTenantRepository: IClientTenantRepository,
-        @inject('ContentRepository') contentRepository: IContentRepository,
-        @inject('AgencyTenantRepository') agencyTenantRepository: IAgencyTenantRepository,
-        @inject('NoteRepository') noteRepository : INoteRepository,
-    ) {
-        this._clientTenantRepository = clientTenantRepository
-        this._contentRepository = contentRepository
-        this._agencyTenantRepository = agencyTenantRepository
-        this._noteRepository = noteRepository
-    }
+  constructor(
+    @inject("ClientTenantRepository")
+    clientTenantRepository: IClientTenantRepository,
+    @inject("ContentRepository") contentRepository: IContentRepository,
+    @inject("AgencyTenantRepository")
+    agencyTenantRepository: IAgencyTenantRepository,
+    @inject("NoteRepository") noteRepository: INoteRepository
+  ) {
+    this._clientTenantRepository = clientTenantRepository;
+    this._contentRepository = contentRepository;
+    this._agencyTenantRepository = agencyTenantRepository;
+    this._noteRepository = noteRepository;
+  }
 
-    
+  async handleSocialMediaUploads(
+    content: IBucket,
+    user: IClientTenant | IAgencyTenant | IInfluncerTenant | null,
+    isCron: boolean
+  ): Promise<ISocialMediaUploadResponse[]> {
+    if (!user) throw new Error("user does not exists");
 
+    const uploadPromises = content.platforms.map(
+      async (platform: IPlatforms) => {
+        if (platform.scheduledDate != "" && !isCron) return null;
 
-    async handleSocialMediaUploads(
-        content: IBucket,
-        user: IClientTenant | IAgencyTenant | IInfluncerTenant | null,
-        isCron: boolean
-    ): Promise<ISocialMediaUploadResponse[]> {
+        let access_token;
+        let response;
 
-        if (!user) throw new Error('user does not exists')
+        try {
+          switch (platform.platform) {
+            case INSTAGRAM:
+              access_token = user?.social_credentials?.instagram?.accessToken;
+              if (!access_token)
+                throw new Error("Instagram access token not found");
+              return (response = await handleInstagramUpload(
+                content,
+                access_token
+              ));
 
-        const uploadPromises = content.platforms.map(async (platform: IPlatforms) => {
-            if (platform.scheduledDate != "" && !isCron) return null;
+            case FACEBOOK:
+              access_token = user?.social_credentials?.facebook?.accessToken;
+              if (!access_token)
+                throw new Error("FaceBook access token not found");
+              return (response = await handleFacebookUpload(
+                content,
+                access_token
+              ));
 
-            let access_token;
-            let response;
+            case LINKEDIN:
+              access_token = user?.social_credentials?.linkedin?.accessToken;
+              if (!access_token)
+                throw new Error("Linkedin access token not found");
+              return (response = await handleLinkedinUpload(
+                content,
+                access_token
+              ));
 
-            try {
-                switch (platform.platform) {
-                    case INSTAGRAM:
-                        access_token = user?.social_credentials?.instagram?.accessToken;
-                        if (!access_token) throw new Error('Instagram access token not found');
-                        return response = await handleInstagramUpload(content, access_token);
+            case X:
+              access_token = user?.social_credentials?.x?.accessToken;
+              if (!access_token)
+                throw new Error("Linkedin access token not found");
+              return (response = await handleXUpload(content, access_token));
 
-                    case FACEBOOK:
-                        access_token = user?.social_credentials?.facebook?.accessToken;
-                        if (!access_token) throw new Error('FaceBook access token not found');
-                        return response = await handleFacebookUpload(content, access_token);
-
-                    case LINKEDIN:
-                        access_token = user?.social_credentials?.linkedin?.accessToken;
-                        if (!access_token) throw new Error('Linkedin access token not found');
-                        return response = await handleLinkedinUpload(content, access_token);
-
-                    case X:
-                        access_token = user?.social_credentials?.x?.accessToken;
-                        if (!access_token) throw new Error('Linkedin access token not found');
-                        return response = await handleXUpload(content, access_token);
-                        
-                    default:
-                        throw new Error(`Unsupported platform: ${platform}`);
-                }
-            } catch (error: unknown) {
-                 throw error  
-            };
-        });
-
-
-        const results = await Promise.all(uploadPromises);
-        const validResults: ISocialMediaUploadResponse[] = results.filter(
-            (result): result is ISocialMediaUploadResponse => result !== null
-        );
-
-        if (validResults.length == 0) return validResults
-        console.log('Upload Results:', results);
-
-        const successfulUploads = results.filter(result => result!.status === 'success');
-        if (successfulUploads.length === 0) {
-            throw new Error('All uploads failed');
+            default:
+              throw new Error(`Unsupported platform: ${platform}`);
+          }
+        } catch (error: unknown) {
+          throw error;
         }
+      }
+    );
 
-        return validResults
+    const results = await Promise.all(uploadPromises);
+    const validResults: ISocialMediaUploadResponse[] = results.filter(
+      (result): result is ISocialMediaUploadResponse => result !== null
+    );
 
+    if (validResults.length == 0) return validResults;
+    console.log("Upload Results:", results);
+
+    const successfulUploads = results.filter(
+      (result) => result!.status === "success"
+    );
+    if (successfulUploads.length === 0) {
+      throw new Error("All uploads failed");
     }
 
-    async getMetaPagesDetails(
-        access_token: string
-    ): Promise<IMetaAccount[]> {
-        return await getMetaPagesDetails(access_token) ?? []
+    return validResults;
+  }
+
+  async getMetaPagesDetails(access_token: string): Promise<IMetaAccount[]> {
+    return (await getMetaPagesDetails(access_token)) ?? [];
+  }
+
+  async updateContentStatus(
+    orgId: string,
+    contentId: string,
+    status: string
+  ): Promise<IBucket | null> {
+    return await this._contentRepository.changeContentStatus(
+      orgId,
+      contentId,
+      status
+    );
+  }
+
+  async getContentById(
+    orgId: string,
+    contentId: string
+  ): Promise<IBucket | null> {
+    return await this._contentRepository.getContentById(orgId, contentId);
+  }
+
+  async saveSocialMediaToken(
+    orgId: string,
+    platform: string,
+    user_id: string,
+    provider: string,
+    accessToken: string,
+    refreshToken?: string
+  ): Promise<void> {
+    console.log(platform, "plaaatfrom");
+    console.log(user_id, "user idddddddd");
+    if (user_id) {
+      let longLivingAccessToken: string = accessToken;
+      console.log(accessToken, refreshToken, "toke1 and token2");
+      switch (platform) {
+        case "agency":
+          if (provider == INSTAGRAM || provider == FACEBOOK || provider == PLATFORMS.META_ADS ) {
+            longLivingAccessToken = await exchangeForLongLivedToken(
+              accessToken
+            );
+          }
+          await this._agencyTenantRepository.setSocialMediaTokens(
+            orgId,
+            provider,
+            longLivingAccessToken,
+            refreshToken
+          );
+          break;
+        case "client":
+          if (provider == INSTAGRAM || provider == FACEBOOK) {
+            longLivingAccessToken = await exchangeForLongLivedToken(
+              accessToken
+            );
+          }
+          await this._clientTenantRepository.setSocialMediaTokens(
+            orgId,
+            user_id,
+            provider,
+            longLivingAccessToken
+          );
+          break;
+        default:
+          break;
+      }
     }
+  }
 
+  async rescheduleContent(
+    orgId: string,
+    contentId: string,
+    platformId: string,
+    date: string
+  ): Promise<void> {
+    await this._contentRepository.rescheduleContent(
+      orgId,
+      contentId,
+      platformId,
+      date
+    );
+  }
 
-    async updateContentStatus(
-        orgId: string,
-        contentId: string,
-        status: string
-    ): Promise<IBucket | null> {
-        return await this._contentRepository.changeContentStatus(orgId, contentId, status)
+  async rejectContent(
+    orgId: string,
+    content_id: string,
+    reason: INote
+  ): Promise<void> {
+    const note = await this._noteRepository.addNote(orgId, reason);
+    if (!note)
+      throw new CustomError(
+        "An unexpected error occured while create note please try again later..",
+        500
+      );
+    await this._contentRepository.changeContentStatus(
+      orgId,
+      content_id,
+      "Rejected"
+    );
+  }
+
+  async getOAuthUrl(
+    provider: string,
+    redirectUri: string,
+    state?: string
+  ): Promise<string> {
+    switch (provider) {
+      case PLATFORMS.INSTAGRAM:
+        return await createInstagramOAuthURL(redirectUri);
+      case PLATFORMS.FACEBOOK:
+        return await createFacebookOAuthURL(redirectUri);
+      case PLATFORMS.LINKEDIN:
+        return await createLinkedInOAuthURL(redirectUri, state);
+      case PLATFORMS.X:
+        return await createXAuthURL(redirectUri, state);
+      case PLATFORMS.GMAIL:
+        return await createGoogleOAuthURL(redirectUri);
+      case PLATFORMS.META_ADS:
+        return await createMetaAdsOAuthURL(redirectUri);
+      default:
+        throw new Error("Unsupported platform");
     }
-
-
-    async getContentById(
-        orgId: string,
-        contentId: string
-    ): Promise<IBucket | null> {
-        return await this._contentRepository.getContentById(orgId, contentId)
-    }
-
-
-    async saveSocialMediaToken(
-        orgId: string,
-        platform: string,
-        user_id: string,
-        provider: string,
-        accessToken: string,
-        refreshToken?:string
-    ): Promise<void> {
-
-        console.log(platform,'plaaatfrom')
-        console.log(user_id,'user idddddddd')
-        if (user_id) {
-            let longLivingAccessToken:string = accessToken
-            console.log(accessToken,refreshToken,'toke1 and token2')
-            switch (platform) {
-                case 'agency':
-                    if(provider == INSTAGRAM || provider == FACEBOOK ){
-                        longLivingAccessToken = await exchangeForLongLivedToken(accessToken)
-                    }
-                    await this._agencyTenantRepository.setSocialMediaTokens(orgId, provider, longLivingAccessToken,refreshToken)
-                    break;
-                case 'client':
-                    if(provider == INSTAGRAM || provider == FACEBOOK){
-                        longLivingAccessToken = await exchangeForLongLivedToken(accessToken)
-                    }
-                    await this._clientTenantRepository.setSocialMediaTokens(orgId, user_id, provider, longLivingAccessToken)
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-    
-    async rescheduleContent(
-        orgId: string, contentId: string,platformId:string, date: string
-    ):Promise<void>{
-        await this._contentRepository.rescheduleContent(orgId,contentId,platformId,date)
-    }
-
-    async deleteScheduledContent(
-        orgId: string, contentId: string,platformId:string
-    ):Promise<void>{
-        await this._contentRepository.deleteScheduledContent(orgId,contentId,platformId)
-    }
-
-    async rejectContent(
-        orgId:string,
-        content_id:string,
-        reason:INote
-    ):Promise<void>{
-        const note = await this._noteRepository.addNote(orgId,reason)
-        if(!note)throw new CustomError("An unexpected error occured while create note please try again later..",500)
-        await this._contentRepository.changeContentStatus(orgId,content_id,"Rejected")
-    }
-
+  }
 }

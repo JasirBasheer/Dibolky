@@ -12,7 +12,7 @@ const AdminDashboard = () => {
   const [recentClients, setRecentClients] = useState<IClient[]>([])
   const fetchRecentClients = async () => {
     try {
-      const response = await axios.get('/api/admin/recent-clients')
+      const response = await axios.get('/api/admin/clients')
       console.log(response)
 
       if (response && response.status == 200) {
@@ -33,12 +33,6 @@ const AdminDashboard = () => {
   }, 0)
   return (
     <div className='w-full p-9'>
-        <CustomBreadCrumbs
-        breadCrumbs={[
-          ["Influencers", "/influencers"],
-          ["Search", ""],
-        ]}
-      />
       <div className="w-full ">
         <h1 className='text-2xl cantarell font-semibold'>Dashbord Overview</h1>
         <div className="flex flex-wrap items-center lg:justify-start justify-center w-full mt-5 gap-5 ">

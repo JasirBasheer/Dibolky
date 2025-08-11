@@ -1,4 +1,4 @@
 export * from "./auth"
-export * from "./post"
+export * from "./contents/post"
 export * from "./handler"
-export * from "./video"
+export * from "./contents/video"

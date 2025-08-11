@@ -1,15 +1,15 @@
 import { memo, useState, useRef } from "react";
-import { message } from "antd";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { SpinnerCircular } from "spinners-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "@/utils/axios";
 import { validateEmail, validatePassword } from "@/validation/agencyValidation";
-
+import CustomInput from "@/components/common/Input";
+import { toast } from "sonner";
 
 const LoginForm = ({ role }: { role: string }) => {
-  const [email, setEmail] = useState("jasirbinbasheerpp@gmail.com");
-  const [password, setPassword] = useState("Jasir@123");
+  const [email, setEmail] = useState("dibolky@gmail.com");
+  const [password, setPassword] = useState("1234567890");
   const [isLoading, setIsLoading] = useState(false);
   const [token, setToken] = useState<string>("");
 
@@ -20,8 +20,7 @@ const LoginForm = ({ role }: { role: string }) => {
   const isNewlyCreatedAccount = searchParams.get("new");
 
   if (isNewlyCreatedAccount) {
-    message.success("Account successfully created");
-    message.success("Login to continue");
+    toast.success("Account successfully created, Login to continue...");
   }
 
   const onVerify = (token: string) => setToken(token);
@@ -31,13 +30,13 @@ const LoginForm = ({ role }: { role: string }) => {
 
     if (!validateEmail(email)) {
       emailRef.current?.focus();
-      message.error("Please enter a valid email address");
+      toast.error("Please enter a valid email address");
       return;
     }
 
     if (!validatePassword(password)) {
       passwordRef.current?.focus();
-      message.error("Please enter a valid Password");
+      toast.error("Please enter a valid Password");
       return;
     }
 
@@ -45,63 +44,66 @@ const LoginForm = ({ role }: { role: string }) => {
       setIsLoading(true);
       await axios.post("/api/auth/login", { email, password, role });
 
-      message.success("Successfully Logged in");
-      const roleRedirects = { agency: "/agency", admin: "/admin/", client: "/client/", influencer: '/influencer/' };
+      toast.success("Successfully Logged in");
+      const roleRedirects = {
+        agency: "/agency/",
+        admin: "/admin/",
+        client: "/client/",
+      };
       navigate(roleRedirects[role as keyof typeof roleRedirects]);
-
     } catch (error: unknown) {
       if (typeof error === "object" && error !== null && "response" in error) {
-        const errorResponse = error as { response: { data: { error: string } } };
-        message.error(errorResponse.response.data.error);
+        const errorResponse = error as {
+          response: { data: { error: string } };
+        };
+        toast.error(errorResponse.response.data.error);
       } else {
-        message.error("Unexpected error occurred");
+        toast.error("Unexpected error occurred");
       }
     } finally {
       setIsLoading(false);
     }
-
   };
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
       <h2 className="text-3xl font-bold text-black mb-3">Welcome Back.</h2>
       <div className="space-y-4 py-4">
-        <div>
-          <label htmlFor="Email" className="block text-sm font-medium text-gray-700 mb-2">
-            Email
-          </label>
-          <input
-            ref={emailRef}
-            id="Email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            type="email"
-            placeholder="Email"
-            className="w-full px-4 py-2 rounded border border-gray-300 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          />
-        </div>
-        <div>
-          <label htmlFor="Password" className="block text-sm font-medium text-gray-700 mb-2">
-            Password
-          </label>
-          <input
-            ref={passwordRef}
-            id="Password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            type="password"
-            placeholder="Password"
-            className="w-full px-4 py-2 rounded border border-gray-300 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          />
-        </div>
-        <HCaptcha sitekey="10000000-ffff-ffff-ffff-000000000001" onVerify={onVerify} />
+        <CustomInput
+          inputRef={emailRef}
+          id="Email"
+          label="Email"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          type="email"
+          placeholder="Email"
+        />
+        <CustomInput
+          inputRef={passwordRef}
+          id="Password"
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          type="password"
+          placeholder="Password"
+          label="Password"
+        />
+        <HCaptcha
+          sitekey="10000000-ffff-ffff-ffff-000000000001"
+          onVerify={onVerify}
+        />
         <button
           disabled={token === ""}
           type="submit"
-          className="w-full h-[3rem] flex items-center justify-center bg-blue-600 text-white rounded-md py-2 px-4 hover:bg-blue-700 transition duration-200 mt-6"
+          className="w-full h-[3rem] flex items-center justify-center bg-[#1c1e21f2] cursor-pointer text-white rounded-md py-2 px-4 hover:bg-[#1c1e21] transition duration-200 mt-6"
         >
           {isLoading ? (
-            <SpinnerCircular size={20} thickness={200} speed={100} color="rgba(255, 255, 255, 1)" secondaryColor="rgba(0, 0, 0, 0.44)" />
+            <SpinnerCircular
+              size={20}
+              thickness={200}
+              speed={100}
+              color="rgba(255, 255, 255, 1)"
+              secondaryColor="rgba(0, 0, 0, 0.44)"
+            />
           ) : (
             <>Login</>
           )}

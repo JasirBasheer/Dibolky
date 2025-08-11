@@ -293,13 +293,13 @@ const Clients = () => {
         />
 
         <DetailModal
-          title="Client Details"
+          title="Client Details" 
           open={isDetailModalOpen}
           onOpenChange={setIsDetailModalOpen}
         >
           {selectedClient && (
             <>
-              <div className="flex justify-between items-start">
+              <div className="flex  justify-between items-start">
                 <div>
                   <h3 className="text-lg font-semibold">
                     {selectedClient.createdAt}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -21,15 +21,24 @@ interface ConnectedPage {
   id: string;
 }
 
+interface AdAccount {
+  id: string;
+  account_id: string;
+  name: string;
+}
+
 interface PlatformFilterProps {
   connections?: {
     connections: Connection[];
     connectedPages: ConnectedPage[];
+    adAccounts?: AdAccount[][];
   };
   onFilterChange: (connections: string[], platforms: string[]) => void;
   selectedConnections: string[];
   selectedPlatforms: string[];
   isLoading: boolean;
+  filter1?: string;
+  filter2?: string;
 }
 
 export function PlatformFilter({
@@ -38,6 +47,8 @@ export function PlatformFilter({
   selectedConnections,
   selectedPlatforms,
   isLoading,
+  filter1 = "Platforms",
+  filter2 = "Connections",
 }: PlatformFilterProps) {
   const [selectedTab, setSelectedTab] = useState("platforms");
   const [isOpen, setIsOpen] = useState(false);
@@ -48,6 +59,7 @@ export function PlatformFilter({
       ?.map((conn) => conn.platform) || [];
 
   const connectedPages = connections?.connectedPages || [];
+  const adAccounts = connections?.adAccounts?.flat() || [];
 
   const handleConnectionToggle = (connectionId: string) => {
     const newSelectedConnections = selectedConnections.includes(connectionId)
@@ -76,6 +88,8 @@ export function PlatformFilter({
       x: "M18.901 2.289h-3.346L8.978 9.743 3.099 2.289H0l7.071 10.286L0 21.711h3.346l7.071-8.457 5.879 8.457h3.099l-7.071-10.286 7.071-8.457z",
       linkedin:
         "M22 3.47C22 2.65 21.35 2 20.53 2H3.47C2.65 2 2 2.65 2 3.47v17.06C2 21.35 2.65 22 3.47 22h17.06c.82 0 1.47-.65 1.47-1.47V3.47zM6.67 18H4V8.67h2.67V18zm-1.33-10.67c-.86 0-1.56-.7-1.56-1.56s.7-1.56 1.56-1.56 1.56.7 1.56 1.56-.7 1.56-1.56 1.56zm14.66 10.67h-2.67v-5.33c0-1.27-.45-2.13-1.58-2.13-.86 0-1.37.58-1.6 1.14-.08.2-.1.48-.1.76v5.56H11.33V8.67h2.56v1.14c.38-.58 1.06-1.4 2.58-1.4 1.9 0 3.33 1.24 3.33 3.9v5.69z",
+      meta_ads:
+        "M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96C15.9 21.59 18.04 20.44 19.7 18.73C21.35 17.03 22.34 14.82 22.34 12.56C22.34 9.8 21.23 7.16 19.26 5.19C17.29 3.23 14.65 2.11 11.9 2.11L12 2.04Z",
     };
     if (!icons[platformLower])
       return `M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96C15.9 21.59 18.04 20.44 19.7 18.73C21.35 17.03 22.34 14.82 22.34 12.56C22.34 9.8 21.23 7.16 19.26 5.19C17.29 3.23 14.65 2.11 11.9 2.11L12 2.04Z`;
@@ -120,7 +134,7 @@ export function PlatformFilter({
                   className="w-full justify-start text-sm"
                   onClick={() => setSelectedTab("platforms")}
                 >
-                  Platforms
+                  {filter1}
                 </Button>
                 <Button
                   variant={selectedTab === "connections" ? "default" : "ghost"}
@@ -128,7 +142,7 @@ export function PlatformFilter({
                   className="w-full justify-start text-sm"
                   onClick={() => setSelectedTab("connections")}
                 >
-                  Connections
+                  {filter2}
                 </Button>
               </div>
             </div>
@@ -142,7 +156,45 @@ export function PlatformFilter({
                   {selectedTab === "connections" && (
                     <div className="flex-1 overflow-y-auto">
                       <div className="p-2 space-y-2">
-                        {connectedPages.length === 0 ? (
+                        {availablePlatforms.includes("meta_ads") ? (
+                          adAccounts.length === 0 ? (
+                            <div className="text-center py-4 text-gray-500">
+                              No ad accounts available
+                            </div>
+                          ) : (
+                            adAccounts.map((account) => (
+                              <div
+                                key={account.id}
+                                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer"
+                                onClick={() => handleConnectionToggle(account.id)}
+                              >
+                                <Checkbox
+                                  checked={selectedConnections.includes(
+                                    account.id
+                                  )}
+                                  onCheckedChange={() =>
+                                    handleConnectionToggle(account.id)
+                                  }
+                                />
+                                <span className="flex items-center justify-center bg-blue-100 text-blue-600 rounded-full w-6 h-6">
+                                  <svg
+                                    viewBox="0 0 24 24"
+                                    width="16"
+                                    height="16"
+                                    fill="currentColor"
+                                  >
+                                    <path d={getSocialMediaIcon("meta_ads")} />
+                                  </svg>
+                                </span>
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-medium text-sm max-w-[163px] truncate">
+                                    {account.name}
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                          )
+                        ) : connectedPages.length === 0 ? (
                           <div className="text-center py-4 text-gray-500">
                             No connected pages available
                           </div>
@@ -192,10 +244,8 @@ export function PlatformFilter({
                             No platforms available
                           </div>
                         ) : (
-                          uniquePlatforms.map((platform) => {
-                            if(!["facebook","instagram"].includes(platform))return
-                            return (
-                              <div
+                          uniquePlatforms.map((platform) => (
+                            <div
                               key={platform}
                               className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer"
                               onClick={() => handlePlatformToggle(platform)}
@@ -218,13 +268,13 @@ export function PlatformFilter({
                               </span>
                               <div className="flex-1 min-w-0">
                                 <div className="font-medium text-sm truncate">
-                                  {platform.charAt(0).toUpperCase() +
-                                    platform.slice(1)}
+                                  {platform
+                                    .replace(/_/g, " ")
+                                    .replace(/\b\w/g, (c) => c.toUpperCase())}
                                 </div>
                               </div>
                             </div>
-                            )
-                          })
+                          ))
                         )}
                       </div>
                     </div>

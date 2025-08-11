@@ -1,10 +1,10 @@
 import { IBucket } from "@/types";
 import { getPages } from "./shared";
 import { NotFoundError } from "mern.common";
-import { publishFaceBookThought } from "@/providers/facebook";
+import { publishFaceBookThought } from "@/providers/meta/facebook";
 import { publishXThought } from "@/providers/x";
 import { getUserURN } from "@/providers/linkedin";
-import { publishLinkedinThought } from "@/providers/linkedin/thought";
+import { publishLinkedinThought } from "@/providers/linkedin/contents/thought";
 import { isErrorWithMessage } from "@/validators";
 
 // FACEBOOK THOUGHT

@@ -1,27 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import {
-  Upload,
   Search,
-  Eye,
-  MoreHorizontal,
   ArrowUpDown,
   Plus,
-  User,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { message } from "antd";
 import {
-  IContentData,
-  IPlatforms,
   IReviewBucket,
   RootState,
 } from "@/types/common";
 import {
   approveContentApi,
-  deleteContentPlatformApi,
   getSignedUrlApi,
   rescheduleContentApi,
 } from "@/services/common/post.services";
@@ -39,7 +32,7 @@ import { DataTable } from "@/components/ui/data-table";
 import CustomBreadCrumbs from "@/components/ui/custom-breadcrumbs";
 import { openCreateContentModal } from "@/redux/slices/ui.slice";
 
-const AgencyClientContent = () => {
+const Contents = () => {
   const user = useSelector((state: RootState) => state.user);
   const agency = useSelector((state: RootState) => state.agency);
 
@@ -89,9 +82,7 @@ const AgencyClientContent = () => {
     fetchSignedUrls();
   }, [data?.contents]);
 
-  const handleViewContent = (content: any) => {
-    setSelectedContent(content);
-  };
+
 
   const handleCloseModal = () => {
     setSelectedContent(null);
@@ -101,8 +92,8 @@ const AgencyClientContent = () => {
     const urlMap: Record<string, string> = {};
 
     await Promise.all(
-      data?.contents?.flatMap((item) =>
-        item.files.map(async (file) => {
+      data?.contents?.flatMap((item: { files: { key: string; }[]; }) =>
+        item.files.map(async (file: { key: string; }) => {
           try {
             const response = await getSignedUrlApi(file.key);
             urlMap[file.key] = response.data.signedUrl;
@@ -137,19 +128,16 @@ const AgencyClientContent = () => {
     setRejectingContent(content_id);
   };
 
-  const handleReschedule = async (contentId: string,platformId:string,date:string) => {
+  const handleReschedule = async (date:string,platformId:string, contentId:string) => {
     try {
        await rescheduleContentApi(user.user_id,contentId,platformId,date)
+       refetch();
     } catch (error) {
       console.log(error)
     }
   };
 
 
-  const handlePlatformDelete = async (contentId: string,platformId:string) => {
-           await deleteContentPlatformApi(user.user_id,contentId,platformId)
-
-  };
 
 
   return (
@@ -208,7 +196,7 @@ const AgencyClientContent = () => {
               >
                 <ArrowUpDown className="h-4 w-4" />
               </Button>
-
+                {user.role !="client" && (
               <Button
                 variant="default"
                 size="sm"
@@ -216,7 +204,7 @@ const AgencyClientContent = () => {
               >
                 <Plus className="h-4 w-4" />
                 Create
-              </Button>
+              </Button>)}
             </div>
           </CardContent>
         </Card>
@@ -339,7 +327,6 @@ const AgencyClientContent = () => {
             onClose={handleCloseModal}
             onApprove={handleApproveContent}
             onReject={handleRejectContent}
-            onPlatformDelete={handlePlatformDelete}
             onReschedule={handleReschedule}
           />
         )}
@@ -355,4 +342,4 @@ const AgencyClientContent = () => {
   );
 };
 
-export default AgencyClientContent;
+export default Contents;

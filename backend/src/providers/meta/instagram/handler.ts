@@ -1,5 +1,5 @@
-import { IBucket } from "../../types/common";
-import { CONTENT_TYPE } from "../../utils/constants";
+import { IBucket } from "../../../types/common";
+import { CONTENT_TYPE } from "../../../utils/constants";
 import { 
     uploadIGPost, 
     uploadIGReel, 

@@ -107,7 +107,7 @@ const Media = () => {
   const { data: connections, isLoading: isConnectionsLoading } = useQuery({
     queryKey: ["get-connections-status",user.role, user.user_id],
     queryFn: () => {
-      return fetchConnections(user.role, user.user_id);
+      return fetchConnections(user.role, user.user_id,`?includes=pages`);
     },
     select: (data) => data?.data,
     enabled: !!user.user_id,

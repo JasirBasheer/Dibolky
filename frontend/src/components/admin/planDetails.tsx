@@ -13,16 +13,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Skeleton from 'react-loading-skeleton';
 import { message } from 'antd';
-import { IAdminPlan, PlanConsumer } from '@/types/admin.types';
+import { IAdminPlan, IPlan, PlanConsumer } from '@/types/admin.types';
 import { getPlanDetailsApi } from '@/services/admin/get.services';
 import { changePlanStatusApi } from '@/services/admin/post.services';
 
 interface PlanDetailsProps {
   setIsPlanDetails: Dispatch<SetStateAction<boolean>>;
   planId: string;
+  setPlans: Dispatch<SetStateAction<IPlan[]>>
 }
 
-const PlanDetails = ({ setIsPlanDetails, planId }: PlanDetailsProps) => {
+const PlanDetails = ({ setIsPlanDetails, planId, setPlans }: PlanDetailsProps) => {
   const [details, setDetails] = useState<any>();
   const [activeTab, setActiveTab] = useState('about');
   const [loading, setLoading] = useState(true);
@@ -32,7 +33,6 @@ const PlanDetails = ({ setIsPlanDetails, planId }: PlanDetailsProps) => {
     try {
       setLoading(true);
       const res = await getPlanDetailsApi(planId)
-      console.log(res.data,'dataaaaaaaaa')
       const menu: string[] = [];
       for (const m in res.data.details.menu) {
         menu.push(m);
@@ -53,10 +53,24 @@ const PlanDetails = ({ setIsPlanDetails, planId }: PlanDetailsProps) => {
   const handleBlock = async(plan_id:string) => {
    const res =  await changePlanStatusApi(plan_id)
    console.log(res)
-   if(res.status == 200){
-    message.success("Plan status changed successfully")
-    await fetchPlanDetails()
-   }
+  if (res.status === 200) {
+      message.success("Plan status changed successfully");
+
+setPlans(prev => {
+  const updatedPlans = prev.map((p) => {
+    if (p._id === plan_id) {
+      return { ...p, isActive: !p.isActive };
+    }
+    return p;
+  });
+  return [...updatedPlans]; 
+});
+    setDetails((prevDetails) => ({
+      ...prevDetails,
+      isActive: !prevDetails.isActive,
+    }));
+
+    }
   };
 
   const AboutTabSkeleton = () => (
@@ -154,11 +168,7 @@ const PlanDetails = ({ setIsPlanDetails, planId }: PlanDetailsProps) => {
                 <Ban className="mr-2 h-4 w-4" /> 
                 {details?.isActive ? "Block plan":"Unblock plan"}
               </DropdownMenuItem>
-              
-              <DropdownMenuItem className="cursor-pointer text-red-600">
-                <Trash2 className="mr-2 h-4 w-4" />
-                Delete Plan
-              </DropdownMenuItem>
+
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -192,7 +202,7 @@ const PlanDetails = ({ setIsPlanDetails, planId }: PlanDetailsProps) => {
           <div>
             <h4 className="font-medium mb-3">Available Modules</h4>
             <div className="flex flex-wrap gap-2">
-              {details?.menu?.map((item: string, index: number) => (
+              {details?.features?.map((item: string, index: number) => (
                 <Badge key={index} variant="secondary" className="capitalize px-3 py-1">
                   {item}
                 </Badge>

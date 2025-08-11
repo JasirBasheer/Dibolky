@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import { IAdmin } from '../Interface/admin';
 
 
-export const adminSchema: Schema<IAdmin> = new Schema({
+const adminSchema: Schema<IAdmin> = new Schema({
     name: {
         type: String,
         required: true,

@@ -504,7 +504,7 @@ const CreateContentModal = () => {
 
   return (
     <Dialog open={ui.createContentModalOpen} onOpenChange={handleClose}>
-      {!user.permissions.includes("Content Management") ? (
+      {!user.permissions.includes("Content & Projects") ? (
         <DialogContent className="sm:max-w-lg w-full sm:max-h-[90vh] p-0 gap-0 overflow-hidden sm:rounded-lg">
           <ScrollArea className="max-h-[calc(90vh-4rem)]">
             <div className="p-8">

@@ -8,7 +8,6 @@ interface IRedirectionUrls {
   agency: string;
   admin: string;
   client: string;
-  influencer: string
 }
 
 
@@ -30,11 +29,9 @@ export const UnProtectedRoute = ({ children, role }: { children: ReactNode, role
         if (response) {
 
           const roleRedirects: IRedirectionUrls = {
-            "agency": '/agency',
+            "agency": '/agency/',
             "admin": '/admin/',
             "client": "/client/",
-            "influencer": "/influencer/",
-
           };
 
           const redirectPath = roleRedirects[response.data?.role as keyof typeof roleRedirects];

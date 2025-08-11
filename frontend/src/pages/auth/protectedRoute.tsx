@@ -108,6 +108,16 @@ export const ProtectedRoute = ({
           );
 
           userIdToUse = res.data.client?._id;
+        }else{
+          console.log(response.data.details)
+                   dispatch(
+            setUser({
+              name: response.data.details?.name || "",
+              email: response.data.details?.email || "",
+              role: response.data.role,
+              user_id: response.data.details?._id || "",
+            })
+          ); 
         }
         setUserIdForRtm(userIdToUse);
 

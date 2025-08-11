@@ -3,14 +3,14 @@ import { inject, injectable } from "tsyringe";
 import { HTTPStatusCodes, NotFoundError, ResponseMessage, SendResponse } from "mern.common";
 import { IProviderController } from "../Interface/IProviderController";
 import { IProviderService } from "../../services/Interface/IProviderService";
-import { createInstagramOAuthURL } from "@/providers/instagram";
+import { createInstagramOAuthURL } from "@/providers/meta/instagram";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
 import { IBucket } from "../../types/common";
-import { FACEBOOK, GMAIL, INSTAGRAM, LINKEDIN, X } from "../../utils/constants";
 import { createLinkedInOAuthURL } from "@/providers/linkedin";
 import { createXAuthURL } from "@/providers/x";
-import { createFacebookOAuthURL } from "@/providers/facebook";
+import { createFacebookOAuthURL } from "@/providers/meta/facebook";
 import { createGoogleOAuthURL } from "@/providers/google";
+import { PLATFORMS } from "@/utils";
 
 
 
@@ -59,7 +59,6 @@ export class ProviderController implements IProviderController {
         res: Response,
     ): Promise<void> =>{
             const { access_token } = req.params
-
             const pages = await this._providerService.getMetaPagesDetails(access_token as string)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { pages })
     }
@@ -71,21 +70,9 @@ export class ProviderController implements IProviderController {
             const { provider } = req.params
             const redirectUri: string = req.query.redirectUri as string;
             const state: string = req.query.state as string;
-            let url;
-            if (provider == INSTAGRAM) {
-                url = await createInstagramOAuthURL(redirectUri);
-            } else if (provider == FACEBOOK) {
-                url = await createFacebookOAuthURL(redirectUri)
-            }else if(provider == LINKEDIN){
-                url = await createLinkedInOAuthURL(redirectUri,state)
-            }else if (provider == X){
-                url = await createXAuthURL(redirectUri,state)
-            }else if (provider == GMAIL){
-                url = await createGoogleOAuthURL(redirectUri)
-            }
+            const url = await this._providerService.getOAuthUrl(provider, redirectUri, state)
             res.send({ url: url });
     }
-
 
 
     saveSocialPlatformToken = async(
@@ -106,15 +93,6 @@ export class ProviderController implements IProviderController {
     ): Promise<void> =>{
             const { contentId, platformId, date } = req.body
             await this._providerService.rescheduleContent(req.details.orgId, contentId, platformId, date)
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-    }
-
-    deleteScheduledContent = async(
-        req: Request,
-        res: Response,
-    ): Promise<void> =>{
-            const { contentId, platformId } = req.body
-            await this._providerService.deleteScheduledContent(req.details.orgId, contentId, platformId)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
 

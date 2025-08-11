@@ -1,6 +1,12 @@
 import { IMenu } from "@/types";
 import { Document } from "mongoose";
 
+interface credentials {
+  accessToken?: string;
+  refreshToken?: string;
+  connectedAt?: string;
+}
+
 export interface IClientTenant extends Document {
   orgId?: string;
   main_id?: string;
@@ -11,31 +17,13 @@ export interface IClientTenant extends Document {
   industry?: string;
   password?: string;
   social_credentials?: {
-    instagram?: {
-      accessToken?: string;
-      refreshToken?: string;
-      connectedAt?: string;
-    };
-    facebook?: {
-      accessToken?: string;
-      refreshToken?: string;
-      connectedAt?: string;
-    };
-    x?: {
-      accessToken?: string;
-      refreshToken?: string;
-      connectedAt?: string;
-    };
-    gmail?: {
-      accessToken?: string;
-      refreshToken?: string;
-      connectedAt?: string;
-    };
-    linkedin?: {
-      accessToken?: string;
-      refreshToken?: string;
-      connectedAt?: string;
-    };
+    instagram?: credentials;
+    facebook?: credentials;
+    x?: credentials;
+    gmail?: credentials;
+    linkedin?: credentials;
+    meta_ads?: credentials;
+    google_ads?: credentials;
   };
   menu: IMenu[];
   isSocialMediaInitialized: boolean;

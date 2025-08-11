@@ -1,5 +1,6 @@
 import { container } from "tsyringe";
-import { activitySchema, adminSchema, agencyTenantSchema, bucketSchema, chatSchema, clientTenantSchema, invoiceSchema, messageSchema, noteSchema, Plan, portfolioSchema, projectSchema, socialMessageSchema, socialUserSchema, testimonialSchema, transactionSchema } from "@/models";
+import { activitySchema,  agencyTenantSchema, bucketSchema, chatSchema, clientTenantSchema, invoiceSchema, messageSchema, noteSchema, Plan, portfolioSchema, projectSchema, socialMessageSchema, socialUserSchema, testimonialSchema, transactionSchema } from "@/models";
+import adminSchema from '@/models/Implementation/admin'
 import agencySchema from '@/models/Implementation/agency'
 import clientSchema from '@/models/Implementation/client'
 

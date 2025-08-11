@@ -62,7 +62,6 @@ export const createEntityRoutes = (): Router => {
   route('/content/scheduled/:userId')
   .get(asyncHandler(entityController.fetchAllScheduledContents))
   .patch(asyncHandler(providerController.rescheduleContent))
-  .delete(asyncHandler(providerController.deleteScheduledContent))
 
   // content
   router.post("/approve-content",asyncHandler(providerController.processContentApproval));
@@ -86,6 +85,8 @@ export const createEntityRoutes = (): Router => {
   // settings
   router.post("/update-profile",asyncHandler(entityController.updateProfile));
 
+  router.get("/calender/:role/:userId",asyncHandler(entityController.getCalenderEvents))
+
   router.
   route("/testimonials")
   .get(asyncHandler(portfolioController.getAllTestimonials))
@@ -96,5 +97,26 @@ export const createEntityRoutes = (): Router => {
   .get(asyncHandler(entityController.getAgoraTokens))
   .post(asyncHandler(portfolioController.createTestimonial))
 
+  router.
+  route("/campaigns/:role/:userId")
+  .get(asyncHandler(entityController.getCampaigns))
+  .post(asyncHandler(entityController.createCampaign))
+  .patch(asyncHandler(entityController.createCampaign))
+  .delete(asyncHandler(entityController.createCampaign))
+
+  router.
+  route("/adsets/:role/:userId")
+  .get(asyncHandler(entityController.getAdSets))
+  .post(asyncHandler(entityController.createAdSet))
+  .patch(asyncHandler(entityController.createAdSet))
+  .delete(asyncHandler(entityController.createAdSet))
+
+  router.
+  route("/ads/:role/:userId")
+  .get(asyncHandler(entityController.getAllAds))
+  .post(asyncHandler(entityController.createAd))
+  .patch(asyncHandler(entityController.createAd))
+  .delete(asyncHandler(entityController.createAd))
+  
   return router;
 };

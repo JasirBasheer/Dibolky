@@ -11,6 +11,12 @@ export interface IClient {
     password: string;
     isBlocked?: boolean;
     planPurchasedRate:number
+    validity: string;
+    profile: string;
+    address:{
+        country: string;
+        city: string
+    }
 }
 
 interface platform {

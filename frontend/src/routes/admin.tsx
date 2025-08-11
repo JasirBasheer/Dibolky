@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
 import Plans from '@/pages/admin/Plans'
-import AgencyLeads from '@/pages/agency/Leads'
 import AdminClients from '@/pages/admin/Clients'
 import AdminDashboard from '@/pages/dashboard/adminDashboard'
 import { AdminLayout, ForgotPassword, Login, ProtectedRoute, ResetPassword, UnProtectedRoute } from '@/pages'
@@ -16,9 +15,7 @@ export default function AdminRoutes() {
 
                 <Route index element={<AdminDashboard />} />
                 <Route path='plans' element={<Plans />} />
-                {/* <Route path='analytics' element={<AgencyAnalytics />} /> */}
                 <Route path='clients' element={<AdminClients />} />
-                <Route path='leads' element={<AgencyLeads />} />
                 
             </Route>
 

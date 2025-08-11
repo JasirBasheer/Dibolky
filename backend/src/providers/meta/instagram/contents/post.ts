@@ -1,6 +1,6 @@
 import { IBucket } from "@/types";
-import { getS3PublicUrl } from "../../utils/aws.utils";
-import { VIDEO_EXTENSIONS } from "../../utils/video-dimensions.utils";
+import { getS3PublicUrl } from "../../../../utils/aws.utils";
+import { VIDEO_EXTENSIONS } from "../../../../utils/video-dimensions.utils";
 import { env } from "@/config";
 
 

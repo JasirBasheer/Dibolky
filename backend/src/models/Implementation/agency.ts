@@ -170,6 +170,34 @@ export const agencyTenantSchema = new Schema<IAgencyTenant>({
                 required:false
             }
         },
+        meta_ads: {
+            accessToken: {
+                type: String,
+                required: false,
+            },
+            refreshToken: {
+                type: String,
+                required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
+            }
+        },
+        google_ads: {
+            accessToken: {
+                type: String,
+                required: false,
+            },
+            refreshToken: {
+                type: String,
+                required: false,
+            },
+            connectedAt:{
+                type:Date,
+                required:false
+            }
+        },
         x: {
             accessToken: {
                 type: String,

@@ -41,7 +41,7 @@ export default function Projects() {
     status: "all",
     sortBy: "createdAt",
     sortOrder: "desc",
-    type: "",
+    type: "all",
   });
   const { page, limit, nextPage, prevPage, reset } = usePagination(1, 10);
   const debouncedFilter = useFilter(filter, 900);
@@ -124,12 +124,17 @@ export default function Projects() {
                 }
               />
               <SelectInput
-                placeholder="Category"
+                placeholder="All Categories"
                 value={filter.type}
                 options={[
+                  { label: "All Categories", value: "all" },
                   { label: "DM", value: "DM" },
                   { label: "CRM", value: "CRM" },
-                  { label: "CC", value: "CC" },
+                  { label: "PHOTO", value: "PHOTO" },
+                  { label: "SEO", value: "SEO" },
+                  { label: "SM", value: "SM" },
+                  { label: "GADSPPC", value: "GADSPPC" },
+                  { label: "MR", value: "MR" },
                 ]}
                 onChange={(value) =>
                   setFilter((prev) => ({ ...prev, type: value }))

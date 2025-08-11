@@ -50,6 +50,7 @@ export class PlanRepository extends BaseRepository<IPlan> implements IPlanReposi
         async editPlan(
                 details: PlanDetailsDTO
         ): Promise<IPlan | null> {
+                console.log(details,'detailsssss')
                 const { _id, ...updateData } = details;
                 return await this.model.findByIdAndUpdate(_id, updateData, { new: true, runValidators: true });
         }

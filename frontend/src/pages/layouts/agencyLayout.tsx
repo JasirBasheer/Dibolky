@@ -13,7 +13,7 @@ export function AgencyLayout() {
   return (
     <>
       <CommandDialogMenu />
-  {isAuthenticated && <VideoCall />}
+      {isAuthenticated && <VideoCall />}
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>

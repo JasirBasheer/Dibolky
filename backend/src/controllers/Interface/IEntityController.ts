@@ -8,7 +8,6 @@ export interface IEntityController {
     checkMail(req: Request, res: Response): Promise<void>
     createAgency(req: Request, res: Response): Promise<void>
     getMenu(req: Request, res: Response): Promise<void>
-    getCountry(req: Request, res: Response): Promise<void>
     getOwner(req: Request, res: Response): Promise<void>
     getChats(req: Request, res: Response): Promise<void>
     getInbox(req: Request, res: Response): Promise<void>
@@ -35,9 +34,14 @@ export interface IEntityController {
     updateProfile(req:Request,res:Response):Promise<void>
     getConnections(req:Request,res:Response):Promise<void>
     handleLinkedinCallback(req:Request,res:Response):Promise<void>
+    getCalenderEvents(req:Request,res:Response):Promise<void>
     handleXCallback(req:Request,res:Response):Promise<void>
     handleGmaileCallback(req:Request,res:Response):Promise<void>
     getAgoraTokens(req: Request, res: Response): Promise<void>
-
-    
+    getCampaigns(req: Request, res: Response): Promise<void>
+    createCampaign(req: Request, res: Response): Promise<void>
+    getAdSets(req: Request, res: Response): Promise<void>
+    createAdSet(req: Request, res: Response): Promise<void>
+    getAllAds(req: Request, res: Response): Promise<void>
+    createAd(req: Request, res: Response): Promise<void>
 }

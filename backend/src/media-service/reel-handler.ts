@@ -1,5 +1,5 @@
-import { checkIGContainerStatus, fetchIGAccountId, publishInstagramContent, uploadIGReelContent } from "@/providers/instagram";
-import { checkReelUploadStatus, initializeReelUpload, publishReel, uploadHostedReel } from "@/providers/facebook";
+import { checkIGContainerStatus, fetchIGAccountId, publishInstagramContent, uploadIGReelContent } from "@/providers/meta/instagram";
+import { checkReelUploadStatus, initializeReelUpload, publishReel, uploadHostedReel } from "@/providers/meta/facebook";
 import { getS3PublicUrl, getS3ViewUrl } from "../utils/aws.utils";
 import { FACEBOOK, INSTAGRAM } from "../utils/constants";
 import { NotFoundError } from "mern.common";

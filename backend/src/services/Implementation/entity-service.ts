@@ -20,15 +20,19 @@ import { CustomError, hashPassword, NotFoundError } from "mern.common";
 import { INoteRepository } from "../../repositories/Interface/INoteRepository";
 import { getLinkedInTokenStatus } from "@/providers/linkedin";
 import {
+  createMetaAd,
   deleteFBComment,
+  getAdAccounts,
+  getAllAds,
   getFBComments,
   getFBInsights,
   getFBMedia,
   getFBReplies,
   getIGTokenDetails,
   getMetaAccessTokenStatus,
+  getMetaCampaigns,
   setFBCommentHidden,
-} from "@/providers/facebook";
+} from "@/providers/meta";
 import { isXAccessTokenValid } from "@/providers/x";
 import { IAgencyRegistrationDto } from "@/dto";
 import { SaveContentDto } from "@/dto/content";
@@ -63,7 +67,7 @@ import {
   getIGMedias,
   getIGReplies,
   setIGCommentHidden,
-} from "@/providers/instagram";
+} from "@/providers/meta/instagram";
 import {
   isGmailAccessTokenValid,
   refreshGmailAccessToken,
@@ -74,6 +78,10 @@ import { getFBMediaDetails } from "@/providers/utils/facebook";
 import { CommonMapper } from "@/mappers/common-mapper";
 import mongoose from "mongoose";
 import crypto from "crypto";
+import { RtmTokenBuilder } from "agora-token";
+import { RtcTokenBuilder } from "agora-token";
+import { RtcRole } from "agora-token";
+import { getAllAdSetsByCampaignId } from "@/providers/meta/ads/adset";
 
 @injectable()
 export class EntityService implements IEntityService {
@@ -154,7 +162,7 @@ export class EntityService implements IEntityService {
         ...(role !== ROLES.AGENCY && {
           "client.clientId": new mongoose.Types.ObjectId(userId),
         }),
-        ...(query.type != "" && { category: query.type }),
+        ...(query.type != "all" && { category: query.type }),
       },
     });
     const options = {
@@ -228,6 +236,7 @@ export class EntityService implements IEntityService {
     };
 
     const ownerDetails = await this._entityRepository.createAgency(newAgency);
+    const plan = await this._planRepository.getPlan(planId)
 
     const newTenantAgency = {
       main_id: ownerDetails?._id,
@@ -236,6 +245,7 @@ export class EntityService implements IEntityService {
       organizationName,
       name,
       email,
+      permissions: plan.permissions
     };
 
     const newTransaction = {
@@ -549,117 +559,189 @@ export class EntityService implements IEntityService {
     );
   }
 
-  async getConnections(
-    orgId: string,
-    entity: string,
-    user_id: string
-  ): Promise<any> {
-    const validConnections = [];
-    const details =
-      entity === "agency"
-        ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
-        : await this._clientTenantRepository.getClientById(orgId, user_id);
+  private async getValidConnections(
+  orgId: string,
+  credentials: any,
+  connectionType: string
+): Promise<
+  {
+    platform: string;
+    isValid: boolean;
+    connectedAt: string | undefined;
+  }[]
+> {
+  const platforms = [
+    ...((connectionType == "social" || connectionType == "all" || connectionType == "pages")
+      ? [
+          {
+            key: "facebook",
+            tokens: credentials?.facebook,
+            connectedAt: credentials?.facebook?.connectedAt,
+            checkStatus: getMetaAccessTokenStatus,
+          },
+          {
+            key: "instagram",
+            tokens: credentials?.instagram,
+            connectedAt: credentials?.instagram?.connectedAt,
+            checkStatus: getMetaAccessTokenStatus,
+          },
+          {
+            key: "linkedin",
+            tokens: credentials?.linkedin,
+            connectedAt: credentials?.linkedin?.connectedAt,
+            checkStatus: getLinkedInTokenStatus,
+          },
+          {
+            key: "x",
+            tokens: credentials?.x,
+            connectedAt: credentials?.x?.connectedAt,
+            checkStatus: isXAccessTokenValid,
+          },
+        ]
+      : []),
+    ...((connectionType == "all" || connectionType === "gmail")
+      ? [
+          {
+            key: "gmail",
+            tokens: credentials?.gmail,
+            connectedAt: credentials?.gmail?.connectedAt,
+            checkStatus: isGmailAccessTokenValid,
+          },
+        ]
+      : []),
+    ...((connectionType == "all" || connectionType === "ads")
+      ? [
+          {
+            key: "meta_ads",
+            tokens: credentials?.meta_ads,
+            connectedAt: credentials?.meta_ads?.connectedAt,
+            checkStatus: getMetaAccessTokenStatus,
+          },
+        ]
+      : []),
+  ];
+  console.log(platforms,"platformsss")
 
-    if (!details)
-      throw new NotFoundError(
-        "User details not found please try again later.."
-      );
+  const validConnections = [];
 
-    let credentials = details.social_credentials;
-    const platforms = [
-      {
-        key: "facebook",
-        tokens: credentials?.facebook,
-        connectedAt: credentials?.facebook?.connectedAt,
-        checkStatus: getMetaAccessTokenStatus,
-      },
-      {
-        key: "instagram",
-        tokens: credentials?.instagram,
-        connectedAt: credentials?.instagram?.connectedAt,
-        checkStatus: getMetaAccessTokenStatus,
-      },
-      {
-        key: "linkedin",
-        tokens: credentials?.linkedin,
-        connectedAt: credentials?.linkedin?.connectedAt,
-        checkStatus: getLinkedInTokenStatus,
-      },
-      {
-        key: "x",
-        tokens: credentials?.x,
-        connectedAt: credentials?.x?.connectedAt,
-        checkStatus: isXAccessTokenValid,
-      },
-      {
-        key: "gmail",
-        tokens: credentials?.gmail,
-        connectedAt: credentials?.gmail?.connectedAt,
-        checkStatus: isGmailAccessTokenValid,
-      },
-    ];
+  for (const platform of platforms) {
+    if (platform.tokens?.accessToken && platform.tokens.accessToken !== "") {
+      let isValid = await platform.checkStatus(platform.tokens);
 
-    for (const platform of platforms) {
-      if (platform.tokens?.accessToken && platform.tokens.accessToken !== "") {
-        let isValid = await platform.checkStatus(platform.tokens);
+      if (
+        platform.key === "gmail" &&
+        !isValid &&
+        platform.tokens.refreshToken
+      ) {
+        console.log("Refreshing Gmail access token...");
+        try {
+          const refreshResult = await refreshGmailAccessToken(
+            platform.tokens.refreshToken
+          );
+          console.log("Refreshed Gmail access token:", refreshResult);
 
-        if (
-          platform.key === "gmail" &&
-          !isValid &&
-          platform.tokens.refreshToken
-        ) {
-          try {
-            const refreshResult = await refreshGmailAccessToken(
+          if (refreshResult) {
+            await this._agencyTenantRepository.setSocialMediaTokens(
+              orgId,
+              "gmail",
+              refreshResult.accessToken,
               platform.tokens.refreshToken
             );
-
-            if (refreshResult) {
-              await this._agencyTenantRepository.setSocialMediaTokens(
-                orgId,
-                "gmail",
-                refreshResult.accessToken,
-                platform.tokens.refreshToken
-              );
-              platform.tokens.accessToken = refreshResult.accessToken;
-              isValid = await platform.checkStatus(platform.tokens);
-            }
-          } catch (error) {
-            console.error("Error refreshing Gmail token:", error);
-            isValid = false;
+            platform.tokens.accessToken = refreshResult.accessToken;
+            isValid = await platform.checkStatus(platform.tokens);
           }
-        }
-
-        validConnections.push({
-          platform: platform.key,
-          is_valid: isValid,
-          createdAt: platform.connectedAt,
-        });
-      }
-    }
-
-    let connectedPages: { name: string; id: string }[] = [];
-    if (
-      validConnections.some(
-        (item) => item.platform == "instagram" || item.platform == "facebook"
-      )
-    ) {
-      const token =
-        credentials?.facebook?.accessToken ||
-        credentials?.instagram?.accessToken;
-      if (token) {
-        try {
-          const pages = await getPages(token);
-          connectedPages = pages.data.map((page) => ({
-            name: page.name,
-            id: page.id,
-          }));
         } catch (error) {
-          console.error("Error fetching pages:", error);
+          console.error("Error refreshing Gmail token:", error);
+          isValid = false;
         }
       }
+
+      validConnections.push({
+        platform: platform.key,
+        is_valid: isValid,
+        connectedAt: platform.connectedAt,
+      });
     }
-    return { validConnections, connectedPages };
   }
+
+  return validConnections;
+}
+
+async getConnections(
+  orgId: string,
+  entity: string,
+  userId: string,
+  includes: string
+): Promise<{
+  validConnections: { platform: string; is_valid: boolean; connectedAt: string | undefined }[];
+  connectedPages: { name: string; id: string }[];
+  adAccounts: { name: string; id: string; act: string }[];
+}> {
+  const userDetails =
+    entity === "agency"
+      ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
+      : await this._clientTenantRepository.getClientById(orgId, userId);
+
+  if (!userDetails) {
+    throw new NotFoundError("User details not found, please try again later.");
+  }
+
+  let validConnections = [];
+
+  if (includes == "all" || includes == "pages" || includes == "social" || includes == "gmail" || includes == "ads") {
+    validConnections = await this.getValidConnections(orgId, userDetails.social_credentials, includes);
+  }
+
+  console.log(validConnections,'avlisdconections')
+
+  let connectedPages: { name: string; id: string }[] = [];
+  if (
+    (includes == "pages" || includes == "all") &&
+    validConnections.some(
+      (conn) =>
+        (conn.platform === "facebook" || conn.platform === "instagram") && conn.is_valid
+    )
+  ) {
+    const token =
+      userDetails.social_credentials?.facebook?.accessToken ||
+      userDetails.social_credentials?.instagram?.accessToken;
+
+    if (token) {
+      try {
+        const pagesResponse = await getPages(token);
+        connectedPages = pagesResponse.data.map((page) => ({
+          name: page.name,
+          id: page.id,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch connected pages:", error);
+      }
+    }
+  }
+
+  console.log('connectedpagess',connectedPages)
+
+  let adAccounts: { name: string; id: string; act: string }[] = [];
+  if (
+    (includes == "ads" || includes=== "all") &&
+    validConnections.some((conn) => conn.platform == "meta_ads" && conn.is_valid)
+  ) {
+    const adsToken = userDetails.social_credentials?.meta_ads?.accessToken;
+    if (adsToken) {
+      try {
+        adAccounts = await getAdAccounts(adsToken);
+      } catch (error) {
+        console.error("Failed to fetch ads accounts:", error);
+      }
+    }
+  }
+
+  return {
+    validConnections,
+    connectedPages,
+    adAccounts,
+  };
+}
 
   async getInbox(
     orgId: string,
@@ -1212,6 +1294,174 @@ export class EntityService implements IEntityService {
     return hiddenComment;
   }
   
+
+  async getAgoraTokens(
+    userId: string,
+    channelName?:string
+  ): Promise<{rtmToken:string, rtcToken:string}> {
+    
+  if (!userId) throw new NotFoundError("user not found")
+
+    const uid = String(userId);
+    const expirationTimeInSeconds = 3600;
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const tokenExpire = currentTimestamp + expirationTimeInSeconds;
+    const privilegeExpire = tokenExpire;
+
+    const rtmToken = RtmTokenBuilder.buildToken(
+      env.AGORA.APP_ID,
+      env.AGORA.APP_CERTIFICATE,
+      uid,
+      tokenExpire
+    );
+
+    let rtcToken: string | null = null;
+    if (channelName) {
+      rtcToken = RtcTokenBuilder.buildTokenWithUid(
+        env.AGORA.APP_ID,
+        env.AGORA.APP_CERTIFICATE,
+        String(channelName),
+        uid,
+        RtcRole.PUBLISHER,
+        tokenExpire,
+        privilegeExpire
+      );
+    }
+    return {rtmToken,rtcToken }
+  }
+
+  async getAllCampaigns(orgId: string, role: string, userId: string, selectedPlatforms: string[], selectedAdAccounts: string[]): Promise<any>{
+        const user = role === ROLES.AGENCY
+        ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
+        : await this._clientTenantRepository.getClientById(orgId, userId);
+        let campaigns = []
+        if(selectedPlatforms.includes('meta_ads')){
+          const token = user.social_credentials.meta_ads.accessToken
+          console.log(await getPages(token),'detils')
+          if(!token)return
+          const validCampaigns = []
+        for (const AdAccId of selectedAdAccounts) {
+          const campaign = await getMetaCampaigns(token, AdAccId);
+          const taggedCampaigns = campaign.map(c => ({
+            ...c,
+            platform: PLATFORMS.META_ADS,
+          }));
+          validCampaigns.push(...taggedCampaigns);
+        }
+          console.log(validCampaigns,"campaign ann too")
+          campaigns.push(...validCampaigns)
+        }
+        
+        return campaigns
+      }
+
+      async getAllAdSets(orgId: string, role: string, userId: string, id:string,platform: string): Promise<any>{
+        const user = role === ROLES.AGENCY
+        ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
+        : await this._clientTenantRepository.getClientById(orgId, userId);        
+        if(!user)throw new NotFoundError("user details not found please try again later")
+          let adsets = []
+        if(platform == PLATFORMS.META_ADS){
+            const token = user.social_credentials?.meta_ads?.accessToken
+            if(!token)throw new NotFoundError("token not found please reconnect meta ad account")
+            const ads = await getAllAdSetsByCampaignId(id,token)
+            adsets = ads.map((adset) => ({
+              ...adset,
+              platform: PLATFORMS.META_ADS,
+            }))
+          }
+        return adsets
+      }
+
+      async getAllAds(orgId: string, role: string, userId: string, adsetId:string,platform: string): Promise<any>{
+      const user = role === ROLES.AGENCY
+        ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
+        : await this._clientTenantRepository.getClientById(orgId, userId);        
+        if(!user)throw new NotFoundError("user details not found please try again later")
+        let ads = []
+        if(platform == PLATFORMS.META_ADS){
+            const token = user.social_credentials?.meta_ads?.accessToken
+            if(!token)throw new NotFoundError("token not found please reconnect meta ad account")
+            ads = await getAllAds(adsetId,token,platform)
+          }
+          console.log(ads,"adssssss")
+        return ads
+      }
+
+      async createAd(orgId: string, role: string, userId: string, adsetId:string,platform: string): Promise<any>{
+        const user = role === ROLES.AGENCY
+        ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
+        : await this._clientTenantRepository.getClientById(orgId, userId);        
+        if(!user)throw new NotFoundError("user details not found please try again later")
+        let createdAd;
+        // if(platform == PLATFORMS.META_ADS){
+        //   const token = user.social_credentials?.meta_ads?.accessToken
+        //   if(!token)throw new NotFoundError("token not found please reconnect meta ad account")
+        //     createdAd = await createMetaAd(adsetId,{ name, adset_id, creative, status },platform)
+        // }
+      }
+
+
+      async getCalenderEvents(orgId: string, role: string, userId: string): Promise<{ _id: string; title: string; from: string | Date; to: string | Date; }[]> {
+        let clients: IClientTenant[] = [];
+        console.log(role,"rollleeedde",userId)
+      
+        if (role === ROLES.AGENCY) {
+          const { data } = await this._clientTenantRepository.getAllClients(orgId);
+          clients = data;
+        } else {
+          const client = await this._clientTenantRepository.getClientById(orgId, userId);
+          if (client) clients.push(client);
+        }
+      
+        const events: { _id: string; title: string; from: string | Date; to: string | Date; }[] = [];
+      
+        for (const client of clients) {
+          const projects = await this._projectRepository.getProjectsByClientId(orgId, client._id.toString());
+          if (projects) {
+            projects.forEach((p, idx) => {
+              events.push({
+                _id: `project-${client._id}-${idx}`,
+                title: `Project: ${p.service_name}`,
+                from: p.createdAt ? new Date(p.createdAt).toISOString() : new Date().toISOString(),
+                to: p.dead_line ? new Date(p.dead_line).toISOString() : new Date().toISOString(),
+              });
+            });
+          }
+      
+          const scheduledContents = await this._contentRepository.getAllScheduledContents(orgId, client._id.toString());
+
+          if (scheduledContents) {
+            scheduledContents.forEach((sc, idx) => {
+              const scheduledDate = sc.platforms?.[0]?.scheduledDate;
+          
+              if (scheduledDate && scheduledDate.trim() !== "") {
+                events.push({
+                  _id: `content-${client._id}-${idx}`,
+                  title: `Scheduled Content: ${sc.title}`,
+                  from: sc.createdAt ? new Date(sc.createdAt).toISOString() : new Date().toISOString(),
+                  to: new Date(scheduledDate).toISOString(),
+                });
+              }
+            });
+          }
+          
+          const { invoices } = await this._invoiceRepository.getAllInvoices(orgId, { "client.clientId": client._id.toString() });
+          if (invoices) {
+            invoices.forEach((inv, idx) => {
+              events.push({
+                _id: `invoice-${client._id}-${idx}`,
+                title: `Invoice: ${inv.invoiceNumber} (${inv.isPaid ? "Paid" : "Unpaid"})`,
+                from: inv.createdAt ? new Date(inv.createdAt).toISOString() : new Date().toISOString(),
+                to: inv.dueDate ? new Date(inv.dueDate).toISOString() : new Date().toISOString(),
+              });        
+            });
+          }
+        }
+      
+        return events;
+      }
+      
 
 
 }

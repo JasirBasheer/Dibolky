@@ -85,15 +85,7 @@ export const rescheduleContentApi = async (
   });
 };
 
-export const deleteContentPlatformApi = async (
-  userId: string,
-  contentId: string,
-  platformId: string
-) => {
-  return await api.delete(`/api/entities/content/scheduled/${userId}`, {
-    data: { contentId, platformId },
-  });
-};
+
 
 export const rejectContentApi = async (
   content_id: string,
@@ -149,6 +141,49 @@ export const getMediaDetailsApi = async (
     `/api/entities/media/${role}/${user_id}/${media.platform}/${media.pageId}/${media.id}/${media.type}`
   );
 };
+
+
+export const getCampaignsApi = async (
+  role: string,
+  userId: string,
+  selectedPlatforms: string[],
+  selectedAdAccounts: string[]
+) => {
+  const params = new URLSearchParams();
+
+  selectedPlatforms.forEach(p => params.append('selectedPlatforms', p));
+  selectedAdAccounts.forEach(a => params.append('selectedAdAccounts', a));
+
+  return await api.get(`/api/entities/campaigns/${role}/${userId}?${params.toString()}`);
+};
+
+
+export const getAdSetsApi = async (
+  role: string,
+  user_id: string,
+  campaignDetails: { id: string; name: string; type: string; pageId: string }
+) => {
+    const queryString = new URLSearchParams(campaignDetails).toString();
+
+  return await api.get(
+    `/api/entities/adsets/${role}/${user_id}?${queryString}`
+  );
+};
+
+export const fetchAdsApi = async(
+  role: string,
+  user_id: string,
+  platform: string,
+  adsetId: string
+) => {
+    const queryString = new URLSearchParams({adsetId,platform}).toString();
+
+  return await api.get(
+    `/api/entities/ads/${role}/${user_id}?${queryString}`
+  );
+};
+
+
 
 export const replayCommentApi = async (
   entity: string,

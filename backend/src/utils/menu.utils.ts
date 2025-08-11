@@ -148,20 +148,20 @@ const clientInvoiceManagement = {
   ],
 };
 
-const performance = {
-  title: "Performance",
-  icon: "LineChart",
-  items: [
-    {
-      title: "Social Insights",
-      url: "/performance/social",
-    },
-    {
-      title: "Conversion Reports",
-      url: "/performance/conversions",
-    },
-  ],
-};
+// const performance = {
+//   title: "Performance",
+//   icon: "LineChart",
+//   items: [
+//     {
+//       title: "Social Insights",
+//       url: "/performance/social",
+//     },
+//     {
+//       title: "Competitor Analysis",
+//       url: "/performance/competitor-analysis",
+//     },
+//   ],
+// };
 
 const billingAndPlans = {
   title: "Billing & Plans",
@@ -186,10 +186,6 @@ const toolsAndSettings = {
   title: "Tools & Settings",
   icon: "Settings2",
   items: [
-    {
-      title: "Calendar",
-      url: "/calendar",
-    },
     {
       title: "Settings",
       url: "/settings",
@@ -222,7 +218,7 @@ const planMenu: Record<string, IMenu> = {
     "Content & Projects": contentAndProjects,
     "Communications": communications, 
     "Invoice Management": invoiceManagement, 
-    "Performance": performance, 
+    // "Performance": performance, 
     "Billing & Plans": billingAndPlans, 
     "Tools & Settings":toolsAndSettings 
 };

@@ -26,5 +26,7 @@ export const PLATFORMS = {
     FACEBOOK : 'facebook',
     X : 'x',
     LINKEDIN : 'linkedin',
-    GMAIL : 'gmail'
-}
+    GMAIL : 'gmail',
+    META_ADS: 'meta_ads',
+    GOOGLE_ADS: "google_ads"
+} as const

@@ -7,6 +7,7 @@ import {
   ChevronRight,
   Clock,
   Hash,
+  SquarePen,
   X,
   XCircle,
 } from "lucide-react";
@@ -29,8 +30,7 @@ interface ContentDetailModalProps {
   onClose: () => void;
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
-  onReschedule: (contentId: string,platformId:string,date:string) => void;
-  onPlatformDelete: (contentId: string,platformId:string) => void;
+  onReschedule: (date:string,platformId:string, contentId:string) => void;
 }
 
 export function ContentDetailModal({
@@ -40,7 +40,6 @@ export function ContentDetailModal({
   onApprove,
   onReject,
   onReschedule,
-  onPlatformDelete
 }: ContentDetailModalProps) {
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
   const [isRescheduleModalOpen, setIsRescheduleModalOpen] = useState(false);
@@ -157,6 +156,16 @@ export function ContentDetailModal({
       </div>
     );
   };
+
+
+  const handleReschedulePlatformDate = (date:string,platformId:string) =>{
+    onReschedule(date,platformId,content._id)
+  }
+
+  const handleCloseRecheduleModal = () =>{
+    setIsRescheduleModalOpen(false)
+    onClose()
+  }
 
   return (
    <>
@@ -296,11 +305,16 @@ export function ContentDetailModal({
                         key={p.platform}
                         className="flex items-center gap-2 bg-gray-100 p-2 rounded-md"
                       >
-                        <p onClick={()=> {
-                          setIsRescheduleModalOpen(true)
-                          setSelectedPlatform(p._id)
-                          }}> edit</p>
-                        <Badge>{p.platform}</Badge>
+                        <div>                          
+                          <SquarePen 
+                          className="w-4 h-4 cursor-pointer text-black"
+                          onClick={()=> {
+                            setIsRescheduleModalOpen(true)
+                            setSelectedPlatform(p._id)
+                            }}/>
+                        <Badge className="text-xs">{p.platform}</Badge>
+                        </div>
+                   
                         <Badge variant="outline">
                           {formatDate(p.scheduledDate.toString())}
                         </Badge>
@@ -354,18 +368,10 @@ export function ContentDetailModal({
     {isRescheduleModalOpen && 
     <RescheduleContent 
     platform={content.platforms.find((p)=> p._id == selectedPlatform)}
-    onSave={onReschedule}
+    onSave={handleReschedulePlatformDate}
+    onClose={handleCloseRecheduleModal}
     />
     }
     </>
   );
 }
-// interface ContentDetailModalProps {
-//   content: IReviewBucket;
-//   contentUrls: Record<string, string>;
-//   onClose: () => void;
-//   onApprove: (id: string) => void;
-//   onReject: (id: string) => void;
-//   onReschedule: (contentId: string,platformId:string,date:string) => void;
-//   onPlatformDelete: (contentId: string,platformId:string) => void;
-// }

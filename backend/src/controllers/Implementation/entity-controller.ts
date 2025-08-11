@@ -8,7 +8,6 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { v4 as uuidv4 } from "uuid";
 import { CountryToCurrency } from "../../utils/currency-conversion.utils";
-import { ParsedQs } from "qs";
 import {
   findCountryByIp,
   HTTPStatusCodes,
@@ -18,11 +17,9 @@ import {
 } from "mern.common";
 import { linkedInAuthCallback } from "@/providers/linkedin";
 import { xAuthCallback } from "@/providers/x";
-import { FilterType } from "@/types/invoice";
 import { QueryParser } from "@/utils/query-parser";
 import { gmailAuthCallback } from "@/providers/google";
 import { env } from "@/config";
-import { RtcRole, RtcTokenBuilder, RtmTokenBuilder } from "agora-token";
 
 @injectable()
 export class EntityController implements IEntityController {
@@ -103,65 +100,15 @@ export class EntityController implements IEntityController {
     let menu;
     if (role === "agency") {
       menu = await this._entityService.getMenu(planId);
-    } else if (role === "agency-client") {
-      console.log(
-        req.details.orgId,
-        planId,
-        "tehireaserfamsdjfklasdjflkasjfasdkl"
-      );
+    } else {
       menu = await this._entityService.getClientMenu(
         req.details.orgId as string,
         planId
       );
-    } else if (role === "admin") {
-      menu = {
-        clients: {
-          label: "All Clients",
-          icon: "Users",
-          path: ["/admin/clients"],
-        },
-        plans: {
-          label: "All Plans",
-          icon: "GalleryVertical",
-          path: ["/admin/plans"],
-        },
-        reports: {
-          label: "Reports",
-          icon: "MessageSquareText",
-          path: ["/admin/reports"],
-        },
-      };
-    } else {
-      return SendResponse(
-        res,
-        HTTPStatusCodes.BAD_REQUEST,
-        "Invalid role provided"
-      );
     }
+    if (!menu)
+      SendResponse(res, HTTPStatusCodes.BAD_REQUEST, "Invalid role provided");
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { menu });
-  };
-
-  getCountry = async (req: Request, res: Response): Promise<void> => {
-    let ipAddressWithProxy =
-      req.get("x-forwarded-for") || req.socket.remoteAddress;
-    ipAddressWithProxy =
-      ipAddressWithProxy == "::1" ? "49.36.231.0" : ipAddressWithProxy;
-    const locationData = findCountryByIp(ipAddressWithProxy as string) || {
-      country: "IN",
-    };
-    let userCountry = req.cookies?.userCountry;
-    if (userCountry) {
-      userCountry = CountryToCurrency[locationData?.country as string];
-      res.cookie("userCountry", userCountry, {
-        maxAge: 365 * 24 * 60 * 60 * 1000,
-        httpOnly: false,
-        secure: false,
-        sameSite: "strict",
-        path: "/",
-      });
-    }
-
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS);
   };
 
   getOwner = async (req: Request, res: Response): Promise<void> => {
@@ -432,7 +379,6 @@ export class EntityController implements IEntityController {
       userId,
       query
     );
-    console.log(result, "resjlt");
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, result);
   };
 
@@ -502,14 +448,18 @@ export class EntityController implements IEntityController {
 
   getConnections = async (req: Request, res: Response): Promise<void> => {
     const { entity, user_id } = req.params;
+    const { includes } = req.query as { includes: string };
+    console.log(includes, "includesincludes");
     const connections = await this._entityService.getConnections(
       req.details.orgId as string,
       entity,
-      user_id
+      user_id,
+      includes
     );
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {
       connections: connections.validConnections,
       connectedPages: connections.connectedPages,
+      adAccounts: connections.adAccounts,
     });
   };
 
@@ -539,44 +489,116 @@ export class EntityController implements IEntityController {
   };
 
   getAgoraTokens = async (req: Request, res: Response): Promise<void> => {
-const { userId, channelName } = req.query;
-
-  if (!userId) {
-    res.status(400).json({ error: "userId is required" });
-    return;
-  }
-
-  const uid = String(userId);
-  try {
-    const expirationTimeInSeconds = 3600;
-    const currentTimestamp = Math.floor(Date.now() / 1000);
-    const tokenExpire = currentTimestamp + expirationTimeInSeconds;
-    const privilegeExpire = tokenExpire;
-
-    const rtmToken = RtmTokenBuilder.buildToken(
-      env.AGORA.APP_ID,
-      env.AGORA.APP_CERTIFICATE,
-      uid,
-      tokenExpire
+    const { userId, channelName } = req.query as {
+      userId: string;
+      channelName?: string;
+    };
+    const { rtmToken, rtcToken } = await this._entityService.getAgoraTokens(
+      userId,
+      channelName
     );
-
-    let rtcToken: string | null = null;
-    if (channelName) {
-      rtcToken = RtcTokenBuilder.buildTokenWithUid(
-        env.AGORA.APP_ID,
-        env.AGORA.APP_CERTIFICATE,
-        String(channelName),
-        uid,
-        RtcRole.PUBLISHER,
-        tokenExpire,
-        privilegeExpire
-      );
-    }
-
     res.json({ rtmToken, rtcToken });
-  } catch (error) {
-    console.error("Token generation failed:", error);
-    res.status(500).json({ error: "Failed to generate tokens" });
-  }
-};
+  };
+
+  getCampaigns = async (req: Request, res: Response): Promise<void> => {
+    const { userId, role } = req.params;
+    const selectedPlatforms = Array.isArray(req.query.selectedPlatforms)
+      ? req.query.selectedPlatforms.map(String)
+      : req.query.selectedPlatforms
+      ? [String(req.query.selectedPlatforms)]
+      : [];
+
+    const selectedAdAccounts = Array.isArray(req.query.selectedAdAccounts)
+      ? req.query.selectedAdAccounts.map(String)
+      : req.query.selectedAdAccounts
+      ? [String(req.query.selectedAdAccounts)]
+      : [];
+
+    const campaigns = await this._entityService.getAllCampaigns(
+      req.details.orgId,
+      role,
+      userId,
+      selectedPlatforms,
+      selectedAdAccounts
+    );
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {
+      campaigns,
+    });
+  };
+
+  createCampaign = async (req: Request, res: Response): Promise<void> => {
+    const { userId, role } = req.params;
+    // const selectedPlatforms = Array.isArray(req.query.selectedPlatforms) ? req.query.selectedPlatforms.map(String)
+    // SendResponse(res,HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { campaigns });
+  };
+
+  getAdSets = async (req: Request, res: Response): Promise<void> => {
+    const { userId, role } = req.params;
+    const { id, platform } = req.query as { id: string; platform: string };
+    const adsets = await this._entityService.getAllAdSets(
+      req.details.orgId,
+      role,
+      userId,
+      id,
+      platform
+    );
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { adsets });
+  };
+
+  createAdSet = async (req: Request, res: Response): Promise<void> => {
+    const { userId, role } = req.params;
+    const { id, platform } = req.query as { id: string; platform: string };
+    const adsets = await this._entityService.getAllAdSets(
+      req.details.orgId,
+      role,
+      userId,
+      id,
+      platform
+    );
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { adsets });
+  };
+
+  getAllAds = async (req: Request, res: Response): Promise<void> => {
+    const { userId, role } = req.params;
+    const { adsetId, platform } = req.query as {
+      adsetId: string;
+      platform: string;
+    };
+
+    const ads = await this._entityService.getAllAds(
+      req.details.orgId,
+      role,
+      userId,
+      adsetId,
+      platform
+    );
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { ads });
+  };
+
+  createAd = async (req: Request, res: Response): Promise<void> => {
+    const { userId, role } = req.params;
+    const { adsetId, platform } = req.query as {
+      adsetId: string;
+      platform: string;
+    };
+
+    const ads = await this._entityService.createAd(
+      req.details.orgId,
+      role,
+      userId,
+      adsetId,
+      platform
+    );
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { ads });
+  };
+
+  getCalenderEvents = async (req: Request, res: Response): Promise<void> => {
+    const { userId, role } = req.params;
+    const events = await this._entityService.getCalenderEvents(
+      req.details.orgId,
+      role,
+      userId
+    );
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { events });
+  };
 }

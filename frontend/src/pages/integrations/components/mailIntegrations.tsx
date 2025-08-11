@@ -1,14 +1,14 @@
 import SocialConnectCard from "./socialConnectCard";
 
 type MailIntegrationsContentProps = {
-  handleConnectSocailMedia: (url: string, platform: string) => void;
+  handleConnectSocials: (url: string, platform: string) => void;
   connections: { is_valid: boolean; platform: string; connectedAt: Date }[];
   required: string[];
   isConnectionLoading: boolean;
 };
 
 export const MailIntegrationsContent = ({
-  handleConnectSocailMedia,
+  handleConnectSocials,
   connections,
   required,
   isConnectionLoading,
@@ -25,7 +25,7 @@ export const MailIntegrationsContent = ({
       required={required}
       isLoading={isConnectionLoading}
       onConnect={(platform) =>
-        handleConnectSocailMedia(`/api/entities/connect/${platform}`, platform)
+        handleConnectSocials(`/api/entities/connect/${platform}`, platform)
       }
       onDisconnect={() => {
         console.log("disconnected");
@@ -40,7 +40,7 @@ export const MailIntegrationsContent = ({
       required={required}
       isLoading={isConnectionLoading}
       onConnect={(platform) =>
-        handleConnectSocailMedia(`/api/entities/connect/${platform}`, platform)
+        handleConnectSocials(`/api/entities/connect/${platform}`, platform)
       }
       onDisconnect={() => {
         console.log("disconnected");

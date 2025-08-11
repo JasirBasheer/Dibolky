@@ -19,7 +19,7 @@ export const renderInputField = (fieldProps: InputFieldProps, formContext: FormC
             [name]: error
         }));
     };
-
+ 
     return (
 
         <div className="mb-4">
@@ -35,7 +35,7 @@ export const renderInputField = (fieldProps: InputFieldProps, formContext: FormC
                         p-3 focus:ring-1 ${errors[name] ? 'focus:ring-red-500 outline-none' : 'focus:ring-blue-500 outline-none'}
                         focus:border-blue-500 hover:border-blue-400 transition-all duration-200 bg-white shadow-sm`}
                     {...props}
-                />
+                /> 
 
             </div>
             {errors[name] && (

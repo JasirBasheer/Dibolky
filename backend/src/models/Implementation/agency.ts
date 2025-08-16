@@ -34,7 +34,8 @@ const agencySchema: Schema<IAgency> = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     address: {
         city: {
@@ -114,6 +115,7 @@ export const agencyTenantSchema = new Schema<IAgencyTenant>({
     email: {
         type: String,
         required: false,
+        unique: true
     },
     paymentCredentials: {
         razorpay: {

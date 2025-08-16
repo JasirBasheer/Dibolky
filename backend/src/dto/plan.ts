@@ -10,5 +10,6 @@ export interface PlanDetailsDTO {
     maxClients: number;
     features: string[];
     permissions:string[];
-    menu: IMenu | string[];
+    menu: string[] | IMenu ;
+    type: string
 }

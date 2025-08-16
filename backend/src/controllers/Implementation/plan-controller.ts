@@ -7,8 +7,8 @@ import {
 } from 'mern.common';
 import { IPlanController } from '../Interface/IPlanController';
 import { IPlanService } from '@/services/Interface/IPlanService';
-import { IPlanType } from '@/types';
 import { PlanDetailsDTO } from '@/dto';
+import { QueryParser } from '@/utils';
 
 @injectable()
 export class PlanController implements IPlanController {
@@ -20,21 +20,13 @@ export class PlanController implements IPlanController {
         this._planService = _planService
     }
 
-    getPlanWithConsumers = async (
-        req: Request<{ plan_id: string }>,
-        res: Response,
-    ): Promise<void> => {
-            const { plan_id } = req.params
-            const details = await this._planService.getPlanDetails(plan_id)
-            SendResponse(res,HTTPStatusCodes.OK,ResponseMessage.SUCCESS,{details})
-    }
-
     getPlans = async(
         req: Request,
         res: Response,
     ): Promise<void> => {
-        const plans = await this._planService.getPlans()
-        SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS,{plans})
+        const query = QueryParser.parseFilterQuery(req.query);
+        const result = await this._planService.getPlans(query)
+        SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS,{result})
     }
 
 
@@ -68,9 +60,10 @@ export class PlanController implements IPlanController {
         req: Request,
         res: Response,
     ): Promise<void> => {
-            const { details }: {details: PlanDetailsDTO } = req.body
-            console.log(details,'ddddd')
-            await this._planService.editPlan(details)
+            console.log(req.body)
+            const details: PlanDetailsDTO = req.body;
+            const { plan_id } = req.params 
+            await this._planService.editPlan(plan_id, details)
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }

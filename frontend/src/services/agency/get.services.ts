@@ -37,3 +37,5 @@ export const fetchAvailableUsersApi = async() =>{
 export const getPaymentIntegrationsStatus = async () => {
     return await api.get(`/api/agency/get-payment-integration-status`)
   }
+
+

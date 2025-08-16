@@ -69,7 +69,6 @@ export class AgencyController implements IAgencyController {
         req: Request,
         res: Response
     ): Promise<void> => {
-            if (!req.details) throw new NotFoundError("Details Not Fount")
             const includeDetails  = req.query.include 
             const query = QueryParser.parseFilterQuery(req.query);
 

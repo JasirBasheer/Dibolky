@@ -19,8 +19,8 @@ type FilterBuilderOptions = {
 export class QueryParser {
   static parseFilterQuery(query: ParsedQs): FilterType {
     return {
-      page: Number(query.page) || 1,
-      limit: Number(query.limit) || 10,
+      page: query.page !== undefined ? Number(query.page) : 1,
+      limit: query.limit !== undefined ? Number(query.limit) : 10,
       query: String(query.query || ""),
       status: String(query.status || ""),
       sortBy: String(query.sortBy || "createdAt"),

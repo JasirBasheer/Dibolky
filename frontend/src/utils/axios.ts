@@ -6,12 +6,12 @@ const customAxios = axios.create({
   withCredentials: true,
 });
 
-customAxios.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    if (err.response?.status === 500) toast.error("Server error!");
-    return Promise.reject(err);
-  }
-);
+// customAxios.interceptors.response.use(
+//   (res) => res,
+//   (err) => {
+//     if (err.response?.status === 500) toast.error("Server error!");
+//     return Promise.reject(err);
+//   }
+// );
 
 export default customAxios;

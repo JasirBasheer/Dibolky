@@ -12,7 +12,7 @@ export default {
   			cantarell: [
   				'Cantarell',
   				'sans-serif'
-  			]
+  			],
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

@@ -138,13 +138,6 @@ const Clients = () => {
     }));
   };
 
-  const getDaysOverdue = (dueDate: string | Date) => {
-    const today = new Date();
-    const due = new Date(dueDate);
-    const diffTime = today.getTime() - due.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays > 0 ? diffDays : 0;
-  };
 
   return (
     <>

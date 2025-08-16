@@ -82,7 +82,11 @@ export class ProjectRepository
     status: string
   ): Promise<IProject | null> {
     const model = await this.getModel(orgId);
-    return null;
+     const updatedProject = await model.findOneAndUpdate(
+        { _id: projectId },
+        { status }
+      );
+    return updatedProject;
   }
 
   async getProjectsByClientId(
@@ -92,6 +96,16 @@ export class ProjectRepository
     const model = await this.getModel(orgId);
     return await model.find({
       "client.clientId": new Types.ObjectId(clientId),
+    });
+  }
+
+    async getProjectById(
+    orgId: string,
+    projectId: string
+  ): Promise<IProject[] | null> {
+    const model = await this.getModel(orgId);
+    return await model.findOne({
+      _id: new Types.ObjectId(projectId),
     });
   }
 }

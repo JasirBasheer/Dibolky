@@ -95,12 +95,12 @@ const Navbar: React.FC<NavbarProps> = ({
             >
               Login
             </a>
-            {/* <a
+            <a
               onClick={() => navigate("/trial")}
               className="dark:bg-[#202d42ea] bg-[#1c1e21f3] border border-[#8c9ab03f] light:bg-blue-600 text-white px-4 py-2 rounded-[25rem] transition-colors duration-200"
             >
               Start Free Trial
-            </a> */}
+            </a>
           </div>
 
           <button

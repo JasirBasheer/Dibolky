@@ -37,7 +37,7 @@ export interface IPlan {
     name: string;
     description:string;
     price: number;
-    planType: string;
+    type: string;
     features: string[];
     billingCycle:  validityType;
     maxProjects?: number;
@@ -48,6 +48,7 @@ export interface IPlan {
         accounting?: IMenuItems;
     };
     isActive:boolean;
+    createdAt?: string;
 }
 
 
@@ -86,6 +87,7 @@ interface Details {
 }
 
 export interface Transactions {
+    _id?:string;
     orgId: string;
     planId?: string
     userId?: string;
@@ -95,6 +97,7 @@ export interface Transactions {
     amount: number;
     description: string;
     currency: string;
+    createdAt: string
 }
 
 export interface IAdminClientData {

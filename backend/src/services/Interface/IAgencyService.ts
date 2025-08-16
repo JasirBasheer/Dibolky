@@ -11,6 +11,7 @@ export interface IAgencyService {
     verifyOwner(agency_id: string): Promise<Partial<IAgencyType> | null>;
     getAgencyOwnerDetails(orgId: string): Promise<IAgencyTenant | null>;
     agencyLoginHandler(email: string, password: string): Promise<string>;
+    toggleAccess(client_id: string): Promise<void>;
     getProjects(orgId: string,projectsFor:string): Promise<object>
     getAllAvailableClients(orgId: string): Promise<IAvailableClients[]>
     createClient(orgId: string, name: string, email: string, industry: string, services: ServicesData, menu: string[], organizationName: string): Promise<IClientTenant | null>;

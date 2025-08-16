@@ -1,8 +1,8 @@
-import mongoose, { Schema, Document } from 'mongoose';
+// models/Implementation/transaction.ts
+import mongoose, { Schema, Model } from 'mongoose';
 import { ITransaction } from '../Interface';
 
-
-export const transactionSchema: Schema<ITransaction> = new Schema({
+const transactionSchema: Schema<ITransaction> = new Schema({
     orgId: {
         type: String,
         required: true,
@@ -20,7 +20,7 @@ export const transactionSchema: Schema<ITransaction> = new Schema({
         default: "razorpay"
     },
     transactionType:{
-        type:String,
+        type: String,
     },
     transactionId: {
         type: String
@@ -37,7 +37,7 @@ export const transactionSchema: Schema<ITransaction> = new Schema({
         type: String,
         required: true
     }
-},{timestamps:true});
+}, { timestamps: true });
 
-const Transaction = mongoose.model<ITransaction>('transaction', transactionSchema);
-export default Transaction
+const TransactionModel: Model<ITransaction> = mongoose.model<ITransaction>('Transaction', transactionSchema);
+export { transactionSchema, TransactionModel };

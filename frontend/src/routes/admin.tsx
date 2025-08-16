@@ -3,6 +3,7 @@ import Plans from '@/pages/admin/Plans'
 import AdminClients from '@/pages/admin/Clients'
 import AdminDashboard from '@/pages/dashboard/adminDashboard'
 import { AdminLayout, ForgotPassword, Login, ProtectedRoute, ResetPassword, UnProtectedRoute } from '@/pages'
+import Transactions from '@/pages/admin/Transactions'
 
 export default function AdminRoutes() {
     return (
@@ -16,6 +17,7 @@ export default function AdminRoutes() {
                 <Route index element={<AdminDashboard />} />
                 <Route path='plans' element={<Plans />} />
                 <Route path='clients' element={<AdminClients />} />
+                <Route path='transactions' element={<Transactions />} />
                 
             </Route>
 

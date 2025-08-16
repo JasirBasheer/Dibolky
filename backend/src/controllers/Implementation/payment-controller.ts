@@ -7,6 +7,7 @@ import {
     ResponseMessage, 
     SendResponse 
 } from 'mern.common';
+import { env } from '@/config';
 
 @injectable()
 export class PaymentController implements IPaymentController {
@@ -25,10 +26,7 @@ export class PaymentController implements IPaymentController {
         res: Response,
     ): Promise<void> => {
             const { amount , currency }: { amount: number, currency:string } = req.body
-            console.log(amount,"notreached,")
-
-            const response = await this._paymentService.razorpay({ amount, currency},"rzp_test_fKh2fGYnPvSVrM","hSMt3HNxZBv4csbZMtVdaEBB")
-            console.log(response,'ersons[osejr')
+            const response = await this._paymentService.razorpay({ amount, currency},env.RAZORPAY.SECRET_ID,env.RAZORPAY.SECRET_KEY)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.CREATED, { data: response })
     }
 
@@ -39,7 +37,6 @@ export class PaymentController implements IPaymentController {
         res: Response,
     ): Promise<void> => {
             const { details, success_url, cancel_url } = req.body
-
             const session = await this._paymentService.stripe(details, success_url, cancel_url)
             res.json({ url: session })
     }

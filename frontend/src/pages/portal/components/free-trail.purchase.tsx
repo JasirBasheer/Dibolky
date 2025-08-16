@@ -14,7 +14,7 @@ import { checkIsMailExistsApi } from '@/services/common/post.services'
 import { getPlanDetailsApi } from '@/services/common/get.services'
 import { useQuery } from '@tanstack/react-query'
 import { validateField } from '@/validation/portalValidation'
-import { createAgencyApi, createInfluencerApi } from '@/services/portal/post.services'
+import { createAgencyApi } from '@/services/portal/post.services'
 import { message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
@@ -108,18 +108,6 @@ const FreeTrialPurchase = ({ planId, onClose }: FreeTrialPurchaseProps) => {
           setTimeout(() => {
               message.success('Login to continue')
               navigate('/agency/login')
-          }, 500)
-      }
-    }else if (plan.planType == "influencer"){
-      const res = await createInfluencerApi(details)
-      if (res.status == 201) {
-          setTimeout(() => {
-              message.success('Influencer account successfully created')
-          }, 100)
-
-          setTimeout(() => {
-              message.success('Login to continue')
-              navigate('/influencer/login')
           }, 500)
       }
     }

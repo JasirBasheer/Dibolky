@@ -47,3 +47,10 @@ export const createPortfolioApi = async (
 }
 
 
+
+
+export const handleProjectCompletedApi = (
+  projectId: string,
+) => {
+  return api.patch(`/api/entities/projects?projectId=${projectId}`);
+};

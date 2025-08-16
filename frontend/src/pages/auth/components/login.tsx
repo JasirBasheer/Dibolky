@@ -1,4 +1,4 @@
-import { memo, useState, useRef } from "react";
+import { memo, useState, useRef, useEffect } from "react";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { SpinnerCircular } from "spinners-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -19,9 +19,9 @@ const LoginForm = ({ role }: { role: string }) => {
   const [searchParams] = useSearchParams();
   const isNewlyCreatedAccount = searchParams.get("new");
 
-  if (isNewlyCreatedAccount) {
-    toast.success("Account successfully created, Login to continue...");
-  }
+  useEffect(() => {
+    if (isNewlyCreatedAccount) toast.success("Account successfully created, Login to continue...");
+  }, [isNewlyCreatedAccount]);
 
   const onVerify = (token: string) => setToken(token);
 

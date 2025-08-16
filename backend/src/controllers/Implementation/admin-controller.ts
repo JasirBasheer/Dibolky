@@ -8,21 +8,26 @@ import {
     ResponseMessage,
     SendResponse
 } from 'mern.common';
+import { QueryParser } from '@/utils';
+import { IAgencyService } from '@/services';
 
 
 @injectable()
 /** Implementation of AdminController Controller */
 export class AdminController implements IAdminController {
     private _adminService: IAdminService;
+    private _agencyService: IAgencyService;
 
     /**
     * Initializes the AdminController with required service dependencies.
     * @param _adminService - Service for handling admin authentication.
     */
     constructor(
-        @inject('AdminService') adminService: IAdminService
+        @inject('AdminService') adminService: IAdminService,
+        @inject('AgencyService') agencyService: IAgencyService
     ) {
         this._adminService = adminService
+        this._agencyService = agencyService
     }
 
 
@@ -53,12 +58,22 @@ export class AdminController implements IAdminController {
     * @returns Promise resolving to void
     * @throws NotFoundError if clients are not found or any other errors during the process
     */
-    recentClients = async (
+    getClients = async (
         req: Request,
         res: Response,
     ): Promise<void> =>{
-            const clients = await this._adminService.getRecentClients()
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { clients })
+            const query = QueryParser.parseFilterQuery(req.query);
+            const result = await this._adminService.getAllClients(query)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, result)
+    }
+
+    getTransactions = async (
+        req: Request,
+        res: Response,
+    ): Promise<void> =>{
+            const query = QueryParser.parseFilterQuery(req.query);
+            const response = await this._adminService.getTransactions(query)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, response)
     }
 
 
@@ -82,26 +97,15 @@ export class AdminController implements IAdminController {
 
     }
 
-
-    /**
-    * Fetches all clients from the database.
-    * @param req - Express Request object
-    * @param res - Express Response object
-    * @param next - Express NextFunction for error handling
-    * @returns A response with the list of clients or an error message
-    */
-    getAllClients = async(
-        req: Request,
+    toggleClientAccess = async(
+        req: Request<{ client_id: string }>,
         res: Response,
-    ): Promise<void> =>{
-            const details = await this._adminService.getAllClients()
-            if (!details) throw new NotFoundError("Clients Not found")
+    ): Promise<void> => {
+            const { client_id } = req.params
 
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details })
+            await this._agencyService.toggleAccess(client_id)
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
-
-
-
 
 }
 

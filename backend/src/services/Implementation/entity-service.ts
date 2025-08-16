@@ -16,7 +16,7 @@ import { IAgencyRepository } from "../../repositories/Interface/IAgencyRepositor
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { getS3ViewUrl } from "../../utils/aws.utils";
 import { addMonthsToDate } from "../../utils/date-utils";
-import { CustomError, hashPassword, NotFoundError } from "mern.common";
+import { ConflictError, CustomError, hashPassword, NotFoundError } from "mern.common";
 import { INoteRepository } from "../../repositories/Interface/INoteRepository";
 import { getLinkedInTokenStatus } from "@/providers/linkedin";
 import {
@@ -184,107 +184,137 @@ export class EntityService implements IEntityService {
     return CommonMapper.ProjectDetails(result);
   }
 
+  async markProjectAsCompleted(orgId: string, projectId: string): Promise<void>{
+    const project = await this._projectRepository.getProjectById(orgId,projectId)
+    if(!project)throw new NotFoundError("Project not found please try again..")
+    await this._projectRepository.editProjectStatus(orgId,projectId,"Completed")
+  }
+
+
   async IsMailExists(mail: string): Promise<boolean> {
     const isExists = await this._entityRepository.isAgencyMailExists(mail);
     if (isExists) return true;
     return false;
   }
 
-  async createAgency(
+    async createAgency(
     payload: IAgencyRegistrationDto
   ): Promise<Partial<IAgencyType> | null> {
-    const {
-      organizationName,
-      name,
-      email,
-      address,
-      websiteUrl,
-      industry,
-      contactNumber,
-      logo,
-      password,
-      planId,
-      validity,
-      planPurchasedRate,
-      transactionId,
-      paymentGateway,
-      description,
-      currency,
-    } = payload;
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    const hashedPassword = await hashPassword(password);
-    let orgId =
-      organizationName.replace(/\s+/g, "") +
-      Math.floor(Math.random() * 1000000);
-    let validityInDate = addMonthsToDate(validity);
-
-    const newAgency = {
-      orgId,
-      planId,
-      validity: validityInDate,
-      organizationName,
-      name,
-      email,
-      address,
-      websiteUrl,
-      industry,
-      contactNumber,
-      logo,
-      password: hashedPassword,
-      planPurchasedRate: planPurchasedRate,
-      currency,
-    };
-
-    const ownerDetails = await this._entityRepository.createAgency(newAgency);
-    const plan = await this._planRepository.getPlan(planId)
-
-    const newTenantAgency = {
-      main_id: ownerDetails?._id,
-      orgId,
-      planId,
-      organizationName,
-      name,
-      email,
-      permissions: plan.permissions
-    };
-
-    const newTransaction = {
-      orgId,
-      email,
-      userId: ownerDetails?._id,
-      planId,
-      paymentGateway,
-      transactionId,
-      amount: planPurchasedRate,
-      description,
-      currency,
-      transactionType: "plan_transactions",
-    };
-
-    const activity = {
-      user: {
-        userId: ownerDetails._id as string,
-        username: organizationName,
+    try {
+      const {
+        organizationName,
+        name,
         email,
-      },
-      activityType: "account_created",
-      activity: "Account created for agency",
-      entity: {
-        type: "agency",
-        id: ownerDetails._id.toString(),
-      },
-      redirectUrl: "settings",
-    };
+        address,
+        websiteUrl,
+        industry,
+        contactNumber,
+        logo,
+        password,
+        planId,
+        validity,
+        planPurchasedRate,
+        transactionId,
+        paymentGateway,
+        description,
+        currency,
+      } = payload;
 
-    this._transactionRepository.createTransaction(newTransaction);
-    this._transactionTenantRepository.createTransaction(orgId, newTransaction);
-    this._activityRepository.createActivity(orgId, activity);
-    await this._entityRepository.saveDetailsInAgencyDb(
-      newTenantAgency,
-      orgId as string
-    );
-    return ownerDetails;
+      const hashedPassword = await hashPassword(password);
+      const orgId = organizationName.replace(/\s+/g, "") + Math.floor(Math.random() * 1000000);
+      const validityInDate = addMonthsToDate(validity);
+
+      const newAgency = {
+        orgId,
+        planId,
+        validity: validityInDate,
+        organizationName,
+        name,
+        email,
+        address,
+        websiteUrl,
+        industry,
+        contactNumber,
+        logo,
+        password: hashedPassword,
+        planPurchasedRate,
+        currency,
+      };
+
+      const ownerDetails = await this._agencyRepository.createAgency(
+        newAgency,
+        session
+      );
+
+      if (!ownerDetails) {
+        throw new Error("Failed to create agency");
+      }
+      await session.commitTransaction();
+
+      const plan = await this._planRepository.getPlan(planId);
+      if (!plan) {
+        throw new Error("Plan not found");
+      }
+      const newTenantAgency = {
+        main_id: ownerDetails?._id,
+        orgId,
+        planId,
+        organizationName,
+        name,
+        email,
+        permissions: plan.permissions,
+      };
+
+      const newTransaction = {
+        orgId,
+        email,
+        userId: ownerDetails?._id,
+        planId,
+        paymentGateway,
+        transactionId,
+        amount: planPurchasedRate,
+        description,
+        currency,
+        transactionType: "plan_transactions",
+      };
+
+      const activity = {
+        user: {
+          userId: ownerDetails._id as string,
+          username: organizationName,
+          email,
+        },
+        activityType: "account_created",
+        activity: "Account created for agency",
+        entity: {
+          type: "agency",
+          id: ownerDetails._id.toString(),
+        },
+        redirectUrl: "settings",
+      };
+      await this._entityRepository.saveDetailsInAgencyDb( newTenantAgency, orgId as string);
+      await this._transactionRepository.createTransaction( newTransaction );
+      await this._transactionTenantRepository.createTransaction( orgId, newTransaction );
+      await this._activityRepository.createActivity( orgId, activity);
+   
+      return ownerDetails;
+    } catch (error) {
+      await session.abortTransaction().catch(() => {}); 
+      await session.endSession();
+      console.error(" createAgency failed:", error);
+       if (error.code === 11000) {
+          throw new ConflictError("Account with this email already exists...");
+        }
+    } finally {
+     if (!session.hasEnded) {
+      await session.endSession();
+    }
+    }
   }
+
 
   async getMenu(planId: string): Promise<IMenu[]> {
     const plan = await this._planRepository.getPlan(planId);

@@ -31,6 +31,8 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import PaginationControls from "@/components/ui/PaginationControls";
 import Skeleton from "react-loading-skeleton";
+import { handleProjectCompletedApi } from "@/services/agency/post.services";
+import { toast } from "sonner";
 
 export default function Projects() {
   const user = useSelector((state: RootState) => state.user);
@@ -51,7 +53,7 @@ export default function Projects() {
     setIsDialogOpen(true);
   };
 
-  const { data, isLoading: isProjectsLoading } = useQuery({
+  const { data, isLoading: isProjectsLoading, refetch } = useQuery({
     queryKey: [
       "get-projects",
       page,
@@ -72,7 +74,7 @@ export default function Projects() {
       return getAllProjects(
         user.role == "agency" ? "agency" : "client",
         user.user_id,
-        `?${searchParams}`
+        `${searchParams}`
       );
     },
     placeholderData: keepPreviousData,
@@ -83,6 +85,17 @@ export default function Projects() {
   useEffect(() => {
     reset();
   }, [debouncedFilter.query,user.user_id, debouncedFilter.status, debouncedFilter.sortBy, debouncedFilter.sortOrder, debouncedFilter.type]);
+
+  const handleProjectCompleted = async(projectId: string) =>{
+    console.log(projectId,'sdf')
+    const response = await handleProjectCompletedApi(projectId)
+    if(response.status == 200){
+      toast.success("project status changed successfully")
+      refetch()
+      setIsDialogOpen(false)
+      setSelectedProject(null)
+    }
+  }
 
   return (
     <>
@@ -327,6 +340,7 @@ export default function Projects() {
                 variant="default"
                 className="bg-black"
                 disabled={selectedProject?.status === "Completed"}
+                onClick={()=> handleProjectCompleted(selectedProject.id)}
               >
                 <CheckCircle2 className="w-4 h-4 mr-2" />
                 Mark as Done

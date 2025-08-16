@@ -22,6 +22,7 @@ export interface IEntityController {
     getMessages(req: Request, res: Response): Promise<void>
     createGroup(req: Request, res: Response): Promise<void>
     getAllProjects(req:Request,res:Response):Promise<void>
+    markProjectAsCompleted(req:Request,res:Response):Promise<void>
     initiateS3BatchUpload(req:Request,res:Response):Promise<void>
     saveContent(req:Request,res:Response):Promise<void>
     getS3ViewUrl(req:Request,res:Response):Promise<void>
@@ -38,6 +39,9 @@ export interface IEntityController {
     handleXCallback(req:Request,res:Response):Promise<void>
     handleGmaileCallback(req:Request,res:Response):Promise<void>
     getAgoraTokens(req: Request, res: Response): Promise<void>
+
+
+    
     getCampaigns(req: Request, res: Response): Promise<void>
     createCampaign(req: Request, res: Response): Promise<void>
     getAdSets(req: Request, res: Response): Promise<void>

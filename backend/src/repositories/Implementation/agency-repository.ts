@@ -1,6 +1,6 @@
 import { IAgencyRepository } from '../Interface/IAgencyRepository';
 import { BaseRepository, NotFoundError } from 'mern.common';
-import { Model } from 'mongoose';
+import mongoose, { Model, SortOrder } from 'mongoose';
 import { inject, injectable } from 'tsyringe';
 import agencyModel from '../../models/Implementation/agency';
 import { IUpdateProfile } from '../../types/common';
@@ -16,10 +16,29 @@ export class AgencyRepository extends BaseRepository<IAgency> implements IAgency
         super(model);
     }
 
+      async createAgency(
+        new_agency: object,
+        session?: mongoose.ClientSession
+      ): Promise<Partial<IAgency>> {
+        const agency = new this.model(new_agency);
+        return await agency.save({ session });
+      }
+
     async findAgencyWithMail(
         agency_mail: string
     ): Promise<IAgency | null> {
         return this.findOne({ email: agency_mail });
+    }
+
+    async toggleAccess(agency_id:string):Promise<void>{
+    const agency = await this.findOne({ _id: agency_id }); 
+    if (!agency) throw new Error("Client not found");
+
+    await this.update(
+        { _id: agency_id },
+        { isBlocked: !agency.isBlocked }
+    );
+
     }
 
     async findAgencyWithId(
@@ -53,11 +72,22 @@ export class AgencyRepository extends BaseRepository<IAgency> implements IAgency
         );
     }
 
-    async getAgencyPlanConsumers(
-        plan_id: string
-    ): Promise<IAgency[] | null> {
-        return await agencyModel.find({ planId: plan_id }).lean();
-    }
+     async getAllAgencies(
+    filter: Record<string, unknown> = {},
+    options?: { page?: number; limit?: number; sort?: string | { [key: string]: SortOrder } | [string, SortOrder][] }
+  ): Promise<{data:IAgency[] , totalCount: number}> {
+    const { page, limit, sort } = options || {};
+    const totalCount = await this.model.countDocuments(filter);
+
+    let query = this.model.find(filter);
+
+    if (sort) query = query.sort(sort);
+    if (page && limit) query = query.skip((page - 1) * limit).limit(limit);
+
+    const data = await query.exec();
+
+    return { data, totalCount };
+  }
 
     async updateProfile(
         orgId: string,

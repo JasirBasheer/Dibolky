@@ -13,6 +13,9 @@ export class PortalMapper {
       maxProjects: plan.maxProjects,
       maxClients: plan.maxClients,
       isActive: plan.isActive,
+      createdAt: plan.createdAt,
+      menu: plan.menu,
+      type: plan.type
     }));
   }
     static PlanMapper(plan: IPlan) {
@@ -26,6 +29,7 @@ export class PortalMapper {
       maxProjects: plan.maxProjects,
       maxClients: plan.maxClients,
       isActive: plan.isActive,
+      createdAt: plan.createdAt,
     }
   }
 

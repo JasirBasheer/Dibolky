@@ -23,6 +23,7 @@ export class AdminAgencyMapper {
             isBlocked: agency.isBlocked,
             planPurchasedRate: agency.planPurchasedRate,
             currency:agency.currency,
+            createdAt: agency.createdAt
       }
     }) as Partial<IAgencyType[]>
   }

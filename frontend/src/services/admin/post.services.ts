@@ -7,8 +7,12 @@ export const createPlanApi = async(details:object) =>{
 export const changePlanStatusApi = async(plan_id:string) =>{
     return await api.patch(`/api/admin/plans/${plan_id}`)
 }
+
+export const changeClientStatusApi = async(client_id:string) =>{
+    return await api.patch(`/api/admin/client/${client_id}`)
+}
+
 export const updatePlanApi = async(plan_id:string, details: object) =>{
-    console.log(details,"detailsss")
     return await api.put(`/api/admin/plans/${plan_id}`,details)
 }
 

@@ -1,5 +1,5 @@
 import { container } from "tsyringe";
-import { activitySchema,  agencyTenantSchema, bucketSchema, chatSchema, clientTenantSchema, invoiceSchema, messageSchema, noteSchema, Plan, portfolioSchema, projectSchema, socialMessageSchema, socialUserSchema, testimonialSchema, transactionSchema } from "@/models";
+import { activitySchema,  agencyTenantSchema, bucketSchema, chatSchema, clientTenantSchema, invoiceSchema, messageSchema, noteSchema, Plan, portfolioSchema, projectSchema, socialMessageSchema, socialUserSchema, testimonialSchema, TransactionModel, transactionSchema } from "@/models";
 import adminSchema from '@/models/Implementation/admin'
 import agencySchema from '@/models/Implementation/agency'
 import clientSchema from '@/models/Implementation/client'
@@ -13,7 +13,8 @@ container.register('client_model', { useValue: clientSchema });
 container.register('client_tenant_model', { useValue: clientTenantSchema });
 container.register('chat_model', { useValue: chatSchema });
 container.register('review_bucket_model', { useValue: bucketSchema });
-container.register('transaction_model', { useValue: transactionSchema });
+container.register('transaction_model', { useValue: TransactionModel });
+container.register('transaction_tenant_modal', { useValue: transactionSchema });
 container.register('message_model', { useValue: messageSchema });
 container.register('plan_model', { useValue: Plan });
 container.register('note_model', { useValue: noteSchema });

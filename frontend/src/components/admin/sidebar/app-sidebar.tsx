@@ -15,7 +15,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
    const menu: { title: string; icon?: string; url?: string }[] = [
           {
        title: 'Dashboard',
-       icon: 'Users',
+       icon: 'LayoutDashboard',
        url: '/admin/'
      },
       {
@@ -27,19 +27,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
        title: 'All Plans',
        icon: 'GalleryVertical',
        url: '/admin/plans'
-     }
+     },
+      {
+       title: 'All Transactions',
+       icon: 'BadgeDollarSign',
+       url: '/admin/transactions'
+     },
+    //   {
+    //    title: 'Settings',
+    //    icon: 'Settings',
+    //    url: '/admin/settings'
+    //  }
     ]
-
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-       <TeamSwitcher />
+      <NavUser user={user} />
       </SidebarHeader>
       <SidebarContent>
          <NavMain items={menu} />
       </SidebarContent>
       <SidebarFooter>
-      <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

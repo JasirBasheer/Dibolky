@@ -43,47 +43,19 @@ export class EntityController implements IEntityController {
   };
 
   createAgency = async (req: Request, res: Response): Promise<void> => {
-    const {
-      organizationName,
-      name,
-      email,
-      address,
-      websiteUrl,
-      industry,
-      contactNumber,
-      logo,
-      password,
-      planId,
-      validity,
-      planPurchasedRate,
-      paymentGateway,
-      description,
-      currency,
-    } = req.body.details;
     const { transaction_id } = req.body;
     const isTrial = !transaction_id;
 
-    const finalPlanPurchasedRate = isTrial ? 0 : planPurchasedRate;
+    const finalPlanPurchasedRate = isTrial ? 0 : req.body.details.planPurchasedRate;
     const finalTransactionId = isTrial ? "trial_user" : transaction_id;
-    const finalPaymentGateway = isTrial ? "trial" : paymentGateway;
+    const finalPaymentGateway = isTrial ? "trial" : req.body.details.paymentGateway;
 
     const createdAgency = await this._entityService.createAgency({
-      organizationName,
-      name,
-      email,
-      address,
-      websiteUrl,
-      industry,
-      contactNumber,
-      logo,
-      password,
-      planId,
-      validity,
+      ...req.body.details,
       planPurchasedRate: finalPlanPurchasedRate,
       transactionId: finalTransactionId,
       paymentGateway: finalPaymentGateway,
-      description,
-      currency: currency ?? "trial",
+      currency: req.body.details.currency ?? "trial",
     });
     if (!createdAgency)
       return SendResponse(
@@ -274,7 +246,7 @@ export class EntityController implements IEntityController {
   };
 
   getAllProjects = async (req: Request, res: Response): Promise<void> => {
-    const { userId, role } = req.params;
+    const { userId, role } = req.query as {userId: string, role: string};
     const query = QueryParser.parseFilterQuery(req.query);
     const result = await this._entityService.fetchAllProjects(
       req.details.orgId as string,
@@ -284,6 +256,12 @@ export class EntityController implements IEntityController {
     );
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, result);
   };
+
+  markProjectAsCompleted = async (req: Request, res: Response): Promise<void> => {
+    const { projectId } =req.query as {projectId: string};
+    await this._entityService.markProjectAsCompleted(req.details.orgId,projectId)
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS);
+  }
 
   initiateS3BatchUpload = async (
     req: Request,

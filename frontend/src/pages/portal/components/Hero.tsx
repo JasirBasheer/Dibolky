@@ -32,9 +32,9 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-4 w-full sm:w-auto">
-            {/* <button className="dark:bg-[#202d42ea] bg-[#1c1e21ea]  text-white px-8 py-3 rounded-lg transition-colors duration-200 text-base sm:text-lg font-medium" onClick={() => navigate('/trial')}>
+            <button className="dark:bg-[#202d42ea] bg-[#1c1e21ea]  text-white px-8 py-3 rounded-lg transition-colors duration-200 text-base sm:text-lg font-medium" onClick={() => navigate('/trial')}>
               Start 30-Day Free Trial
-            </button> */}
+            </button>
             <button className="border border-[#202d42ea] dark:text-white light:text-[#2563EB] px-8 py-3 rounded-lg light:hover:bg-blue-50 transition-colors duration-200 text-base sm:text-lg font-medium" onClick={() => setIsDemoVideoOpen(true)}>
               Watch Demo
             </button>

@@ -9,9 +9,9 @@ export const getAllProjects = (
   userId: string,
   query: string = ""
 ) => {
-  console.log(role, userId, "fdokfjaslkjfsdf");
-  return api.get(`/api/entities/projects/${role}/${userId}${query}`);
+  return api.get(`/api/entities/projects?role=${role}&userId=${userId}&${query}`);
 };
+
 
 export const getConnectSocailMediaUrlApi = async (endpoint: string) => {
   console.log(endpoint, "endpoints");
@@ -61,6 +61,10 @@ export const getAllTransactions = async (
 export const getPlanDetailsApi = async (planId: string) => {
   return await api.get(`/api/public/plans/${planId}`);
 };
+
+export const getAllPortalPlans = async() =>{
+    return await api.get(`/api/public/plans?page=0&limit=0`)
+}
 
 export const getActivitesApi = async (role: string, user_id: string) => {
   return await api.get(`/api/entities/activity/${role}/${user_id}`);

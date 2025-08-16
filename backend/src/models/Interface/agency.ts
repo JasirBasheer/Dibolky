@@ -22,6 +22,6 @@ export interface IAgency extends Document {
     isBlocked: boolean;
     planPurchasedRate: number;
     currency?:string;
-    createdAt:Date
+    createdAt?:Date
     updatedAt?:Date
 }

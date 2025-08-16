@@ -111,6 +111,12 @@ export class AgencyService implements IAgencyService {
     }
   }
 
+  async toggleAccess(client_id: string): Promise<void>{
+    if(!client_id)throw new NotFoundError("client Id not found please try again")
+    await this._agencyRepository.toggleAccess(client_id)
+  }
+
+
   async getProjects(
     orgId: string,
     projectsFor: string = "dasboard"
@@ -504,7 +510,7 @@ export class AgencyService implements IAgencyService {
     console.log(agency)
 
     const upgradablePlans = allPlans
-      .filter(
+      .data.filter(
         (plan) =>
           plan.isActive &&
           plan.price > currentPlan.price &&

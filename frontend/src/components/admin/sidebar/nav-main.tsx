@@ -1,4 +1,4 @@
-import { ChevronRight, GalleryVertical, MessageSquareText, Settings, Users, type LucideIcon } from "lucide-react"
+import { BadgeDollarSign, ChevronRight, GalleryVertical, LayoutDashboard, MessageSquareText, Settings, Users, type LucideIcon } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible"
@@ -17,6 +17,9 @@ const icons:Record<string, LucideIcon>  = {
   GalleryVertical:GalleryVertical, 
   MessageSquareText:MessageSquareText,
   Settings:Settings,
+  LayoutDashboard:LayoutDashboard,
+  BadgeDollarSign:BadgeDollarSign,
+
 };
 
 

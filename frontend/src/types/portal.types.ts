@@ -1,5 +1,5 @@
 import { LucideProps } from "lucide-react";
-import { ComponentType, ReactNode } from "react";
+import { ComponentType, ElementType, ReactNode } from "react";
 import { IPlan } from "./admin.types";
 
 export interface Plan {
@@ -77,7 +77,7 @@ export type ValidationErrors = {
 }
 
 export interface InputFieldProps {
-    icon: ReactNode | ComponentType<LucideProps>; 
+    icon: ReactNode | ComponentType<LucideProps>
     name: keyof IFormData;
     label: string;
     type?: string;

@@ -29,6 +29,7 @@ export interface IAgencyType {
   isBlocked: boolean;
   planPurchasedRate: number;
   currency?: string;
+  createdAt?: Date;
 }
 
 interface credentials {

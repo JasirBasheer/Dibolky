@@ -5,6 +5,7 @@ import { IPaymentService } from "../Interface/IPaymentService";
 import { inject, injectable } from "tsyringe";
 import { IEntityService } from "../Interface/IEntityService";
 import { createRazorpayInstance } from "@/config/razorpay.config";
+import { env } from "@/config";
 
 @injectable()
 export class PaymentService implements IPaymentService {
@@ -77,26 +78,48 @@ export class PaymentService implements IPaymentService {
         sig: string
     ): Promise<boolean> {
         try {
-            let event: Stripe.Event;
-            event = stripe.webhooks.constructEvent(details, sig, "whsec_cae33044573115c56711a0bacaf0e229d72fbadd3301a0fc3f8bafe6c4093fe3");
-            console.log('Received Stripe event:', event.type);
+            console.log('stripe debug 1')
 
-            if (event.type == 'checkout.session.completed') {
+            let event: Stripe.Event;
+            event = stripe.webhooks.constructEvent(details, sig, env.STRIPE.WEBHOOK_SECRET);
+
+            console.log('stripe debug 2')
+            
+            switch (event.type) {
+            case "checkout.session.completed": {
+                console.log("Checkout session completed");
                 const session = event.data.object as Stripe.Checkout.Session;
                 const metadata = session.metadata || {};
 
                 await this._entityService.createAgency({
-                    organizationName:metadata.organizationName, name:metadata.name, email:metadata.email,
-                    address:{ city: metadata.city, country: metadata.country }, websiteUrl:metadata.website,
-                    industry:metadata.industry,contactNumber:Number(metadata.phone), logo:metadata.logo || "",
-                    password:metadata.password, planId:JSON.parse(metadata.plan)._id, validity:Number(metadata.validity),
-                    planPurchasedRate:Number(metadata.amount),transactionId: session.payment_intent as string || session.id as string, 
-                    paymentGateway:"Stripe", description:metadata.description, currency:metadata.currency
-                })
+                    organizationName: metadata.organizationName,
+                    name: metadata.name,
+                    email: metadata.email,
+                    address: { city: metadata.city, country: metadata.country },
+                    websiteUrl: metadata.website,
+                    industry: metadata.industry,
+                    contactNumber: Number(metadata.phone),
+                    logo: metadata.logo || "",
+                    password: metadata.password,
+                    planId: JSON.parse(metadata.plan)._id,
+                    validity: Number(metadata.validity),
+                    planPurchasedRate: Number(metadata.amount),
+                    transactionId: (session.payment_intent as string) || (session.id as string),
+                    paymentGateway: "Stripe",
+                    description: metadata.description,
+                    currency: metadata.currency
+                });
                 return true
             }
-            return false
 
+            case "payment_intent.succeeded":
+                console.log("Payment intent succeeded");
+                return true
+
+            default:
+                console.log(` Unhandled event type: ${event.type}`);
+                return false
+        }
         } catch (error) {
             throw error
         }

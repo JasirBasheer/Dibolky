@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { message } from 'antd';
 import { createPlanApi } from '@/services/admin/post.services';
 import { memo } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 const PRESET_MENUS = ["Dashboard", "Our Work", "Client Management", "Content & Projects",
   "Communications", "Invoice Management", "Billing & Plans", "Tools & Settings" ];
@@ -22,7 +23,7 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
   const [formData, setFormData] = useState({
     name: "", price: 0, description: "",
     billingCycle: "monthly",
-    maxProjects: 0, maxClients: 0
+    maxProjects: 0, maxClients: 0, type:"paid"
   })
 
   const [features, setFeatures] = useState([]);
@@ -106,6 +107,23 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
               <h3 className="text-lg font-medium mb-4 ml-1">Basic Information</h3>
               <div className="space-y-6">
                
+<div className="grid grid-cols-2 gap-6">
+  <div className="space-y-2 ml-1">
+    <Label htmlFor="type">Type</Label>
+    <Select
+      value={formData.type || 'paid'} 
+      onValueChange={(value) => handleChange(value, 'type')}
+    >
+      <SelectTrigger>
+        <SelectValue placeholder="Select plan type" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="paid">Paid</SelectItem>
+        <SelectItem value="trail">Trial</SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
+</div>
 
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2 ml-1">
@@ -114,7 +132,7 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
                   </div>
                   <div className="space-y-2 ml-1">
                     <Label htmlFor="price">Price</Label>
-                    <Input id="price" placeholder="Enter price" type="number" onChange={(e) => handleChange(Number(e.target.value), 'price')} />
+                    <Input id="price"  placeholder="Enter price"  disabled={formData.type == "trail"} type="number" onChange={(e) => handleChange(Number(e.target.value), 'price')} />
                   </div>
                 </div>
 

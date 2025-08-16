@@ -168,10 +168,6 @@ const billingAndPlans = {
   icon: "CreditCard",
   items: [
     {
-      title: "Your Plan",
-      url: "/billing/plan",
-    },
-    {
       title: "Upgrade Plan",
       url: "/billing/upgrade",
     },

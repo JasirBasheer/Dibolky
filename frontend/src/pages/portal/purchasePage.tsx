@@ -6,11 +6,8 @@ import { FormData, ValidationError } from '../../types/portal.types';
 import { renderInputField } from './components/Input';
 import { handleStripePayment } from '@/helpers/portal/stripe';
 import Navbar from './components/Navbar';
-import { RootState } from '@/types/common';
 import Skeleton from 'react-loading-skeleton'
-import { useSelector } from 'react-redux';
 import axios from '../../utils/axios';
-import { message } from "antd";
 import {
     User, Mail,
     Phone, Building2,
@@ -20,6 +17,7 @@ import {
 } from 'lucide-react';
 import { IPlan } from '@/types/admin.types';
 import { checkIsMailExistsApi } from '@/services/common/post.services';
+import { toast } from 'sonner';
 
 
 export const PurchasePlan: React.FC = () => {
@@ -31,7 +29,6 @@ export const PurchasePlan: React.FC = () => {
     const [loading, setLoading] = useState(true)
     const [next, setNext] = useState(false)
     const navigate = useNavigate()
-    const currency = useSelector((state: RootState) => state.portal)
 
     const [formData, setFormData] = useState<FormData>({
         firstName: '', lastName: '', email: '', password: '',
@@ -43,10 +40,7 @@ export const PurchasePlan: React.FC = () => {
         setNext(isnext)
     }, [formData, currentStep])
 
-    useEffect(() => {
-        const isnext = validate()
-        setNext(isnext)
-    }, [currency])
+
 
 
     if (!plan_id) {
@@ -80,7 +74,7 @@ export const PurchasePlan: React.FC = () => {
         if (next) {
             const isExists = await validateMail(formData.email)
             if (isExists && currentStep == 1) {
-                message.error('Email alredy exists')
+                toast.error('Email alredy exists')
             } else {
                 setCurrentStep((prev) => prev + 1)
             }
@@ -90,7 +84,7 @@ export const PurchasePlan: React.FC = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         fetchPlanDetails()
-    }, [currency])
+    }, [])
 
     const fetchPlanDetails = async () => {
         try {
@@ -110,9 +104,9 @@ export const PurchasePlan: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         if (paymentMethod == 'razorpay') {
-            await handleRazorpayPayment(formData, plan as IPlan, navigate, currency.selectedCurrency);
+            await handleRazorpayPayment(formData, plan as IPlan, navigate);
         } else if (paymentMethod == 'stripe') {
-            const response = await handleStripePayment(formData, plan as IPlan, currency.selectedCurrency)
+            const response = await handleStripePayment(formData, plan as IPlan)
             console.log(response)
             if (response.url) window.location.href = response.url
         }
@@ -125,7 +119,7 @@ export const PurchasePlan: React.FC = () => {
                     <div key={step} className="flex items-center">
                         <div className={`
                             w-8 h-8 rounded-full flex items-center justify-center
-                            ${currentStep === step ? 'bg-blue-600 text-white' :
+                            ${currentStep === step ? 'bg-[#202d42] text-white' :
                                 currentStep > step ? 'bg-green-500 text-white' :
                                     'bg-gray-200 text-gray-600'}
                             transition-colors duration-200
@@ -152,7 +146,7 @@ export const PurchasePlan: React.FC = () => {
                             <h2 className="text-3xl text-gray-900 font-lazare font-bold">{plan?.name}
                             </h2>
                             <div className="mt-4">
-                                <span className="text-4xl  dark:text-white text-black font-lazare font-bold">{currency.currencySymbol} {plan.price.toLocaleString()}</span>
+                                <span className="text-4xl  dark:text-white text-black font-lazare font-bold">$ {plan.price.toLocaleString()}</span>
                                 <span className="text-gray-600 ml-2 font-lazare font-bold" >/ {plan.billingCycle}</span>
                             </div>
                         </div>
@@ -227,7 +221,7 @@ export const PurchasePlan: React.FC = () => {
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-600">Total Amount</span>
                                 <div className="text-right">
-                                    <span className="text-2xl font-bold text-gray-900">{currency.currencySymbol} {(plan?.price * (formData?.validity ?? 1) || 0).toLocaleString()}{ }</span>
+                                    <span className="text-2xl font-bold text-gray-900">$ {(plan?.price * (formData?.validity ?? 1) || 0).toLocaleString()}{ }</span>
                                     <span className="text-gray-500 text-sm ml-1">/ {plan?.billingCycle}</span>
                                 </div>
                             </div>
@@ -261,7 +255,7 @@ export const PurchasePlan: React.FC = () => {
                                 </div> */}
                                 <div className="absolute inset-0 rounded-lg border-2 border-transparent peer-checked:border-blue-500"></div>
                             </label>
-                            {/* <label className="relative flex p-4 cursor-pointer border rounded-lg hover:border-blue-500 transition-all" onClick={() => setPaymentMethod('stripe')}>
+                            <label className="relative flex p-4 cursor-pointer border rounded-lg hover:border-blue-500 transition-all" onClick={() => setPaymentMethod('stripe')}>
                                 <input
                                     type="radio"
                                     name="payment-method"
@@ -281,11 +275,9 @@ export const PurchasePlan: React.FC = () => {
                                         <p className="text-sm text-gray-500">Pay securely with Stripe</p>
                                     </div>
                                 </div>
-                                <div className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 border-2 rounded-full peer-checked:border-blue-500 peer-checked:bg-blue-50">
-                                    <Check className="w-4 h-4 text-blue-500 opacity-0 peer-checked:opacity-100 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-                                </div>
+               
                                 <div className="absolute inset-0 rounded-lg border-2 border-transparent peer-checked:border-blue-500"></div>
-                            </label> */}
+                            </label>
                         </div>
                     </div>
                 );
@@ -327,7 +319,7 @@ export const PurchasePlan: React.FC = () => {
                                 <>
                                     <h2 className="text-3xl font-bold mb-2 text-center text-gray-800">Complete Your Purchase</h2>
                                     <p className="text-center text-gray-600 mb-8">Please fill in your details to continue</p>
-                                    {/* {renderStepIndicator()} */}
+                                    {renderStepIndicator()}
 
                                     <form onSubmit={handleSubmit} className="space-y-6">
                                         {renderStep()}

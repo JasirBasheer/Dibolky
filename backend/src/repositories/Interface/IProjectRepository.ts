@@ -23,9 +23,14 @@ export interface IProjectRepository extends BaseRepository<IProject> {
     projectId: string,
     status: string
   ): Promise<IProject | null>;
-  
+
   getProjectsByClientId(
     orgId: string,
     clientId: string
+  ): Promise<IProject[] | null>;
+
+  getProjectById(
+    orgId: string,
+    projectId: string
   ): Promise<IProject[] | null>;
 }

@@ -17,6 +17,7 @@ export interface IClient {
         country: string;
         city: string
     }
+    createdAt: string
 }
 
 interface platform {

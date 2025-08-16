@@ -19,7 +19,11 @@ export const createEntityRoutes = (): Router => {
   router.get("/owner",asyncHandler(entityController.getOwner));
 
 
-  router.get("/projects/:role/:userId",asyncHandler(entityController.getAllProjects));
+
+  router
+  .route("/projects")
+  .get(asyncHandler(entityController.getAllProjects))
+  .patch(asyncHandler(entityController.markProjectAsCompleted))
 
   router.get("/get-chats/:userId",asyncHandler(entityController.getChats));
   

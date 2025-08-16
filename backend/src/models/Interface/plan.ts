@@ -14,4 +14,6 @@ export interface IPlan extends Document {
     menu: IMenu[]
     isActive:boolean;
     permissions:string[]
+    createdAt: Date
+    type: string
 }

@@ -75,6 +75,11 @@ const planSchema: Schema<IPlan> = new Schema(
         permissions:{
             type: [String],
             required:true
+        },
+        type:{
+            type: String,
+            required: true,
+            enum: ["trail", "paid"],
         }
     },
     { timestamps: true }

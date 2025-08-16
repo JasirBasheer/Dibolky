@@ -14,7 +14,7 @@ export class TransactionTenantRepository
   private _modelName = "transaction";
   private _models: Map<string, Model<ITransaction>> = new Map();
 
-  constructor(@inject("transaction_model") schema: Schema) {
+  constructor(@inject("transaction_tenant_modal") schema: Schema) {
     super(null as unknown as Model<ITransaction>);
     this._transactionModel = schema;
   }

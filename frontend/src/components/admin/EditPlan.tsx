@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { X, Plus, FolderKanban, Users } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,17 +12,18 @@ import { updatePlanApi } from '@/services/admin/post.services';
 import { IPlan } from '@/types/admin.types';
 
 interface EditPlanProps {
-  setIsEditPlan: Dispatch<SetStateAction<boolean>>;
+  onClose: () => void;
   plan: IPlan;
 }
 
 const PRESET_MENUS = ["Dashboard", "Our Work", "Client Management", "Content & Projects",
   "Communications", "Invoice Management", "Billing & Plans", "Tools & Settings"];
 
-const EditPlan = ({ setIsEditPlan, plan }: EditPlanProps) => {
+const EditPlan = ({ onClose, plan }: EditPlanProps) => {
   const [formData, setFormData] = useState({
     name: plan.name,
     price: plan.price,
+    type: plan.type,
     description: plan.description,
     billingCycle: plan.billingCycle,
     maxProjects: plan.maxProjects || 0,
@@ -30,7 +31,7 @@ const EditPlan = ({ setIsEditPlan, plan }: EditPlanProps) => {
   });
 
   const [features, setFeatures] = useState(plan.features || []);
-  const [selectedMenus, setSelectedMenus] = useState(plan.menu ? Object.keys(plan.menu) : []);
+  const [selectedMenus, setSelectedMenus] = useState([]);
   const [newFeature, setNewFeature] = useState('');
 
   const addFeature = () => {
@@ -62,14 +63,15 @@ const EditPlan = ({ setIsEditPlan, plan }: EditPlanProps) => {
       const updatedPlan = {
         ...formData,
         features,
-        menu: selectedMenus,
+        ...(selectedMenus.length > 0 && { menu: selectedMenus }),
       };
+
 
       const res = await updatePlanApi(plan._id as string, updatedPlan);
 
       if (res.status === 200) {
         message.success("Plan successfully updated");
-        setIsEditPlan(false);
+        onClose();
       }
     } catch (error: unknown) {
       message.error(error instanceof Error ? error.message : 'Unexpected error occurred while updating plan');
@@ -86,7 +88,7 @@ const EditPlan = ({ setIsEditPlan, plan }: EditPlanProps) => {
   return (
     <div
       className="fixed inset-[-3rem] bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
-      onClick={() => setIsEditPlan(false)}
+      onClick={() => onClose()}
     >
       <Card className="w-full max-w-3xl" onClick={(e) => e.stopPropagation()}>
         <div className=" p-4 flex items-center justify-between">
@@ -95,7 +97,7 @@ const EditPlan = ({ setIsEditPlan, plan }: EditPlanProps) => {
             variant="ghost"
             size="icon"
             className="rounded-full"
-            onClick={() => setIsEditPlan(false)}
+            onClick={() => onClose()}
           >
             <X className="h-5 w-5" />
           </Button>
@@ -121,6 +123,7 @@ const EditPlan = ({ setIsEditPlan, plan }: EditPlanProps) => {
                       id="price"
                       value={formData.price}
                       type="number"
+                      disabled={formData.type === 'trail'}
                       onChange={(e) => handleChange(Number(e.target.value), 'price')}
                     />
                   </div>
@@ -236,7 +239,7 @@ const EditPlan = ({ setIsEditPlan, plan }: EditPlanProps) => {
           </div>
 
           <div className="flex justify-end gap-3 mt-8 pt-4 border-t">
-            <Button variant="outline" onClick={() => setIsEditPlan(false)}>
+            <Button variant="outline" onClick={() => onClose()}>
               Cancel
             </Button>
             <Button

@@ -13,14 +13,9 @@ export const env = {
     X: process.env.FRONTEND_BASE_URL,
   },
 
-  // ZEGOCLOUD: {
-  //   APP_ID: Number(process.env.ZEGO_CLOUD_APP_ID),
-  //   APP_SIGN: process.env.ZEGO_CLOUD_APP_SIGN,
-  //   SERVER_SECRET: process.env.ZEGO_CLOUD_SERVER_SECRET,
-  // },
-  AGORA:{
+  AGORA: {
     APP_ID: process.env.AGORA_APP_ID,
-    APP_CERTIFICATE: process.env.AGORA_APP_CERTIFICATE
+    APP_CERTIFICATE: process.env.AGORA_APP_CERTIFICATE,
   },
 
   AWS: {
@@ -30,11 +25,6 @@ export const env = {
       ACCESS_KEY: process.env.AWS_ACCESS_KEY as string,
       SECRET_KEY: process.env.AWS_SECRET_KEY as string,
     },
-  },
-
-  STRIPE: {
-    WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET as string,
-    SECRET_KEY: process.env.STRIPE_SECRET_KEY as string,
   },
 
   GOOGLE: {
@@ -69,5 +59,14 @@ export const env = {
     ACCESS_SECRET: process.env.JWT_ACCESS_SECRET as string,
     REFRESH_SECRET: process.env.JWT_REFRESH_SECRET as string,
     RESET_PASSWORD_SECRET: process.env.JWT_RESET_PASSWORD_SECRET as string,
+  },
+
+  STRIPE: {
+    WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET as string,
+    SECRET_KEY: process.env.STRIPE_SECRET_KEY as string,
+  },
+  RAZORPAY: {
+    SECRET_ID: process.env.RAZORPAY_SECRET_ID as string,
+    SECRET_KEY: process.env.RAZORPAY_SECRET_KEY as string,
   },
 };

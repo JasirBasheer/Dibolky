@@ -137,7 +137,7 @@ export const Home: React.FC = () => {
                 </a>
                 <span className="text-gray-400">•</span>
                 <a className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
-                  Privacy Policy
+                  Privacy Policy v1
                 </a>
               </div>
             </div>

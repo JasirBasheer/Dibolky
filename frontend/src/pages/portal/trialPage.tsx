@@ -9,6 +9,7 @@ import { fetchTrialPlans } from "@/services/portal/get.services"
 import { IPlan } from "@/types/admin.types"
 import Skeleton from "react-loading-skeleton"
 
+
 export function FreeTrialCards() {
 
   const { data: trialPlans, isLoading: isTrialPlansLoading } = useQuery({

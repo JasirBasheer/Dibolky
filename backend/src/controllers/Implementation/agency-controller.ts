@@ -3,7 +3,6 @@ import { IAgencyController } from "../Interface/IAgencyController";
 import { IAgencyService } from "../../services/Interface/IAgencyService";
 import { inject, injectable } from "tsyringe";
 import {
-  ConflictError,
   CustomError,
   HTTPStatusCodes,
   NotFoundError,
@@ -21,7 +20,7 @@ export class AgencyController implements IAgencyController {
   }
 
   isExists = async (req: Request, res: Response): Promise<void> => {
-    const { mail } = req.query as {mail: string};
+    const { mail } = req.query as { mail: string };
     const isExists = await this._agencyService.IsMailExists(mail);
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {
       isExists: isExists,
@@ -178,7 +177,6 @@ export class AgencyController implements IAgencyController {
     req: Request,
     res: Response
   ): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
     const { details, provider } = req.body;
     const gatewayDetails = await this._agencyService.integratePaymentGateWay(
       req.details.orgId as string,
@@ -195,7 +193,6 @@ export class AgencyController implements IAgencyController {
     req: Request,
     res: Response
   ): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
     const paymentIntegrationStatus =
       await this._agencyService.getPaymentIntegrationStatus(
         req.details.orgId as string
@@ -235,6 +232,15 @@ export class AgencyController implements IAgencyController {
   handleSendMail = async (req: Request, res: Response): Promise<void> => {
     const { to, message, subject } = req.body;
     await this._agencyService.sendMail(req.details.orgId, to, subject, message);
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS);
+  };
+
+  toggleAgencyAccess = async (
+    req: Request<{ client_id: string }>,
+    res: Response
+  ): Promise<void> => {
+    const { client_id } = req.params;
+    await this._agencyService.toggleAccess(client_id);
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS);
   };
 }

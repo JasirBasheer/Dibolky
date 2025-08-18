@@ -1,6 +1,7 @@
 import { env } from "@/config";
 import { IBucket } from "@/types";
 import { PLATFORMS } from "@/utils";
+import { isErrorWithMessage } from "@/validators";
 import axios from "axios";
 
 export async function publishFaceBookVideo(
@@ -26,9 +27,8 @@ export async function publishFaceBookVideo(
     console.log(`Facebook video posted with ID: ${postData.id}`);
     return { name: PLATFORMS.FACEBOOK, status: "success", id: content._id as string, postId: postData.id};
 
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.error?.message || error.message;
-    console.error(`Error posting Facebook video: ${errorMessage}`);
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
     return { name: PLATFORMS.FACEBOOK, status: "failed", id: content._id as string, error: `Error posting Facebook video: ${errorMessage}`,};
   }
 }

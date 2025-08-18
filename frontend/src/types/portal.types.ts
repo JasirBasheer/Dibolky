@@ -49,6 +49,7 @@ export interface InputFieldProps {
     placeholder?: string;
     minLength?: number;
     maxLength?: number;
+    options?: string[]; 
 }
 
 export interface FormContextType {

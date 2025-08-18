@@ -83,6 +83,7 @@ import { RtmTokenBuilder } from "agora-token";
 import { RtcTokenBuilder } from "agora-token";
 import { RtcRole } from "agora-token";
 import { getAllAdSetsByCampaignId } from "@/providers/meta/ads/adset";
+import { isErrorWithMessage } from "@/validators";
 
 @injectable()
 export class EntityService implements IEntityService {
@@ -304,9 +305,7 @@ export class EntityService implements IEntityService {
   }
 
   async getOwner(orgId: string): Promise<IAgencyTenant[]> {
-    const tenantDb = await connectTenantDB(orgId);
-    const ownerDetailModel = tenantDb.model("OwnerDetail", agencyTenantSchema);
-    return await this._entityRepository.fetchOwnerDetails(ownerDetailModel);
+    return await this._agencyTenantRepository.getOwners(orgId);
   }
 
   async saveContent(payload: SaveContentDto): Promise<IBucket> {
@@ -837,8 +836,9 @@ async getConnections(
       }
 
       return users;
-    } catch (error: any) {
-      console.error("Error fetching inbox:", error);
+    } catch (error: unknown) {
+      const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+      console.error("Error fetching inbox:", errorMessage);
       throw new CustomError("Error while fetching chats", 500);
     }
   }
@@ -949,8 +949,9 @@ async getConnections(
       }
 
       return medias;
-    } catch (error: any) {
-      console.error("Error fetching inbox:", error);
+    } catch (error: unknown) {
+      const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+      console.error("Error fetching inbox:", errorMessage);
       throw new CustomError("Error while fetching chats", 500);
     }
   }
@@ -1042,8 +1043,9 @@ async getConnections(
       }
 
       return contentDetails;
-    } catch (error: any) {
-      console.error("Error fetching content details:", error);
+    } catch (error: unknown) {
+      const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+      console.error("Error fetching content details:", errorMessage);
       throw new CustomError("Error while fetching content details", 500);
     }
   }
@@ -1128,7 +1130,8 @@ async getConnections(
       } else {
         throw new Error(`Unsupported platform: ${platform}`);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
       console.error("Error replying to comment:", error);
       throw new CustomError("Error while replying to comment", 500);
     }

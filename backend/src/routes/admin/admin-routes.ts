@@ -5,12 +5,14 @@ import { IAdminController } from "../../controllers/Interface/IAdminController";
 import { requireRoles } from "../../middlewares/required-roles";
 import { TokenMiddleWare } from "@/middlewares";
 import { IPlanController } from "@/controllers/Interface/IPlanController";
+import { IAgencyController } from "@/controllers";
 
 export const createAdminRoutes = (): Router => {
   const router = Router();
 
   const adminController = container.resolve<IAdminController>("AdminController");
-  const planController = container.resolve<IPlanController>('PlanController')
+  const planController = container.resolve<IPlanController>('PlanController');
+  const agencyController = container.resolve<IAgencyController>('AgencyController');
   
 
   router.use(TokenMiddleWare);
@@ -23,7 +25,7 @@ export const createAdminRoutes = (): Router => {
   router
   .route("/client/:client_id")
   .get(asyncHandler(adminController.getClient))
-  .patch(asyncHandler(adminController.toggleClientAccess))
+  .patch(asyncHandler(agencyController.toggleAgencyAccess))
 
   router
   .route("/plans/:plan_id")

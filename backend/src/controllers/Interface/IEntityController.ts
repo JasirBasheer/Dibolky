@@ -37,7 +37,7 @@ export interface IEntityController {
     handleLinkedinCallback(req:Request,res:Response):Promise<void>
     getCalenderEvents(req:Request,res:Response):Promise<void>
     handleXCallback(req:Request,res:Response):Promise<void>
-    handleGmaileCallback(req:Request,res:Response):Promise<void>
+    handleGmailCallback(req:Request,res:Response):Promise<void>
     getAgoraTokens(req: Request, res: Response): Promise<void>
 
 

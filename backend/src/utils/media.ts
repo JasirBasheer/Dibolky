@@ -1,6 +1,7 @@
 import s3Client from "@/config/aws.config";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import { getS3PublicUrl } from "./aws.utils";
+import { isErrorWithMessage } from "@/validators";
 
 export async function getMediaDetails(fileKey: string,platformMaxVideoSize?: number): Promise<{
   contentType: string;
@@ -31,7 +32,8 @@ export async function getMediaDetails(fileKey: string,platformMaxVideoSize?: num
 
     const url = await getS3PublicUrl(fileKey);
     return { contentType, size, url };
-  } catch (error: any) {
-    throw new Error(`Failed to fetch media from S3: ${error.message}`);
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    throw new Error(`Failed to fetch media from S3: ${errorMessage}`);
   }
 }

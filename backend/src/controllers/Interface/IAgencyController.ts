@@ -23,5 +23,6 @@ export interface IAgencyController {
     getPaymentIntegrationStatus(req: Request, res: Response): Promise<void>
     createInvoice(req: Request, res: Response): Promise<void>
     upgradePlan(req: Request, res: Response): Promise<void>
+    toggleAgencyAccess(req: Request, res: Response): Promise<void>
 
 }

@@ -1,3 +1,4 @@
+import { isErrorWithMessage } from "@/validators";
 import axios from "axios";
 
 export async function getLeads(fromId: string, accessToken: string) {
@@ -17,8 +18,9 @@ export async function getLeads(fromId: string, accessToken: string) {
     }
 
     return allLeads;
-  } catch (error: any) {
-    console.error("Error fetching leads:", error.response?.data || error.message);
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    console.error("Error fetching leads:", errorMessage);
     throw new Error("Failed to fetch leads.");
   }
 }

@@ -5,6 +5,7 @@ import { NotFoundError } from "mern.common";
 import { publishFaceBookImageStory, publishFaceBookVideoStory } from "@/providers/meta/facebook/contents/story";
 import { getMediaDetails, PLATFORMS } from "@/utils";
 import { publishInstagramStory } from "@/providers/meta/instagram/contents/story";
+import { isErrorWithMessage } from "@/validators";
 
 // INSTAGRAM STORY
 export async function uploadIGStory(
@@ -20,8 +21,9 @@ export async function uploadIGStory(
     if (!url) throw new Error("s3 URL is missing");
    
     return await publishInstagramStory(contentType, url,igUser.id,accessToken,content._id as string)
-  } catch (error: any) {
-    return { name: PLATFORMS.INSTAGRAM, status: "failed", id: content._id as string, error: `Error posting Instagram Story: ${error.message}`};
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    return { name: PLATFORMS.INSTAGRAM, status: "failed", id: content._id as string, error: `Error posting Instagram Story: ${errorMessage}`};
   }
 }
 
@@ -53,7 +55,8 @@ export async function uploadFaceBookStory(
       return { name: PLATFORMS.FACEBOOK, status: "failed", id: content._id as string, error: "Unsupported media type for Facebook Story."};
     }
 
-  } catch (error: any) {
-    return { name: PLATFORMS.FACEBOOK, status: "failed", id: content._id as string, error: `Error posting Facebook Story: ${error.message}`};
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    return { name: PLATFORMS.FACEBOOK, status: "failed", id: content._id as string, error: `Error posting Facebook Story: ${errorMessage}`};
   }
 }

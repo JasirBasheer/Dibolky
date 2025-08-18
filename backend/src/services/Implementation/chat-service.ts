@@ -1,30 +1,24 @@
 import { inject, injectable } from 'tsyringe';
 import { IChatService } from '../Interface/IChatService';
 import { IChatRepository } from '../../repositories/Interface/IChatRepository';
-import { agencyTenantSchema } from '../../models/Implementation/agency';
 import { CustomError, NotFoundError } from 'mern.common';
 import { IMessageRepository } from '../../repositories/Interface/IMessageRepository';
 import { IChat, IGroupDetails, IMessage, Participant } from '../../types/chat';
-import { IEntityRepository } from '../../repositories/Interface/IEntityRepository';
-import { IAgencyTenant } from '../../types/agency';
-import { Connection, Types } from 'mongoose';
+import { Types } from 'mongoose';
 import { deleteS3Object } from '../../utils/aws.utils';
 
 @injectable()
 export class ChatService implements IChatService {
     private _chatRepository: IChatRepository;
     private _messageRepository: IMessageRepository;
-    private _entityRepository: IEntityRepository;
 
     constructor(
         @inject('ChatRepository') chatRepository: IChatRepository,
         @inject('MessageRepository') messageRepository: IMessageRepository,
-        @inject('EntityRepository') entityRepository: IEntityRepository,
 
     ) {
         this._chatRepository = chatRepository
         this._messageRepository = messageRepository
-        this._entityRepository = entityRepository
     }
 
 
@@ -118,20 +112,6 @@ export class ChatService implements IChatService {
                 };
             }));
 
-        } catch (error) {
-            throw new CustomError("Error while fetching chats", 500)
-        }
-    }
-
-
-    async findOwnerDetails(
-        tenantDb: Connection
-    ): Promise<IAgencyTenant> {
-        try {
-            const ownerModel = tenantDb.model("OwnerDetail", agencyTenantSchema);
-            const details =  await this._entityRepository.fetchOwnerDetails(ownerModel)
-            if(!details)throw new CustomError("owner Details not found",500)
-            return details[0]
         } catch (error) {
             throw new CustomError("Error while fetching chats", 500)
         }

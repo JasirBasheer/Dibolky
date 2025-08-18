@@ -17,7 +17,7 @@ export class PlanRepository
 
   async getPlans(
     filter: Record<string, unknown> = {},
-    options?: { page?: number; limit?: number; sort?: any }
+    options?: { page?: number; limit?: number; sort?: Record<string, 1 | -1>  }
   ): Promise<{ data: IPlan[]; totalCount: number }> {
     const { page, limit, sort } = options || {};
     const totalCount = await this.model.countDocuments(filter);

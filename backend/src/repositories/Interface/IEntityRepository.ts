@@ -3,5 +3,4 @@ import { IAgencyType, IAgencyTenant } from "../../types/agency";
 import { IAgency } from "@/models/Interface/agency";
 
 export interface IEntityRepository {
-    fetchOwnerDetails(tenantDb: Model<IAgencyTenant>): Promise<IAgencyTenant[]>;
 }

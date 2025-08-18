@@ -1,4 +1,5 @@
 import { env } from "@/config";
+import { isErrorWithMessage } from "@/validators";
 import base64url from "base64url";
 import { google } from "googleapis";
 
@@ -57,8 +58,9 @@ export async function sendGMail(
     });
 
     console.log("Email sent successfully to", validBcc.length, "recipients");
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
     console.error("Gmail API Error:", error);
-    throw new Error(`Failed to send email: ${error?.message || "Unknown error"}`);
+    throw new Error(`Failed to send email: ${errorMessage}`);
   }
 }

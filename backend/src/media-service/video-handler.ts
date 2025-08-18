@@ -5,6 +5,7 @@ import { getMediaDetails, PLATFORMS } from "@/utils";
 import { publishFaceBookVideo } from "@/providers/meta/facebook";
 import { getUserURN, publishLinkedinVideo } from "@/providers/linkedin";
 import { getS3PublicUrl } from "@/utils/aws.utils";
+import { isErrorWithMessage } from "@/validators";
 
 
 // FACEBOOK VIDEO
@@ -28,9 +29,9 @@ export async function uploadFaceBookVideo(
     if (!videoUrl) { throw new Error("S3 video URL is missing."); }
     return await publishFaceBookVideo(page.id,page.access_token,videoUrl,content)
 
-  } catch (error: any) {
-    console.error(`Error posting Facebook video: ${error.message}`);
-    return { name: PLATFORMS.FACEBOOK, status: "failed", id: content._id as string, error: `Error posting Facebook video: ${error.message}` };
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    return { name: PLATFORMS.FACEBOOK, status: "failed", id: content._id as string, error: `Error posting Facebook video: ${errorMessage}` };
   }
 }
 

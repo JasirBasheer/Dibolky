@@ -116,7 +116,7 @@
 //       postId: igPublishData.id,
 //     };
 
-//   } catch (error: any) {
+//   } catch (error: unknown) {
 //     console.error(`Error posting Instagram video: ${error.message}`);
 //     return {
 //       name: "Instagram",

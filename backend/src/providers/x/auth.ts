@@ -1,4 +1,5 @@
 import { env } from "@/config";
+import { isErrorWithMessage } from "@/validators";
 
 const STATIC_CODE_VERIFIER = 'testcodeverifier1234567890';
 const STATIC_CODE_CHALLENGE = STATIC_CODE_VERIFIER;
@@ -76,8 +77,9 @@ export async function isXAccessTokenValid(tokens: {accessToken?:string,refreshTo
     const errorData = await response.json();
     console.error('X access token validation failed:', errorData);
     return false;
-  } catch (error:any) {
-    console.error('Error validating X access token:', error.message);
+  } catch (error:unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    console.error('Error validating X access token:', errorMessage);
     return false;
   }
 }

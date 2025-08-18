@@ -1,5 +1,6 @@
 import { IBucket } from "@/types";
 import { PLATFORMS } from "@/utils";
+import { isErrorWithMessage } from "@/validators";
 import axios from 'axios';
 
 export async function publishXThought(
@@ -21,8 +22,9 @@ export async function publishXThought(
     );
 
     return { name: PLATFORMS.X, status: "success", id: content._id as string };
-  } catch (error:any) {
-    console.error("Error posting to X:", error.response?.data || error.message);
+  } catch (error:unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    console.error("Error posting to X:", errorMessage);
     throw error;
   }
 }

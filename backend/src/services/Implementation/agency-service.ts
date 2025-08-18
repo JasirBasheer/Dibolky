@@ -392,7 +392,6 @@ export class AgencyService implements IAgencyService {
         orgId,
         orgName: agencyOwner.organizationName,
       };
-      console.log(invoice, " invoiceeeee");
 
       await this._invoiceRepository.createInvoice(orgId, invoice);
     }

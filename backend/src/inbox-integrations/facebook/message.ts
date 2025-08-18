@@ -1,5 +1,44 @@
 import axios from "axios";
 import { env } from "@/config";
+import { isErrorWithMessage } from "@/validators";
+
+export type FBSendSuccess = {
+  recipient_id: string;
+  message_id: string;
+  attachment_id?: string;
+};
+
+export type FBError = {
+  message: string;
+  type?: string;
+  code?: number;
+  error_subcode?: number;
+  fbtrace_id?: string;
+};
+
+export type FBSendErrorResponse = {
+  error: FBError;
+};
+
+export type FBSendResponse = FBSendSuccess | FBSendErrorResponse;
+
+type FBSendMessageType = "text" | "image" | "video";
+
+interface FBSendPayload {
+  recipient: { id: string };
+  access_token: string;
+  message:
+    | { text: string }
+    | {
+        attachment: {
+          type: Exclude<FBSendMessageType, "text">;
+          payload: {
+            url: string;
+            is_reusable?: boolean;
+          };
+        };
+      };
+}
 
 export async function sendFBMessage(
   conversation_id: string,
@@ -7,10 +46,10 @@ export async function sendFBMessage(
   message: string,
   type: "text" | "image" | "video" = "text",
   media_url?: string
-): Promise<any> {
+): Promise<FBSendResponse> {
   const url = `https://graph.facebook.com/${env.META.API_VERSION}/${conversation_id}/messages`;
   try {
-    const payload: any = {
+    const payload: Partial<FBSendPayload> = {
       recipient: { id: conversation_id },
       access_token,
     };
@@ -29,8 +68,11 @@ export async function sendFBMessage(
     }
     const response = await axios.post(url, payload);
     return response.data;
-  } catch (error: any) {
-    console.error("Error sending FB message:", error?.response?.data || error.message);
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error)
+      ? error.message
+      : "Unknown error";
+    console.error("Error fetching IG messages:", errorMessage);
     throw new Error("Failed to send FB message");
-}
   }
+}

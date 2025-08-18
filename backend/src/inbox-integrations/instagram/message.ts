@@ -1,5 +1,6 @@
 import axios from "axios";
 import { env } from "@/config";
+import { isErrorWithMessage } from "@/validators";
 
 export async function sendIGMessage(
   conversation_id: string,
@@ -35,8 +36,9 @@ export async function sendIGMessage(
     const response = await axios.post(url, payload);
 
     return response.data;
-  } catch (error: any) {
-    console.error("Error sending IG message:", error?.response?.data || error.message);
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    console.error("Error fetching IG messages:", errorMessage);
     throw new Error("Failed to send IG message");
   }
 }

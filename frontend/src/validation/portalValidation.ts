@@ -13,6 +13,7 @@ export const validateField = (name: string, value: string): string => {
     } else if (name === 'phone') {
         if (!value) return 'Phone number is required';
         if (!/^\d{10}$/.test(value)) return 'Phone number Must be exactly 10 digits';
+        if (/^(\d)\1{9}$/.test(value)) return 'Phone number cannot be all same digits';
         return '';
     } else if (name === 'organizationName') {
         if (!value.trim()) return 'Organization name is required';

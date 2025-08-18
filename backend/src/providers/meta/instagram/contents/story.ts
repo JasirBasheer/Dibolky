@@ -1,4 +1,5 @@
 import { PLATFORMS } from "@/utils";
+import { isErrorWithMessage } from "@/validators";
 import axios from "axios";
 
 export async function publishInstagramStory(
@@ -40,8 +41,8 @@ export async function publishInstagramStory(
 
     return { name: PLATFORMS.INSTAGRAM, status: "success", id: contentId as string, postId: publishData.id };
 
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.error?.message || error.message;
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
     return { name: PLATFORMS.INSTAGRAM, status: "failed", id: contentId as string, error: `Failed to publish Instagram Story: ${errorMessage}`};
   }
 }

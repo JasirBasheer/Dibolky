@@ -1,4 +1,5 @@
 import { env } from "@/config";
+import { isErrorWithMessage } from "@/validators";
 import axios from "axios";
 import { AuthorizationCode } from "simple-oauth2";
 
@@ -48,8 +49,9 @@ export async function linkedInAuthCallback(code: string, state: string): Promise
     console.log(accessToken,"acess toke form linkedin")
     await new Promise((resolve) => setTimeout(resolve, 15000));
     return {accessToken: accessToken.token.access_token.toString() }
-  } catch (error:any) {
-    console.error("LinkedIn OAuth Error:", error.message);
+  } catch (error:unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    console.error("LinkedIn OAuth Error:", errorMessage);
     throw new Error("Failed to get access token");
   }
 }
@@ -87,7 +89,7 @@ export async function getLinkedInTokenStatus(tokens: {accessToken?:string,refres
       return true;
     }
     return false;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error validating access token:", error);
     return false;
   }

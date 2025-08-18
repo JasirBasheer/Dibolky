@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { IBucket, IFiles } from "@/types";
 import { PLATFORMS } from '@/utils';
+import { isErrorWithMessage } from '@/validators';
 
 export async function publishLinkedInPost(
   file: IFiles,
@@ -93,8 +94,8 @@ export async function publishLinkedInPost(
 
     return { name: PLATFORMS.LINKEDIN, status: "success", id: content._id.toString() };
 
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.message || error.message;
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
     console.error("LinkedIn post failed:", errorMessage);
     throw new Error(errorMessage);
   }

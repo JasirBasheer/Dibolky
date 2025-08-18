@@ -1,16 +1,14 @@
 import { Router } from "express";
 import { container } from "tsyringe";
-import { IAgencyController, IEntityController } from "@/controllers";
+import { IAgencyController } from "@/controllers";
 import { asyncHandler } from "@/utils/async-handler-util";
 import { IPlanController } from "@/controllers/Interface/IPlanController";
 import { validateRequest } from "@/middlewares";
-import { agencyZodSchema } from "@/validators/common/public";
+import { agencyTrialZodSchema, agencyZodSchema } from "@/validators/common/public";
 
 export const createPublicRoutes = (): Router => {
   const router = Router();
 
-  const entityController =
-    container.resolve<IEntityController>("EntityController");
     const agencyController =
     container.resolve<IAgencyController>("AgencyController");  
   const planController = container.resolve<IPlanController>("PlanController");
@@ -22,7 +20,10 @@ export const createPublicRoutes = (): Router => {
   router
   .route("/trial")
   .get(asyncHandler(planController.getAllTrialPlans))
-  .post(asyncHandler(agencyController.createTrialAgency))
+  .post(
+    validateRequest(agencyTrialZodSchema),
+    asyncHandler(agencyController.createTrialAgency)
+  );
 
   router.post(
     "/agency",

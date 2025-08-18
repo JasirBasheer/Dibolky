@@ -203,7 +203,6 @@ export class EntityController implements IEntityController {
   };
 
   createGroup = async (req: Request, res: Response): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
     const { details, userId } = req.body;
     const createdGroup = await this._chatService.createGroup(
       req.details?.orgId as string,
@@ -296,7 +295,6 @@ export class EntityController implements IEntityController {
   };
 
   saveContent = async (req: Request, res: Response): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
     const { platform, user_id } = req.params;
     const { files, platforms, metadata, contentType } = req.body;
     await this._entityService.saveContent({
@@ -426,7 +424,7 @@ export class EntityController implements IEntityController {
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { tokens });
   };
 
-  handleGmaileCallback = async (req: Request, res: Response): Promise<void> => {
+  handleGmailCallback = async (req: Request, res: Response): Promise<void> => {
     if (!req.details) throw new NotFoundError("request details not found");
     const { code } = req.body;
     const tokens = await gmailAuthCallback(code as string);

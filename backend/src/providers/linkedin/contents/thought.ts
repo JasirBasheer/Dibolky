@@ -1,5 +1,6 @@
 import { IBucket } from '@/types';
 import { PLATFORMS } from '@/utils';
+import { isErrorWithMessage } from '@/validators';
 import axios from 'axios';
 
 export async function publishLinkedinThought(
@@ -36,8 +37,8 @@ export async function publishLinkedinThought(
 
     return { name: PLATFORMS.LINKEDIN, status: "success", id: content._id as string };
 
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.message || error.message;
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
     console.error("Error posting to LinkedIn:", errorMessage);
     throw new Error(`Failed to post text: ${errorMessage}`);
   }

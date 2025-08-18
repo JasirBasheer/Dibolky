@@ -1,5 +1,6 @@
 import axios from "axios";
 import { env } from "@/config";
+import { isErrorWithMessage } from "@/validators";
 
 export async function getIGConversations(
   pageId: string,
@@ -16,8 +17,9 @@ export async function getIGConversations(
     });
 
     return response.data.data || [];
-  } catch (error: any) {
-    console.error("Error fetching IG conversations:", error?.response?.data || error.message);
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    console.error("Error fetching IG conversations:", errorMessage);
     return []
   }
 }
@@ -38,8 +40,9 @@ export async function getIGMessages(
     });
 
     return response.data.data || [];
-  } catch (error: any) {
-    console.error("Error fetching IG messages:", error?.response?.data || error.message);
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    console.error("Error fetching IG messages:", errorMessage);
     throw new Error("Failed to fetch IG messages");
   }
 }
@@ -61,8 +64,9 @@ export async function getIGMessageSenderDetails(
     });
 
     return response.data;
-  } catch (error: any) {
-    console.error("Error fetching IG messages:", error?.response?.data || error.message);
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    console.error("Error fetching IG messages:", errorMessage);
     throw new Error("Failed to fetch IG messages");
   }
 }

@@ -1,4 +1,4 @@
-import { Model, Schema } from "mongoose";
+import { Model, Schema, SortOrder } from "mongoose";
 import { inject, injectable } from "tsyringe";
 import { BaseRepository, CustomError, NotFoundError } from "mern.common";
 import { IClientTenantRepository } from "../Interface/IClientTenantRepository";
@@ -50,7 +50,7 @@ export class ClientTenantRepository extends BaseRepository<IClientTenant> implem
     async getAllClients(
         orgId: string,
         filter: Record<string, unknown> , 
-        options?: { page?: number, limit?: number, sort?: any }
+        options?: { page?: number, limit?: number, sort?: string | { [key: string]: SortOrder } | [string, SortOrder][] }
     ): Promise<{ data: IClientTenant[]; totalCount: number }> {
         const model = await this.getModel(orgId);
         const { page, limit, sort } = options || {};

@@ -1,3 +1,4 @@
+import { isErrorWithMessage } from '@/validators';
 import axios from 'axios';
 
 export async function publishFaceBookImageStory(
@@ -31,8 +32,8 @@ export async function publishFaceBookImageStory(
 
     return { name: "Facebook", status: "success", id: contentId as string, postId: publishData.id};
 
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.error?.message || error.message;
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
     return { name: "Facebook", status: "failed", id: contentId as string, error: `Failed to publish Facebook Photo Story: ${errorMessage}`};
   }
 }
@@ -79,8 +80,8 @@ export async function publishFaceBookVideoStory(
 
     return {name: "Facebook", status: "success", id: contentId as string, postId: publishData.id};
 
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.error?.message || error.message;
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
     return { name: "Facebook", status: "failed", id: contentId as string, error: `Failed to publish Facebook Video Story: ${errorMessage}`};
   }
 }

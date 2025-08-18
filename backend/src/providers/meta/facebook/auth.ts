@@ -1,5 +1,6 @@
 import { env } from "@/config";
 import { IMetaAccount } from "@/types";
+import { isErrorWithMessage } from "@/validators";
 import axios from "axios";
 
 export async function createFacebookOAuthURL(
@@ -101,8 +102,9 @@ export async function getIGTokenDetails(pageId: string, accessToken: string) {
       }
     );
     return response.data;
-  } catch (error: any) {
-    console.error("Error fetching IG user details:", error.response?.data || error.message);
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    console.error("Error fetching IG user details:", errorMessage);
     return null;
   }
 }

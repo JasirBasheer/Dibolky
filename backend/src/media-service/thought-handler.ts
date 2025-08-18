@@ -22,9 +22,9 @@ export async function uploadFaceBookThought(
     await publishFaceBookThought(content, page.id, page.access_token)
 
     return { name: PLATFORMS.FACEBOOK, status: "success", id: content._id as string };
-  } catch (error: any) {
-    console.error(`Error posting Facebook text: ${error.message}`);
-    return { name: PLATFORMS.FACEBOOK, status: "failed", id: content._id as string, error: `Error posting Facebook text: ${error.message}`};
+  } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    return { name: PLATFORMS.FACEBOOK, status: "failed", id: content._id as string, error: `Error posting Facebook text: ${errorMessage}`};
   }
 }
 
@@ -37,9 +37,10 @@ export async function uploadXThought(
   if (content.caption.length > 280) return { name: PLATFORMS.X, status: "failed", id: content._id as string };
     try {
       return await publishXThought(content,accessToken)
-    } catch (error: any) {
-    console.error(`Error posting X text: ${error.message}`);
-    return { name: PLATFORMS.X, status: "failed", id: content._id as string, error: `Error posting X text: ${error.message}`};
+    } catch (error: unknown) {
+    const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+    console.error(`Error posting X text: ${errorMessage}`);
+    return { name: PLATFORMS.X, status: "failed", id: content._id as string, error: `Error posting X text: ${errorMessage}`};
 
     } 
 }

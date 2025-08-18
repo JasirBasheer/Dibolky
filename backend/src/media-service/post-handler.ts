@@ -14,6 +14,7 @@ import { createCarouselPost, uploadImageToFacebook } from "@/providers/meta/face
 import { getUserURN, publishLinkedInPost } from "@/providers/linkedin";
 import { platform } from "node:os";
 import { PLATFORMS } from "@/utils";
+import { isErrorWithMessage } from "@/validators";
 
 
 
@@ -136,8 +137,9 @@ export async function uploadLinkedinPost(
     const filePath = await getS3PublicUrl(file.key);
     return await publishLinkedInPost(file,filePath,accessToken,userURN,content)
     
-    } catch (error: any) {
-     return { name: PLATFORMS.LINKEDIN, status: "failed", id: content._id as string,error:error.message}
+    } catch (error: unknown) {
+     const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
+     return { name: PLATFORMS.LINKEDIN, status: "failed", id: content._id as string,error:errorMessage}
     };
 
 }

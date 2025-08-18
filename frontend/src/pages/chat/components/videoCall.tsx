@@ -15,8 +15,10 @@ import {
 import axios from "@/utils/axios";
 import { RootState } from "@/types/common";
 import { setInCall, resetCallState } from "@/redux/slices/ui.slice";
+import { toast } from "sonner";
 
 interface PeerData {
+  chatId: string;
   userId: string;
   name: string;
   profileUrl?: string;
@@ -34,12 +36,12 @@ const VideoCall: React.FC = () => {
     callType: "audio" | "video";
   } | null>(null);
 
-  // Incoming call state
   const [incomingCall, setIncomingCall] = useState<{
     callerId: string;
     channelName: string;
     callType: "video" | "audio";
     from: string;
+    chatId: string;
     callerName?: string;
     callerProfileUrl?: string;
   } | null>(null);
@@ -85,6 +87,7 @@ const VideoCall: React.FC = () => {
               channelName: data.channelName,
               callType: data.callType,
               from: data.from,
+              chatId: data.chatId,
               callerName: data.callerName || "Unknown",
               callerProfileUrl: data.callerProfileUrl || "",
             });
@@ -104,21 +107,19 @@ const VideoCall: React.FC = () => {
           reconnectRtm();
         }
       });
-
-      // If needed, you can also listen to other RTM events here
     } catch (error) {
       console.error("RTM client init error:", error);
     }
   };
 
   useEffect(() => {
-    console.log('triggered',prevOutgoingCall)
+    console.log("triggered", prevOutgoingCall);
     // if (
     //   outgoingCall &&
     //   (prevOutgoingCall.current === null ||
     //     prevOutgoingCall.current.recipientId !== outgoingCall.recipientId)
     // ) {
-    if(outgoingCall && outgoingCall?.callType && outgoingCall?.recipientId){
+    if (outgoingCall && outgoingCall?.callType && outgoingCall?.recipientId) {
       prevOutgoingCall.current = outgoingCall;
       doStartCall(outgoingCall);
     }
@@ -126,12 +127,15 @@ const VideoCall: React.FC = () => {
   }, [outgoingCall]);
 
   useEffect(() => {
-  if (inCall && currentCallType === "video" && localTracks.current[1] && localVideoRef.current) {
-    localTracks.current[1].play(localVideoRef.current);
-  }
-
-}, [inCall, currentCallType]);
-
+    if (
+      inCall &&
+      currentCallType === "video" &&
+      localTracks.current[1] &&
+      localVideoRef.current
+    ) {
+      localTracks.current[1].play(localVideoRef.current);
+    }
+  }, [inCall, currentCallType]);
 
   function shortId(uid) {
     return (uid || "").replace(/[^a-zA-Z0-9-_]/g, "").slice(0, 8);
@@ -143,82 +147,78 @@ const VideoCall: React.FC = () => {
       .join("_")}_${Date.now().toString(36)}`;
   }
 
-const doStartCall = async ({
-  recipientId,
-  callType,
-}: {
-  recipientId: string;
-  callType: "audio" | "video";
-}) => {
-  if (!user || !user.user_id) {
-    message.error("User not logged in");
-    return;
-  }
-  const channelName = getSafeChannelName(user.user_id, recipientId);
-  const rtm = getRtmClient();
-
-  try {
-    // 1. Send peer-to-peer invite message
-    await rtm.sendMessageToPeer(
-      {
-        text: JSON.stringify({
-          type: "call_invite",
-          channelName,
-          callType,
-          from: user.user_id,
-          callerName: user.name,
-          callerProfile: user.profile || "",
-        }),
-      },
-      recipientId
-    );
-
-    // 2. Join RTM channel for signaling and listen for call_response
-    if (rtmChannelRef.current) {
-      await rtmChannelRef.current.leave();
-      rtmChannelRef.current = null;
+  const doStartCall = async ({
+    recipientId,
+    callType,
+    chatId,
+  }: {
+    recipientId: string;
+    callType: "audio" | "video";
+    chatId: string;
+  }) => {
+    if (!user || !user.user_id) {
+      message.error("User not logged in");
+      return;
     }
+    const channelName = getSafeChannelName(user.user_id, recipientId);
+    const rtm = getRtmClient();
 
-    const channel = rtm.createChannel(channelName);
-    await channel.join();
-    rtmChannelRef.current = channel;
+    try {
+      await rtm.sendMessageToPeer(
+        {
+          text: JSON.stringify({
+            type: "call_invite",
+            channelName,
+            callType,
+            chatId,
+            from: user.user_id,
+            callerName: user.name,
+            callerProfile: user.profile || "",
+          }),
+        },
+        recipientId
+      );
 
-    // 3. Listen for call_response messages on this channel
-    channel.on("ChannelMessage", async (message, senderId) => {
-      console.log("messageeee",message,user.user_id)
-      try {
-        const data = JSON.parse(message.text);
-        if (
-          data.type === "call_response"
-          && data.from == user.user_id 
-        ) {
-          if (data.status === "accepted") {
-            // Call accepted by callee
-            setRemotePeer({
-              userId: senderId,
-              name: data.callerName,
-              profileUrl: data.callerProfileUrl,
-            });
-            await joinRtcCall(data.channelName, data.callType);
-          } else {
-            prevOutgoingCall.current = null
-            message.error("Call rejected");
-            dispatch(setInCall(false));
-            setCurrentChannel(null);
-          }
-        }
-      } catch {
-        // ignore bad messages
+      if (rtmChannelRef.current) {
+        await rtmChannelRef.current.leave();
+        rtmChannelRef.current = null;
       }
-    });
-  } catch (error) {
-    console.error("Failed during call setup:", error);
-    message.error("Could not start call");
-  }
-};
 
+      const channel = rtm.createChannel(channelName);
+      await channel.join();
+      rtmChannelRef.current = channel;
 
-  // RTM reconnect logic using exponential backoff
+      channel.on("ChannelMessage", async (message, senderId) => {
+        console.log("messageeee", message, user.user_id);
+        try {
+          const data = JSON.parse(message.text);
+          if (data.type === "call_response" && data.from == user.user_id) {
+            if (data.status === "accepted") {
+              // Call accepted by callee
+              setRemotePeer({
+                userId: senderId,
+                chatId: data.chatId,
+                name: data.callerName,
+                profileUrl: data.callerProfileUrl,
+              });
+              await joinRtcCall(data.channelName, data.callType);
+            } else {
+              toast.error("Call rejected");
+              await cleanupAfterCallEnd();
+            }
+          }
+        } catch {
+          toast.error("Call rejected");
+          await cleanupAfterCallEnd();
+        }
+      });
+    } catch (error) {
+      console.error("Failed during call setup:", error);
+      toast.error("Could not start call");
+      await cleanupAfterCallEnd();
+    }
+  };
+
   const reconnectRtm = () => {
     if (reconnectAttempts.current >= maxReconnectAttempts) {
       message.error("Max RTM reconnect attempts reached, please refresh.");
@@ -227,16 +227,22 @@ const doStartCall = async ({
     reconnectAttempts.current++;
     setTimeout(() => {
       if (user.user_id) {
-        // You must call loginRtmClient(user.user_id, token) from your app/session logic
-        // Here we just retry initRtmClient for listeners, actual login is global
         initRtmClient();
       }
     }, reconnectDelayMs * Math.pow(2, reconnectAttempts.current));
   };
 
-  // Join RTM channel for current call
   const joinRtmChannel = async (channelName: string) => {
     if (!rtmClientRef.current || rtmChannelRef.current) return;
+    if (rtmChannelRef.current) {
+      try {
+        await rtmChannelRef.current.leave();
+      } catch (e) {
+        console.warn("Error leaving existing RTM channel:", e);
+      }
+      rtmChannelRef.current = null;
+    }
+
     try {
       const channel = rtmClientRef.current.createChannel(channelName);
       await channel.join();
@@ -253,31 +259,29 @@ const doStartCall = async ({
             if (data.status === "accepted") {
               setRemotePeer({
                 userId: senderId,
+                chatId: data.chatId,
                 name: data.callerName || "Unknown",
                 profileUrl: data.callerProfileUrl || "",
               });
               await joinRtcCall(data.channelName, data.callType);
             } else {
-              message.error("Call rejected by the recipient");
-              dispatch(setInCall(false));
-              setCurrentChannel(null);
+              toast.error("Call rejected by the recipient");
+              await cleanupAfterCallEnd();
             }
           }
         } catch (error) {
-                prevOutgoingCall.current = null
-
+          toast.error("Call rejected by the recipient");
+          await cleanupAfterCallEnd();
           console.error("Error processing RTM channel message:", error);
         }
       });
     } catch (error) {
-            prevOutgoingCall.current = null
-
+      toast.error("Call rejected by the recipient");
+      await cleanupAfterCallEnd();
       console.error("Failed to join RTM channel:", error);
-      message.error("Failed to join RTM channel");
     }
   };
 
-  // Join RTC call using Agora WebRTC SDK
   const joinRtcCall = async (
     channelName: string,
     callType: "video" | "audio"
@@ -337,11 +341,9 @@ const doStartCall = async ({
       setCurrentChannel(channelName);
     } catch (error) {
       console.error("RTC join error:", error);
-      message.error("Failed to join call");
     }
   };
 
-  // Accept incoming call
   const acceptCall = async () => {
     console.log(incomingCall, "incomming calleeee");
     if (!incomingCall) return;
@@ -364,6 +366,7 @@ const doStartCall = async ({
       });
       setRemotePeer({
         userId: incomingCall.callerId,
+        chatId: incomingCall.chatId,
         name: incomingCall.callerName || "Unknown",
         profileUrl: incomingCall.callerProfileUrl || "",
       });
@@ -375,9 +378,8 @@ const doStartCall = async ({
     }
   };
 
-  // Reject incoming call
   const rejectCall = async () => {
-    prevOutgoingCall.current = null
+    prevOutgoingCall.current = null;
     if (!incomingCall) return;
     try {
       await joinRtmChannel(incomingCall.channelName);
@@ -392,14 +394,14 @@ const doStartCall = async ({
         }),
       });
       setIncomingCall(null);
+      await cleanupAfterCallEnd();
     } catch (error) {
-    prevOutgoingCall.current = null
       console.error("Failed to reject call:", error);
-      message.error("Failed to reject call");
+      await cleanupAfterCallEnd();
+
     }
   };
 
-  // End current call cleaning up tracks and clients
   const endCall = async () => {
     try {
       localTracks.current.forEach((t) => {
@@ -416,21 +418,19 @@ const doStartCall = async ({
         await rtmChannelRef.current.leave();
         rtmChannelRef.current = null;
       }
-      dispatch(setInCall(false));
-      setIsAudioMuted(false);
-      setIsVideoMuted(false);
-      setRemotePeer(null);
-      setCurrentChannel(null);
-      prevOutgoingCall.current = null
+
       if (localVideoRef.current) localVideoRef.current.srcObject = null;
       if (remoteVideoRef.current) remoteVideoRef.current.srcObject = null;
+
+      setIsAudioMuted(false);
+      setIsVideoMuted(false);
+      await cleanupAfterCallEnd();
     } catch (error) {
       console.error("Failed to end call:", error);
       message.error("Failed to end call");
     }
   };
 
-  // Toggle audio mute
   const toggleAudio = async () => {
     if (localTracks.current[0]) {
       await localTracks.current[0].setMuted(!isAudioMuted);
@@ -438,7 +438,6 @@ const doStartCall = async ({
     }
   };
 
-  // Toggle video mute
   const toggleVideo = async () => {
     if (currentCallType === "video" && localTracks.current[1]) {
       await localTracks.current[1].setMuted(!isVideoMuted);
@@ -468,6 +467,28 @@ const doStartCall = async ({
     };
   }, [user.user_id, dispatch]);
 
+  const cleanupAfterCallEnd = async () => {
+    try {
+      prevOutgoingCall.current = null;
+      dispatch(resetCallState());
+      dispatch(setInCall(false));
+      setCurrentChannel(null);
+      setRemotePeer(null);
+
+      // Clean up RTM channel
+      if (rtmChannelRef.current) {
+        try {
+          await rtmChannelRef.current.leave();
+        } catch (e) {
+          console.warn("Error leaving RTM channel:", e);
+        }
+        rtmChannelRef.current = null;
+      }
+    } catch (error) {
+      console.error("Error during cleanup:", error);
+    }
+  };
+
   return (
     <>
       {/* Incoming Call UI */}
@@ -476,7 +497,10 @@ const doStartCall = async ({
           <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
             <div className="text-center">
               <Avatar className="w-16 h-16 mx-auto mb-3">
-                <AvatarImage src={incomingCall.callerProfileUrl} alt={incomingCall.callerName} />
+                <AvatarImage
+                  src={incomingCall.callerProfileUrl}
+                  alt={incomingCall.callerName}
+                />
                 <AvatarFallback className="bg-blue-500 text-white text-lg">
                   {incomingCall.callerName?.[0] || "?"}
                 </AvatarFallback>

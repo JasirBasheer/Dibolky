@@ -65,7 +65,7 @@ export const PurchasePlan: React.FC = () => {
     }
 
     const validateMail = async (mail: string): Promise<boolean> => {
-        const response = await  checkIsMailExistsApi(mail)
+        const response = await  checkIsMailExistsApi(`?mail=${mail}`)
         return response.data.isExists
     }
 

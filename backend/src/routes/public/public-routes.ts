@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { container } from "tsyringe";
-import { IEntityController } from "@/controllers";
+import { IAgencyController, IEntityController } from "@/controllers";
 import { asyncHandler } from "@/utils/async-handler-util";
 import { IPlanController } from "@/controllers/Interface/IPlanController";
 import { validateRequest } from "@/middlewares";
@@ -11,17 +11,23 @@ export const createPublicRoutes = (): Router => {
 
   const entityController =
     container.resolve<IEntityController>("EntityController");
+    const agencyController =
+    container.resolve<IAgencyController>("AgencyController");  
   const planController = container.resolve<IPlanController>("PlanController");
 
   router.get("/plans", asyncHandler(planController.getPlans));
   router.get("/plans/:plan_id", asyncHandler(planController.getPlan));
-  router.get("/trial", asyncHandler(planController.getAllTrialPlans));
+  router.get("/exists", asyncHandler(agencyController.isExists));
+  
+  router
+  .route("/trial")
+  .get(asyncHandler(planController.getAllTrialPlans))
+  .post(asyncHandler(agencyController.createTrialAgency))
 
-  router.post("/check-mail", asyncHandler(entityController.checkMail));
   router.post(
     "/agency",
     validateRequest(agencyZodSchema),
-    asyncHandler(entityController.createAgency)
+    asyncHandler(agencyController.createAgency)
   );
 
   return router;

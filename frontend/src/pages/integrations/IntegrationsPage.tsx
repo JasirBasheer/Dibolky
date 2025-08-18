@@ -65,7 +65,9 @@ const Integrations = () => {
     const required = searchParams.get("required")?.split(",") || [];
     if (required.length > 0) {
       setRequired(required);
+      window.history.replaceState({}, "", `${window.location.pathname}`);
       toast.warning("Please connect the required platforms");
+
     }
   }, []);
 
@@ -124,7 +126,7 @@ const Integrations = () => {
           queryKey: ["get-connections-status", role, userId, selectedClient],
         });
 
-        toast.success(`${provider} connected successfully`);
+        toast.success(`${provider.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())} connected successfully`);
         return response;
       } else {
         toast.error(
@@ -201,7 +203,7 @@ const Integrations = () => {
           />
         );
       default:
-        return <div className="py-10 text-center">asdf</div>;
+        return <div className="py-10 text-center"></div>;
     }
   };
   const tabs = [

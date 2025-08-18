@@ -26,19 +26,20 @@ export class CommonMapper {
   }
 
   static ContentDetails(details:{
-    contents: IBucket[];
+    contents: IBucketWithReason[];
     totalCount: number;
     totalPages: number;
   }){
+    console.log(details.contents)
     return {
-      contents: details.contents.map((content: IBucket): IBucketWithReason => {
+      contents: details.contents.map((content: IBucketWithReason): IBucketWithReason => {
         return {
            _id: content._id.toString(),
           user_id: content.user_id.toString(),
           orgId: content.orgId,
           files: content.files,
           status: content.status,
-          metaAccountId: content.status,
+          metaAccountId: content.metaAccountId,
           platforms: content.platforms,
           title: content.title,
           contentType: content.contentType,

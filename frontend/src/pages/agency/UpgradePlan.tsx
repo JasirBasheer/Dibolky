@@ -1,5 +1,3 @@
-"use client"
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
@@ -9,8 +7,7 @@ import { getAllUpgradablePlansApi } from "@/services/agency/get.services"
 import axios from "@/utils/axios"
 import { IRazorpayOrder } from "@/types/payment.types"
 import { toast } from "sonner"
-import { RootState } from "@/types"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { setUser } from "@/redux/slices/user.slice"
 import { setAgency } from "@/redux/slices/agency.slice"
 

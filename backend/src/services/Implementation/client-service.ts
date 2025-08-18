@@ -14,6 +14,7 @@ import { IRazorpayOrder } from "@/types/payment";
 import { IActivityRepository, IInvoiceRepository, ITransactionTenantRepository } from "@/repositories";
 import { IPaymentService } from "../Interface";
 import crypto from "node:crypto"
+import { decryptToken } from "@/utils";
 
 @injectable()
 export class ClientService implements IClientService {
@@ -100,11 +101,10 @@ export class ClientService implements IClientService {
   }
 
   async initiateRazorpayPayment(orgId:string,invoice_id:string):Promise<IRazorpayOrder | null>{
-    const owner = await this._agencyTenantRepository.getOwners(orgId)
+    const owner = await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
     const invoice = await this._invoiceRepository.getInvoiceById(orgId,invoice_id)
-    const paymentCredentials = owner[0].paymentCredentials.razorpay
-    return await this._paymentService.razorpay({amount:invoice.pricing,currency:"USD"},paymentCredentials.secret_id,paymentCredentials.secret_key)
-
+    const paymentCredentials = owner.paymentCredentials.razorpay
+    return await this._paymentService.razorpay({amount:invoice.pricing,currency:"USD"},decryptToken(paymentCredentials.secret_id),decryptToken(paymentCredentials.secret_key))
   }
 
   async verifyInvoicePayment(orgId:string,invoice_id:string,response:IRazorpayOrder):Promise<void>{
@@ -114,7 +114,7 @@ export class ClientService implements IClientService {
     const paymentCredentials = owner.paymentCredentials.razorpay
 
     const generatedSignature = crypto
-      .createHmac('sha256', paymentCredentials.secret_key)
+      .createHmac('sha256', decryptToken(paymentCredentials.secret_key))
       .update(`${response.razorpay_order_id}|${response.razorpay_payment_id}`)
       .digest('hex');
 

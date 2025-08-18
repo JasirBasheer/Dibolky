@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
   CalendarDays,
@@ -16,16 +15,14 @@ import {
   ArrowUpDown,
 } from "lucide-react";
 import { format } from "date-fns";
-import { toast } from "sonner";
 import { useFilter, usePagination } from "@/hooks";
 import {  RootState } from "@/types";
-import { getAllTransactions, getInvoices } from "@/services";
+import { getAllTransactions } from "@/services";
 import PaginationControls from "@/components/ui/PaginationControls";
 import DetailModal from "@/components/modals/details-modal";
 import SelectInput from "@/components/ui/selectInput";
 import { DataTable } from "@/components/ui/data-table";
 import Skeleton from "react-loading-skeleton";
-import axios from "@/utils/axios";
 import { ITransactionType } from "@/types/transaction";
 
 const BillingHistory = () => {
@@ -175,7 +172,7 @@ const BillingHistory = () => {
                     <div className="flex items-center gap-1">
                       <CalendarDays className="h-4 w-4 text-gray-400" />
                       <span>
-                        {/* {format(new Date(transaction.createdAt), "MMM dd, yyyy")} */}
+                        {format(new Date(transaction.createdAt), "MMM dd, yyyy")}
                       </span>
                     </div>
                   ),

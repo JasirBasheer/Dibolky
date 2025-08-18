@@ -51,10 +51,6 @@ export class PlanService implements IPlanService {
     return { plans: MappedPlans, totalCount: result.totalCount };
   }
 
-  async getAllTrailPlans(): Promise<Partial<IPlan>[]> {
-    const trailPlans = (await this._planRepository.getTrialPlans()) ?? [];
-    return PortalMapper.TrailPlansMapper(trailPlans);
-  }
 
   async getPlan(plan_id: string): Promise<Partial<IPlanType>> {
     const plan = await this._planRepository.getPlan(plan_id);

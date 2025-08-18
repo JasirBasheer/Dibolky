@@ -41,14 +41,14 @@ import {
   IPlanRepository,
   ITransactionRepository,
   ITransactionTenantRepository,
-  TransactionRepository,
-  TransactionTenantRepository,
 } from "@/repositories";
 import { IInvoiceType } from "@/types/invoice";
 import { IPlan } from "@/models/Interface/plan";
 import { addMonthsToDate } from "@/utils/date-utils";
 import { FilterType } from "@/utils";
 import { sendGMail } from "@/providers/google";
+import { IAgencyRegistrationDto } from "@/dto";
+import mongoose from "mongoose";
 
 @injectable()
 export class AgencyService implements IAgencyService {
@@ -61,7 +61,7 @@ export class AgencyService implements IAgencyService {
   private _invoiceRepository: InoviceRepository;
   private _planRepository: IPlanRepository;
   private _transactionRepository: ITransactionRepository;
-  private _transactiontenantRepository: ITransactionTenantRepository;
+  private _transactionTenantRepository: ITransactionTenantRepository;
   private _activityRepository: IActivityRepository;
 
   constructor(
@@ -90,7 +90,7 @@ export class AgencyService implements IAgencyService {
     this._invoiceRepository = invoiceRepository;
     this._planRepository = planRepository;
     this._transactionRepository = transactionRepository;
-    this._transactiontenantRepository = transactiontenantRepository;
+    this._transactionTenantRepository = transactiontenantRepository;
     this._activityRepository = activityRepository;
   }
 
@@ -111,11 +111,147 @@ export class AgencyService implements IAgencyService {
     }
   }
 
-  async toggleAccess(client_id: string): Promise<void>{
-    if(!client_id)throw new NotFoundError("client Id not found please try again")
-    await this._agencyRepository.toggleAccess(client_id)
+  async createAgency(
+    payload: IAgencyRegistrationDto
+  ): Promise<Partial<IAgencyType> | null> {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      const {
+        organizationName,
+        name,
+        email,
+        address,
+        websiteUrl,
+        industry,
+        contactNumber,
+        logo,
+        password,
+        planId,
+        validity,
+        planPurchasedRate,
+        transactionId,
+        paymentGateway,
+        description,
+        currency,
+      } = payload;
+
+    const plan = await this._planRepository.getPlan(planId);
+      if (!plan) {
+        throw new Error("Plan not found");
+      }
+
+      const hashedPassword = await hashPassword(password);
+      const orgId =
+        organizationName.replace(/\s+/g, "") +
+        Math.floor(Math.random() * 1000000);
+      const validityInDate = addMonthsToDate(plan.billingCycle,validity);
+
+      const newAgency = {
+        orgId,
+        planId,
+        validity: validityInDate,
+        organizationName,
+        name,
+        email,
+        address,
+        websiteUrl,
+        industry,
+        contactNumber,
+        logo,
+        password: hashedPassword,
+        remainingClients: plan.maxClients,
+        remainingProjects: plan.maxProjects,
+        planPurchasedRate,
+        currency,
+      };
+
+      const ownerDetails = await this._agencyRepository.createAgency(
+        newAgency,
+        session
+      );
+
+      if (!ownerDetails) {
+        throw new Error("Failed to create agency");
+      }
+      await session.commitTransaction();
+
+    
+      const newTenantAgency = {
+        main_id: ownerDetails?._id,
+        orgId,
+        planId,
+        organizationName,
+        name,
+        email,
+        permissions: plan.permissions,
+      };
+
+      const newTransaction = {
+        orgId,
+        email,
+        userId: ownerDetails?._id,
+        planId,
+        paymentGateway,
+        transactionId,
+        amount: planPurchasedRate,
+        description,
+        currency,
+        transactionType: "plan_transactions",
+      };
+
+      const activity = {
+        user: {
+          userId: ownerDetails._id as string,
+          username: organizationName,
+          email,
+        },
+        activityType: "account_created",
+        activity: "Account created for agency",
+        entity: {
+          type: "agency",
+          id: ownerDetails._id.toString(),
+        },
+        redirectUrl: "settings",
+      };
+      await this._agencyTenantRepository.saveDetails(
+        newTenantAgency,
+        orgId as string
+      );
+      await this._transactionRepository.createTransaction(newTransaction);
+      await this._transactionTenantRepository.createTransaction(
+        orgId,
+        newTransaction
+      );
+      await this._activityRepository.createActivity(orgId, activity);
+
+      return ownerDetails;
+    } catch (error) {
+      await session.abortTransaction().catch(() => {});
+      await session.endSession();
+      console.error(" createAgency failed:", error);
+      if (error.code === 11000) {
+        throw new ConflictError("Account with this email already exists...");
+      }
+    } finally {
+      if (!session.hasEnded) {
+        await session.endSession();
+      }
+    }
   }
 
+  async IsMailExists(mail: string): Promise<boolean> {
+    const isExists = await this._agencyRepository.findAgencyWithMail(mail);
+    if (isExists) return true;
+    return false;
+  }
+
+  async toggleAccess(client_id: string): Promise<void> {
+    if (!client_id)
+      throw new NotFoundError("client Id not found please try again");
+    await this._agencyRepository.toggleAccess(client_id);
+  }
 
   async getProjects(
     orgId: string,
@@ -136,8 +272,6 @@ export class AgencyService implements IAgencyService {
     }
     return data.projects;
   }
-
-  
 
   async getAllAvailableClients(orgId: string): Promise<IAvailableClients[]> {
     const clients = await this._clientTenantRepository.getAllClients(orgId);
@@ -191,11 +325,14 @@ export class AgencyService implements IAgencyService {
 
     if (client && client.orgId == orgId)
       throw new ConflictError("Client already exists with this email");
-    const Agency = await this._agencyRepository.findAgencyWithOrgId(orgId);
-    if (!Agency) throw new NotFoundError("Agency not found , Please try again");
-    if (Agency.remainingClients == 0)
-      throw new CustomError(
+    const agency = await this._agencyRepository.findAgencyWithOrgId(orgId);
+    if (!agency) throw new NotFoundError("Agency not found , Please try again");
+    if (agency.remainingClients == 0)throw new CustomError(
         "Client creation limit reached ,Please upgrade for more clients",
+        402
+      );
+    if(Object.keys(services).length > agency.remainingProjects)throw new CustomError(
+        "Project creation limit reached ,Please upgrade for more Projects",
         402
       );
 
@@ -260,7 +397,6 @@ export class AgencyService implements IAgencyService {
       await this._invoiceRepository.createInvoice(orgId, invoice);
     }
 
-
     const activity = {
       user: {
         userId: createdClient._id.toString(),
@@ -271,13 +407,12 @@ export class AgencyService implements IAgencyService {
       activity: `new client ${clientDetails.name} has been created with ${menu.length} services`,
       entity: {
         type: "agency",
-        id: Agency._id.toString()
+        id: agency._id.toString(),
       },
       redirectUrl: "clients",
     };
 
     await this._activityRepository.createActivity(orgId, activity);
-
 
     const data = createClientMailData(
       email,
@@ -287,7 +422,7 @@ export class AgencyService implements IAgencyService {
     );
     sendMail(
       email,
-      `Welcome to ${Agency.organizationName}! Excited to Partner with You`,
+      `Welcome to ${agency.organizationName}! Excited to Partner with You`,
       data,
       (error: unknown, info: { response: string }) => {
         if (error) {
@@ -357,7 +492,7 @@ export class AgencyService implements IAgencyService {
         );
         clients = clientsWithProjectDetails;
         break;
-        
+
       case "count":
         const lastWeekClients =
           clients?.filter(
@@ -369,7 +504,7 @@ export class AgencyService implements IAgencyService {
           clients: {
             count: clients?.length || 0,
             lastWeekCount: lastWeekClients?.length || 0,
-          }
+          },
         };
 
       default:
@@ -383,7 +518,6 @@ export class AgencyService implements IAgencyService {
       currentPage: page,
     };
   }
-  
 
   async getClient(
     orgId: string,
@@ -504,27 +638,31 @@ export class AgencyService implements IAgencyService {
     const agency = await this._agencyRepository.findAgencyWithOrgId(orgId);
     const currentPlan = await this._planRepository.getPlan(agency.planId);
 
-    if (!currentPlan || currentPlan.price === 0) return [];
+    if (!currentPlan) return [];
 
     const allPlans = await this._planRepository.getPlans();
-    console.log(agency)
 
-    const upgradablePlans = allPlans
-      .data.filter(
+    const upgradablePlans = allPlans.data
+      .filter(
         (plan) =>
           plan.isActive &&
+          plan.type !== "trial" &&
           plan.price > currentPlan.price &&
           plan._id.toString() !== currentPlan._id.toString()
       )
       .map((plan) => {
-        const proratedPrice = this.calculateProratedPrice(
-          plan.price,
-          agency.createdAt,
-          plan.billingCycle
-        );
+        let proratedPrice = plan.price;
+
+        if (currentPlan.type !== "trial") {
+          proratedPrice = this.calculateProratedPrice(
+            plan.price,
+            agency.createdAt,
+            plan.billingCycle
+          );
+        }
+
         return { ...plan.toObject(), proratedPrice };
       });
-    console.log(upgradablePlans)
 
     return upgradablePlans;
   }
@@ -532,7 +670,7 @@ export class AgencyService implements IAgencyService {
   private calculateProratedPrice(
     fullPrice: number,
     planStartDate: Date,
-    billingClycle: string
+    billingCycle: "monthly" | "yearly"
   ): number {
     const now = new Date();
     const usedDays = Math.floor(
@@ -540,13 +678,13 @@ export class AgencyService implements IAgencyService {
         (1000 * 60 * 60 * 24)
     );
 
-    const billingCycleDays = billingClycle == "monthly" ? 30 : 365;
+    const billingCycleDays = billingCycle === "monthly" ? 30 : 365;
     const remainingDays = Math.max(0, billingCycleDays - usedDays);
 
     const pricePerDay = fullPrice / billingCycleDays;
-    const discount = pricePerDay * remainingDays;
+    const proratedPrice = pricePerDay * remainingDays;
 
-    return parseFloat((fullPrice - discount).toFixed(2));
+    return parseFloat(proratedPrice.toFixed(2));
   }
 
   async upgradePlan(orgId: string, planId: string): Promise<void> {
@@ -556,7 +694,7 @@ export class AgencyService implements IAgencyService {
     }
 
     const agency = await this._agencyTenantRepository.getOwnerWithOrgId(orgId);
-    console.log(agency,'agency')
+    console.log(agency, "agency");
     if (!agency) {
       throw new CustomError("Agency not found", 404);
     }
@@ -567,7 +705,7 @@ export class AgencyService implements IAgencyService {
       plan.billingCycle
     );
 
-    const validityInDate = addMonthsToDate(
+    const validityInDate = addMonthsToDate(plan.billingCycle,
       plan.billingCycle == "monthly" ? 30 : 365
     );
     await this._agencyRepository.upgradePlanWithOrgId(
@@ -591,7 +729,7 @@ export class AgencyService implements IAgencyService {
     };
 
     await this._transactionRepository.createTransaction(transaction);
-    await this._transactiontenantRepository.createTransaction(
+    await this._transactionTenantRepository.createTransaction(
       orgId,
       transaction
     );
@@ -606,7 +744,7 @@ export class AgencyService implements IAgencyService {
       activity: `Agency upgraded to ${plan.name} plan`,
       entity: {
         type: "agency",
-        id: agency._id.toString()
+        id: agency._id.toString(),
       },
       redirectUrl: "settings",
     };

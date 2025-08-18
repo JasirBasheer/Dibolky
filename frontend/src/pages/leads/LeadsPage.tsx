@@ -1,11 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  Search,
-  MoreHorizontal,
-  Plus,
-} from "lucide-react";
+import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react";
+import { Search, MoreHorizontal, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,11 +11,7 @@ import { useSelector } from "react-redux";
 import CustomBreadCrumbs from "@/components/ui/custom-breadcrumbs";
 import type { RootState } from "@/types/common";
 import { PlatformFilter } from "@/components/common/platfrom-filter";
-import {
-  fetchConnections,
-  getAdSetsApi,
-  getCampaignsApi,
-} from "@/services";
+import { fetchConnections, getAdSetsApi, getCampaignsApi } from "@/services";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,8 +20,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { formatDate, formatTimestamp } from "@/utils/utils";
-import {Adsets} from "./components/adsets";
-import CreateCampaign from "./components/createCampaign";
+import { Adsets } from "./components/adsets";
+import DetailModal from "@/components/modals/details-modal";
 
 const LeadsPage = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -44,11 +36,12 @@ const LeadsPage = () => {
   const [isCampaignsLoading, setIsCampaignsLoading] = useState<boolean>(false);
   const [isSelectedContentLoading, setSelectedContentLoading] =
     useState<boolean>(false);
-  const [selectedCampaignAdsets, setSelectedCampaignAdsets] = useState<any>(null);
+  const [selectedCampaignAdsets, setSelectedCampaignAdsets] =
+    useState<any>(null);
   const [selectedCampaignDetails, setSelectedCampaignDetails] =
     useState<any>(null);
   const [filteredCampaigns, setFilteredCampaigns] = useState<any[]>([]);
-  const [isCreateCampaignOpen, setIsCreateCampaignOpen] = useState(false)
+  const [isCreateCampaignOpen, setIsCreateCampaignOpen] = useState(false);
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
@@ -143,8 +136,7 @@ const LeadsPage = () => {
   ]);
 
   return (
-     <>
-     {isCreateCampaignOpen && <CreateCampaign/>}
+    <>
       <CustomBreadCrumbs
         breadCrumbs={[
           [
@@ -210,10 +202,11 @@ const LeadsPage = () => {
             <Button
               size="sm"
               className=" bg-black text-white"
-              onClick={()=> setIsCreateCampaignOpen(true)}
+              onClick={() => setIsCreateCampaignOpen(true)}
             >
-              <Plus className="h-4 w-4 "  />
+              <Plus className="h-4 w-4 " />
             </Button>
+            
           </div>
 
           <div className="flex-1 ">
@@ -256,7 +249,7 @@ const LeadsPage = () => {
                           setSelectedCampaignDetails({
                             id: item.id,
                             platform: item.platform,
-                            name: item.name
+                            name: item.name,
                           })
                         }
                       >
@@ -290,7 +283,9 @@ const LeadsPage = () => {
                                         console.log("Pause clicked")
                                       }
                                     >
-                                      {item.effective_status == "ACTIVE"?"Pause Campaign" :"Restart Campaign"} 
+                                      {item.effective_status == "ACTIVE"
+                                        ? "Pause Campaign"
+                                        : "Restart Campaign"}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                       className="text-xs cursor-pointer text-destructive"
@@ -314,14 +309,14 @@ const LeadsPage = () => {
                                 {item.platform
                                   .replace(/_/g, " ")
                                   .replace(/\b\w/g, (c) => c.toUpperCase())}
-                              </p>     
+                              </p>
                               <p className="text-xs text-gray-600 line-clamp-2 mb-2">
                                 Started: {formatTimestamp(item.start_time)}
                               </p>
                               {item?.stop_time && (
-                          <p className="text-xs text-gray-600 line-clamp-2 mb-2">
-                                Stoped: {formatDate(item?.stop_time)}
-                              </p>
+                                <p className="text-xs text-gray-600 line-clamp-2 mb-2">
+                                  Stoped: {formatDate(item?.stop_time)}
+                                </p>
                               )}
                             </div>
                           </div>
@@ -342,6 +337,85 @@ const LeadsPage = () => {
           />
         </div>
       </div>
+      <DetailModal
+        title="Create Campaign"
+        open={isCreateCampaignOpen}
+        onOpenChange={setIsCreateCampaignOpen}
+      >
+        <form className="space-y-4">
+          <div>
+            <label
+              htmlFor="campaignName"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Campaign Name
+            </label>
+            <input
+              id="campaignName"
+              name="campaignName"
+              type="text"
+              required
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="objective"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Objective
+            </label>
+            <select
+              id="objective"
+              name="objective"
+              required
+              className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            >
+              <option value="">Select objective</option>
+              <option value="LINK_CLICKS">Link Clicks</option>
+              <option value="CONVERSIONS">Conversions</option>
+              <option value="BRAND_AWARENESS">Brand Awareness</option>
+            </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor="objective"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Meta Ad Account
+            </label>
+            <select
+              id="objective"
+              name="objective"
+              required
+              className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            >
+              <option value="">Select Ad Account</option>
+              {connections?.adAccounts.flat().map((acc: { account_id: string , name: string  }) => (
+              <option key={acc.account_id} value={acc.account_id}>{acc.name}</option>
+              ))}
+  
+            </select>
+          </div>
+        </form>
+
+        <div className="flex justify-end gap-3 pt-4 border-t">
+          <Button
+            variant="outline"
+            onClick={() => setIsCreateCampaignOpen(false)}
+          >
+            Close
+          </Button>
+          <Button
+            variant="default"
+            onClick={() => setIsCreateCampaignOpen(false)}
+          >
+            Create
+          </Button>
+        </div>
+      </DetailModal>
     </>
   );
 };

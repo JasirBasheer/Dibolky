@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { IBucket, IFiles } from "@/types";
+import { PLATFORMS } from '@/utils';
 
 export async function publishLinkedInPost(
   file: IFiles,
@@ -90,7 +91,7 @@ export async function publishLinkedInPost(
     if (!content._id) throw new Error("Content ID is missing");
     console.log('linkedin post is on air....')
 
-    return { name: "linkedin", status: "success", id: content._id.toString() };
+    return { name: PLATFORMS.LINKEDIN, status: "success", id: content._id.toString() };
 
   } catch (error: any) {
     const errorMessage = error.response?.data?.message || error.message;

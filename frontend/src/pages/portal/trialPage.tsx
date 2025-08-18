@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import FreeTrialPurchase from "./components/free-trail.purchase"
-import { Check, Building2, UserCircle2, CircleArrowLeft } from "lucide-react"
+import { Check, CircleArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { Link } from "react-router-dom"
@@ -16,7 +16,7 @@ export function FreeTrialCards() {
     queryFn: () => {
       return fetchTrialPlans()
     },
-    select: (data) => data?.data.trialPlans,
+    select: (data) => data?.data.plans,
     staleTime: 1000 * 60 * 60,
   })
   const [selectedTrial, setSelectedTrial] = useState<string | null>(null)
@@ -53,14 +53,6 @@ export function FreeTrialCards() {
                     <CardHeader className="pb-4 space-y-4">
                       <div className="flex justify-between items-center">
                         <CardTitle className="text-xl font-bold text-black">{trialPlan.name}</CardTitle>
-                        <div className="p-2 rounded-full bg-gray-100">
-                          {trialPlan.planType == "influencer" ?
-                            (
-                              <UserCircle2 className="w-6 h-6 text-black" />
-                            ) : (
-                              <Building2 className="w-6 h-6 text-black" />
-                            )}
-                        </div>
                       </div>
                       <p className="text-sm text-gray-600">
                         {trialPlan.description}

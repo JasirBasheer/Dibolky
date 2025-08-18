@@ -36,7 +36,7 @@ export class ProviderController implements IProviderController {
         res: Response,
     ): Promise<void> =>{
             if (!req.details) throw new NotFoundError("Details Not Fount")
-            const { content_id, user_id, platform } = req.body
+            const { content_id, platform } = req.body
             const content: IBucket | null = await this._providerService.getContentById(req.details.orgId as string, content_id)
             let user;
             if (platform == 'agency') {
@@ -58,8 +58,8 @@ export class ProviderController implements IProviderController {
         req: Request,
         res: Response,
     ): Promise<void> =>{
-            const { access_token } = req.params
-            const pages = await this._providerService.getMetaPagesDetails(access_token as string)
+            const { role, userId } = req.params
+            const pages = await this._providerService.getMetaPagesDetails(req.details.orgId, role, userId )
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { pages })
     }
 

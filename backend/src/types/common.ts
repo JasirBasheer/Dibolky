@@ -45,7 +45,7 @@ export interface IBucket extends Document {
     caption: string;
     tags: string[];
     isPublished?: boolean;
-    reason?:INote | null;
+    reason:INote | null;
     createdAt?: string;
     changePlatformPublishStatus(platform: string, value: boolean): Promise<void>;
 }

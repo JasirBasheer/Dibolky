@@ -34,37 +34,8 @@ export class EntityController implements IEntityController {
     this._chatService = chatService;
   }
 
-  checkMail = async (req: Request, res: Response): Promise<void> => {
-    const { mail } = req.body;
-    const isExists = await this._entityService.IsMailExists(mail);
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {
-      isExists: isExists,
-    });
-  };
 
-  createAgency = async (req: Request, res: Response): Promise<void> => {
-    const { transaction_id } = req.body;
-    const isTrial = !transaction_id;
 
-    const finalPlanPurchasedRate = isTrial ? 0 : req.body.details.planPurchasedRate;
-    const finalTransactionId = isTrial ? "trial_user" : transaction_id;
-    const finalPaymentGateway = isTrial ? "trial" : req.body.details.paymentGateway;
-
-    const createdAgency = await this._entityService.createAgency({
-      ...req.body.details,
-      planPurchasedRate: finalPlanPurchasedRate,
-      transactionId: finalTransactionId,
-      paymentGateway: finalPaymentGateway,
-      currency: req.body.details.currency ?? "trial",
-    });
-    if (!createdAgency)
-      return SendResponse(
-        res,
-        HTTPStatusCodes.UNAUTHORIZED,
-        ResponseMessage.BAD_REQUEST
-      );
-    SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED);
-  };
 
   getMenu = async (req: Request, res: Response): Promise<void> => {
     if (!req.details) throw new NotFoundError("request details not found");
@@ -427,12 +398,8 @@ export class EntityController implements IEntityController {
   getConnections = async (req: Request, res: Response): Promise<void> => {
     const { entity, user_id } = req.params;
     const { includes } = req.query as { includes: string };
-    console.log(includes, "includesincludes");
     const connections = await this._entityService.getConnections(
-      req.details.orgId as string,
-      entity,
-      user_id,
-      includes
+      req.details.orgId as string, entity, user_id, includes
     );
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {
       connections: connections.validConnections,

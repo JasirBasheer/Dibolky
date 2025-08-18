@@ -14,7 +14,7 @@ import { checkIsMailExistsApi } from '@/services/common/post.services'
 import { getPlanDetailsApi } from '@/services/common/get.services'
 import { useQuery } from '@tanstack/react-query'
 import { validateField } from '@/validation/portalValidation'
-import { createAgencyApi } from '@/services/portal/post.services'
+import { createTrialAgencyApi } from '@/services/portal/post.services'
 import { message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
@@ -59,7 +59,7 @@ const FreeTrialPurchase = ({ planId, onClose }: FreeTrialPurchaseProps) => {
 
   const validateMail = async (mail: string): Promise<boolean> => {
     console.log(plan)
-    const response = await checkIsMailExistsApi(mail)
+    const response = await checkIsMailExistsApi(`?mail=${mail}`)
     return response.data.isExists
   }
   const handleSubmit = async (e: React.FormEvent) => {
@@ -95,11 +95,10 @@ const FreeTrialPurchase = ({ planId, onClose }: FreeTrialPurchaseProps) => {
         validity:1,
         industry: formData.industry,
         planId:plan._id,
-        description:plan.planName + " "+"Purchased",
+        description:plan.name + " "+"Purchased",
     }
 
-    if(plan.planType == "agency"){
-      const res = await createAgencyApi(details)
+      const res = await createTrialAgencyApi(details)
       if (res.status == 201) {
           setTimeout(() => {
               message.success('Agnecy successfully created')
@@ -110,7 +109,7 @@ const FreeTrialPurchase = ({ planId, onClose }: FreeTrialPurchaseProps) => {
               navigate('/agency/login')
           }, 500)
       }
-    }
+    
 
 
       // onClose();

@@ -138,26 +138,20 @@ export const CaseStudiesPage = () => {
     }
   }, [caseStudies]);
 
-  if (isCaseStudiesLoading) {
-    return <div>Loading case studies...</div>;
-  }
 
-  if (!caseStudies || caseStudies.length === 0) {
-    return <div>No case studies available.</div>;
-  }
 
   return (
     <div className="min-h-screen bg-background">
       <CustomBreadCrumbs
         breadCrumbs={[
-          ["Our Works", `/${user.role == "agency" ? "agency" : "client"}`],
+          ["Our Works", `/${user.role == "agency" ? "agency" : "client"}/`],
           ["Case Studies", ""],
         ]}
       />
 
       <div className="container mx-auto px-4 py-12">
         <div className="grid gap-8 lg:grid-cols-2">
-          {caseStudies.map((caseStudy) => (
+          {caseStudies?.map((caseStudy) => (
             <Card
               key={caseStudy._id}
               className="overflow-hidden hover:shadow-xl transition-all duration-300 group"

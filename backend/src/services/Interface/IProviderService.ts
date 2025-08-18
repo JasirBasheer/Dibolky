@@ -7,7 +7,7 @@ import { INote } from "../../types/note";
 export interface IProviderService {
     handleSocialMediaUploads(content: IBucket, user: IClientTenant | IAgencyTenant | IInfluncerTenant | null, isCron: boolean): Promise<ISocialMediaUploadResponse[]>;
     updateContentStatus(orgId: string, contentId: string, status: string): Promise<IBucket | null>;
-    getMetaPagesDetails(access_token: string): Promise<IMetaAccount[]>;
+    getMetaPagesDetails(orgId: string, role: string, userId: string): Promise<IMetaAccount[]>;
     getContentById(orgId: string, contentId: string): Promise<IBucket | null>;
     saveSocialMediaToken(orgId: string, platform: string, user_id: string, provider: string, accessToken: string, refreshToken?: string): Promise<void>;
     rescheduleContent(orgId: string, contentId: string,platformId:string, date: string): Promise<void>;

@@ -1,4 +1,5 @@
 import { IBucket } from "@/types";
+import { PLATFORMS } from "@/utils";
 import axios from 'axios';
 
 export async function publishXThought(
@@ -19,7 +20,7 @@ export async function publishXThought(
       }
     );
 
-    return { name: "X", status: "success", id: content._id as string };
+    return { name: PLATFORMS.X, status: "success", id: content._id as string };
   } catch (error:any) {
     console.error("Error posting to X:", error.response?.data || error.message);
     throw error;

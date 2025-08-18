@@ -18,7 +18,8 @@ export interface IAgency extends Document {
     planId: string;
     validity: string;
     logo: string;
-    remainingClients?: number;
+    remainingClients: number;
+    remainingProjects: number;
     isBlocked: boolean;
     planPurchasedRate: number;
     currency?:string;

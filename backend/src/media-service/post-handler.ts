@@ -1,6 +1,5 @@
 import { IBucket } from "../types/common";
 import { getS3PublicUrl, getS3ViewUrl } from "../utils/aws.utils";
-import { FACEBOOK, INSTAGRAM } from "../utils/constants";
 import { 
     checkIGContainerStatus, 
     createInstaCarousel, 
@@ -13,6 +12,8 @@ import { getPages } from "./shared";
 import { NotFoundError } from "mern.common";
 import { createCarouselPost, uploadImageToFacebook } from "@/providers/meta/facebook";
 import { getUserURN, publishLinkedInPost } from "@/providers/linkedin";
+import { platform } from "node:os";
+import { PLATFORMS } from "@/utils";
 
 
 
@@ -56,7 +57,7 @@ export async function uploadIGPost(
         const response = await publishInstagramContent(access_token, accountId.id, containerId as string)
         if (response) {
             return {
-                name: INSTAGRAM,
+                name: PLATFORMS.INSTAGRAM,
                 status: 'success',
                 id: content._id as string
             }
@@ -65,7 +66,11 @@ export async function uploadIGPost(
         }
 
     } catch (error: unknown) {
-        throw error
+        return {
+            name: PLATFORMS.INSTAGRAM,
+            status: "failed",
+            id:content._id.toString()
+        }
     }
 }
 
@@ -75,7 +80,7 @@ export async function uploadIGPost(
 export async function uploadFacebookPost(
     accessToken: string,
     content: IBucket,
-): Promise<{ name: string, status: string, id: string }> {
+): Promise<{ name: string, status: string, id: string, error?: string }> {
     try {
         if (!content.files.length)throw new Error("No images provided for the post.");
 
@@ -99,7 +104,7 @@ export async function uploadFacebookPost(
 
         if (postId) {
             return {
-                name: FACEBOOK,
+                name: PLATFORMS.FACEBOOK,
                 status: 'success',
                 id: content._id as string 
             };
@@ -109,7 +114,12 @@ export async function uploadFacebookPost(
 
     } catch (error: unknown) {
         console.error("Error in uploadFacebookPost:", error);
-        throw error;
+            return {
+            name: PLATFORMS.FACEBOOK,
+            status: "failed",
+            id:content._id.toString(),
+        }
+        // throw error;
     }
 }
 
@@ -127,7 +137,7 @@ export async function uploadLinkedinPost(
     return await publishLinkedInPost(file,filePath,accessToken,userURN,content)
     
     } catch (error: any) {
-     return { name: "linkedin", status: "failed", id: content._id as string,error:error.message}
+     return { name: PLATFORMS.LINKEDIN, status: "failed", id: content._id as string,error:error.message}
     };
 
 }

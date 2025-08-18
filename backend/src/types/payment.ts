@@ -14,6 +14,7 @@ export interface IRazorpayOrder {
   offer_id: string | null;
   receipt: string | null;
   status: string;
+  key_id: string
 }
 
 export interface IUserPlan {

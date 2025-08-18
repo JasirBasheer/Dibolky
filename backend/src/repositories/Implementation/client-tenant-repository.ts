@@ -88,13 +88,14 @@ export class ClientTenantRepository extends BaseRepository<IClientTenant> implem
         orgId: string,
         client_id: string,
         provider: string,
-        token: string
+        accessToken: string,
+        refreshToken: string
     ): Promise<void> {
         const model = await this.getModel(orgId);
 
         const details = await model.findOne({ _id: client_id })
         if (!details) throw new NotFoundError('Client not found')
-        return await details.setSocialMediaToken!(provider, token);
+        return await details.setSocialMediaToken!(provider, accessToken,refreshToken);
     }
  
 

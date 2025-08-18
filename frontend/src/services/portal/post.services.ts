@@ -6,3 +6,9 @@ export const createAgencyApi = async (
 ) => {
     return await api.post(`/api/public/agency`,{ details, transaction_id });
 }
+
+export const createTrialAgencyApi = async (
+    details: object,
+) => {
+    return await api.post(`/api/public/trial`,{ details });
+}

@@ -84,6 +84,20 @@ export class ContentRepository
     );
   }
 
+  async changePlatformStatus(
+    orgId: string,
+    contentId: string,
+    platform: string,
+    status: string
+  ): Promise<IBucket | null> {
+    const model = await this.getModel(orgId);
+    return await model.findOneAndUpdate(
+      { _id: contentId, "platforms.platform": platform },
+      { $set: { "platforms.$.status": status } },
+      { new: true }
+    );
+  }
+
   async getAllScheduledContents(
     orgId: string,
     user_id: string
@@ -120,7 +134,7 @@ export class ContentRepository
       );
     return content;
   }
-  
+
   async deleteScheduledContent(
     orgId: string,
     contentId: string,

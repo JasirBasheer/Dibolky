@@ -19,10 +19,8 @@ export const savePlatformTokenApi = async (
   );
 };
 
-export const checkIsMailExistsApi = async (mail: string) => {
-  return await api.post("/api/public/check-mail", {
-    mail,
-  });
+export const checkIsMailExistsApi = async (query : string = "") => {
+  return await api.get(`/api/public/exists${query}`);
 };
 
 export const InitiateS3BatchUpload = async (

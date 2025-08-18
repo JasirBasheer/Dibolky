@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { IBucket, IFiles } from "@/types";
+import { PLATFORMS } from '@/utils';
 
 export async function publishLinkedinVideo(
   filePath: string,
@@ -98,7 +99,7 @@ export async function publishLinkedinVideo(
       throw new Error(`Failed to post: ${errorData.message}`);
     }
     console.log("linked video is on air .....")
-    return { name: "linkedin", status: "success", id: content._id as string, };
+    return { name: PLATFORMS.LINKEDIN, status: "success", id: content._id as string, };
 
   } catch (error: any) {
     console.error("LinkedIn Video Upload Error:", error.response?.data || error.message);

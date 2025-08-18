@@ -47,7 +47,7 @@ export class ActivityRepository extends BaseRepository<IActivity> implements IAc
         options: { orgId: string; userId?: string; activityType?: string; limit?: number; skip?: number }
     ): Promise<IActivity[]> {
         const model = await this.getModel(options.orgId);
-        return await model.find({})
+        return await model.find({}).sort({ timestamp: -1 })
     }
 
     async getActivitiesByUserId(

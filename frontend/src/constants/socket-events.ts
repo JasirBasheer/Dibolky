@@ -5,6 +5,7 @@ export const SOCKET_EVENTS = {
   USER: {
     SET_ONLINE: "user:online",
     SET_OFFLINE: "user:offline",
+    ACTIVE_USERS: "active-users",
   },
 
   CHAT: {

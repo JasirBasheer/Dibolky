@@ -8,20 +8,6 @@ import { IAgency } from "@/models/Interface/agency";
 export class EntityRepository implements IEntityRepository {
 
 
-  async isAgencyMailExists(agency_mail: string): Promise<IAgencyType | null> {
-    return await Agency.findOne({ email: agency_mail });
-  }
-
-  async saveDetailsInAgencyDb(
-    new_agency: object,
-    orgId: string
-  ): Promise<IAgencyTenant> {
-    const db = await connectTenantDB(orgId);
-    const AgencyModel = db.model("OwnerDetail", agencyTenantSchema);
-    const agency = new AgencyModel(new_agency);
-    return await agency.save();
-  }
-
 
 
   async fetchOwnerDetails(

@@ -38,7 +38,7 @@ import {
 } from "@/redux/slices/ui.slice";
 import { useNavigate } from "react-router-dom";
 import InstagramAccountModal from "../../../components/common/instagram.acccounts.list";
-import { getMetaPages } from "@/services/common/get.services";
+import { fetchConnections, getMetaPages } from "@/services/common/get.services";
 import {
   InitiateS3BatchUpload,
   saveContentApi,
@@ -301,22 +301,22 @@ const CreateContentModal = () => {
 
   const handleUpload = async () => {
     if (!selectedPlatforms.length) {
-      alert("Please select at least one platform");
+      toast.error("Please select at least one platform");
       return;
     }
 
     if (!selectedContentType) {
-      alert("Please select a content type");
+      toast.error("Please select a content type");
       return;
     }
 
     if (selectedContentType !== "thought" && uploadedFile.length === 0) {
-      alert("Please upload a file");
+      toast.error("Please upload a file");
       return;
     }
 
     if (!caption.trim()) {
-      alert("Please enter a caption");
+      toast.error("Please enter a caption");
       return;
     }
 
@@ -325,7 +325,7 @@ const CreateContentModal = () => {
         (p) => !p.scheduledDate
       );
       if (unscheduledPlatforms.length > 0) {
-        alert(
+        toast.error(
           `Please set schedule time for: ${unscheduledPlatforms
             .map((p) => p.platform)
             .join(", ")}`
@@ -335,14 +335,13 @@ const CreateContentModal = () => {
     }
 
     const requiredPlatforms: string[] = [];
+    const connections = await fetchConnections(user.role == "agency"?"agency":"client", user.user_id, `?includes=social`)
+    console.log(connections.data,"connnections")
+    
     for (const item of selectedPlatforms as IPlatforms[]) {
-      if (item.platform == "instagram" && user.instagramAccessToken == "") {
-        requiredPlatforms.push("instagram");
-      } else if (
-        item.platform == "facebook" &&
-        user.facebookAccessToken == ""
-      ) {
-        requiredPlatforms.push("facebook");
+      const platform = connections.data.connections.find((acc: { platform: string; })=> acc.platform == item.platform)
+      if (!platform || (platform && !platform.is_valid)) {
+        requiredPlatforms.push(item.platform);
       }
     }
 
@@ -363,11 +362,7 @@ const CreateContentModal = () => {
       !selectedAccount
     ) {
       setIsLoading(true);
-      const response = await getMetaPages(
-        !user.facebookAccessToken
-          ? user.instagramAccessToken
-          : user.facebookAccessToken
-      );
+      const response = await getMetaPages(user.role,user.user_id);
       setUploadButtonText("Upload now");
       setIsLoading(false);
       setAccounts(response?.data?.pages);

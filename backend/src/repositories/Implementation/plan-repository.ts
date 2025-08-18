@@ -35,10 +35,6 @@ export class PlanRepository
     return { data, totalCount };
   }
 
-  async getTrialPlans(): Promise<IPlan[] | null> {
-    return await this.find({ price: 0 });
-  }
-
   async getPlan(planId: string): Promise<IPlan | null> {
     return await this.findOne({ _id: planId });
   }

@@ -4,7 +4,7 @@ interface IUI {
   createContentModalOpen: boolean;
   planExpiredModal: boolean;
   inCall: boolean;
-  outgoingCall: { recipientId: string; callType: "audio" | "video" } | null;
+  outgoingCall: { recipientId: string, chatId:string, callType: "audio" | "video" } | null;
 
 }
 
@@ -38,7 +38,7 @@ const UiSlice = createSlice({
     setInCall: (state, action: PayloadAction<boolean>) => {
       state.inCall = action.payload;
     },
-     setOutgoingCall(state, action: PayloadAction<{ recipientId: string; callType: "audio" | "video" } | null>) {
+    setOutgoingCall(state, action: PayloadAction<{ chatId:string; recipientId: string; callType: "audio" | "video" } | null>) {
       state.outgoingCall = action.payload;
     },
     resetCallState: () => initialState,

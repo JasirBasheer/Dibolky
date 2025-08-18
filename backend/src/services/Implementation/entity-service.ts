@@ -4,7 +4,6 @@ import { IEntityRepository } from "../../repositories/Interface/IEntityRepositor
 import { IPlanRepository } from "../../repositories/Interface/IPlanRepository";
 import { agencyTenantSchema } from "../../models/Implementation/agency";
 import { ITransactionRepository } from "../../repositories/Interface/ITransactionRepository";
-import { IProject } from "../../models/Implementation/project";
 import { IProjectRepository } from "../../repositories/Interface/IProjectRepository";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
@@ -24,6 +23,7 @@ import {
   deleteFBComment,
   getAdAccounts,
   getAllAds,
+  getAllFBMedias,
   getFBComments,
   getFBInsights,
   getFBMedia,
@@ -34,7 +34,6 @@ import {
   setFBCommentHidden,
 } from "@/providers/meta";
 import { isXAccessTokenValid } from "@/providers/x";
-import { IAgencyRegistrationDto } from "@/dto";
 import { SaveContentDto } from "@/dto/content";
 import { IClientTenant } from "@/models";
 import {
@@ -62,6 +61,8 @@ import { env } from "@/config";
 import {
   deleteIGComment,
   fetchIGAccountId,
+  fetchIGProfileDetails,
+  getAllIGMedias,
   getIGComments,
   getIGInsights,
   getIGMedias,
@@ -73,7 +74,7 @@ import {
   refreshGmailAccessToken,
 } from "@/providers/google";
 import { getSupportedMetrics } from "@/providers/utils";
-import { PLATFORMS, QueryParser, ROLES } from "@/utils";
+import { decryptToken, encryptToken, PLATFORMS, QueryParser, ROLES } from "@/utils";
 import { getFBMediaDetails } from "@/providers/utils/facebook";
 import { CommonMapper } from "@/mappers/common-mapper";
 import mongoose from "mongoose";
@@ -191,129 +192,7 @@ export class EntityService implements IEntityService {
   }
 
 
-  async IsMailExists(mail: string): Promise<boolean> {
-    const isExists = await this._entityRepository.isAgencyMailExists(mail);
-    if (isExists) return true;
-    return false;
-  }
 
-    async createAgency(
-    payload: IAgencyRegistrationDto
-  ): Promise<Partial<IAgencyType> | null> {
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
-    try {
-      const {
-        organizationName,
-        name,
-        email,
-        address,
-        websiteUrl,
-        industry,
-        contactNumber,
-        logo,
-        password,
-        planId,
-        validity,
-        planPurchasedRate,
-        transactionId,
-        paymentGateway,
-        description,
-        currency,
-      } = payload;
-
-      const hashedPassword = await hashPassword(password);
-      const orgId = organizationName.replace(/\s+/g, "") + Math.floor(Math.random() * 1000000);
-      const validityInDate = addMonthsToDate(validity);
-
-      const newAgency = {
-        orgId,
-        planId,
-        validity: validityInDate,
-        organizationName,
-        name,
-        email,
-        address,
-        websiteUrl,
-        industry,
-        contactNumber,
-        logo,
-        password: hashedPassword,
-        planPurchasedRate,
-        currency,
-      };
-
-      const ownerDetails = await this._agencyRepository.createAgency(
-        newAgency,
-        session
-      );
-
-      if (!ownerDetails) {
-        throw new Error("Failed to create agency");
-      }
-      await session.commitTransaction();
-
-      const plan = await this._planRepository.getPlan(planId);
-      if (!plan) {
-        throw new Error("Plan not found");
-      }
-      const newTenantAgency = {
-        main_id: ownerDetails?._id,
-        orgId,
-        planId,
-        organizationName,
-        name,
-        email,
-        permissions: plan.permissions,
-      };
-
-      const newTransaction = {
-        orgId,
-        email,
-        userId: ownerDetails?._id,
-        planId,
-        paymentGateway,
-        transactionId,
-        amount: planPurchasedRate,
-        description,
-        currency,
-        transactionType: "plan_transactions",
-      };
-
-      const activity = {
-        user: {
-          userId: ownerDetails._id as string,
-          username: organizationName,
-          email,
-        },
-        activityType: "account_created",
-        activity: "Account created for agency",
-        entity: {
-          type: "agency",
-          id: ownerDetails._id.toString(),
-        },
-        redirectUrl: "settings",
-      };
-      await this._entityRepository.saveDetailsInAgencyDb( newTenantAgency, orgId as string);
-      await this._transactionRepository.createTransaction( newTransaction );
-      await this._transactionTenantRepository.createTransaction( orgId, newTransaction );
-      await this._activityRepository.createActivity( orgId, activity);
-   
-      return ownerDetails;
-    } catch (error) {
-      await session.abortTransaction().catch(() => {}); 
-      await session.endSession();
-      console.error(" createAgency failed:", error);
-       if (error.code === 11000) {
-          throw new ConflictError("Account with this email already exists...");
-        }
-    } finally {
-     if (!session.hasEnded) {
-      await session.endSession();
-    }
-    }
-  }
 
 
   async getMenu(planId: string): Promise<IMenu[]> {
@@ -532,19 +411,24 @@ export class EntityService implements IEntityService {
       contentIds
     );
 
-    const contentsWithNotes = result.contents.map((content) => {
+
+    const contentsWithNotes = result.contents.map((contentDoc) => {
+      const content = contentDoc.toObject(); 
       const matchingNote = notes.find(
-        (note) => note.entityId.toString() === String(content._id)
+        (note) => note.entityId.toString() === content._id.toString()
       );
       return {
         ...content,
-        _id: String(content._id),
-        reason: matchingNote ? matchingNote : null,
+        _id: content._id.toString(),
+        reason: matchingNote || null,
       } as IBucketWithReason;
-    });
+    }) 
+
+    console.log(contentsWithNotes)
+    
     return CommonMapper.ContentDetails({
-      contents: contentsWithNotes,
       ...result,
+      contents: contentsWithNotes,
     });
   }
 
@@ -656,29 +540,37 @@ export class EntityService implements IEntityService {
 
   for (const platform of platforms) {
     if (platform.tokens?.accessToken && platform.tokens.accessToken !== "") {
-      let isValid = await platform.checkStatus(platform.tokens);
+      const tokens = {
+        accessToken: decryptToken(platform.tokens.accessToken),
+        refreshToken: decryptToken(platform.tokens.refreshToken || ""),
+      }
+      let isValid = await platform.checkStatus(tokens);
 
       if (
         platform.key === "gmail" &&
         !isValid &&
         platform.tokens.refreshToken
       ) {
-        console.log("Refreshing Gmail access token...");
         try {
           const refreshResult = await refreshGmailAccessToken(
-            platform.tokens.refreshToken
+            tokens.refreshToken
           );
-          console.log("Refreshed Gmail access token:", refreshResult);
+          const newEncryptedAccessToken = encryptToken(refreshResult.accessToken)
 
           if (refreshResult) {
             await this._agencyTenantRepository.setSocialMediaTokens(
               orgId,
               "gmail",
-              refreshResult.accessToken,
+              newEncryptedAccessToken,
               platform.tokens.refreshToken
             );
             platform.tokens.accessToken = refreshResult.accessToken;
-            isValid = await platform.checkStatus(platform.tokens);
+            isValid = await platform.checkStatus(
+              {
+              accessToken: refreshResult.accessToken,
+              refreshToken: tokens.refreshToken
+            }
+            );
           }
         } catch (error) {
           console.error("Error refreshing Gmail token:", error);
@@ -722,7 +614,6 @@ async getConnections(
     validConnections = await this.getValidConnections(orgId, userDetails.social_credentials, includes);
   }
 
-  console.log(validConnections,'avlisdconections')
 
   let connectedPages: { name: string; id: string }[] = [];
   if (
@@ -736,9 +627,11 @@ async getConnections(
       userDetails.social_credentials?.facebook?.accessToken ||
       userDetails.social_credentials?.instagram?.accessToken;
 
-    if (token) {
+    const decryptedToken = decryptToken(token)
+
+    if (decryptedToken) {
       try {
-        const pagesResponse = await getPages(token);
+        const pagesResponse = await getPages(decryptedToken);
         connectedPages = pagesResponse.data.map((page) => ({
           name: page.name,
           id: page.id,
@@ -749,7 +642,6 @@ async getConnections(
     }
   }
 
-  console.log('connectedpagess',connectedPages)
 
   let adAccounts: { name: string; id: string; act: string }[] = [];
   if (
@@ -757,9 +649,10 @@ async getConnections(
     validConnections.some((conn) => conn.platform == "meta_ads" && conn.is_valid)
   ) {
     const adsToken = userDetails.social_credentials?.meta_ads?.accessToken;
-    if (adsToken) {
+    const decryptedAdsToken = decryptToken(adsToken)
+    if (decryptedAdsToken) {
       try {
-        adAccounts = await getAdAccounts(adsToken);
+        adAccounts = await getAdAccounts(decryptedAdsToken);
       } catch (error) {
         console.error("Failed to fetch ads accounts:", error);
       }
@@ -815,8 +708,9 @@ async getConnections(
           );
           console.log(pagesWithNoUsers.length);
           if (pagesWithNoUsers.length > 0) {
+            const token = decryptToken(user.social_credentials.instagram.accessToken)
             const pages = await getPages(
-              user.social_credentials.instagram.accessToken
+              token
             );
             const validPages = pages.data.filter((page) =>
               pagesWithNoUsers.includes(page.id)
@@ -984,10 +878,8 @@ async getConnections(
 
         if (platform === "instagram") {
           if (!user?.social_credentials?.instagram?.accessToken) return [];
-
-          const pages = await getPages(
-            user.social_credentials.instagram.accessToken
-          );
+          const token = decryptToken(user.social_credentials.instagram.accessToken)
+          const pages = await getPages(token);
           const selectedPagesDetails = pages.data.filter((item) =>
             selectedPages.includes(item.id)
           );
@@ -1004,25 +896,12 @@ async getConnections(
 
             if (igAccountData.isBusiness) {
               const igUserId = igAccountData.id;
-              const igProfileResponse = await fetch(
-                `https://graph.facebook.com/${igUserId}?fields=id,username,name,profile_picture_url&access_token=${pageAccessToken}`
-              );
-              const igProfile = await igProfileResponse.json();
-
-              let allMedia = [];
-              let nextUrl = `https://graph.facebook.com/${igUserId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${pageAccessToken}`;
-
-              while (nextUrl) {
-                const response = await fetch(nextUrl);
-                const data = await response.json();
-
-                allMedia.push(...(data?.data || []));
-                nextUrl = data?.paging?.next || null;
-              }
+              const igProfile = await fetchIGProfileDetails(igUserId,pageAccessToken)
+              let allMedia = await getAllIGMedias(igUserId,pageAccessToken);
 
               contents = allMedia.map((content) => ({
                 ...content,
-                platform: "instagram",
+                platform: PLATFORMS.INSTAGRAM,
                 pageId,
                 profileName: igProfile.username,
                 profilePicture: igProfile.profile_picture_url,
@@ -1032,14 +911,10 @@ async getConnections(
           }
         } else if (platform === "facebook") {
           if (!user?.social_credentials?.facebook?.accessToken) return [];
-
-          const pagesResponse = await fetch(
-            `https://graph.facebook.com/${env.META.API_VERSION}/me/accounts?access_token=${user.social_credentials.facebook.accessToken}`
-          );
-          const pagesData = await pagesResponse.json();
-
+          const token = decryptToken(user.social_credentials.facebook.accessToken)
+          const pagesData = await getPages(token)
           const selectedPagesDetails = (pagesData.data || []).filter(
-            (page: any) => selectedPages.includes(page.id)
+            (page) => selectedPages.includes(page.id)
           );
 
           for (const selectedPage of selectedPagesDetails) {
@@ -1050,17 +925,7 @@ async getConnections(
               `https://graph.facebook.com/${env.META.API_VERSION}/${pageId}?fields=name,picture&access_token=${pageAccessToken}`
             );
             const pageInfo = await pageInfoResponse.json();
-            let allPosts = [];
-            let nextUrl = `https://graph.facebook.com/${env.META.API_VERSION}/${pageId}/posts?fields=id,message,created_time,permalink_url,attachments{subattachments,media,type,url},story&access_token=${pageAccessToken}`;
-
-            while (nextUrl) {
-              const response = await fetch(nextUrl);
-              const data = await response.json();
-              console.log(data, "data");
-              allPosts.push(...(data?.data || []));
-              nextUrl = data?.paging?.next || null;
-            }
-
+            let allPosts = await getAllFBMedias(pageId,pageAccessToken)
             contents = allPosts.map((post) => ({
               id: post.id,
               caption: post.message || post.story || "",
@@ -1072,7 +937,7 @@ async getConnections(
                 "",
               permalink: post.permalink_url,
               timestamp: post.created_time,
-              platform: "facebook",
+              platform: PLATFORMS.FACEBOOK,
               pageId,
               profileName: pageInfo.name,
               profilePicture: pageInfo.picture?.data?.url || null,
@@ -1110,7 +975,7 @@ async getConnections(
       let contentDetails: any = {};
 
       if (platform === PLATFORMS.INSTAGRAM) {
-        const accessToken = user.social_credentials.instagram?.accessToken;
+        const accessToken = decryptToken(user.social_credentials.instagram?.accessToken)
         if (!accessToken) throw new Error("Instagram access token missing");
 
         const pages = await getPages(accessToken);
@@ -1138,7 +1003,7 @@ async getConnections(
           insights,
         };
       } else if (platform === PLATFORMS.FACEBOOK) {
-        const accessToken = user.social_credentials.facebook?.accessToken;
+        const accessToken = decryptToken(user.social_credentials.facebook?.accessToken)
         if (!accessToken) throw new Error("Facebook access token missing");
 
         const pages = await getPages(accessToken);
@@ -1208,7 +1073,7 @@ async getConnections(
 
       if (platform === "instagram") {
         const instagramAccessToken =
-          user.social_credentials.instagram?.accessToken;
+          decryptToken(user.social_credentials.instagram?.accessToken);
         if (!instagramAccessToken) {
           throw new Error("Instagram access token missing");
         }
@@ -1236,7 +1101,7 @@ async getConnections(
         return data;
       } else if (platform === "facebook") {
         const facebookAccessToken =
-          user.social_credentials.facebook?.accessToken;
+          decryptToken(user.social_credentials.facebook?.accessToken)
         if (!facebookAccessToken) {
           throw new Error("Facebook access token missing");
         }
@@ -1285,8 +1150,8 @@ async getConnections(
       platform == "facebook"
         ? user.social_credentials.facebook.accessToken
         : user.social_credentials.instagram.accessToken;
-
-    const pages = await getPages(accessToken);
+    const decryptedAccessToken = decryptToken(accessToken)
+    const pages = await getPages(decryptedAccessToken);
     const page = pages.data.find((p) => p.id == pageId);
 
     const deletedComment =
@@ -1313,7 +1178,8 @@ async getConnections(
         ? user.social_credentials.facebook.accessToken
         : user.social_credentials.instagram.accessToken;
 
-    const pages = await getPages(accessToken);
+    const decryptedAccessToken = decryptToken(accessToken)
+    const pages = await getPages(decryptedAccessToken);
     const page = pages.data.find((p) => p.id == pageId);
 
     console.log(platform, "test", entity, "entity");
@@ -1366,8 +1232,7 @@ async getConnections(
         : await this._clientTenantRepository.getClientById(orgId, userId);
         let campaigns = []
         if(selectedPlatforms.includes('meta_ads')){
-          const token = user.social_credentials.meta_ads.accessToken
-          console.log(await getPages(token),'detils')
+          const token = decryptToken(user.social_credentials.meta_ads.accessToken)
           if(!token)return
           const validCampaigns = []
         for (const AdAccId of selectedAdAccounts) {
@@ -1392,7 +1257,7 @@ async getConnections(
         if(!user)throw new NotFoundError("user details not found please try again later")
           let adsets = []
         if(platform == PLATFORMS.META_ADS){
-            const token = user.social_credentials?.meta_ads?.accessToken
+            const token = decryptToken(user.social_credentials?.meta_ads?.accessToken)
             if(!token)throw new NotFoundError("token not found please reconnect meta ad account")
             const ads = await getAllAdSetsByCampaignId(id,token)
             adsets = ads.map((adset) => ({
@@ -1410,7 +1275,7 @@ async getConnections(
         if(!user)throw new NotFoundError("user details not found please try again later")
         let ads = []
         if(platform == PLATFORMS.META_ADS){
-            const token = user.social_credentials?.meta_ads?.accessToken
+            const token = decryptToken(user.social_credentials?.meta_ads?.accessToken)
             if(!token)throw new NotFoundError("token not found please reconnect meta ad account")
             ads = await getAllAds(adsetId,token,platform)
           }

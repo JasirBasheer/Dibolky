@@ -106,3 +106,4 @@ export async function getIGTokenDetails(pageId: string, accessToken: string) {
     return null;
   }
 }
+

@@ -47,7 +47,6 @@ const ChatInterface = ({
   onChatClose: () => void;
 }) => {
   const user = useSelector((state: RootState) => state.user);
-  // State declarations
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [newMessage, setNewMessage] = useState<{
     text: string;
@@ -67,7 +66,6 @@ const ChatInterface = ({
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const dispatch = useDispatch();
 
-  // Media upload handlers (no change)
   const handleMediaClick = () => {
     fileInputRef.current?.click();
   };
@@ -384,9 +382,9 @@ const ChatInterface = ({
 
 
 
-  async function startCall({callType, recipientId }) {
-    console.log('called ')
-  dispatch(setOutgoingCall({ recipientId, callType }));
+  async function startCall({chatId, callType, recipientId }) {
+  console.log('calling...')
+  dispatch(setOutgoingCall({chatId, recipientId, callType }));
   }
 
 
@@ -444,6 +442,7 @@ const ChatInterface = ({
     const recipient = participantsWithProfiles.find((p) => p.userId !== userId);
     if (recipient) {
        startCall({
+        chatId:chatDetails._id,
         callType: "video",
         recipientId: recipient.userId,
       });
@@ -462,6 +461,7 @@ const ChatInterface = ({
     const recipient = participantsWithProfiles.find((p) => p.userId !== userId);
     if (recipient) {
        startCall({
+        chatId:chatDetails._id,
         callType: "audio",
         recipientId: recipient.userId,
       });
@@ -667,7 +667,6 @@ const ChatInterface = ({
         })}
       </div>
 
-      {/* Chat Details Modal */}
       {showChatDetails && (
         <ChatDetails
           setShowChatDetails={setShowChatDetails}
@@ -679,14 +678,12 @@ const ChatInterface = ({
         />
       )}
 
-      {/* Emoji Picker */}
       {showEmojiPicker && (
         <div className="absolute z-10 bottom-56">
           <Picker data={data} onEmojiSelect={handleEmojiSelect} />
         </div>
       )}
 
-      {/* Message Input */}
       <div className="p-4 border-t border-slate-200">
         {newMessage.file && (
           <div className="flex items-center mb-2 bg-slate-100 rounded-lg px-3 py-1 text-sm text-slate-700">

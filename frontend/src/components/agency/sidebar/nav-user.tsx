@@ -122,10 +122,6 @@ export function NavUser({
                 Billing
               </DropdownMenuItem>
               }
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>

@@ -33,13 +33,13 @@ export const createEntityRoutes = (): Router => {
 
   
   router.get("/invoices/:entity/:user_id",asyncHandler(entityController.getAllInvoices))
-  
-  router.get("/payments/:entity/:user_id",asyncHandler(entityController.getAllTransactions))
 
+  router.get("/payments/:entity/:user_id",asyncHandler(entityController.getAllTransactions))
+     
   router.get("/activity/:entity/:user_id",asyncHandler(entityController.getAllActivities))
 
   
-  router.get("/get-meta-pages/:access_token",asyncHandler(providerController.getMetaPagesDetails));
+  router.get("/get-meta-pages/:role/:userId",asyncHandler(providerController.getMetaPagesDetails));
   router.get("/contents/:role/:userId",asyncHandler(entityController.fetchContents));
   // router.get("/get-scheduled-contents/:userId",asyncHandler(entityController.fetchAllScheduledContents));
   router.get("/get-connections/:entity/:user_id",asyncHandler(entityController.getConnections));

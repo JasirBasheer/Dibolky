@@ -1,7 +1,7 @@
 import { IBucket } from "@/types";
 import { getPages } from "./shared";
 import { NotFoundError } from "mern.common";
-import { getMediaDetails } from "@/utils";
+import { getMediaDetails, PLATFORMS } from "@/utils";
 import { publishFaceBookVideo } from "@/providers/meta/facebook";
 import { getUserURN, publishLinkedinVideo } from "@/providers/linkedin";
 import { getS3PublicUrl } from "@/utils/aws.utils";
@@ -12,8 +12,8 @@ export async function uploadFaceBookVideo(
   accessToken: string, 
   content: IBucket,
 ): Promise<{ name: string; status: string; id: string; postId?: string; error?: string }> {
-  if (content.files.length !== 1) return { name: "Facebook", status: "failed", id: content._id as string, error: "Only one video file is supported." };
-  if (!content.metaAccountId) return { name: "Facebook", status: "failed", id: content._id as string, error: "Facebook Page ID required." };
+  if (content.files.length !== 1) return { name: PLATFORMS.FACEBOOK, status: "failed", id: content._id as string, error: "Only one video file is supported." };
+  if (!content.metaAccountId) return { name: PLATFORMS.FACEBOOK, status: "failed", id: content._id as string, error: "Facebook Page ID required." };
 
   const fileKey = content.files[0].key;
   try {
@@ -30,7 +30,7 @@ export async function uploadFaceBookVideo(
 
   } catch (error: any) {
     console.error(`Error posting Facebook video: ${error.message}`);
-    return { name: "Facebook", status: "failed", id: content._id as string, error: `Error posting Facebook video: ${error.message}` };
+    return { name: PLATFORMS.FACEBOOK, status: "failed", id: content._id as string, error: `Error posting Facebook video: ${error.message}` };
   }
 }
 
@@ -59,6 +59,6 @@ export async function uploadLinkedinVideo(
     
   } catch (error) {
     console.error(`Error processing video ${content.files[0]?.key || "unknown"}:`, error);
-    return { name: "linkedin", status: "error", id: content._id as string };
+    return { name: PLATFORMS.LINKEDIN, status: "failed", id: content._id as string };
   }
 }

@@ -1,10 +1,10 @@
 import { checkIGContainerStatus, fetchIGAccountId, publishInstagramContent, uploadIGReelContent } from "@/providers/meta/instagram";
 import { checkReelUploadStatus, initializeReelUpload, publishReel, uploadHostedReel } from "@/providers/meta/facebook";
 import { getS3PublicUrl, getS3ViewUrl } from "../utils/aws.utils";
-import { FACEBOOK, INSTAGRAM } from "../utils/constants";
 import { NotFoundError } from "mern.common";
 import { IBucket } from "../types/common";
 import { getPages } from "./shared";
+import { PLATFORMS } from "@/utils";
 
 
 // INSTAGRAM REEL
@@ -24,7 +24,7 @@ export async function uploadIGReel(
         const result = await publishInstagramContent(access_token, instagramAccountId.id, containerData.id);
         if (result) {
             return {
-                name: INSTAGRAM,
+                name: PLATFORMS.INSTAGRAM,
                 status: 'success',
                 id: content._id as string
             }
@@ -33,7 +33,14 @@ export async function uploadIGReel(
         }
     } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    throw new Error(`Failed to upload reel: ${errorMessage}`);    }
+    // throw new Error(`Failed to upload reel: ${errorMessage}`);    
+            return {
+            name: PLATFORMS.INSTAGRAM,
+            status: "failed",
+            id:content._id.toString()
+        }
+}
+    
 }
 
 
@@ -59,7 +66,7 @@ export async function uploadFacebookReel(
 
         if (publishRespone) {
             return {
-                name: FACEBOOK,
+                name: PLATFORMS.FACEBOOK,
                 status: 'success',
                 id: content._id as string
             };
@@ -68,7 +75,12 @@ export async function uploadFacebookReel(
         }
    
     } catch (error: unknown) {
-        throw error;
+        return {
+            name: PLATFORMS.FACEBOOK,
+            status: "failed",
+            id:content._id.toString()
+        }
+        // throw error;
     }
 
 }

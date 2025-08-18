@@ -34,8 +34,12 @@ export class PlanController implements IPlanController {
         req: Request,
         res: Response,
     ): Promise<void> => {
-            const trialPlans = await this._planService.getAllTrailPlans()
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { trialPlans })
+            const result = await this._planService.getPlans({
+                limit:0,
+                page:0,
+                type:"trail"
+            })
+            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, result)
     }
 
     getPlan = async(

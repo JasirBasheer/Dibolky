@@ -5,8 +5,8 @@ import {
 
 /** Interface for Entity Controller */
 export interface IEntityController {
-    checkMail(req: Request, res: Response): Promise<void>
-    createAgency(req: Request, res: Response): Promise<void>
+
+
     getMenu(req: Request, res: Response): Promise<void>
     getOwner(req: Request, res: Response): Promise<void>
     getChats(req: Request, res: Response): Promise<void>

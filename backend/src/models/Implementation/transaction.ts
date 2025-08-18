@@ -35,7 +35,6 @@ const transactionSchema: Schema<ITransaction> = new Schema({
     },
     currency: {
         type: String,
-        required: true
     }
 }, { timestamps: true });
 

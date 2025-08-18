@@ -3,6 +3,7 @@ export const env = {
     PORT: process.env.PORT,
     DB_URI: process.env.DB_URI as string,
     CORS_ORIGINS: process.env.CORS_ORIGINS,
+    TOKEN_SECRET: process.env.TOKEN_SECRET,
   },
 
   BASE_URLS: {

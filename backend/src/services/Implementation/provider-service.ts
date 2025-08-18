@@ -30,13 +30,14 @@ import {
 } from "../../utils/constants";
 import { INote } from "../../types/note";
 import { INoteRepository } from "../../repositories/Interface/INoteRepository";
-import { CustomError } from "mern.common";
+import { CustomError, sendMail } from "mern.common";
 import { handleLinkedinUpload } from "@/providers/linkedin/handler";
 import { createXAuthURL, handleXUpload } from "@/providers/x";
 import { getMetaPagesDetails } from "@/providers/meta/facebook";
 import { IClientTenant } from "@/models";
 import { createLinkedInOAuthURL } from "@/providers/linkedin";
 import { createGoogleOAuthURL } from "@/providers/google";
+import { decryptToken, encryptToken } from "@/utils";
 
 @injectable()
 export class ProviderService implements IProviderService {
@@ -77,11 +78,10 @@ export class ProviderService implements IProviderService {
           switch (platform.platform) {
             case INSTAGRAM:
               access_token = user?.social_credentials?.instagram?.accessToken;
-              if (!access_token)
-                throw new Error("Instagram access token not found");
+              if (!access_token)throw new Error("Instagram access token not found");
               return (response = await handleInstagramUpload(
                 content,
-                access_token
+                decryptToken(access_token)
               ));
 
             case FACEBOOK:
@@ -90,7 +90,7 @@ export class ProviderService implements IProviderService {
                 throw new Error("FaceBook access token not found");
               return (response = await handleFacebookUpload(
                 content,
-                access_token
+                decryptToken(access_token)
               ));
 
             case LINKEDIN:
@@ -99,14 +99,14 @@ export class ProviderService implements IProviderService {
                 throw new Error("Linkedin access token not found");
               return (response = await handleLinkedinUpload(
                 content,
-                access_token
+                decryptToken(access_token)
               ));
 
             case X:
               access_token = user?.social_credentials?.x?.accessToken;
               if (!access_token)
                 throw new Error("Linkedin access token not found");
-              return (response = await handleXUpload(content, access_token));
+              return (response = await handleXUpload(content, decryptToken(access_token)));
 
             default:
               throw new Error(`Unsupported platform: ${platform}`);
@@ -123,20 +123,44 @@ export class ProviderService implements IProviderService {
     );
 
     if (validResults.length == 0) return validResults;
-    console.log("Upload Results:", results);
+    await Promise.all(validResults.map(r => this._contentRepository.changePlatformStatus(user.orgId, r.id, r.name, r.status)));
 
-    const successfulUploads = results.filter(
-      (result) => result!.status === "success"
-    );
-    if (successfulUploads.length === 0) {
-      throw new Error("All uploads failed");
+
+    const failedUploads = results.filter((result) => result!.status === "failed");
+
+    if (failedUploads.length > 0) {
+      const html = `<h3>Failed Uploads</h3><ul>${failedUploads
+        .map((f) => `<li>${f.name} (ID: ${f.id}) - ${f.status}</li>`)
+        .join("")}</ul>`;
+      await sendMail(
+        user.email,
+        "Failed to Upload Contents",
+        html,
+        (err: unknown, info: unknown) => {
+          if (err) {
+            console.log("Error sending mail to user");
+          } else {
+            console.log("Mail sended succeessfully");
+          }
+        }
+      );
     }
+
 
     return validResults;
   }
 
-  async getMetaPagesDetails(access_token: string): Promise<IMetaAccount[]> {
-    return (await getMetaPagesDetails(access_token)) ?? [];
+  async getMetaPagesDetails(orgId: string, role: string, userId: string): Promise<IMetaAccount[]> {
+      const user =
+        role === "agency"
+          ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
+          : await this._clientTenantRepository.getClientById(orgId, userId);
+      const accessToken = 
+      user.social_credentials?.facebook?.accessToken != ""
+      ? user.social_credentials.facebook?.accessToken
+      : user.social_credentials.instagram.accessToken
+      console.log(accessToken,user)
+    return (await getMetaPagesDetails(decryptToken(accessToken))) ?? [];
   }
 
   async updateContentStatus(
@@ -166,23 +190,28 @@ export class ProviderService implements IProviderService {
     accessToken: string,
     refreshToken?: string
   ): Promise<void> {
-    console.log(platform, "plaaatfrom");
-    console.log(user_id, "user idddddddd");
     if (user_id) {
       let longLivingAccessToken: string = accessToken;
-      console.log(accessToken, refreshToken, "toke1 and token2");
+      let encryptedAccessToken: string, encryptedRefreshToken: string;
+      
       switch (platform) {
         case "agency":
-          if (provider == INSTAGRAM || provider == FACEBOOK || provider == PLATFORMS.META_ADS ) {
+          if (
+            provider == INSTAGRAM ||
+            provider == FACEBOOK ||
+            provider == PLATFORMS.META_ADS
+          ) {
             longLivingAccessToken = await exchangeForLongLivedToken(
               accessToken
             );
           }
+          encryptedAccessToken = encryptToken(longLivingAccessToken)
+          encryptedRefreshToken = encryptToken(refreshToken)
           await this._agencyTenantRepository.setSocialMediaTokens(
             orgId,
             provider,
-            longLivingAccessToken,
-            refreshToken
+            encryptedAccessToken,
+            encryptedRefreshToken
           );
           break;
         case "client":
@@ -191,11 +220,15 @@ export class ProviderService implements IProviderService {
               accessToken
             );
           }
+          
+          encryptedAccessToken = encryptToken(longLivingAccessToken)
+          encryptedRefreshToken = encryptToken(refreshToken)
           await this._clientTenantRepository.setSocialMediaTokens(
             orgId,
             user_id,
             provider,
-            longLivingAccessToken
+            encryptedAccessToken,
+            encryptedRefreshToken
           );
           break;
         default:

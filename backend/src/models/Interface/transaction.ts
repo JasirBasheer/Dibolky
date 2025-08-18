@@ -9,6 +9,6 @@ export interface ITransaction extends Document {
     paymentGateway: string;
     amount: number;
     description: string;
-    currency: string;
+    currency?: string;
     transactionType:string;
 }

@@ -1,5 +1,6 @@
 import { env } from "@/config";
 import { IBucket } from "@/types";
+import { PLATFORMS } from "@/utils";
 import axios from "axios";
 
 export async function publishFaceBookVideo(
@@ -23,11 +24,11 @@ export async function publishFaceBookVideo(
     });
 
     console.log(`Facebook video posted with ID: ${postData.id}`);
-    return { name: "Facebook", status: "success", id: content._id as string, postId: postData.id};
+    return { name: PLATFORMS.FACEBOOK, status: "success", id: content._id as string, postId: postData.id};
 
   } catch (error: any) {
     const errorMessage = error.response?.data?.error?.message || error.message;
     console.error(`Error posting Facebook video: ${errorMessage}`);
-    return { name: "Facebook", status: "failed", id: content._id as string, error: `Error posting Facebook video: ${errorMessage}`,};
+    return { name: PLATFORMS.FACEBOOK, status: "failed", id: content._id as string, error: `Error posting Facebook video: ${errorMessage}`,};
   }
 }

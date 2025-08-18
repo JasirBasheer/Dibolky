@@ -4,15 +4,15 @@ import {
   Search,
   ArrowUpDown,
   Plus,
+  CheckCircle,
+  XCircle,
+  Clock,
+  AlertCircle,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { message } from "antd";
-import {
-  IReviewBucket,
-  RootState,
-} from "@/types/common";
+import { IReviewBucket, RootState } from "@/types/common";
 import {
   approveContentApi,
   getSignedUrlApi,
@@ -31,6 +31,12 @@ import SelectInput from "@/components/ui/selectInput";
 import { DataTable } from "@/components/ui/data-table";
 import CustomBreadCrumbs from "@/components/ui/custom-breadcrumbs";
 import { openCreateContentModal } from "@/redux/slices/ui.slice";
+import { toast } from "sonner";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 const Contents = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -41,6 +47,9 @@ const Contents = () => {
     null
   );
   const [rejectingContent, setRejectingContent] = useState<string | null>("");
+  const [uploadingContentLoadingStates, setUploadingContentLoadingStates] =
+    useState([]);
+
   const dispatch = useDispatch();
 
   const [filter, setFilter] = useState({
@@ -82,8 +91,6 @@ const Contents = () => {
     fetchSignedUrls();
   }, [data?.contents]);
 
-
-
   const handleCloseModal = () => {
     setSelectedContent(null);
   };
@@ -92,8 +99,8 @@ const Contents = () => {
     const urlMap: Record<string, string> = {};
 
     await Promise.all(
-      data?.contents?.flatMap((item: { files: { key: string; }[]; }) =>
-        item.files.map(async (file: { key: string; }) => {
+      data?.contents?.flatMap((item: { files: { key: string }[] }) =>
+        item.files.map(async (file: { key: string }) => {
           try {
             const response = await getSignedUrlApi(file.key);
             urlMap[file.key] = response.data.signedUrl;
@@ -110,17 +117,21 @@ const Contents = () => {
 
   const handleApproveContent = async (content_id: string) => {
     try {
-      message.loading("Uploading content");
+      setUploadingContentLoadingStates((prev) => [...prev, content_id]);
       await approveContentApi(
         content_id,
         user.user_id == agency.user_id ? "agency" : "client",
         user.user_id == agency.user_id ? user.main_id : user.user_id
       );
       refetch();
-      message.success("Content approved successfully");
+      toast.success("Content approved successfully");
     } catch (error) {
       console.error("Failed to approve content", error);
-      message.error("Failed to approve content");
+      toast.error("Failed to approve content");
+    } finally {
+      setUploadingContentLoadingStates((prev) =>
+        prev.filter((id) => id !== content_id)
+      );
     }
   };
 
@@ -128,17 +139,18 @@ const Contents = () => {
     setRejectingContent(content_id);
   };
 
-  const handleReschedule = async (date:string,platformId:string, contentId:string) => {
+  const handleReschedule = async (
+    date: string,
+    platformId: string,
+    contentId: string
+  ) => {
     try {
-       await rescheduleContentApi(user.user_id,contentId,platformId,date)
-       refetch();
+      await rescheduleContentApi(user.user_id, contentId, platformId, date);
+      refetch();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
-
-
-
 
   return (
     <>
@@ -196,15 +208,16 @@ const Contents = () => {
               >
                 <ArrowUpDown className="h-4 w-4" />
               </Button>
-                {user.role !="client" && (
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => dispatch(openCreateContentModal())}
-              >
-                <Plus className="h-4 w-4" />
-                Create
-              </Button>)}
+              {user.role != "client" && (
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => dispatch(openCreateContentModal())}
+                >
+                  <Plus className="h-4 w-4" />
+                  Create
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -291,24 +304,119 @@ const Contents = () => {
                   },
                   {
                     header: "Status",
-                    render: (content) => (
-                      <Badge
-                        className={
-                          content.status === "Approved"
-                            ? "bg-green-500 text-white hover:bg-green-500"
-                            : content.status === "Rejected"
-                            ? "bg-red-500 text-white hover:bg-red-500"
-                            : "bg-gray-200 text-black hover:bg-gray-200 "
+                    render: (content) => {
+                      if (
+                        uploadingContentLoadingStates?.includes(
+                          content._id
+                        )
+                      ) {
+                        return <Skeleton height={20} width={85} />;
+                      }
+
+                      const getStatusVariant = (status: string) => {
+                        switch (status.toLowerCase()) {
+                          case "success":
+                            return "default" as const;
+                          case "rejected":
+                          case "failed":
+                            return "destructive" as const;
+                          case "pending":
+                            return "secondary" as const;
+                          default:
+                            return "outline" as const;
                         }
-                      >
-                        {content.status}
-                      </Badge>
-                    ),
+                      };
+
+                      const getStatusColor = (status: string) => {
+                        switch (status.toLowerCase()) {
+                          case "success":
+                            return "bg-green-500";
+                          case "rejected":
+                          case "failed":
+                            return "bg-red-500";
+                          case "pending":
+                            return "bg-blue-500";
+                          default:
+                            return "bg-gray-500";
+                        }
+                      };
+
+                      const getStatusIcon = (status: string) => {
+                        switch (status.toLowerCase()) {
+                          case "approved":
+                          case "success":
+                            return <CheckCircle className="w-3 h-3" />;
+                          case "rejected":
+                          case "failed":
+                            return <XCircle className="w-3 h-3" />;
+                          case "pending":
+                            return <Clock className="w-3 h-3" />;
+                          default:
+                            return <AlertCircle className="w-3 h-3" />;
+                        }
+                      };
+
+                      return (
+                        <div className="flex items-center gap-3">
+                          <Badge
+                            variant={getStatusVariant(content.status)}
+                            className={
+                              content.status === "Approved"
+                                ? "bg-green-500 hover:bg-green-600 text-white"
+                                : content.status === "Rejected"
+                                ? "bg-red-500 hover:bg-red-600 text-white"
+                                : ""
+                            }
+                          >
+                            {getStatusIcon(content.status)}
+                            <span className="ml-1">{content.status}</span>
+                          </Badge>
+
+                          <HoverCard>
+                            <HoverCardTrigger asChild>
+                              <div className="w-3 h-3 rounded-full bg-gray-400 hover:bg-gray-500 cursor-pointer transition-colors" />
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-48 p-3" side="top">
+                              <div className="space-y-2">
+                                <h4 className="font-medium text-sm">
+                                  Platform Status
+                                </h4>
+                                <div className="space-y-1">
+                                  {content.platforms?.map(
+                                    (platform: any, index: number) => (
+                                      <div
+                                        key={index}
+                                        className="flex items-center justify-between text-sm"
+                                      >
+                                        <span className="capitalize">
+                                          {platform.platform ||
+                                            `Platform ${index + 1}`}
+                                        </span>
+                                        <div className="flex items-center gap-1">
+                                          <div
+                                            className={`w-2 h-2 rounded-full ${getStatusColor(
+                                              platform.status
+                                            )}`}
+                                          />
+                                          <span className="text-xs text-muted-foreground capitalize">
+                                            {platform.status}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    )
+                                  )}
+                                </div>
+                              </div>
+                            </HoverCardContent>
+                          </HoverCard>
+                        </div>
+                      );
+                    },
                   },
                 ]}
               />
             ) : (
-              <Skeleton count={5} height={48} />
+              <Skeleton height={40} count={3} />
             )}
           </CardContent>
         </Card>

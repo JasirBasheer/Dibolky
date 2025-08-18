@@ -30,8 +30,8 @@ export const fetchAllChatsApi = async (userId: string) => {
   return await api.get(`/api/entities/get-chats/${userId}`);
 };
 
-export const getMetaPages = async (token: string) => {
-  return await api.get(`/api/entities/get-meta-pages/${token}`);
+export const getMetaPages = async (role: string, userId: string) => {
+  return await api.get(`/api/entities/get-meta-pages/${role}/${userId}`);
 };
 
 export const fetchAllSchduledContentsApi = async (userId: string) => {

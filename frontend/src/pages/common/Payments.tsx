@@ -178,7 +178,7 @@ const Payments = () => {
                     <div className="flex items-center gap-1">
                       <CalendarDays className="h-4 w-4 text-gray-400" />
                       <span>
-                        {/* {format(new Date(transaction.createdAt), "MMM dd, yyyy")} */}
+                        {format(new Date(transaction.createdAt), "MMM dd, yyyy")}
                       </span>
                     </div>
                   ),

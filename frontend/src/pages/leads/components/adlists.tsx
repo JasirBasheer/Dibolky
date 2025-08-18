@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { BarChart3, Calendar, ExternalLink, Eye, MousePointer, TrendingUp, Users, Loader2, Plus } from 'lucide-react'
-import CreateAdModal from "./createAd"
+import DetailModal from "@/components/modals/details-modal"
 
 const AdsListWithInsights = ({ ads, isAdsLoading }) => {
   const [selectedAd, setSelectedAd] = useState(null)
@@ -56,7 +56,84 @@ const AdsListWithInsights = ({ ads, isAdsLoading }) => {
 
   return (
     <>
-    {isCreateAdModalOpen && <CreateAdModal/>}
+<DetailModal
+        title="Create Campaign"
+        open={isCreateAdModalOpen}
+        onOpenChange={setIsCreateAdModalOpen}
+      >
+        <form  className="space-y-6">
+              {/* Ad Section */}
+              <div>
+                <h3 className="font-medium mb-2">Ad Details</h3>
+
+                <label
+                  htmlFor="adName"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Ad Name
+                </label>
+                <input
+                  id="adName"
+                  name="adName"
+                  type="text"
+                  required
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                  placeholder="My Ad"
+                />
+
+                <label
+                  htmlFor="adCreativeId"
+                  className="block text-sm font-medium text-gray-700 mt-4"
+                >
+                  Ad Creative ID
+                </label>
+                <input
+                  id="adCreativeId"
+                  name="adCreativeId"
+                  type="text"
+                  required
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                  placeholder="1234567890"
+                />
+
+                <label
+                  htmlFor="status"
+                  className="block text-sm font-medium text-gray-700 mt-4"
+                >
+                  Ad Status
+                </label>
+                <select
+                  id="status"
+                  name="status"
+                  required
+                  className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                >
+                  <option value="PAUSED">Paused</option>
+                  <option value="ACTIVE">Active</option>
+                </select>
+              </div>
+
+            </form>
+
+        <div className="flex justify-end gap-3 pt-4 border-t">
+          <Button
+            variant="outline"
+            onClick={() => setIsCreateAdModalOpen(false)}
+          >
+            Close
+          </Button>
+          <Button
+            variant="default"
+            onClick={() => setIsCreateAdModalOpen(false)}
+          >
+            Create
+          </Button>
+        </div>
+      </DetailModal>
+
+
+
+
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">Ads</h2>

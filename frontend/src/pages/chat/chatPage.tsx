@@ -203,17 +203,6 @@ const ChatPage = () => {
       setActiveMembers(users);
     };
 
-    const handleRemovedMember = ({
-      chatId,
-      memberId,
-    }: {
-      chatId: string;
-      memberId: string;
-    }) => {
-      if (user.user_id != memberId) return;
-      if (selectedChat == chatId) setSelectedChat("");
-      setChats((prev) => prev.filter((chat) => chat._id != chatId));
-    };
 
     const handleDeletedMessage = ({
       chatId,
@@ -242,22 +231,9 @@ const ChatPage = () => {
 
     socket.on(SOCKET_EVENTS.CHAT.RECEIVE_MESSAGE, handleNewMessage);
     socket.on(SOCKET_EVENTS.CHAT.NEW_CHAT_CREATED, handleNewChat);
-    socket.on("active-users", handleAcitiveMembers);
-    socket.on("member-removed", handleRemovedMember);
+    socket.on(SOCKET_EVENTS.USER.ACTIVE_USERS, handleAcitiveMembers);
     socket.on(SOCKET_EVENTS.CHAT.DELETE_MESSAGE, handleDeletedMessage);
     socket.emit(SOCKET_EVENTS.USER.SET_ONLINE, { orgId: user.orgId, userId: user.user_id });
-
-
-    // return () => {
-    //   socket?.emit("set-member-offline", {
-    //     userId: user.user_id,
-    //     orgId: user.orgId,
-    //   });
-    //   socket?.off(SOCKET_EVENTS.CHAT.RECEIVE_MESSAGE, handleNewMessage);
-    //   socket?.off(SOCKET_EVENTS.CHAT.CREATE_CHAT, handleNewChat);
-    //   socket?.off("active-users", handleAcitiveMembers);
-    //   socket?.disconnect();
-    // };
   }, [user.orgId, user.user_id]);
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 import { IBucket } from '@/types';
+import { PLATFORMS } from '@/utils';
 import axios from 'axios';
 
 export async function publishLinkedinThought(
@@ -33,7 +34,7 @@ export async function publishLinkedinThought(
       }
     );
 
-    return { name: "linkedin", status: "success", id: content._id as string };
+    return { name: PLATFORMS.LINKEDIN, status: "success", id: content._id as string };
 
   } catch (error: any) {
     const errorMessage = error.response?.data?.message || error.message;

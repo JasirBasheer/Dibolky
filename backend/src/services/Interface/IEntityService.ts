@@ -10,8 +10,6 @@ import { IBucketWithReason, MappedProjectType } from "@/types";
 export interface IEntityService {
     fetchAllProjects(orgId: string,userId:string, role:string ,query:FilterType): Promise<{ projects: MappedProjectType[]; totalPages: number } | null>;
     markProjectAsCompleted(orgId: string, projectId: string): Promise<void>;
-    IsMailExists(mail: string): Promise<boolean>;
-    createAgency(payload: IAgencyRegistrationDto): Promise<Partial<IAgencyType> | null>;
     getMenu(planId: string): Promise<IMenu[]>;
     getClientMenu(orgId: string, client_id: string): Promise<IMenu[]>;
     getAllInvoices(orgId: string,role: string, user_id: string,query:FilterType): Promise<any>;

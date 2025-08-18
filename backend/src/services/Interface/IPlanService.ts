@@ -5,7 +5,6 @@ import { FilterType } from "@/utils";
 
 export interface IPlanService {
     getPlans(query:FilterType): Promise<{plans:Partial<IPlanType>[],totalCount: number}>;
-    getAllTrailPlans(): Promise<Partial<IPlan>[]>;
     getPlan(plan_id: string): Promise<Partial<IPlanType> >;
 
     createPlan(details: PlanDetailsDTO): Promise<void>

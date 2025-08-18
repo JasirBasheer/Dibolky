@@ -274,7 +274,7 @@ export function ContentDetailModal({
               {content.platforms.map((item: IPlatforms, index: number) => {
                 return (
                   <Badge key={index} variant="outline" className="capitalize">
-                    {item.platform || "Unknown"}
+                    {item.platform || "Unknown"} - {item.status || "Unknown"}
                   </Badge>
                 );
               })}

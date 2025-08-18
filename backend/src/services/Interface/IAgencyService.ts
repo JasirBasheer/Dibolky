@@ -6,9 +6,13 @@ import { IClientTenant } from "@/models";
 import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/common";
 import { IInvoiceType } from "@/types/invoice";
 import { FilterType } from "@/utils";
+import { IAgencyRegistrationDto } from "@/dto";
 
 export interface IAgencyService {
     verifyOwner(agency_id: string): Promise<Partial<IAgencyType> | null>;
+    createAgency(payload: IAgencyRegistrationDto): Promise<Partial<IAgencyType> | null>;
+    IsMailExists(mail: string): Promise<boolean>;
+  
     getAgencyOwnerDetails(orgId: string): Promise<IAgencyTenant | null>;
     agencyLoginHandler(email: string, password: string): Promise<string>;
     toggleAccess(client_id: string): Promise<void>;

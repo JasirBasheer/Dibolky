@@ -45,7 +45,7 @@ import {
 import { IInvoiceType } from "@/types/invoice";
 import { IPlan } from "@/models/Interface/plan";
 import { addMonthsToDate } from "@/utils/date-utils";
-import { FilterType } from "@/utils";
+import { decryptToken, FilterType } from "@/utils";
 import { sendGMail } from "@/providers/google";
 import { IAgencyRegistrationDto } from "@/dto";
 import mongoose from "mongoose";
@@ -759,9 +759,10 @@ export class AgencyService implements IAgencyService {
   ): Promise<void> {
     const agency = await this._agencyTenantRepository.getOwnerWithOrgId(orgId);
     const { accessToken, refreshToken } = agency?.social_credentials?.gmail;
+
     await sendGMail(
-      accessToken,
-      refreshToken,
+      decryptToken(accessToken),
+      decryptToken(refreshToken),
       agency.email,
       to,
       subject,

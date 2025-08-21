@@ -21,7 +21,7 @@ export interface IAgencyType {
   websiteUrl: string;
   industry: string;
   password?: string;
-  contactNumber: number;
+  contactNumber: string;
   planId: string;
   validity: string;
   logo: string;
@@ -92,7 +92,7 @@ export interface IAgencyRegistrationPayload {
   address: AddressType;
   websiteUrl: string;
   industry: string;
-  contactNumber: number;
+  contactNumber: string;
   logo: string;
   password: string;
   planId: string;

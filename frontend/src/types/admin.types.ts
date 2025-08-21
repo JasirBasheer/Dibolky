@@ -74,7 +74,7 @@ interface Details {
     name: string;
     email: string;
     industry: string;
-    contactNumber: number;
+    contactNumber: string;
     logo: string;
     password: string;
     remainingClients: number;

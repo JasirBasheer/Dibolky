@@ -42,10 +42,7 @@ export const agencyTrialZodSchema = z.object({
     logo: z.string().optional(),
     planId: z.string().min(1, "Plan ID is required"),
     validity: z.coerce.number().min(1, "Validity must be at least 1 month"),
-    planPurchasedRate: z.coerce.number().min(1, "Invalid purchase rate"),
-    paymentGateway: z.string().min(1, "Payment gateway is required"),
     description: z.string().min(1, "Description is required"),
-    currency: z.string().length(3, "Currency must be a 3-letter code"),
   }),
   transaction_id: z.string().optional(),
 });

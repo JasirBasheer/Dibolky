@@ -11,11 +11,5 @@ export const handleSendMails = async (
       toast.error("Please select at least one client to send mail.")
       return
     }
-    try {
       await sendMailApi(to,subject,message)
-      
-    } catch (error) {
-      console.error("Error sending reminders:", error)
-      toast.error("Failed to send reminder emails. Please try again.")
-    }
   }

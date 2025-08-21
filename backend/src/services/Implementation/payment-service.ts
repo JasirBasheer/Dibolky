@@ -94,7 +94,7 @@ export class PaymentService implements IPaymentService {
             address: { city: metadata.city, country: metadata.country },
             websiteUrl: metadata.website,
             industry: metadata.industry,
-            contactNumber: Number(metadata.phone),
+            contactNumber: metadata.phone,
             logo: metadata.logo || "",
             password: metadata.password,
             planId: JSON.parse(metadata.plan)._id,

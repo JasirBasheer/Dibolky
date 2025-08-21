@@ -52,7 +52,7 @@ const agencySchema: Schema<IAgency> = new mongoose.Schema(
       type: String,
     },
     contactNumber: {
-      type: Number,
+      type: String,
     },
     logo: {
       type: String,

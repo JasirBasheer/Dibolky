@@ -14,7 +14,7 @@ export interface IAgency extends Document {
     websiteUrl: string;
     industry: string;
     password?: string;
-    contactNumber: number;
+    contactNumber: string;
     planId: string;
     validity: string;
     logo: string;

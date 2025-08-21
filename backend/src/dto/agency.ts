@@ -7,7 +7,7 @@ export interface IAgencyRegistrationDto {
   address: AddressType;
   websiteUrl: string;
   industry: string;
-  contactNumber: number;
+  contactNumber: string;
   logo: string;
   password: string;
   planId: string;

@@ -7,7 +7,6 @@ import {
 } from 'mern.common';
 import { IPlanController } from '../Interface/IPlanController';
 import { IPlanService } from '@/services/Interface/IPlanService';
-import { PlanDetailsDTO } from '@/dto';
 import { QueryParser } from '@/utils';
 
 @injectable()
@@ -37,7 +36,7 @@ export class PlanController implements IPlanController {
             const result = await this._planService.getPlans({
                 limit:0,
                 page:0,
-                type:"trail"
+                type:"trial"
             })
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, result)
     }
@@ -55,7 +54,7 @@ export class PlanController implements IPlanController {
         req: Request,
         res: Response,
     ): Promise<void> => {
-            const { details }: { details: PlanDetailsDTO } = req.body
+            const { details } = req.body
             await this._planService.createPlan(details)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
@@ -64,10 +63,8 @@ export class PlanController implements IPlanController {
         req: Request,
         res: Response,
     ): Promise<void> => {
-            console.log(req.body)
-            const details: PlanDetailsDTO = req.body;
             const { plan_id } = req.params 
-            await this._planService.editPlan(plan_id, details)
+            await this._planService.editPlan(plan_id, req.body)
 
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }

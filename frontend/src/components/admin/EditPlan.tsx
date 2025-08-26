@@ -123,7 +123,7 @@ const EditPlan = ({ onClose, plan }: EditPlanProps) => {
                       id="price"
                       value={formData.price}
                       type="number"
-                      disabled={formData.type === 'trail'}
+                      disabled={formData.type === 'trial'}
                       onChange={(e) => handleChange(Number(e.target.value), 'price')}
                     />
                   </div>

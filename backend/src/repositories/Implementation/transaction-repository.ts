@@ -2,46 +2,50 @@ import { inject, injectable } from "tsyringe";
 import { ITransactionRepository } from "../Interface/ITransactionRepository";
 import { Model, SortOrder } from "mongoose";
 import { BaseRepository } from "mern.common";
-import { ITransaction } from "@/models";
+import { TransactionDoc } from "@/models";
+import { FilterType, QueryParser } from "@/utils";
+import { PaginatedResponse, QueryDto } from "@/dtos";
 
 @injectable()
 export class TransactionRepository
-  extends BaseRepository<ITransaction>
+  extends BaseRepository<TransactionDoc>
   implements ITransactionRepository
 {
-  constructor(@inject("transaction_model") model: Model<ITransaction>) {
+  constructor(@inject("transaction_model") model: Model<TransactionDoc>) {
     super(model);
   }
 
-  async createTransaction(transaction: object): Promise<ITransaction | null> {
-    console.log(transaction,'transaction')
+  async createTransaction(transaction: object): Promise<TransactionDoc | null> {
+    console.log(transaction, "transaction");
     return await this.create(transaction);
   }
 
   async getTransactionsWithOrgId(
     orgId: string
-  ): Promise<Partial<ITransaction[]> | null> {
+  ): Promise<Partial<TransactionDoc[]> | null> {
     return await this.find({ orgId: orgId });
   }
 
   async getTransactions(
-    filter: Record<string, unknown> = {},
-    options?: {
-      page?: number;
-      limit?: number;
-      sort?: string | { [key: string]: SortOrder } | [string, SortOrder][];
-    }
-  ): Promise<{ data: ITransaction[]; totalCount: number }> {
-    const { page, limit, sort } = options || {};
-  const totalCount = await this.model.countDocuments(filter);
+    query: QueryDto
+  ): Promise<PaginatedResponse<TransactionDoc>> {
+    const { page, limit, sortBy, sortOrder } = query;
+    const filter = QueryParser.buildFilter({
+      searchText: query.query,
+      searchFields: ["email", "paymentGateway", "description"],
+    });
 
-    let query = this.model.find(filter);
+    const sort: Record<string, 1 | -1> = { [sortBy]: sortOrder === "desc" ? -1 : 1};
+    const totalCount = await this.model.countDocuments(filter);
+    const totalPages = Math.ceil(totalCount / limit);
 
-    if (sort) query = query.sort(sort);
-    if (page && limit) query = query.skip((page - 1) * limit).limit(limit);
+     const mongoQuery = this.model
+      .find(filter)
+      .sort(sort)
+      .skip((page - 1) * limit)
+      .limit(limit);
 
-    const data = await query.exec();
-
-    return { data, totalCount };
+    const data = await mongoQuery.exec();
+    return { data, page, totalCount, totalPages };
   }
 }

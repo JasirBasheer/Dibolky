@@ -34,12 +34,7 @@ export class AgencyController implements IAgencyController {
       transactionId: "trial_user",
       paymentGateway: "trial",
     });
-    if (!createdAgency)
-      return SendResponse(
-        res,
-        HTTPStatusCodes.UNAUTHORIZED,
-        ResponseMessage.BAD_REQUEST
-      );
+    if (!createdAgency)return SendResponse(res,HTTPStatusCodes.UNAUTHORIZED,ResponseMessage.BAD_REQUEST);
     SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED);
   };
 
@@ -243,4 +238,21 @@ export class AgencyController implements IAgencyController {
     await this._agencyService.toggleAccess(client_id);
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS);
   };
+
+  getAllAgencies = async (req: Request, res: Response): Promise<void> => {
+    const query = QueryParser.parseFilterQuery(req.query);
+    const result = await this._agencyService.getAllAgencies(query);
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, result);
+  };
+
+  getAgencyById = async (
+    req: Request<{ client_id: string }>,
+    res: Response
+  ): Promise<void> => {
+    const { client_id } = req.params;
+    const details = await this._agencyService.getAgencyById(client_id);
+    if (!details) throw new NotFoundError("Client Not found");
+
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details });
+  };  
 }

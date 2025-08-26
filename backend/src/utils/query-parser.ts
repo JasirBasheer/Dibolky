@@ -1,3 +1,4 @@
+import { QueryDto } from "@/dtos";
 import { ParsedQs } from "qs";
 
 export type FilterType = {
@@ -17,7 +18,7 @@ type FilterBuilderOptions = {
 };
 
 export class QueryParser {
-  static parseFilterQuery(query: ParsedQs): FilterType {
+  static parseFilterQuery(query: ParsedQs): QueryDto {
     return {
       page: query.page !== undefined ? Number(query.page) : 1,
       limit: query.limit !== undefined ? Number(query.limit) : 10,

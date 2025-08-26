@@ -46,19 +46,12 @@ export class AuthenticationController implements IAuthenticationController {
     }
 
 
-    /**
-    * Authenticates a user based on role and creates access and refresh tokens
-    * @param req Express Request object containing email, password, and role
-    * @param res Express Response object
-    * @param next Express NextFunction for error handling
-    * @returns Promise resolving to void
-    */
     login = async(
         req: Request,
         res: Response
     ): Promise<void> => {
-            const { email, password, role }: { email: string, password: string, role: string } = req.body
-            let id;
+            const { email, password, role } = req.body
+            let id : string;
 
             switch (role) {
                 case ROLES.ADMIN:
@@ -85,13 +78,6 @@ export class AuthenticationController implements IAuthenticationController {
     }
 
 
-    /**
-    * Logs out the user by blacklisting the access token and clearing authentication cookies
-    * @param req Express Request object containing token details
-    * @param res Express Response object
-    * @param next Express NextFunction for error handling
-    * @returns Promise resolving to void
-    */
     logout = async(
         req: Request,
         res: Response
@@ -105,38 +91,22 @@ export class AuthenticationController implements IAuthenticationController {
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
 
-
-    /**
-    * Initiates the password reset process for a user
-    * @param req Express Request object containing the user's email and role
-    * @param res Express Response object
-    * @param next Express NextFunction for error handling
-    * @returns Promise resolving to void
-    */
     forgotPassword = async(
         req: Request,
         res: Response
     ): Promise<void> => {
-            const { email, role }: { email: string, role: string } = req.body
-
+            const { email, role } = req.body
             await this._authenticationService.resetPassword(email, role)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
     }
 
 
-    /**
-    * Resets  password using a reset token
-    * @param req Express Request object containing the reset token and new password
-    * @param res Express Response object
-    * @param next Express NextFunction for error handling
-    * @returns Promise resolving to void
-    */
     resetPassword = async(
         req: Request,
         res: Response
     ): Promise<void> => {
-            const { token } = req.params as { token: string };
-            const { newPassword } = req.body as { newPassword: string };
+            const { token } = req.params 
+            const { newPassword } = req.body
 
             await this._authenticationService.changePassword(token, newPassword)
             SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)

@@ -1,5 +1,5 @@
 import CustomBreadCrumbs from "@/components/ui/custom-breadcrumbs";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { IClient } from "@/types/client.types";
 
 const Clients = () => {
+    const queryClient = useQueryClient();
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<IClient | null>(null);
 
@@ -67,6 +68,13 @@ const Clients = () => {
     const res = await changeClientStatusApi(client_id);
 
     if (res.status === 200) {
+    // queryClient.setQueryData<any>(
+    //     ["admin:get-clients", page, debouncedFilter],
+    //     (oldResult) => {
+    //       return oldResult
+    //         ? [oldResult, ...oldResult]
+    //         : [oldResult];
+    //     })
       toast.success("client status changed successfully");
       refetch()
     }

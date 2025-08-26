@@ -119,7 +119,7 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="paid">Paid</SelectItem>
-        <SelectItem value="trail">Trial</SelectItem>
+        <SelectItem value="trial">Trial</SelectItem>
       </SelectContent>
     </Select>
   </div>
@@ -132,7 +132,7 @@ const AddPlan = ({ setIsAddPlan }: AddPlanProps) => {
                   </div>
                   <div className="space-y-2 ml-1">
                     <Label htmlFor="price">Price</Label>
-                    <Input id="price"  placeholder="Enter price"  disabled={formData.type == "trail"} type="number" onChange={(e) => handleChange(Number(e.target.value), 'price')} />
+                    <Input id="price"  placeholder="Enter price"  disabled={formData.type == "trial"} type="number" onChange={(e) => handleChange(Number(e.target.value), 'price')} />
                   </div>
                 </div>
 

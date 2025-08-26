@@ -45,10 +45,11 @@ import {
 import { IInvoiceType } from "@/types/invoice";
 import { IPlan } from "@/models/Interface/plan";
 import { addMonthsToDate } from "@/utils/date-utils";
-import { decryptToken, FilterType } from "@/utils";
+import { decryptToken, FilterType, QueryParser } from "@/utils";
 import { sendGMail } from "@/providers/google";
-import { IAgencyRegistrationDto } from "@/dto";
 import mongoose from "mongoose";
+import { AdminAgencyMapper } from "@/mappers/admin/agency-mapper";
+import { IAgencyRegistrationDto } from "@/dtos/agency";
 
 @injectable()
 export class AgencyService implements IAgencyService {
@@ -111,6 +112,36 @@ export class AgencyService implements IAgencyService {
     }
   }
 
+  async getAllAgencies(
+    query: FilterType
+  ): Promise<{ clients: IAgencyType[]; totalCount: number }> {
+    const { page, limit, sortBy, sortOrder } = query;
+    const filter = QueryParser.buildFilter({
+      searchText: query.query,
+      searchFields: ["name", "email", "organizationName"],
+    });
+    const options = {
+      page,
+      limit,
+      sort: sortBy
+        ? ({ [sortBy]: sortOrder === "desc" ? -1 : 1 } as Record<
+            string,
+            1 | -1
+          >)
+        : {},
+    };
+
+    const result = await this._agencyRepository.getAllAgencies(filter, options);
+    const clients = AdminAgencyMapper.AgencyMapper(result.data as IAgency[]);
+    return { clients, totalCount: result.totalCount };
+  }
+
+  async getAgencyById(agencyId: string): Promise<IAgencyType | null> {
+    const details = await this._agencyRepository.findAgencyWithId(agencyId);
+    if (!details) throw new NotFoundError("Agency Not Found");
+    return details;
+  }
+
   async createAgency(
     payload: IAgencyRegistrationDto
   ): Promise<Partial<IAgencyType> | null> {
@@ -137,16 +168,23 @@ export class AgencyService implements IAgencyService {
         currency,
       } = payload;
 
-    const plan = await this._planRepository.getPlan(planId);
-      if (!plan) {
-        throw new Error("Plan not found");
+      const plan = await this._planRepository.getPlan(planId);
+      if (!plan) throw new Error("Plan not found");
+      if (payload.paymentGateway == "trial") {
+        console.log(plan.type)
+        if (plan.type !== payload.paymentGateway) {
+          throw new CustomError(
+            "Invalid payment gateway for the selected plan.",
+            400
+          );
+        }
       }
 
       const hashedPassword = await hashPassword(password);
       const orgId =
         organizationName.replace(/\s+/g, "") +
         Math.floor(Math.random() * 1000000);
-      const validityInDate = addMonthsToDate(plan.billingCycle,validity);
+      const validityInDate = addMonthsToDate(plan.billingCycle, validity);
 
       const newAgency = {
         orgId,
@@ -172,12 +210,9 @@ export class AgencyService implements IAgencyService {
         session
       );
 
-      if (!ownerDetails) {
-        throw new Error("Failed to create agency");
-      }
+      if (!ownerDetails) throw new Error("Failed to create agency");
       await session.commitTransaction();
 
-    
       const newTenantAgency = {
         main_id: ownerDetails?._id,
         orgId,
@@ -219,13 +254,15 @@ export class AgencyService implements IAgencyService {
         newTenantAgency,
         orgId as string
       );
-      await this._transactionRepository.createTransaction(newTransaction);
-      await this._transactionTenantRepository.createTransaction(
-        orgId,
-        newTransaction
-      );
+      if(plan.type == "trial"){
+        await this._transactionRepository.createTransaction(newTransaction);
+        await this._transactionTenantRepository.createTransaction(
+          orgId,
+          newTransaction
+        );
+      }
+        
       await this._activityRepository.createActivity(orgId, activity);
-
       return ownerDetails;
     } catch (error) {
       await session.abortTransaction().catch(() => {});
@@ -327,11 +364,13 @@ export class AgencyService implements IAgencyService {
       throw new ConflictError("Client already exists with this email");
     const agency = await this._agencyRepository.findAgencyWithOrgId(orgId);
     if (!agency) throw new NotFoundError("Agency not found , Please try again");
-    if (agency.remainingClients == 0)throw new CustomError(
+    if (agency.remainingClients == 0)
+      throw new CustomError(
         "Client creation limit reached ,Please upgrade for more clients",
         402
       );
-    if(Object.keys(services).length > agency.remainingProjects)throw new CustomError(
+    if (Object.keys(services).length > agency.remainingProjects)
+      throw new CustomError(
         "Project creation limit reached ,Please upgrade for more Projects",
         402
       );
@@ -704,7 +743,8 @@ export class AgencyService implements IAgencyService {
       plan.billingCycle
     );
 
-    const validityInDate = addMonthsToDate(plan.billingCycle,
+    const validityInDate = addMonthsToDate(
+      plan.billingCycle,
       plan.billingCycle == "monthly" ? 30 : 365
     );
     await this._agencyRepository.upgradePlanWithOrgId(

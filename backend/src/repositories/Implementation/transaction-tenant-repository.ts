@@ -3,29 +3,29 @@ import { Model, Schema } from "mongoose";
 import { BaseRepository } from "mern.common";
 import { connectTenantDB } from "@/config/db.config";
 import { ITransactionTenantRepository } from "../Interface";
-import { ITransaction } from "@/models";
+import { TransactionDoc } from "@/models";
 
 @injectable()
 export class TransactionTenantRepository
-  extends BaseRepository<ITransaction>
+  extends BaseRepository<TransactionDoc>
   implements ITransactionTenantRepository
 {
   private _transactionModel: Schema;
   private _modelName = "transaction";
-  private _models: Map<string, Model<ITransaction>> = new Map();
+  private _models: Map<string, Model<TransactionDoc>> = new Map();
 
   constructor(@inject("transaction_tenant_modal") schema: Schema) {
-    super(null as unknown as Model<ITransaction>);
+    super(null as unknown as Model<TransactionDoc>);
     this._transactionModel = schema;
   }
 
-  private async getModel(orgId: string): Promise<Model<ITransaction>> {
+  private async getModel(orgId: string): Promise<Model<TransactionDoc>> {
     if (this._models.has(orgId)) {
       return this._models.get(orgId)!;
     }
     const connection = await connectTenantDB(orgId);
     if (!connection) throw new Error("Connection not found");
-    let model: Model<ITransaction> = connection.model<ITransaction>(
+    let model: Model<TransactionDoc> = connection.model<TransactionDoc>(
       this._modelName,
       this._transactionModel
     );
@@ -36,14 +36,14 @@ export class TransactionTenantRepository
   async createTransaction(
     orgId: string,
     transaction: object
-  ): Promise<ITransaction | null> {
+  ): Promise<TransactionDoc | null> {
     const model = await this.getModel(orgId);
     return await model.create(transaction);
   }
 
   async getTransactionsWithOrgId(
     orgId: string
-  ): Promise<Partial<ITransaction[]> | null> {
+  ): Promise<Partial<TransactionDoc[]> | null> {
     return await this.find({ orgId: orgId });
   }
 
@@ -52,7 +52,7 @@ export class TransactionTenantRepository
     filter: Record<string, unknown> = {},
     options?: { page?: number; limit?: number; sort?: any }
   ): Promise<{
-    transactions: ITransaction[];
+    transactions: TransactionDoc[];
     totalCount: number;
     totalPages: number }> {
     const model = await this.getModel(orgId);

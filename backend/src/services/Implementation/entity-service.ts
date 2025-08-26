@@ -34,7 +34,7 @@ import {
   setFBCommentHidden,
 } from "@/providers/meta";
 import { isXAccessTokenValid } from "@/providers/x";
-import { SaveContentDto } from "@/dto/content";
+import { SaveContentDto } from "@/dtos/content";
 import { IClientTenant } from "@/models";
 import {
   IActivityRepository,

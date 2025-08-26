@@ -49,6 +49,8 @@
     "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.3",
     "chalk": "^5.4.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
     "compression": "^1.7.5",
     "console-log-colors": "^0.5.0",
     "cookie-parser": "^1.4.7",

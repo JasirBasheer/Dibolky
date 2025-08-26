@@ -1,9 +1,7 @@
-## All-in-One SMMA Agency Platform
+# All-in-One SMMA Agency Platform
 
 An all-in-one platform designed for Social Media Marketing Agencies (SMMA) to manage everything in one place.  
-From social media scheduling to ads management and client communication – simplify workflows and maximize efficiency.
-
-This platform is **subscription-based**, offering multiple plans to suit agencies of all sizes.  
+From social media scheduling to ads management and client communication simplify workflows and maximize efficiency. This platform is subscription based, offering multiple plans to suit agencies of all sizes.  
 
 
 ### Features

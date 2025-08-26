@@ -1,42 +1,54 @@
-// models/Implementation/transaction.ts
-import mongoose, { Schema, Model } from 'mongoose';
-import { ITransaction } from '../Interface';
+import mongoose, { Schema, Model, HydratedDocument } from "mongoose";
+import { Transaction } from "../Interface";
 
-const transactionSchema: Schema<ITransaction> = new Schema({
+
+export type TransactionDoc = HydratedDocument<Transaction>;
+
+const transactionSchema: Schema<TransactionDoc> = new Schema(
+  {
     orgId: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     email: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     userId: { type: String },
     planId: {
-        type: String,
+      type: String,
     },
     paymentGateway: {
-        type: String,
-        default: "razorpay"
+      type: String,
+      default: "razorpay",
     },
-    transactionType:{
-        type: String,
+    transactionType: {
+      type: String,
     },
     transactionId: {
-        type: String
+      type: String,
     },
     amount: {
-        type: Number,
-        required: true
+      type: Number,
+      required: true,
     },
     description: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     currency: {
-        type: String,
-    }
-}, { timestamps: true });
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
 
-const TransactionModel: Model<ITransaction> = mongoose.model<ITransaction>('Transaction', transactionSchema);
+transactionSchema.index({ createdAt: -1 });
+transactionSchema.index({ userId: 1, createdAt: -1 });
+
+const TransactionModel: Model<TransactionDoc> = mongoose.model<TransactionDoc>(
+  "Transaction",
+  transactionSchema
+);
+
 export { transactionSchema, TransactionModel };

@@ -14,7 +14,6 @@ import http from "http";
 import { Server } from "socket.io";
 import { config } from "./config/socket";
 
-
 async function bootstrap() {
   try {
     await connectDB()

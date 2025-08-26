@@ -87,7 +87,7 @@ interface Details {
 }
 
 export interface Transactions {
-    _id?:string;
+    id?:string;
     orgId: string;
     planId?: string
     userId?: string;

@@ -7,6 +7,10 @@ export interface IAgencyController {
     isExists(req: Request, res: Response): Promise<void>
     createTrialAgency(req: Request, res: Response): Promise<void>
     createAgency(req: Request, res: Response): Promise<void>
+
+    getAllAgencies(req: Request, res: Response): Promise<void>
+    getAgencyById(req: Request, res: Response): Promise<void>
+
     getAgency(req: Request, res: Response): Promise<void>
     getAgencyOwnerDetails(req: Request, res: Response): Promise<void>
     createClient(req: Request, res: Response): Promise<void>

@@ -113,7 +113,7 @@ const Plans = () => {
                 value={filter.type}
                 options={[
                   { label: "All Plans", value: "all" },
-                  { label: "Trail Plans", value: "trail" },
+                  { label: "Trail Plans", value: "trial" },
                   { label: "Paid Plans", value: "paid" },
                 ]}
                 onChange={(value) =>

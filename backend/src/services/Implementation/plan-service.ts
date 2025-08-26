@@ -2,14 +2,12 @@ import { inject, injectable } from "tsyringe";
 import { IPlanService } from "../Interface/IPlanService";
 import { IPlanRepository } from "@/repositories/Interface/IPlanRepository";
 import { IMenu, IPlanType } from "@/types";
-import { PlanDetailsDTO } from "@/dto";
 import { createMenu } from "@/utils/menu.utils";
 import { CustomError } from "mern.common";
 import { IAgencyRepository } from "@/repositories/Interface/IAgencyRepository";
 import { PortalMapper } from "@/mappers/portal/portal-mapper";
-import { getPriceConversionFunc } from "@/utils/currency-conversion.utils";
-import { IPlan } from "@/models/Interface/plan";
 import { FilterType, QueryParser } from "@/utils";
+import { PlanType } from "@/validators";
 
 @injectable()
 export class PlanService implements IPlanService {
@@ -58,7 +56,7 @@ export class PlanService implements IPlanService {
     return PortalMapper.PlanMapper(plan);
   }
 
-  async createPlan(details: PlanDetailsDTO): Promise<void> {
+  async createPlan(details: PlanType): Promise<void> {
     let menu = createMenu(details.menu as string[]);
     details.permissions = details.menu as string[];
     details.menu = menu as unknown as IMenu | string[];
@@ -66,7 +64,7 @@ export class PlanService implements IPlanService {
     if (!createdPlan) throw new CustomError("Error While creating Plan", 500);
   }
 
-  async editPlan(plan_id: string, details: PlanDetailsDTO): Promise<void> {
+  async editPlan(plan_id: string, details: PlanType): Promise<void> {
     let editedPlan;
     console.log(details, "detilasss");
     if (Array.isArray(details?.menu) && details.menu.length > 0) {

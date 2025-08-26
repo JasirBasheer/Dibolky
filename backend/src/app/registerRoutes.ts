@@ -3,12 +3,12 @@ import { createAdminRoutes, createAgencyRoutes, createAuthRoutes, createClientRo
 
 export const registerRoutes = (app: Express) => {
   app.use("/api/", createHealthRoutes());
-  app.use("/api/public",createPublicRoutes());
   app.use("/api/auth", createAuthRoutes());
-  app.use("/api/entities", createEntityRoutes());
   app.use("/api/admin", createAdminRoutes());
   app.use("/api/agency", createAgencyRoutes());
   app.use("/api/client", createClientRoutes());
+  app.use("/api/public",createPublicRoutes());
   app.use("/api/payment", createPaymentRouter());  
+  app.use("/api/entities", createEntityRoutes());
 };
  

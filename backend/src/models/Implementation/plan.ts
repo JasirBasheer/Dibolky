@@ -79,7 +79,7 @@ const planSchema: Schema<IPlan> = new Schema(
         type:{
             type: String,
             required: true,
-            enum: ["trail", "paid"],
+            enum: ["trial", "paid"],
         }
     },
     { timestamps: true }

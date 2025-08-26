@@ -55,7 +55,7 @@ const Plans = () => {
           ) : (
             plans?.map(
               (plan, i) =>
-                plan.isActive && plan.type !="trail" && (
+                plan.isActive && plan.type !="trial" && (
                   <div
                     key={i}
                     className={`relative ${i !== 1 ? "mt-0 md:mt-4" : ""}

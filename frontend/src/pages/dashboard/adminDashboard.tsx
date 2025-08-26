@@ -28,8 +28,10 @@ const AdminDashboard = () => {
     queryFn: () => {
       return getAllTransactions(`?page=1&limit=10&sortOrder=desc`);
     },
-    select: (data) => data?.data.transactions,
+    select: (data) => data?.data,
   });
+
+  console.log(transactions,"transactions")
 
   const navigate = useNavigate();
 
@@ -133,8 +135,8 @@ const AdminDashboard = () => {
                 <div className="">
                   {isTransactionsLoading ? (
                     <Skeleton className="mt-2" count={3} height={31} />
-                  ) : transactions.length > 0 ? (
-                    transactions.map((item: Transactions, index: number) => (
+                  ) : transactions.data.length > 0 ? (
+                    transactions.data.map((item: Transactions, index: number) => (
                       <div
                         key={index}
                         onClick={() => {

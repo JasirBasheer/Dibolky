@@ -1,8 +1,7 @@
-import { IAgencyRegistrationDto } from "@/dto";
 import { IProject } from "../../models/Implementation/project";
 import {  IAgencyType, IAgencyTenant } from "../../types/agency";
 import { IMenu, IBucket, IUpdateProfile } from "../../types/common";
-import { SaveContentDto } from "@/dto/content";
+import { SaveContentDto } from "@/dtos/content";
 import { IClientTenant } from "@/models";
 import { FilterType } from "@/types/invoice";
 import { IBucketWithReason, MappedProjectType } from "@/types";

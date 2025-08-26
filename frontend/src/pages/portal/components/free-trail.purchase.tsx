@@ -27,7 +27,7 @@ const FreeTrialPurchase = ({ planId, onClose }: FreeTrialPurchaseProps) => {
   const navigate = useNavigate();
 
   const { data: plan } = useQuery({
-    queryKey: ["get-trail-plan-details"],
+    queryKey: ["get-trial-plan-details"],
     queryFn: () => {
       return getPlanDetailsApi(planId);
     },

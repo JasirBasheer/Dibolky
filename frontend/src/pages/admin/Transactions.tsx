@@ -55,9 +55,7 @@ const TransactionsPage = () => {
   });
   useEffect(() => {
     reset();
-  }, [
-    debouncedFilter,
-  ]);
+  }, [debouncedFilter]);
 
   const openPlanDetails = (transaction: Transactions) => {
     setSelectedTransaction(transaction);
@@ -130,7 +128,7 @@ const TransactionsPage = () => {
           <CardContent>
             {!isLoading ? (
               <DataTable
-                data={data?.transactions || []}
+                data={data?.data || []}
                 onRowClick={openPlanDetails}
                 columns={[
                   {
@@ -139,7 +137,7 @@ const TransactionsPage = () => {
                       <div className="flex items-center gap-2">
                         <ScanLine className="h-4 w-4 text-gray-400" />
                         <div>
-                          <div className="font-medium">{transaction._id}</div>
+                          <div className="font-medium">{transaction.id}</div>
                         </div>
                       </div>
                     ),
@@ -214,7 +212,7 @@ const TransactionsPage = () => {
               <div className="flex  justify-between items-start">
                 <div>
                   <h3 className="text-lg font-semibold font-lazare">
-                    {selectedTransaction._id}
+                    {selectedTransaction.id}
                   </h3>
                   <p className="text-sm text-gray-500 font-lazare font-semibold">
                     created At:{" "}

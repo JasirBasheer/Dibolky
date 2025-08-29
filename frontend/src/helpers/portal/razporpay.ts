@@ -2,14 +2,14 @@ import axios from "../../utils/axios";
 import { FormData } from "../../types/portal.types";
 import notificationSound from "../../assets/audios/currectanswer.wav";
 import { NavigateFunction } from "react-router-dom";
-import { IPlan } from "@/types/admin.types";
 import { IRazorpayOrder } from "@/types/payment.types";
 import { createAgencyApi } from "@/services/portal/post.services";
 import { toast } from "sonner";
+import { Plan } from "@/types";
 
 export const handleRazorpayPayment = async (
   formData: FormData,
-  plan: IPlan,
+  plan: Plan,
   navigate: NavigateFunction
 ) => {
   try {
@@ -56,7 +56,7 @@ export const handleRazorpayPayment = async (
 const handlePaymentSuccess = async (
   response: IRazorpayOrder,
   formData: FormData,
-  plan: IPlan,
+  plan: Plan,
   navigate: NavigateFunction
 ) => {
   const details = {
@@ -72,7 +72,7 @@ const handlePaymentSuccess = async (
     contactNumber: formData.phone,
     logo: "",
     industry: formData.industry,
-    planId: plan._id,
+    planId: plan.id,
     validity: formData.validity,
     planPurchasedRate: plan?.price * formData.validity,
     paymentGateway: "razorpay",

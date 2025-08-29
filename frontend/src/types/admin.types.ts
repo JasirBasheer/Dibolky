@@ -1,3 +1,5 @@
+import { Plan } from "./plan";
+
 export interface PlanConsumer {
     name: string;
     organizationName: string;
@@ -19,42 +21,11 @@ export interface IAdminPlan {
 
 
 
-export interface ISubItem {
-    label: string;
-    icon: string;
-    path: string[];
-}
-
-export interface IMenuItems {
-    label: string;
-    icon: string;
-    subItems: ISubItem[];
-}
-
-export type validityType = "monthly" | "yearly" ;
-export interface IPlan {
-    _id?:string;
-    name: string;
-    description:string;
-    price: number;
-    type: string;
-    features: string[];
-    billingCycle:  validityType;
-    maxProjects?: number;
-    maxClients?: number;
-    menu?: {
-        smm?: IMenuItems;
-        crm?: IMenuItems;
-        accounting?: IMenuItems;
-    };
-    isActive:boolean;
-    createdAt?: string;
-}
 
 
 
 export interface IPlans {
-    [key: string]: IPlan[]; 
+    [key: string]: Plan[]; 
 }
 
 

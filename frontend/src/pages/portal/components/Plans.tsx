@@ -1,9 +1,9 @@
 import { FcCheckmark } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
-import { IPlan } from "@/types/admin.types";
 import { getAllPortalPlans } from "@/services";
 import { useQuery } from "@tanstack/react-query";
 import Skeleton from "react-loading-skeleton";
+import { Plan } from "@/types";
 
 const Plans = () => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const Plans = () => {
     queryKey: ["portal:get-plans"],
     queryFn: async () => {
       const response = await getAllPortalPlans();
-      return response.data.result.plans as IPlan[];
+      return response.data.result.data as Plan[];
     },
   });
 
@@ -82,7 +82,7 @@ const Plans = () => {
                       </div>
                     </div>
                     <button
-                      onClick={() => handlePurchasePlan(plan._id as string)}
+                      onClick={() => handlePurchasePlan(plan.id as string)}
                       className={`w-full mt-6 h-14 rounded-md transition-all duration-300 ${
                         i === 1
                           ? "dark:bg-[#38456683] bg-[#1c1e21f3] hover:bg-gray-200 dark:hover:text-white text-white hover:text-black"

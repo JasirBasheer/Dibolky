@@ -212,7 +212,6 @@ export class AgencyController implements IAgencyController {
     const upgradablePlans = await this._agencyService.getUpgradablePlans(
       req.details.orgId
     );
-    console.log(upgradablePlans);
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {
       upgradablePlans,
     });
@@ -231,11 +230,11 @@ export class AgencyController implements IAgencyController {
   };
 
   toggleAgencyAccess = async (
-    req: Request<{ client_id: string }>,
+    req: Request<{ clientId: string }>,
     res: Response
   ): Promise<void> => {
-    const { client_id } = req.params;
-    await this._agencyService.toggleAccess(client_id);
+    const { clientId } = req.params;
+    await this._agencyService.toggleAccess(clientId);
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS);
   };
 
@@ -246,11 +245,11 @@ export class AgencyController implements IAgencyController {
   };
 
   getAgencyById = async (
-    req: Request<{ client_id: string }>,
+    req: Request<{ clientId: string }>,
     res: Response
   ): Promise<void> => {
-    const { client_id } = req.params;
-    const details = await this._agencyService.getAgencyById(client_id);
+    const { clientId } = req.params;
+    const details = await this._agencyService.getAgencyById(clientId);
     if (!details) throw new NotFoundError("Client Not found");
 
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details });

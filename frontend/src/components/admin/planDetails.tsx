@@ -13,14 +13,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Skeleton from 'react-loading-skeleton';
 import { message } from 'antd';
-import { IAdminPlan, IPlan, PlanConsumer } from '@/types/admin.types';
+import { PlanConsumer } from '@/types/admin.types';
 import { getPlanDetailsApi } from '@/services/admin/get.services';
 import { changePlanStatusApi } from '@/services/admin/post.services';
+import { Plan } from '@/types';
 
 interface PlanDetailsProps {
   setIsPlanDetails: Dispatch<SetStateAction<boolean>>;
   planId: string;
-  setPlans: Dispatch<SetStateAction<IPlan[]>>
+  setPlans: Dispatch<SetStateAction<Plan[]>>
 }
 
 const PlanDetails = ({ setIsPlanDetails, planId, setPlans }: PlanDetailsProps) => {
@@ -58,7 +59,7 @@ const PlanDetails = ({ setIsPlanDetails, planId, setPlans }: PlanDetailsProps) =
 
 setPlans(prev => {
   const updatedPlans = prev.map((p) => {
-    if (p._id === plan_id) {
+    if (p.id === plan_id) {
       return { ...p, isActive: !p.isActive };
     }
     return p;

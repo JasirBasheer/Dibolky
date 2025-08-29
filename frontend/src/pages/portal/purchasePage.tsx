@@ -20,13 +20,13 @@ import {
   Check,
   CheckCircle2,
 } from "lucide-react";
-import { IPlan } from "@/types/admin.types";
 import { checkIsMailExistsApi } from "@/services/common/post.services";
 import { toast } from "sonner";
+import { Plan } from "@/types";
 
 export const PurchasePlan: React.FC = () => {
-  const { plan_id } = useParams();
-  const [plan, setPlan] = useState<IPlan | null>(null);
+  const { planId } = useParams();
+  const [plan, setPlan] = useState<Plan | null>(null);
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [paymentMethod, setPaymentMethod] = useState<string>("razorpay");
   const [errors, setErrors] = useState<ValidationError>({});
@@ -52,7 +52,7 @@ export const PurchasePlan: React.FC = () => {
     setNext(isnext);
   }, [formData, currentStep]);
 
-  if (!plan_id) {
+  if (!planId) {
     console.error("Missing URL parameters!");
     navigate("/");
     return;
@@ -101,7 +101,7 @@ export const PurchasePlan: React.FC = () => {
   const fetchPlanDetails = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/public/plans/${plan_id}`);
+      const response = await axios.get(`/api/public/plans/${planId}`);
       setPlan(response.data.plan);
     } catch (error) {
       console.log(error);
@@ -115,9 +115,9 @@ export const PurchasePlan: React.FC = () => {
   ): Promise<void> => {
     e.preventDefault();
     if (paymentMethod == "razorpay") {
-      await handleRazorpayPayment(formData, plan as IPlan, navigate);
+      await handleRazorpayPayment(formData, plan as Plan, navigate);
     } else if (paymentMethod == "stripe") {
-      const response = await handleStripePayment(formData, plan as IPlan);
+      const response = await handleStripePayment(formData, plan as Plan);
       console.log(response);
       if (response.url) window.location.href = response.url;
     }

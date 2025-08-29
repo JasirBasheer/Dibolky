@@ -1,12 +1,11 @@
-import { IPlanType } from "@/types";
-import { FilterType } from "@/utils";
-import { PlanType } from "@/validators";
+import { CreatePlanDto, EditPlanDto, PaginatedResponse, QueryDto } from "@/dtos";
+import { Plan } from "@/models";
 
 export interface IPlanService {
-    getPlans(query:FilterType): Promise<{plans:Partial<IPlanType>[],totalCount: number}>;
-    getPlan(plan_id: string): Promise<Partial<IPlanType> >;
+    getPlans(query:QueryDto): Promise<PaginatedResponse<Plan>>;
+    getPlan(planId: string): Promise<Plan>;
 
-    createPlan(details: PlanType): Promise<void>
-    editPlan(plan_id: string, details: PlanType): Promise<void>
-    changePlanStatus(plan_id: string): Promise<void>
+    createPlan(details: CreatePlanDto): Promise<Plan>
+    editPlan(planId: string, details: EditPlanDto): Promise<Plan>
+    changePlanStatus(planId: string): Promise<void>
 }

@@ -6,8 +6,8 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { fetchTrialPlans } from "@/services/portal/get.services"
-import { IPlan } from "@/types/admin.types"
 import Skeleton from "react-loading-skeleton"
+import { Plan } from "@/types"
 
 
 export function FreeTrialCards() {
@@ -48,7 +48,7 @@ export function FreeTrialCards() {
           <Skeleton width={250} height={400}/>
           </>) :
             (
-              trialPlans?.map((trialPlan: IPlan) => {
+              trialPlans?.map((trialPlan: Plan) => {
                 return (
                   <Card className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 md:w-[22rem]">
                     <CardHeader className="pb-4 space-y-4">
@@ -69,7 +69,7 @@ export function FreeTrialCards() {
                         ))}
                       </div>
 
-                      <Button className="w-full bg-black text-white hover:bg-gray-800 h-11" onClick={() => setSelectedTrial(trialPlan._id as string)}>Start Free Trial</Button>
+                      <Button className="w-full bg-black text-white hover:bg-gray-800 h-11" onClick={() => setSelectedTrial(trialPlan.id as string)}>Start Free Trial</Button>
                       <p className="text-xs text-gray-500 text-center">No credit card required. 30-day free trial.</p>
                     </CardContent>
                   </Card>

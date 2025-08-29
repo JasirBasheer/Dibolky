@@ -5,8 +5,10 @@
   "scripts": {
     "test": "jest",
     "start": "nodemon --exec ts-node -r tsconfig-paths/register ./src/server.ts",
-    "dev": "nodemon ./src/server.ts",
-    "build": "tsc --noEmitOnError false"
+    "dev": "nodemon",
+    "build": "tsc --noEmitOnError false",
+    "start:prod": "node --max-old-space-size=1024 ./dist/server.js",
+    "monitor": "node --inspect --max-old-space-size=512 ./src/server.ts"
   },
   "keywords": [],
   "author": "",

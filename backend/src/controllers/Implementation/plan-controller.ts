@@ -1,83 +1,56 @@
-import { Request, Response } from 'express';
-import { inject, injectable } from 'tsyringe';
-import { 
-    HTTPStatusCodes, 
-    ResponseMessage, 
-    SendResponse 
-} from 'mern.common';
-import { IPlanController } from '../Interface/IPlanController';
-import { IPlanService } from '@/services/Interface/IPlanService';
-import { QueryParser } from '@/utils';
+import { Request, Response } from "express";
+import { inject, injectable } from "tsyringe";
+import { HTTPStatusCodes, ResponseMessage, SendResponse } from "mern.common";
+import { IPlanController } from "../Interface/IPlanController";
+import { IPlanService } from "@/services/Interface/IPlanService";
+import { QueryParser } from "@/utils";
 
 @injectable()
 export class PlanController implements IPlanController {
-    private _planService: IPlanService;
+  constructor(
+    @inject("PlanService")
+    private readonly _planService: IPlanService
+  ) {}
 
-    constructor(
-        @inject('PlanService') _planService: IPlanService,
-    ) {
-        this._planService = _planService
-    }
+  getPlans = async (req: Request, res: Response): Promise<void> => {
+    const query = QueryParser.parseFilterQuery(req.query);
+    const result = await this._planService.getPlans(query);
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { result });
+  };
 
-    getPlans = async(
-        req: Request,
-        res: Response,
-    ): Promise<void> => {
-        const query = QueryParser.parseFilterQuery(req.query);
-        const result = await this._planService.getPlans(query)
-        SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS,{result})
-    }
+  getAllTrialPlans = async (req: Request, res: Response): Promise<void> => {
+    const result = await this._planService.getPlans({
+      limit: 0,
+      page: 0,
+      type: "trial",
+    });
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, result);
+  };
 
+  getPlan = async (req: Request, res: Response): Promise<void> => {
+    const { planId } = req.params;
+    const plan = await this._planService.getPlan(planId);
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plan });
+  };
 
-    getAllTrialPlans = async(
-        req: Request,
-        res: Response,
-    ): Promise<void> => {
-            const result = await this._planService.getPlans({
-                limit:0,
-                page:0,
-                type:"trial"
-            })
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, result)
-    }
+  createPlan = async (req: Request, res: Response): Promise<void> => {
+    const plan = await this._planService.createPlan(req.body);
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plan });
+  };
 
-    getPlan = async(
-        req: Request,
-        res: Response,
-    ): Promise<void> => {
-            const { plan_id } = req.params
-            const plan = await this._planService.getPlan(plan_id);
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { plan })
-    }
+  editPlan = async (req: Request, res: Response): Promise<void> => {
+    const { planId } = req.params;
+    await this._planService.editPlan(planId, req.body);
 
-    createPlan = async(
-        req: Request,
-        res: Response,
-    ): Promise<void> => {
-            const { details } = req.body
-            await this._planService.createPlan(details)
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-    }
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS);
+  };
 
-    editPlan = async(
-        req: Request,
-        res: Response,
-    ): Promise<void> => {
-            const { plan_id } = req.params 
-            await this._planService.editPlan(plan_id, req.body)
-
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-    }
-
-    changePlanStatus = async (
-        req: Request<{ plan_id: string }>,
-        res: Response,
-    ): Promise<void> => {
-            const { plan_id } = req.params
-            await this._planService.changePlanStatus(plan_id)
-            SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS)
-    }
-
-
-
+  changePlanStatus = async (
+    req: Request<{ planId: string }>,
+    res: Response
+  ): Promise<void> => {
+    const { planId } = req.params;
+    await this._planService.changePlanStatus(planId);
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS);
+  };
 }

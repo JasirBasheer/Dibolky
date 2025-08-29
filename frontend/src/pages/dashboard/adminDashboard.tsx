@@ -20,7 +20,7 @@ const AdminDashboard = () => {
       return fetchAllClientsApi(`?page=1&limit=10&sortOrder=desc`);
     },
 
-    select: (data) => data?.data.clients,
+    select: (data) => data?.data.data,
   });
 
   const { data: transactions, isLoading: isTransactionsLoading } = useQuery({

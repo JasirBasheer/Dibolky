@@ -4,7 +4,30 @@ import { IClientTenantType } from "@/types/client";
 
 
 export class AgencyMapper {
-  static AgenyDetailsMapper(details:IAgency) {
+  static toAgencyResponse(agency: IAgency) {
+      return {
+            _id: agency._id.toString(),
+            organizationName: agency.organizationName,
+            orgId: agency.orgId,
+            name: agency.name,
+            email: agency.email,
+            address: agency.address,
+            profile:agency?.profile,
+            bio:agency?.profile,
+            websiteUrl: agency.websiteUrl,
+            industry: agency.industry,
+            contactNumber: agency.contactNumber,
+            planId: agency.planId,
+            validity: agency.validity,
+            logo: agency.logo,
+            remainingClients: agency.remainingClients,
+            isBlocked: agency.isBlocked,
+            planPurchasedRate: agency.planPurchasedRate,
+            currency:agency.currency,
+            createdAt: agency.createdAt
+      }
+  }
+    static AgenyDetailsMapper(details:IAgency) {
     return {
       _id: details._id,
       orgId: details.orgId,
@@ -38,4 +61,5 @@ export class AgencyMapper {
       }
     }) as IClientTenantType[]
   }
+
 }

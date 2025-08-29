@@ -1,4 +1,4 @@
-import { IMenuItems } from "./admin.types";
+import { IMenu } from "./plan";
 
 export interface IClient {
     _id?:string;
@@ -34,7 +34,7 @@ interface credentials {
 
 
 export interface IMenuCategory {
-    [key: string]: IMenuItems ;
+    [key: string]: IMenu ;
 }
 
 export interface IClientTenant  {

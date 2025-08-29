@@ -7,11 +7,13 @@ import { IFiles, IIntegratePaymentType, IPlatforms, IBucket } from "../../types/
 import { IInvoiceType } from "@/types/invoice";
 import { FilterType } from "@/utils";
 import { IAgencyRegistrationDto } from "@/dtos/agency";
+import { PaginatedResponse } from "@/dtos";
+import { IAgency } from "@/models/Interface/agency";
 
 export interface IAgencyService {
     verifyOwner(agency_id: string): Promise<Partial<IAgencyType> | null>;
     
-    getAllAgencies(query:FilterType) : Promise<{ clients:IAgencyType[], totalCount: number }>
+    getAllAgencies(query:FilterType) : Promise<PaginatedResponse<IAgencyType>>
     getAgencyById(agencyId: string) : Promise<IAgencyType | null>
 
     createAgency(payload: IAgencyRegistrationDto): Promise<Partial<IAgencyType> | null>;

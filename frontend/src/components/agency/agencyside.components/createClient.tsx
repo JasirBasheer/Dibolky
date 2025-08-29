@@ -265,12 +265,13 @@ const ServiceModal = ({
             </div>
           ))}
           <div className="col-span-2 flex justify-end items-center">
-            <button
+
+            <Button
               onClick={onAdd}
-              className="w-1/2 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+              className="w-1/2 text-white py-2 px-4 rounded-md"
             >
               Add Service
-            </button>
+            </Button>
           </div>
         </div>
       </div>

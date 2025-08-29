@@ -8,7 +8,7 @@ export function PortalRoutes() {
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<MainLoginPage />} />
         <Route path='/trial' element={<FreeTrialCards />} />
-        <Route path='/purchase/:plan_id' element={<PurchasePlan />} />
+        <Route path='/purchase/:planId' element={<PurchasePlan />} />
       </Routes>
     )
   }

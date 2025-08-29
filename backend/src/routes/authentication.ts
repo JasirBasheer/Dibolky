@@ -1,10 +1,9 @@
 import { Router } from "express";
-import { IAuthenticationController } from "../../controllers/Interface/IAuthenticationController";
 import { container } from "tsyringe";
-import { TokenMiddleWare } from "../../middlewares/token";
 import { asyncHandler } from "@/utils/async-handler-util";
-import { validateRequest } from "@/middlewares";
+import { TokenMiddleWare, validateRequest } from "@/middlewares";
 import { forgotPasswordSchema, loginSchema, resetPasswordSchema } from "@/validators";
+import { IAuthenticationController } from "@/controllers";
 
 export const createAuthRoutes = (): Router => {
   const router = Router();

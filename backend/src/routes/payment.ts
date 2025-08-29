@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { createStripeRoutes } from "./stripe-routes";
-import { createRazorpayRoutes } from "./razorpay-routes";
+import { createRazorpayRoutes } from "./razorpay";
+import { createStripeRoutes } from "./stripe";
 
 export const createPaymentRouter = () => {
     const router = Router();

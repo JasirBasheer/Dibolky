@@ -39,7 +39,7 @@ const SettingsPage = () => {
   const { data: connections, isLoading } = useQuery({
     queryKey: ["get-connections-status"],
     queryFn: () => {
-      return fetchConnections(user.role, user.user_id,`?includes=pages`);
+      return fetchConnections(user.role, user.user_id, `?includes=pages`);
     },
     select: (data) => data?.data?.connections,
     enabled: !!user.user_id,
@@ -87,7 +87,9 @@ const SettingsPage = () => {
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                <Skeleton count={3} height={21} />
+                <TableCell colSpan={4} >
+                  <Skeleton count={3} height={31} />
+                </TableCell>
               ) : connections && connections.length > 0 ? (
                 connections.map((connection: IConnection, index: number) => (
                   <TableRow key={index} className="hover:bg-gray-50">

@@ -14,7 +14,7 @@ export const createPublicRoutes = (): Router => {
   const planController = container.resolve<IPlanController>("PlanController");
 
   router.get("/plans", asyncHandler(planController.getPlans));
-  router.get("/plans/:plan_id", asyncHandler(planController.getPlan));
+  router.get("/plans/:planId", asyncHandler(planController.getPlan));
   router.get("/exists", asyncHandler(agencyController.isExists));
   
   router

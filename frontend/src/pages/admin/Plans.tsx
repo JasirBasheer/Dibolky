@@ -1,5 +1,5 @@
 import CustomBreadCrumbs from "@/components/ui/custom-breadcrumbs";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,23 +17,27 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { useFilter, usePagination } from "@/hooks";
-import type { RootState } from "@/types";
+import type { PaginatedResponse, Plan, RootState } from "@/types";
 import PaginationControls from "@/components/ui/PaginationControls";
 import DetailModal from "@/components/modals/details-modal";
 import SelectInput from "@/components/ui/selectInput";
 import { DataTable } from "@/components/ui/data-table";
 import Skeleton from "react-loading-skeleton";
 import { getAllPlans } from "@/services/admin/get.services";
-import { IPlan } from "@/types/admin.types";
-import { changePlanStatusApi } from "@/services/admin/post.services";
+import {
+  changePlanStatusApi,
+  createPlanApi,
+} from "@/services/admin/post.services";
 import { toast } from "sonner";
 import EditPlan from "@/components/admin/EditPlan";
 import AddPlan from "@/components/admin/AddPlan";
+import { AxiosError } from "axios";
 
 const Plans = () => {
+  const queryClient = useQueryClient();
   const user = useSelector((state: RootState) => state.user);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<IPlan | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [editPlanId, setEditPlanId] = useState("");
   const [isAddPlanModalOpen, setIsAddPlanModalOpen] = useState(false);
 
@@ -41,15 +45,15 @@ const Plans = () => {
     query: "",
     sortBy: "createdAt",
     sortOrder: "asc",
-    type: "all"
+    type: "all",
   });
 
   const { page, limit, nextPage, prevPage, reset } = usePagination(1, 10);
   const debouncedFilter = useFilter(filter, 900);
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, refetch } = useQuery<PaginatedResponse<Plan>>({
     queryKey: ["admin:get-plans", page, debouncedFilter],
-    queryFn: () => {
+    queryFn: async () => {
       const searchParams = new URLSearchParams({
         page: page.toString(),
         limit: limit.toString(),
@@ -58,18 +62,18 @@ const Plans = () => {
         sortOrder: debouncedFilter.sortOrder,
         type: debouncedFilter.type,
       }).toString();
-      return getAllPlans(`?${searchParams}`);
+
+      const res = await getAllPlans(`?${searchParams}`);
+      return res.data.result;
     },
-    select: (data) => data?.data.result,
     enabled: !!user.user_id,
   });
+
   useEffect(() => {
     reset();
-  }, [
-    debouncedFilter,
-  ]);
+  }, [debouncedFilter]);
 
-  const openPlanDetails = (plan: IPlan) => {
+  const openPlanDetails = (plan: Plan) => {
     setSelectedPlan(plan);
     setIsDetailModalOpen(true);
   };
@@ -79,7 +83,50 @@ const Plans = () => {
 
     if (res.status === 200) {
       toast.success("Plan status changed successfully");
-      refetch()
+      queryClient.setQueryData(
+        ["admin:get-plans", page, debouncedFilter],
+        (oldData: PaginatedResponse<Plan>) => {
+          if (!oldData) return oldData;
+          const updatedPlans = oldData.data.map((plan) =>
+            plan.id === plan_id ? { ...plan, isActive: !plan.isActive } : plan
+          );
+          return { ...oldData, data: updatedPlans };
+        }
+      );
+    }
+  };
+
+  const handleAddPlan = async (details: Partial<Plan>) => {
+    try {
+      const res = await createPlanApi(details);
+      if (res.status == 200) {
+        toast.success("Plan successfully created");
+        setIsAddPlanModalOpen(false);
+        queryClient.setQueryData(
+          ["admin:get-plans", page, debouncedFilter],
+          (oldData: PaginatedResponse<Plan>) => {
+            if (!oldData) {
+              return {
+                data: [res.data.plan],
+                page: 1,
+                totalCount: 1,
+                totalPages: 1,
+              };
+            }
+            return {
+              ...oldData,
+              data: [...oldData.data, res.data.plan],
+              totalCount: oldData.totalCount + 1,
+            };
+          }
+        );
+      }
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.error || "An error occurred");
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
   };
 
@@ -108,7 +155,7 @@ const Plans = () => {
                   />
                 </div>
               </div>
-            <SelectInput
+              <SelectInput
                 placeholder="All Plans"
                 value={filter.type}
                 options={[
@@ -145,11 +192,11 @@ const Plans = () => {
               >
                 <ArrowUpDown className="h-4 w-4" />
               </Button>
-                  <Button
+              <Button
                 variant="default"
                 size="sm"
-                onClick={()=>{
-                  setIsAddPlanModalOpen(true)
+                onClick={() => {
+                  setIsAddPlanModalOpen(true);
                 }}
               >
                 <Plus className="h-4 w-4" />
@@ -168,7 +215,7 @@ const Plans = () => {
           <CardContent>
             {!isLoading ? (
               <DataTable
-                data={data?.plans || []}
+                data={data?.data || []}
                 onRowClick={openPlanDetails}
                 columns={[
                   {
@@ -213,8 +260,8 @@ const Plans = () => {
                           variant="outline"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setEditPlanId(plan._id);
-                            setSelectedPlan(plan)
+                            setEditPlanId(plan.id);
+                            setSelectedPlan(plan);
                           }}
                         >
                           <SquarePen className="h-7 w-7 rounded-md hover:shadow-md  cursor-pointer" />
@@ -225,7 +272,7 @@ const Plans = () => {
                           className=""
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleBlock(plan._id);
+                            handleBlock(plan.id);
                           }}
                         >
                           <RouteOff className="h-7 w-7 rounded-md hover:shadow-md cursor-pointer" />
@@ -347,15 +394,21 @@ const Plans = () => {
             </>
           )}
         </DetailModal>
-        {editPlanId && 
-          <EditPlan onClose={()=>{
-            setEditPlanId("")
-            refetch()
-          }} plan={selectedPlan} />
-        }
-        {isAddPlanModalOpen && 
-        <AddPlan setIsAddPlan={setIsAddPlanModalOpen}/>
-        }
+        {editPlanId && (
+          <EditPlan
+            onClose={() => {
+              setEditPlanId("");
+              refetch();
+            }}
+            plan={selectedPlan}
+          />
+        )}
+        {isAddPlanModalOpen && (
+          <AddPlan
+            setIsAddPlan={setIsAddPlanModalOpen}
+            onSubmit={handleAddPlan}
+          />
+        )}
       </div>
     </>
   );

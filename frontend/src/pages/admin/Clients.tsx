@@ -23,9 +23,10 @@ import { fetchAllClientsApi } from "@/services/admin/get.services";
 import { changeClientStatusApi } from "@/services/admin/post.services";
 import { toast } from "sonner";
 import { IClient } from "@/types/client.types";
+import { PaginatedResponse } from "@/types";
 
 const Clients = () => {
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<IClient | null>(null);
 
@@ -37,10 +38,11 @@ const Clients = () => {
 
   const { page, limit, nextPage, prevPage, reset } = usePagination(1, 10);
   const debouncedFilter = useFilter(filter, 900);
-
-  const { data, isLoading: isClientsLoading, refetch } = useQuery({
+  const { data, isLoading: isClientsLoading } = useQuery<
+    PaginatedResponse<IClient>
+  >({
     queryKey: ["admin:get-clients", page, debouncedFilter],
-    queryFn: () => {
+    queryFn: async () => {
       const searchParams = new URLSearchParams({
         page: page.toString(),
         limit: limit.toString(),
@@ -49,15 +51,17 @@ const Clients = () => {
         sortOrder: debouncedFilter.sortOrder,
         include: "details",
       }).toString();
-      return fetchAllClientsApi(`?${searchParams}`);
+
+      const res = await fetchAllClientsApi(`?${searchParams}`);
+      return res.data;
     },
-    select: (data) => data?.data,
+    enabled: true,
   });
+  console.log(data, "all clients data");
+
   useEffect(() => {
     reset();
-  }, [
-    debouncedFilter,
-  ]);
+  }, [debouncedFilter]);
 
   const openClientDetails = (client: IClient) => {
     setSelectedClient(client);
@@ -68,15 +72,21 @@ const Clients = () => {
     const res = await changeClientStatusApi(client_id);
 
     if (res.status === 200) {
-    // queryClient.setQueryData<any>(
-    //     ["admin:get-clients", page, debouncedFilter],
-    //     (oldResult) => {
-    //       return oldResult
-    //         ? [oldResult, ...oldResult]
-    //         : [oldResult];
-    //     })
-      toast.success("client status changed successfully");
-      refetch()
+      queryClient.setQueryData<PaginatedResponse<IClient>>(
+        ["admin:get-clients", page, debouncedFilter],
+        (oldData) => {
+          if (!oldData) return oldData;
+
+          const updatedClients = oldData.data.map((client) =>
+            client._id === client_id
+              ? { ...client, isBlocked: !client.isBlocked }
+              : client
+          );
+
+          return { ...oldData, data: updatedClients };
+        }
+      );
+      toast.success("Client status changed successfully");
     }
   };
 
@@ -143,7 +153,7 @@ const Clients = () => {
           <CardContent>
             {!isClientsLoading ? (
               <DataTable
-                data={data?.clients || []}
+                data={data?.data || []}
                 onRowClick={openClientDetails}
                 columns={[
                   {
@@ -164,7 +174,9 @@ const Clients = () => {
                     render: (client) => (
                       <div className="flex items-center gap-1">
                         <Bolt className="h-4 w-4" />
-                          <span className="font-medium">{format(new Date(client.validity), "MMM dd, yyyy")}</span>
+                        <span className="font-medium">
+                          {format(new Date(client.validity), "MMM dd, yyyy")}
+                        </span>
                       </div>
                     ),
                   },
@@ -185,7 +197,6 @@ const Clients = () => {
                     header: "Actions",
                     render: (client) => (
                       <div className="flex items-center gap-2">
-
                         <Button
                           variant="outline"
                           className=""
@@ -272,16 +283,13 @@ const Clients = () => {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="font-lazare font-semibold">
-                      Place:
-                    </span>
+                    <span className="font-lazare font-semibold">Place:</span>
                     <span className="font-lazare font-bold">
                       {" "}
-                      {selectedClient.address.city} , 
+                      {selectedClient.address.city} ,
                       {selectedClient.address.country}
                     </span>
                   </div>
-
                 </CardContent>
               </Card>
 
@@ -296,7 +304,6 @@ const Clients = () => {
             </>
           )}
         </DetailModal>
-
       </div>
     </>
   );

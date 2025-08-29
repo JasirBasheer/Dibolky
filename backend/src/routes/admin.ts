@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { container } from "tsyringe";
 import { asyncHandler } from "@/utils/async-handler-util";
-import { IAdminController } from "../../controllers/Interface/IAdminController";
-import { requireRoles } from "../../middlewares/required-roles";
+import { IAdminController } from "../controllers/Interface/IAdminController";
+import { requireRoles } from "../middlewares/required-roles";
 import { TokenMiddleWare, validateRequest } from "@/middlewares";
 import { IPlanController } from "@/controllers/Interface/IPlanController";
 import { IAgencyController, ITransactionController } from "@/controllers";
@@ -25,12 +25,12 @@ export const createAdminRoutes = (): Router => {
   router.get("/transactions",asyncHandler(transactionController.getTransactions))
 
   router
-  .route("/client/:client_id")
+  .route("/client/:clientId")
   .get(asyncHandler(agencyController.getAgencyById))
   .patch(asyncHandler(agencyController.toggleAgencyAccess))
 
   router
-  .route("/plans/:plan_id")
+  .route("/plans/:planId")
   .patch(asyncHandler(planController.changePlanStatus))
   .put(asyncHandler(planController.editPlan))
   

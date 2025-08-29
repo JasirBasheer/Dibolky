@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import agencyReducer from './slices/agency.slice'
-import userReducer from './slices/user.slice'
-import clientReducer from './slices/client.slice'
-import portalReducer from './slices/portal.slice'
-import uiReducer from './slices/ui.slice'
+import agencyReducer from '../redux/slices/agency.slice'
+import userReducer from '../redux/slices/user.slice'
+import clientReducer from '../redux/slices/client.slice'
+import portalReducer from '../redux/slices/portal.slice'
+import uiReducer from '../redux/slices/ui.slice'
 
 const store = configureStore({
     reducer: {

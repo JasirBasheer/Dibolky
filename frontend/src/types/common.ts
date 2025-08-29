@@ -1,4 +1,4 @@
-import store from "@/redux/store";
+import store from "@/app/store";
 import { LucideProps } from "lucide-react";
 import React, { ComponentType, ReactNode } from "react";
 

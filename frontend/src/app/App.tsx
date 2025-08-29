@@ -1,9 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
-import AdminRoutes from './routes/admin'
-import PortalRoutes from './routes/portal'
-import AgencyRoutes from './routes/agency'
-import ClientRoutes from './routes/client'
-
+import { AdminRoutes, AgencyRoutes, ClientRoutes, PortalRoutes } from '@/routes'
 
 const App = () => {
   return (

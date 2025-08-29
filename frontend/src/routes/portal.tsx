@@ -2,7 +2,7 @@ import { FreeTrialCards, Home, MainLoginPage, PurchasePlan } from "@/pages";
 import { Route, Routes } from "react-router-dom";
 
 
-export default function PortalRoutes() {
+export function PortalRoutes() {
     return (
       <Routes>
         <Route path='/' element={<Home />} />

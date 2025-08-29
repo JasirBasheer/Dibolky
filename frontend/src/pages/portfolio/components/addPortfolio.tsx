@@ -73,14 +73,14 @@ export const AddPortfolio: React.FC<AddPortfolioProps> = ({ open, onOpenChange,r
 
   const uploadToS3 = async (file: File): Promise<{key:string,url:string,contentType:string}> => {
     try {
-      const response = await getUploadUrlApi({fileName: file.name, fileType: file.type})
-       await axios.put(response?.data?.s3file.url, file, {
+      const response = await getUploadUrlApi(file.name,file.type)
+       await axios.put(response?.data?.file.url, file, {
                     headers: {
-                        'Content-Type': response?.data?.s3file.contentType,
+                        'Content-Type': response?.data?.file.contentType,
                         'Content-Disposition': 'inline',
                     },
                 });
-      return response.data.s3file
+      return response.data.file
     } catch (error) {
       console.error("S3 upload error:", error);
       throw new Error("Failed to upload file to S3");

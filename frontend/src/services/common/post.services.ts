@@ -50,12 +50,12 @@ export const updateProfileApi = async (
   return await api.post(`/api/entities/update-profile`, { role, details });
 };
 
-export const getUploadUrlApi = async (file: object) => {
-  return await api.post(`/api/entities/get-s3Upload-url`, { file });
+export const getUploadUrlApi = async (fileName: string, fileType: string) => {
+  return await api.post(`/api/storage/presign`, { fileName, fileType });
 };
 
 export const getSignedUrlApi = async (key: string) => {
-  return await api.post(`/api/entities/get-signedUrl`, { key });
+  return await api.get(`/api/storage/signed-url?key=${key}`);
 };
 
 export const approveContentApi = async (

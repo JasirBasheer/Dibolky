@@ -272,11 +272,8 @@ const ChatInterface = ({
           fileType: newMessage?.file?.type,
           fileSize: newMessage?.file?.size,
         };
-        const response = await axios.post("/api/entities/get-s3Upload-url", {
-          file: fileData,
-        });
-        file = response?.data?.s3file;
-        console.log(file, "fileeee");
+        const response = await axios.post("/api/storage/presign", fileData);
+        file = response?.data?.file;
 
         await axios.put(file.url, newMessage?.file, {
           headers: {

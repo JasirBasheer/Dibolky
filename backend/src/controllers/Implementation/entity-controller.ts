@@ -269,31 +269,6 @@ export class EntityController implements IEntityController {
       filesInfo,
     });
   };
-
-  getUploadS3Url = async (req: Request, res: Response): Promise<void> => {
-    const { file } = req.body;
-    console.log(file);
-
-    const key = `test/${uuidv4()}-${file.fileName}`;
-
-    const command = new PutObjectCommand({
-      Bucket: env.AWS.S3.BUCKET_NAME,
-      Key: key,
-      ContentType: file.fileType,
-      ContentDisposition: "inline",
-    });
-
-    const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-
-    const s3file = {
-      key,
-      url,
-      contentType: file.fileType,
-    };
-
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { s3file });
-  };
-
   saveContent = async (req: Request, res: Response): Promise<void> => {
     const { platform, user_id } = req.params;
     const { files, platforms, metadata, contentType } = req.body;
@@ -310,12 +285,6 @@ export class EntityController implements IEntityController {
     SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED);
   };
 
-  getS3ViewUrl = async (req: Request, res: Response): Promise<void> => {
-    const { key } = req.body;
-    const signedUrl = await this._entityService.getS3ViewUrl(key);
-
-    res.json({ signedUrl });
-  };
 
   fetchContents = async (req: Request, res: Response): Promise<void> => {
     const { userId, role } = req.params;

@@ -360,9 +360,6 @@ export class EntityService implements IEntityService {
     return this._contentRepository.saveContent(detials);
   }
 
-  async getS3ViewUrl(key: string): Promise<string> {
-    return await getS3ViewUrl(key);
-  }
 
   async fetchContents(
     orgId: string,

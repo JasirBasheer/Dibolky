@@ -3,7 +3,6 @@ import { container } from "tsyringe";
 import { requireRoles, TenantMiddleWare, TokenMiddleWare, validateRequest } from "@/middlewares";
 import { IEntityController, IPortfolioController, IProviderController } from "@/controllers";
 import { asyncHandler } from "@/utils/async-handler-util";
-import { SaveContentZodSchema } from "@/validators";
 
 export const createEntityRoutes = (): Router => {
   const router = Router();
@@ -33,20 +32,6 @@ export const createEntityRoutes = (): Router => {
   route("/agora")
   .get(asyncHandler(entityController.getAgoraTokens))
   .post(asyncHandler(portfolioController.createTestimonial))
-
-  router.
-  route("/campaigns/:role/:userId")
-  .get(asyncHandler(entityController.getCampaigns))
-  .post(asyncHandler(entityController.createCampaign))
-  .patch(asyncHandler(entityController.createCampaign))
-  .delete(asyncHandler(entityController.createCampaign))
-
-  router.
-  route("/adsets/:role/:userId")
-  .get(asyncHandler(entityController.getAdSets))
-  .post(asyncHandler(entityController.createAdSet))
-  .patch(asyncHandler(entityController.createAdSet))
-  .delete(asyncHandler(entityController.createAdSet))
 
   router
   .route("/connect/:provider")
@@ -94,9 +79,7 @@ export const createEntityRoutes = (): Router => {
   router.post("/initiate-s3-batch-upload",asyncHandler(entityController.initiateS3BatchUpload));
   router.post("/save-platform-token/:platform/:provider/:user_id",asyncHandler(providerController.saveSocialPlatformToken));
 
-  // aws s3
-  router.post("/get-signedUrl",asyncHandler(entityController.getS3ViewUrl));
-  router.post("/get-s3Upload-url",asyncHandler(entityController.getUploadS3Url));
+  
   router.get("/portfolio",asyncHandler(portfolioController.getPortfolios));
 
   // chat
@@ -113,6 +96,20 @@ export const createEntityRoutes = (): Router => {
   .post(asyncHandler(entityController.createAd))
   .patch(asyncHandler(entityController.createAd))
   .delete(asyncHandler(entityController.createAd))
+
+  router.
+  route("/campaigns/:role/:userId")
+  .get(asyncHandler(entityController.getCampaigns))
+  .post(asyncHandler(entityController.createCampaign))
+  .patch(asyncHandler(entityController.createCampaign))
+  .delete(asyncHandler(entityController.createCampaign))
+
+  router.
+  route("/adsets/:role/:userId")
+  .get(asyncHandler(entityController.getAdSets))
+  .post(asyncHandler(entityController.createAdSet))
+  .patch(asyncHandler(entityController.createAdSet))
+  .delete(asyncHandler(entityController.createAdSet))
   
   return router;
 };

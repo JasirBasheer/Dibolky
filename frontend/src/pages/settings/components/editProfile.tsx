@@ -101,16 +101,16 @@ const ProfileContents = () => {
                     fileSize: profilePicture.size
                 };
 
-                const response = await getUploadUrlApi(fileData);
+                const response = await getUploadUrlApi(fileData.fileName, fileData.fileType);
 
-                await axios.put(response?.data?.s3file.url, profilePicture, {
+                await axios.put(response?.data?.file.url, profilePicture, {
                     headers: {
-                        'Content-Type': response?.data?.s3file.contentType,
+                        'Content-Type': response?.data?.file.contentType,
                         'Content-Disposition': 'inline',
                     },
                 });
 
-                profileKey = response?.data?.s3file?.key || "";
+                profileKey = response?.data?.file?.key || "";
             }
 
             const updatedUserData = {
@@ -153,7 +153,8 @@ const ProfileContents = () => {
             setIsLoading(false);
             setIsProfileLoading(false)
         }
-    };
+    };    
+
     return (
         <Card className="overflow-hidden">
             <div className="relative px-6">

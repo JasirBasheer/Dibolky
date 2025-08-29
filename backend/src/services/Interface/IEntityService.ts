@@ -16,7 +16,6 @@ export interface IEntityService {
     getAllActivities(orgId: string,entity:string, user_id: string): Promise<any>;
     getOwner(orgId: string): Promise<IAgencyTenant[]>
     saveContent(payload: SaveContentDto): Promise<IBucket>;
-    getS3ViewUrl(key: string): Promise<string>
     fetchContents(orgId: string, role: string, userId: string, query:FilterType): Promise<{ contents: IBucketWithReason[]; totalCount: number; totalPages: number }>
     updateProfile(orgId: string, role: string, requestRole: string, details: IUpdateProfile): Promise<IAgencyTenant | IClientTenant>
     getScheduledContent(orgId: string, user_id: string): Promise<IBucket[]>

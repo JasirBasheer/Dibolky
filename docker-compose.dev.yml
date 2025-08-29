@@ -20,13 +20,7 @@ services:
       MONGODB_DEBUG: true
       LOGSTASH_HOST: logstash
       HOSTNAME: mern-backend
-      NODE_OPTIONS: "--max-old-space-size=512 --max-semi-space-size=64"
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-        reservations:
-          memory: 512M
+      NODE_OPTIONS: --max-old-space-size=4096
     networks:
       dibolky-tool:
         aliases:

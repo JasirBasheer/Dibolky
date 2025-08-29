@@ -104,67 +104,6 @@ export class EntityController implements IEntityController {
     });
   };
 
-  getContentDetails = async (req: Request, res: Response): Promise<void> => {
-    const { entity, user_id, platform, mediaId, pageId, mediaType } =
-      req.params;
-    const content = await this._entityService.getContentDetails(
-      req.details.orgId as string,
-      entity,
-      user_id,
-      platform,
-      mediaId,
-      mediaType,
-      pageId
-    );
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { content });
-  };
-
-  replayToComments = async (req: Request, res: Response): Promise<void> => {
-    const { entity, user_id, platform, commentId, replyMessage, pageId } =
-      req.body;
-    const comment = await this._entityService.replayToComments(
-      req.details.orgId as string,
-      entity,
-      user_id,
-      platform,
-      commentId,
-      pageId,
-      replyMessage
-    );
-    console.log(comment, "new comment");
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { comment });
-  };
-
-  deleteComment = async (req: Request, res: Response): Promise<void> => {
-    const { platform, commentId, userId, entity, pageId } = req.body;
-    const deletedComment = await this._entityService.deleteComment(
-      req.details.orgId,
-      userId,
-      entity,
-      pageId,
-      platform,
-      commentId
-    );
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {
-      deletedComment,
-    });
-  };
-
-  hideComment = async (req: Request, res: Response): Promise<void> => {
-    const { platform, commentId, userId, entity, pageId } = req.body;
-    const hidenComment = await this._entityService.hideComment(
-      req.details.orgId,
-      userId,
-      entity,
-      pageId,
-      platform,
-      commentId
-    );
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {
-      hidenComment,
-    });
-  };
-
   sendMessage = async (req: Request, res: Response): Promise<void> => {
     if (!req.details) throw new NotFoundError("request details not found");
     const { conversation_id, access_token, message, type, media_url } =
@@ -269,34 +208,9 @@ export class EntityController implements IEntityController {
       filesInfo,
     });
   };
-  saveContent = async (req: Request, res: Response): Promise<void> => {
-    const { platform, user_id } = req.params;
-    const { files, platforms, metadata, contentType } = req.body;
-    await this._entityService.saveContent({
-      orgId: req.details.orgId as string,
-      platform,
-      platforms,
-      user_id,
-      files,
-      metadata,
-      contentType,
-    });
-
-    SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED);
-  };
 
 
-  fetchContents = async (req: Request, res: Response): Promise<void> => {
-    const { userId, role } = req.params;
-    const query = QueryParser.parseFilterQuery(req.query);
-    const result = await this._entityService.fetchContents(
-      req.details.orgId as string,
-      role,
-      userId,
-      query
-    );
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, result);
-  };
+
 
   getAllInvoices = async (req: Request, res: Response): Promise<void> => {
     const { user_id, entity } = req.params;
@@ -347,58 +261,9 @@ export class EntityController implements IEntityController {
     });
   };
 
-  fetchAllScheduledContents = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
-    const { user_id } = req.params;
-    const scheduledContents = await this._entityService.getScheduledContent(
-      req.details.orgId as string,
-      user_id
-    );
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {
-      scheduledContents,
-    });
-  };
 
-  getConnections = async (req: Request, res: Response): Promise<void> => {
-    const { entity, user_id } = req.params;
-    const { includes } = req.query as { includes: string };
-    const connections = await this._entityService.getConnections(
-      req.details.orgId as string, entity, user_id, includes
-    );
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {
-      connections: connections.validConnections,
-      connectedPages: connections.connectedPages,
-      adAccounts: connections.adAccounts,
-    });
-  };
 
-  handleLinkedinCallback = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
-    const { code, state } = req.body;
-    console.log(code, state, "test form linkledin");
-    const tokens = await linkedInAuthCallback(code as string, state as string);
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { tokens });
-  };
 
-  handleXCallback = async (req: Request, res: Response): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
-    const { code, state } = req.body;
-    const tokens = await xAuthCallback(code as string, state as string);
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { tokens });
-  };
-
-  handleGmailCallback = async (req: Request, res: Response): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
-    const { code } = req.body;
-    const tokens = await gmailAuthCallback(code as string);
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { tokens });
-  };
 
   getAgoraTokens = async (req: Request, res: Response): Promise<void> => {
     const { userId, channelName } = req.query as {
@@ -410,98 +275,6 @@ export class EntityController implements IEntityController {
       channelName
     );
     res.json({ rtmToken, rtcToken });
-  };
-
-  getCampaigns = async (req: Request, res: Response): Promise<void> => {
-    const { userId, role } = req.params;
-    const selectedPlatforms = Array.isArray(req.query.selectedPlatforms)
-      ? req.query.selectedPlatforms.map(String)
-      : req.query.selectedPlatforms
-      ? [String(req.query.selectedPlatforms)]
-      : [];
-
-    const selectedAdAccounts = Array.isArray(req.query.selectedAdAccounts)
-      ? req.query.selectedAdAccounts.map(String)
-      : req.query.selectedAdAccounts
-      ? [String(req.query.selectedAdAccounts)]
-      : [];
-
-    const campaigns = await this._entityService.getAllCampaigns(
-      req.details.orgId,
-      role,
-      userId,
-      selectedPlatforms,
-      selectedAdAccounts
-    );
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {
-      campaigns,
-    });
-  };
-
-  createCampaign = async (req: Request, res: Response): Promise<void> => {
-    const { userId, role } = req.params;
-    // const selectedPlatforms = Array.isArray(req.query.selectedPlatforms) ? req.query.selectedPlatforms.map(String)
-    // SendResponse(res,HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { campaigns });
-  };
-
-  getAdSets = async (req: Request, res: Response): Promise<void> => {
-    const { userId, role } = req.params;
-    const { id, platform } = req.query as { id: string; platform: string };
-    const adsets = await this._entityService.getAllAdSets(
-      req.details.orgId,
-      role,
-      userId,
-      id,
-      platform
-    );
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { adsets });
-  };
-
-  createAdSet = async (req: Request, res: Response): Promise<void> => {
-    const { userId, role } = req.params;
-    const { id, platform } = req.query as { id: string; platform: string };
-    const adsets = await this._entityService.getAllAdSets(
-      req.details.orgId,
-      role,
-      userId,
-      id,
-      platform
-    );
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { adsets });
-  };
-
-  getAllAds = async (req: Request, res: Response): Promise<void> => {
-    const { userId, role } = req.params;
-    const { adsetId, platform } = req.query as {
-      adsetId: string;
-      platform: string;
-    };
-
-    const ads = await this._entityService.getAllAds(
-      req.details.orgId,
-      role,
-      userId,
-      adsetId,
-      platform
-    );
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { ads });
-  };
-
-  createAd = async (req: Request, res: Response): Promise<void> => {
-    const { userId, role } = req.params;
-    const { adsetId, platform } = req.query as {
-      adsetId: string;
-      platform: string;
-    };
-
-    const ads = await this._entityService.createAd(
-      req.details.orgId,
-      role,
-      userId,
-      adsetId,
-      platform
-    );
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { ads });
   };
 
   getCalenderEvents = async (req: Request, res: Response): Promise<void> => {

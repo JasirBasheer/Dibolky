@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { container } from "tsyringe";
 import { requireRoles, TenantMiddleWare, TokenMiddleWare, validateRequest } from "@/middlewares";
-import { IEntityController, IPortfolioController, IProviderController } from "@/controllers";
+import { IAdController, IEntityController, IPortfolioController, IProviderController } from "@/controllers";
 import { asyncHandler } from "@/utils/async-handler-util";
 
 export const createEntityRoutes = (): Router => {
   const router = Router();
 
   const entityController = container.resolve<IEntityController>("EntityController");
+  const adController = container.resolve<IAdController>("AdController");
   const providerController = container.resolve<IProviderController>("ProviderController");
   const portfolioController = container.resolve<IPortfolioController>("PortfolioController")
 
@@ -45,37 +46,37 @@ export const createEntityRoutes = (): Router => {
 
   
   router.get("/get-meta-pages/:role/:userId",asyncHandler(providerController.getMetaPagesDetails));
-  router.get("/contents/:role/:userId",asyncHandler(entityController.fetchContents));
-  router.get("/get-connections/:entity/:user_id",asyncHandler(entityController.getConnections));
+  router.get("/contents/:role/:userId",asyncHandler(providerController.fetchContents));
+  router.get("/get-connections/:entity/:user_id",asyncHandler(providerController.getConnections));
   router.get("/:role/:planId",asyncHandler(entityController.getMenu));
   
   router.post("/inbox/:entity/:user_id",asyncHandler(entityController.getInbox));
   router.post("/media/:entity/:user_id",asyncHandler(entityController.getMedia));
-  router.get("/media/:entity/:user_id/:platform/:pageId/:mediaId/:mediaType",asyncHandler(entityController.getContentDetails));
+  router.get("/media/:entity/:user_id/:platform/:pageId/:mediaId/:mediaType",asyncHandler(providerController.getContentDetails));
   router.post("/message",asyncHandler(entityController.getInbox));
   router.get("/inboxMessages/:platform/:user_id/:conversationId",asyncHandler(entityController.getInboxMessages));
 
   router.
   route("/media/comment")
-  .post(asyncHandler(entityController.replayToComments))
-  .delete(asyncHandler(entityController.deleteComment))
-  .patch(asyncHandler(entityController.hideComment))
+  .post(asyncHandler(providerController.replayToComments))
+  .delete(asyncHandler(providerController.deleteComment))
+  .patch(asyncHandler(providerController.hideComment))
   
   // callback
-  router.post("/linkedin/callback",asyncHandler(entityController.handleLinkedinCallback))
-  router.post("/x/callback",asyncHandler(entityController.handleXCallback))
-  router.post("/gmail/callback",asyncHandler(entityController.handleGmailCallback))
+  router.post("/linkedin/callback",asyncHandler(providerController.handleLinkedinCallback))
+  router.post("/x/callback",asyncHandler(providerController.handleXCallback))
+  router.post("/gmail/callback",asyncHandler(providerController.handleGmailCallback))
 
   router.
   route('/content/scheduled/:userId')
-  .get(asyncHandler(entityController.fetchAllScheduledContents))
+  .get(asyncHandler(providerController.fetchAllScheduledContents))
   .patch(asyncHandler(providerController.rescheduleContent))
+  router.post("/content/save/:platform/:user_id",asyncHandler(providerController.saveContent));
 
   // content
   router.post("/approve-content",asyncHandler(providerController.processContentApproval));
   router.post("/reject-content",asyncHandler(providerController.processContentReject));
 
-  router.post("/content/save/:platform/:user_id",asyncHandler(entityController.saveContent));
   router.post("/initiate-s3-batch-upload",asyncHandler(entityController.initiateS3BatchUpload));
   router.post("/save-platform-token/:platform/:provider/:user_id",asyncHandler(providerController.saveSocialPlatformToken));
 
@@ -92,24 +93,24 @@ export const createEntityRoutes = (): Router => {
 
   router.
   route("/ads/:role/:userId")
-  .get(asyncHandler(entityController.getAllAds))
-  .post(asyncHandler(entityController.createAd))
-  .patch(asyncHandler(entityController.createAd))
-  .delete(asyncHandler(entityController.createAd))
+  .get(asyncHandler(adController.getAllAds))
+  .post(asyncHandler(adController.createAd))
+  .patch(asyncHandler(adController.createAd))
+  .delete(asyncHandler(adController.createAd))
 
   router.
   route("/campaigns/:role/:userId")
-  .get(asyncHandler(entityController.getCampaigns))
-  .post(asyncHandler(entityController.createCampaign))
-  .patch(asyncHandler(entityController.createCampaign))
-  .delete(asyncHandler(entityController.createCampaign))
+  .get(asyncHandler(adController.getCampaigns))
+  .post(asyncHandler(adController.createCampaign))
+  .patch(asyncHandler(adController.createCampaign))
+  .delete(asyncHandler(adController.createCampaign))
 
   router.
   route("/adsets/:role/:userId")
-  .get(asyncHandler(entityController.getAdSets))
-  .post(asyncHandler(entityController.createAdSet))
-  .patch(asyncHandler(entityController.createAdSet))
-  .delete(asyncHandler(entityController.createAdSet))
+  .get(asyncHandler(adController.getAdSets))
+  .post(asyncHandler(adController.createAdSet))
+  .patch(asyncHandler(adController.createAdSet))
+  .delete(asyncHandler(adController.createAdSet))
   
   return router;
 };

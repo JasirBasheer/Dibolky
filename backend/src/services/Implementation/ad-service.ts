@@ -8,6 +8,7 @@ import {
 import { decryptToken, PLATFORMS, ROLES } from "@/utils";
 import { getAllAds, getMetaCampaigns } from "@/providers/meta";
 import { getAllAdSetsByCampaignId } from "@/providers/meta/ads/adset";
+import { Ad, AdSet, Campaign } from "@/types";
 
 @injectable()
 export class AdService implements IAdService {
@@ -24,7 +25,7 @@ export class AdService implements IAdService {
     userId: string,
     selectedPlatforms: string[],
     selectedAdAccounts: string[]
-  ): Promise<any> {
+  ): Promise<Campaign[]> {
     const user =
       role === ROLES.AGENCY
         ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
@@ -42,7 +43,6 @@ export class AdService implements IAdService {
         }));
         validCampaigns.push(...taggedCampaigns);
       }
-      console.log(validCampaigns, "campaign ann too");
       campaigns.push(...validCampaigns);
     }
 
@@ -55,7 +55,7 @@ export class AdService implements IAdService {
     userId: string,
     id: string,
     platform: string
-  ): Promise<any> {
+  ): Promise<AdSet[]> {
     const user =
       role === ROLES.AGENCY
         ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
@@ -77,6 +77,7 @@ export class AdService implements IAdService {
         platform: PLATFORMS.META_ADS,
       }));
     }
+
     return adsets;
   }
 
@@ -86,7 +87,7 @@ export class AdService implements IAdService {
     userId: string,
     adsetId: string,
     platform: string
-  ): Promise<any> {
+  ): Promise<Ad[]> {
     const user =
       role === ROLES.AGENCY
         ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
@@ -104,7 +105,6 @@ export class AdService implements IAdService {
         );
       ads = await getAllAds(adsetId, token, platform);
     }
-    console.log(ads, "adssssss");
     return ads;
   }
 
@@ -114,7 +114,7 @@ export class AdService implements IAdService {
     userId: string,
     adsetId: string,
     platform: string
-  ): Promise<any> {
+  ): Promise<void> {
     const user =
       role === ROLES.AGENCY
         ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)

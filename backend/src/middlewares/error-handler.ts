@@ -3,7 +3,7 @@ import { BaseError } from "mern.common";
 import logger from "../logger";
 
 export const errorHandler = (
-    err: any,
+    err: Error,
     req: Request,
     res: Response,
     next: NextFunction

@@ -5,14 +5,15 @@ import { IPaymentService } from "../Interface/IPaymentService";
 import { inject, injectable } from "tsyringe";
 import { createRazorpayInstance } from "@/config/razorpay.config";
 import { env } from "@/config";
-import { IAgencyService } from "../Interface";
+import { IAgencyService, IPlanService } from "../Interface";
 
 @injectable()
 export class PaymentService implements IPaymentService {
-  private _agencyService: IAgencyService;
-  constructor(@inject("AgencyService") agencyService: IAgencyService) {
-    this._agencyService = agencyService;
-  }
+  constructor(
+    @inject("AgencyService")private readonly _agencyService: IAgencyService
+    @inject("PlanService")private readonly _planService: IPlanService
+  ) {}
+   
 
   async razorpay(
     details: { amount: number; currency: string },
@@ -38,6 +39,7 @@ export class PaymentService implements IPaymentService {
     cancel_url: string
   ): Promise<string> {
     try {
+      const plan = await this._planService.getPlan(details?.planId)
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         mode: "payment",
@@ -48,7 +50,7 @@ export class PaymentService implements IPaymentService {
               product_data: {
                 name: details.name,
               },
-              unit_amount: details?.plan?.price * 100,
+              unit_amount: plan.price * 100,
             },
             quantity: details.validity,
           },
@@ -57,8 +59,7 @@ export class PaymentService implements IPaymentService {
         cancel_url,
         metadata: {
           ...details,
-          plan: JSON.stringify(details.plan),
-        },
+                },
       });
 
       return session.url as string;
@@ -85,6 +86,8 @@ export class PaymentService implements IPaymentService {
           console.log("Checkout session completed");
           const session = event.data.object as Stripe.Checkout.Session;
           const metadata = session.metadata || {};
+          const plan = await this._planService.getPlan(metadata.planId)
+
 
           await this._agencyService.createAgency({
             organizationName: metadata.organizationName,
@@ -96,7 +99,7 @@ export class PaymentService implements IPaymentService {
             contactNumber: metadata.phone,
             logo: metadata.logo || "",
             password: metadata.password,
-            planId: JSON.parse(metadata.plan)._id,
+            planId: plan.id,
             validity: Number(metadata.validity),
             planPurchasedRate: Number(metadata.amount),
             transactionId:

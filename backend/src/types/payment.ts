@@ -17,17 +17,7 @@ export interface IRazorpayOrder {
   key_id: string
 }
 
-export interface IUserPlan {
-    name:string
-    menu: Record<string, object>;
-    _id: string;
-    title: string;
-    description: string;
-    price: number;
-    validity: string;
-    features: string[];
-    isActive: boolean;
-  }
+
 
 export interface IUserDetails {
   name: string;
@@ -42,7 +32,7 @@ export interface IUserDetails {
   country: string;
   industry: string;
   validity: number;
-  plan: IUserPlan;
+  planId: string;
   platform: string;
   amount: number;
   currency: string;

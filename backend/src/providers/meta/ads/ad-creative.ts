@@ -8,7 +8,7 @@ export async function getAllAds(
 ) {
   try {
     const baseUrl = `https://graph.facebook.com/v20.0/${adId}/ads?fields=id,name,leadgen_form_id,status,adset_id,campaign_id,creative&access_token=${accessToken}`;
-    let ads: any[] = [];
+    let ads = [];
     let nextPageUrl: string | null = baseUrl;
 
     while (nextPageUrl) {
@@ -16,7 +16,7 @@ export async function getAllAds(
       const data = res?.data?.data || [];
 
       const enrichedAds = await Promise.all(
-        data.map(async (ad: any) => {
+        data.map(async (ad: { leadgen_form_id: string; creative: { id: string; }; id: string; }) => {
           const leadsPromise = ad.leadgen_form_id
             ? getLeads(ad.leadgen_form_id, accessToken)
             : Promise.resolve([]);
@@ -76,7 +76,7 @@ export async function createMetaAd(adAccountId: string, params: {
   adset_id: string;
   creative: object;
   status: string;
-}, accessToken: string): Promise<any> {
+}, accessToken: string) {
   const url = `https://graph.facebook.com/v20.0/act_${adAccountId}/ads`;
   const body = { ...params, access_token: accessToken };
   const response = await fetch(url, {

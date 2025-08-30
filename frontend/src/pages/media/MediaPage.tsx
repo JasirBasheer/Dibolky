@@ -45,7 +45,7 @@ const Media = () => {
   const [isContentLoading, setContentLoading] = useState<boolean>(false);
   const [isSelectedContentLoading, setSelectedContentLoading] =
     useState<boolean>(false);
-  const [selectedContent, setSelectedContent] = useState<any>(null);
+  const [selectedContent, setSelectedContent] = useState(null);
   const [selectedContentMedia, setSelectedContentMedia] = useState<{
     platform: string;
     id: string;

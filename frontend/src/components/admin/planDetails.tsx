@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { X, Users, Package, Edit, Ban, Trash2 } from 'lucide-react';
+import { X, Users, Package, Edit, Ban } from 'lucide-react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Skeleton from 'react-loading-skeleton';
 import { message } from 'antd';
-import { PlanConsumer } from '@/types/admin.types';
 import { getPlanDetailsApi } from '@/services/admin/get.services';
 import { changePlanStatusApi } from '@/services/admin/post.services';
 import { Plan } from '@/types';
@@ -25,7 +24,7 @@ interface PlanDetailsProps {
 }
 
 const PlanDetails = ({ setIsPlanDetails, planId, setPlans }: PlanDetailsProps) => {
-  const [details, setDetails] = useState<any>();
+  const [details, setDetails] = useState<Plan>();
   const [activeTab, setActiveTab] = useState('about');
   const [loading, setLoading] = useState(true);
 
@@ -222,7 +221,7 @@ setPlans(prev => {
         <span className="font-medium">Current Subscribers</span>
       </div>
 
-      <div className="space-y-4">
+      {/* <div className="space-y-4">
         {details?.planConsumers?.map((consumer: PlanConsumer, index: number) => (
           <motion.div
             key={index}
@@ -245,7 +244,7 @@ setPlans(prev => {
             </div>
           </motion.div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 

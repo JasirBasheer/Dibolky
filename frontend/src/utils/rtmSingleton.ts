@@ -2,11 +2,11 @@ import AgoraRTM from "agora-rtm-sdk";
 
 const AGORA_APP_ID = "477e713fbd1d4e43ace7a34ea6c758b7";
 
-let rtmClientInstance: any = null;
+let rtmClientInstance = null;
 let loginPromise: Promise<void> | null = null;
 let loggedIn = false;
 
-export function getRtmClient(): any {
+export function getRtmClient() {
   if (!rtmClientInstance) {
     rtmClientInstance = AgoraRTM.createInstance(AGORA_APP_ID);
     rtmClientInstance.on("ConnectionStateChanged", (newState: string) => {
@@ -27,7 +27,7 @@ export async function loginRtmClient(uid: string, token: string): Promise<void> 
       loggedIn = true;
       loginPromise = null;
     })
-    .catch((error: any) => {
+    .catch((error) => {
       loginPromise = null;
       if (error.code === 8) {
         loggedIn = true; 

@@ -1,4 +1,4 @@
-import axios from "../../utils/axios";
+import api from "../../utils/axios";
 import { FormData } from "../../types/portal.types";
 import notificationSound from "../../assets/audios/currectanswer.wav";
 import { NavigateFunction } from "react-router-dom";
@@ -6,6 +6,7 @@ import { IRazorpayOrder } from "@/types/payment.types";
 import { createAgencyApi } from "@/services/portal/post.services";
 import { toast } from "sonner";
 import { Plan } from "@/types";
+import axios from "axios";
 
 export const handleRazorpayPayment = async (
   formData: FormData,
@@ -13,7 +14,7 @@ export const handleRazorpayPayment = async (
   navigate: NavigateFunction
 ) => {
   try {
-    const response = await axios.post("/api/payment/razorpay", {
+    const response = await api.post("/api/payment/razorpay", {
       amount: plan?.price * formData.validity || 0,
       currency: "USD",
     });
@@ -90,15 +91,20 @@ const handlePaymentSuccess = async (
       }, 100);
       navigate("/agency/login");
     }
-  } catch (error: any) {
-    if (error.response?.status === 409) {
-      toast.error(
-        error.response?.data?.error || "Account already exists, please login."
-      );
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 409) {
+        toast.error(
+          error.response?.data?.error || "Account already exists, please login."
+        );
+      } else {
+        toast.error(
+          error.response?.data?.error ||
+            "Something went wrong, please try again."
+        );
+      }
     } else {
-      toast.error(
-        error.response?.data?.error || "Something went wrong, please try again."
-      );
+      toast.error("Unexpected error occurred. Please try again.");
     }
   }
 };

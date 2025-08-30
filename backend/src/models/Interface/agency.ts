@@ -1,8 +1,8 @@
 import { AddressType } from "@/types/agency";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 export interface IAgency extends Document {
-    _id: string;
+    _id: any;
     role?:string;
     orgId: string;
     organizationName: string;

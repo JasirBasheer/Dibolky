@@ -51,7 +51,7 @@ import {
   getMetaPagesDetails,
   setFBCommentHidden,
 } from "@/providers/meta/facebook";
-import { IClientTenant } from "@/models";
+import { credentials, IClientTenant } from "@/models";
 import { createLinkedInOAuthURL, getLinkedInTokenStatus } from "@/providers/linkedin";
 import { createGoogleOAuthURL, isGmailAccessTokenValid, refreshGmailAccessToken } from "@/providers/google";
 import { decryptToken, encryptToken, FilterType, QueryParser } from "@/utils";
@@ -334,7 +334,7 @@ export class ProviderService implements IProviderService {
 
   private async getValidConnections(
     orgId: string,
-    credentials: any,
+    credentials: Record<string, credentials>,
     connectionType: string
   ): Promise<
     {
@@ -467,7 +467,7 @@ export class ProviderService implements IProviderService {
 
       if (!user) throw new Error("User not found");
 
-      let contentDetails: any = {};
+      let contentDetails = {};
 
       if (platform === PLATFORMS.INSTAGRAM) {
         const accessToken = decryptToken(
@@ -637,7 +637,7 @@ export class ProviderService implements IProviderService {
         ? error.message
         : "Unknown error";
       console.error("Error replying to comment:", error);
-      throw new CustomError("Error while replying to comment", 500);
+      throw new CustomError(errorMessage, 500);
     }
   }
 

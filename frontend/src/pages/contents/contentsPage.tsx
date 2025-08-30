@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import {
   Search,
@@ -383,7 +382,7 @@ const Contents = () => {
                                 </h4>
                                 <div className="space-y-1">
                                   {content.platforms?.map(
-                                    (platform: any, index: number) => (
+                                    (platform, index: number) => (
                                       <div
                                         key={index}
                                         className="flex items-center justify-between text-sm"

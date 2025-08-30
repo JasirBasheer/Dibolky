@@ -48,7 +48,7 @@ export async function createAdSet(adAccountId: string, params: {
   optimization_goal: string;
   targeting: object;
   status: string;
-}, accessToken: string): Promise<any> {
+}, accessToken: string) {
   const url = `https://graph.facebook.com/v20.0/act_${adAccountId}/adsets`;
   const body = { ...params, access_token: accessToken };
   const response = await fetch(url, {

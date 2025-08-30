@@ -1,6 +1,6 @@
 "use client";
 
-import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, MoreHorizontal, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -32,15 +32,15 @@ const LeadsPage = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [campaigns, setCampaigns] = useState([]);
   const [isCampaignsLoading, setIsCampaignsLoading] = useState<boolean>(false);
   const [isSelectedContentLoading, setSelectedContentLoading] =
     useState<boolean>(false);
   const [selectedCampaignAdsets, setSelectedCampaignAdsets] =
-    useState<any>(null);
+    useState(null);
   const [selectedCampaignDetails, setSelectedCampaignDetails] =
-    useState<any>(null);
-  const [filteredCampaigns, setFilteredCampaigns] = useState<any[]>([]);
+    useState(null);
+  const [filteredCampaigns, setFilteredCampaigns] = useState([]);
   const [isCreateCampaignOpen, setIsCreateCampaignOpen] = useState(false);
 
   useEffect(() => {

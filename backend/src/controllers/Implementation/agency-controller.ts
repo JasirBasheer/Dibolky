@@ -76,31 +76,8 @@ export class AgencyController implements IAgencyController {
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details });
   };
 
-  createClient = async (req: Request, res: Response): Promise<void> => {
-    const { orgId, name, email, industry, services, menu } = req.body;
-    await this._agencyService.createClient(
-      orgId,
-      name,
-      email,
-      industry,
-      services,
-      menu,
-      req.details.organizationName as string
-    );
-    SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED);
-  };
 
-  getAllClients = async (req: Request, res: Response): Promise<void> => {
-    const includeDetails = req.query.include;
-    const query = QueryParser.parseFilterQuery(req.query);
 
-    let result = await this._agencyService.getAllClients(
-      req.details.orgId as string,
-      includeDetails as string,
-      query
-    );
-    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { result });
-  };
 
   getClient = async (req: Request, res: Response): Promise<void> => {
     const { client_id } = req.params;

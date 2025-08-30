@@ -33,10 +33,9 @@ export class SocialUserRepository extends BaseRepository<ISocialUser> implements
 
     async createUser(
         orgId:string,
-        social_user: any
-    ): Promise<any> {
+        social_user: Partial<ISocialUser>
+    ): Promise<ISocialUser> {
         const model = await this.getModel(orgId);
-        console.log(social_user)
         const newSocialUser = new model(social_user)
         const createdUser = await newSocialUser.save()
         if(!createdUser)throw new CustomError("An unexpected error occured while creating user please try again later.",500)
@@ -47,7 +46,7 @@ export class SocialUserRepository extends BaseRepository<ISocialUser> implements
         orgId:string,
         userId: string,
         platform:string,
-    ): Promise<any> {
+    ): Promise<ISocialUser[]> {
         const model = await this.getModel(orgId);
         return model.find({userId,platform})
     }
@@ -57,7 +56,7 @@ export class SocialUserRepository extends BaseRepository<ISocialUser> implements
         userId: string,
         platform:string,
         linkedPage?:string
-    ): Promise<any> {
+    ): Promise<ISocialUser[]> {
         const model = await this.getModel(orgId);
         return model.find({userId,platform,linkedPage})
     }

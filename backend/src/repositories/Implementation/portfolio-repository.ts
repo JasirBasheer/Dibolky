@@ -2,7 +2,7 @@ import { Model, Schema } from "mongoose";
 import { inject, injectable } from "tsyringe";
 import { BaseRepository, CustomError, NotFoundError } from "mern.common";
 import { connectTenantDB } from "@/config/db.config";
-import { IPortfolio } from "@/models";
+import { IPortfolio, IPortfolioType } from "@/models";
 import { IPortfolioRepository } from "../Interface/IPortfolioRepository";
 
 @injectable()
@@ -33,13 +33,13 @@ export class PortfolioRepository
     return model;
   }
 
-  async createPortfolio(orgId: string, details: any): Promise<IPortfolio> {
+  async createPortfolio(orgId: string, details: Partial<IPortfolioType>): Promise<IPortfolio> {
     const model = await this.getModel(orgId);
     const note = new model(details);
     return await note.save();
   }
 
-  async editPortfolio(orgId: string, details: any): Promise<IPortfolio> {
+  async editPortfolio(orgId: string, details: Partial<IPortfolioType>): Promise<IPortfolio> {
     const model = await this.getModel(orgId);
     const updatedPortfolio = await model.findByIdAndUpdate(
       { _id: details._id },

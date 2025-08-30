@@ -70,11 +70,11 @@ export const Adsets = ({
     select: (data) => data?.data.ads,
   });
 
-  const formatLocations = (geoLocations: any) => {
+  const formatLocations = (geoLocations) => {
     if (!geoLocations?.custom_locations) return "N/A";
     const cities = geoLocations.custom_locations
       .map(
-        (loc: any) =>
+        (loc) =>
           cityIdToName[loc.primary_city_id] ||
           `Lat: ${loc.latitude}, Lon: ${loc.longitude}`
       )

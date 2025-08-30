@@ -4,7 +4,7 @@ export async function createMetaCampaign(
   adAccountId: string,
   name: string,
   objective: string
-): Promise<any> {
+){
   const url = `https://graph.facebook.com/v20.0/act_${adAccountId}/campaigns?access_token=${accessToken}`;
   const payload = {
     name: name,
@@ -44,7 +44,7 @@ export async function setMetaCampaignStatus(
   accessToken: string,
   campaignId: string,
   status: "PAUSED" | "ACTIVE"
-): Promise<any> {
+) {
   const url = `https://graph.facebook.com/v20.0/${campaignId}?access_token=${accessToken}`;
   const payload = { status };
   const response = await fetch(url, {
@@ -60,8 +60,8 @@ export async function setMetaCampaignStatus(
 export async function fetchMetaAdsInCampaign(
   accessToken: string,
   campaignId: string
-): Promise<any[]> {
-  let ads: any[] = [];
+){
+  let ads= [];
   let url = `https://graph.facebook.com/v20.0/${campaignId}/ads?fields=id,name,status&access_token=${accessToken}&limit=100`;
   while (url) {
     const response = await fetch(url);
@@ -77,7 +77,7 @@ export async function fetchMetaCampaignInsights(
   accessToken: string,
   campaignId: string,
   params: string = "impressions,clicks,spend"
-): Promise<any> {
+) {
   const url = `https://graph.facebook.com/v20.0/${campaignId}/insights?fields=${params}&access_token=${accessToken}`;
   const response = await fetch(url);
   if (!response.ok)

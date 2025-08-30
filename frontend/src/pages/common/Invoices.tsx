@@ -107,7 +107,7 @@ const Invoices = () => {
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
     } catch {
-      toast.error("An Unexpected error occured please try again later..");
+      toast.error("Payment failed: Invalid agency credentials. Please contact your agency or try again later.");
     } finally {
       setLoadingPayments((prev) => prev.filter((inv) => inv !== invoiceId));
     }

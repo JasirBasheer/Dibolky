@@ -30,7 +30,7 @@ export class PortfolioService implements IPortfolioService {
     }
   }
 
-  async editPortfolio(orgId: string, details: any): Promise<void> {
+  async editPortfolio(orgId: string, details: Partial<IPortfolioType>): Promise<void> {
     try {
       let updatedPortfolio = await this._portfolioRepository.editPortfolio(
         orgId,

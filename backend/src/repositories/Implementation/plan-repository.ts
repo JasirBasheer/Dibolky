@@ -55,10 +55,6 @@ export class PlanRepository
     return await newPlan.save();
   }
 
-  async createInfluencerPlan(details: any): Promise<Partial<PlanDoc> | null> {
-    const newPlan = new this.model(details);
-    return await newPlan.save();
-  }
 
   async editPlan(_id: string, details: EditPlanDto): Promise<PlanDoc | null> {
     return await this.model.findByIdAndUpdate(_id, details, {

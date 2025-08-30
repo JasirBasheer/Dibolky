@@ -46,7 +46,6 @@ const VideoCall: React.FC = () => {
     callerProfileUrl?: string;
   } | null>(null);
 
-  // Call state
   const [currentCallType, setCurrentCallType] = useState<"video" | "audio">(
     "video"
   );
@@ -54,7 +53,6 @@ const VideoCall: React.FC = () => {
   const [isAudioMuted, setIsAudioMuted] = useState(false);
   const [isVideoMuted, setIsVideoMuted] = useState(false);
   const [currentChannel, setCurrentChannel] = useState(null);
-  // Agora-related refs
   const rtcClientRef = useRef<ReturnType<typeof AgoraRTC.createClient> | null>(
     null
   );
@@ -64,14 +62,12 @@ const VideoCall: React.FC = () => {
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
 
-  // Max reconnect attempts for RTM connection retry logic if needed
   const maxReconnectAttempts = 5;
   const reconnectDelayMs = 5000;
   const reconnectAttempts = useRef(0);
 
-  // Initialize RTM client and set listeners (called once)
   const initRtmClient = async () => {
-    if (rtmClientRef.current) return; // Already initialized
+    if (rtmClientRef.current) return; 
 
     try {
       const rtm = getRtmClient();
@@ -194,7 +190,6 @@ const VideoCall: React.FC = () => {
           const data = JSON.parse(message.text);
           if (data.type === "call_response" && data.from == user.user_id) {
             if (data.status === "accepted") {
-              // Call accepted by callee
               setRemotePeer({
                 userId: senderId,
                 chatId: data.chatId,
@@ -445,7 +440,6 @@ const VideoCall: React.FC = () => {
     }
   };
 
-  // Setup RTM client once after user available, no login here (should be done once when session starts)
   useEffect(() => {
     if (user.user_id) {
       initRtmClient();
@@ -491,7 +485,6 @@ const VideoCall: React.FC = () => {
 
   return (
     <>
-      {/* Incoming Call UI */}
       {incomingCall && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
@@ -530,7 +523,6 @@ const VideoCall: React.FC = () => {
         </div>
       )}
 
-      {/* In Call UI */}
       {inCall && (
         <div className="absolute inset-0 bg-gray-900 z-40 flex flex-col">
           <div className="flex-1 relative">

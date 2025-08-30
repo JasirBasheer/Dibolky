@@ -1,8 +1,10 @@
 import { IClient } from "@/models/Interface/client";
 import { IAgencyTenant } from "../../types/agency";
-import { IClientType } from "../../types/client";
+import { IClientTenantType, IClientTenantWithProjectDetailsType, IClientType } from "../../types/client";
 import { IClientTenant } from "@/models";
 import { IRazorpayOrder } from "@/types/payment";
+import { ServicesData } from "@/types/chat";
+import { QueryDto } from "@/dtos";
 
 export interface IClientService {
     clientLoginHandler(email: string, password: string): Promise<string>;
@@ -13,4 +15,7 @@ export interface IClientService {
     getClientInMainDb(email:string):Promise<IClient | null>;
     initiateRazorpayPayment(orgId:string,invoice_id:string):Promise<IRazorpayOrder | null>;
     verifyInvoicePayment(orgId:string,invoice_id:string,response:IRazorpayOrder):Promise<void>;
+    createClient(orgId: string, name: string, email: string, industry: string, services: ServicesData, menu: string[], organizationName: string): Promise<IClientTenant | null>;
+    getAllClients(orgId: string, includeDetails:string,query:QueryDto): Promise<{  clients: IClientTenantType[] | IClientTenantWithProjectDetailsType[]| { count: number; lastWeekCount: number };totalPages?: number;currentPage?: number;totalCount?: number;}>
+    
 }

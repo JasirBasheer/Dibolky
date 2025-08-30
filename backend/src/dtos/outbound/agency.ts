@@ -29,7 +29,7 @@ export class AgencyMapper {
   }
     static AgenyDetailsMapper(details:IAgency) {
     return {
-      _id: details._id,
+      _id: details._id.toString(),
       orgId: details.orgId,
       profile: details.profile,
       bio: details.bio,

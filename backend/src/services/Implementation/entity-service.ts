@@ -35,7 +35,7 @@ import {
 } from "@/providers/meta";
 import { isXAccessTokenValid } from "@/providers/x";
 import { SaveContentDto } from "@/dtos/content";
-import { IClientTenant } from "@/models";
+import { credentials, IActivity, IClientTenant, IInvoice, TransactionDoc } from "@/models";
 import {
   IActivityRepository,
   IInvoiceRepository,
@@ -217,7 +217,7 @@ export class EntityService implements IEntityService {
     role: string,
     user_id: string,
     query: FilterType
-  ): Promise<any> {
+  ): Promise<{ invoices: IInvoice[]; totalCount: number; totalPages: number }> {
     const { page, limit, sortBy, sortOrder } = query;
     const filter = QueryParser.buildFilter({
       searchText: query.query,
@@ -255,7 +255,7 @@ export class EntityService implements IEntityService {
     role: string,
     user_id: string,
     query: FilterType
-  ): Promise<any> {
+  ): Promise<{ transactions: TransactionDoc[], totalCount: number ,totalPages: number }> {
     const { page, limit, sortBy, sortOrder, type } = query;
     const filter = QueryParser.buildFilter({
       searchText: query.query,
@@ -290,7 +290,7 @@ export class EntityService implements IEntityService {
     orgId: string,
     entity: string,
     user_id: string
-  ): Promise<any> {
+  ): Promise<IActivity[]> {
     let activities;
     if (entity == "agency") {
       activities = await this._activityRepository.getActivities({ orgId });
@@ -343,7 +343,7 @@ export class EntityService implements IEntityService {
 
   private async getValidConnections(
   orgId: string,
-  credentials: any,
+  credentials: Record<string, credentials>,
   connectionType: string
 ): Promise<
   {
@@ -473,7 +473,7 @@ export class EntityService implements IEntityService {
 
       const users: ISocialUserType[] = [];
       for (const platform of selectedPlatforms) {
-        let platformUsers: ISocialUserType[] = [];
+        let platformUsers = [];
 
         if (platform === "instagram") {
           if (!user?.social_credentials?.instagram?.accessToken) return [];
@@ -657,17 +657,17 @@ export class EntityService implements IEntityService {
     userId: string,
     selectedPlatforms: string[],
     selectedPages: string[]
-  ): Promise<any[]> {
+  ): Promise<object[]> {
     try {
       const user =
         entity === "agency"
           ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
           : await this._clientTenantRepository.getClientById(orgId, userId);
 
-      const medias: any[] = [];
+      const medias= [];
 
       for (const platform of selectedPlatforms) {
-        let contents: any[] = [];
+        let contents = [];
 
         if (platform === "instagram") {
           if (!user?.social_credentials?.instagram?.accessToken) return [];

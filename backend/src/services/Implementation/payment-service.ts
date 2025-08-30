@@ -46,7 +46,7 @@ export class PaymentService implements IPaymentService {
         line_items: [
           {
             price_data: {
-              currency: details.currency.toLowerCase(),
+              currency: "USD",
               product_data: {
                 name: details.name,
               },

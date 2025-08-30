@@ -43,9 +43,7 @@ export class AdController implements IAdController {
 
   createCampaign = async (req: Request, res: Response): Promise<void> => {
     const { userId, role } = req.params;
-    
-    // Validate request body
-    const validationResult = CreateCampaignSchema.safeParse(req.body);
+        const validationResult = CreateCampaignSchema.safeParse(req.body);
     if (!validationResult.success) {
       SendResponse(res, HTTPStatusCodes.BAD_REQUEST, "Validation failed", {
         errors: validationResult.error.issues,

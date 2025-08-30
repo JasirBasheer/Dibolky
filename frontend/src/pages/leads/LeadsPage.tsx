@@ -43,7 +43,6 @@ const LeadsPage = () => {
     useState(null);
   const [filteredCampaigns, setFilteredCampaigns] = useState([]);
   const [isCreateCampaignOpen, setIsCreateCampaignOpen] = useState(false);
-  // Form state for campaign creation
   const [campaignFormData, setCampaignFormData] = useState({
     name: "",
     objective: "",
@@ -53,7 +52,6 @@ const LeadsPage = () => {
 
   const queryClient = useQueryClient();
 
-  // Campaign creation mutation
   const createCampaignMutation = useMutation({
     mutationFn: (campaignData: {
       name: string;
@@ -66,7 +64,6 @@ const LeadsPage = () => {
       toast.success("Campaign created successfully!");
       setIsCreateCampaignOpen(false);
       setCampaignFormData({ name: "", objective: "", adAccountId: "" });
-      // Refetch campaigns to show the new one
       queryClient.invalidateQueries({
         queryKey: ["get-leads-connection-status", user.role, user.user_id],
       });
@@ -76,29 +73,23 @@ const LeadsPage = () => {
     },
   });
 
-  // Campaign deletion mutation
   const deleteCampaignMutation = useMutation({
     mutationFn: ({ campaignId, platform }: { campaignId: string; platform: string }) =>
       deleteCampaignApi(user.role, user.user_id, campaignId, platform),
     onMutate: async ({ campaignId }) => {
-      // Cancel any outgoing refetches
       await queryClient.cancelQueries({
         queryKey: ["get-leads-connection-status", user.role, user.user_id],
       });
 
-      // Snapshot the previous value
       const previousCampaigns = campaigns;
 
-      // Optimistically update the campaigns list
       setCampaigns(prevCampaigns => 
         prevCampaigns.filter(campaign => campaign.id !== campaignId)
       );
 
-      // Return a context object with the snapshotted value
       return { previousCampaigns };
     },
     onError: (err, variables, context) => {
-      // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousCampaigns) {
         setCampaigns(context.previousCampaigns);
       }
@@ -108,27 +99,21 @@ const LeadsPage = () => {
       toast.success("Campaign deleted successfully!");
     },
     onSettled: () => {
-      // Always refetch after error or success to ensure we have the latest data
       queryClient.invalidateQueries({
         queryKey: ["get-leads-connection-status", user.role, user.user_id],
       });
     },
   });
 
-  // Campaign status toggle mutation
   const toggleCampaignStatusMutation = useMutation({
     mutationFn: ({ campaignId, platform, currentStatus }: { campaignId: string; platform: string; currentStatus: string }) =>
       toggleCampaignStatusApi(user.role, user.user_id, campaignId, platform, currentStatus),
     onMutate: async ({ campaignId, currentStatus }) => {
-      // Cancel any outgoing refetches
       await queryClient.cancelQueries({
         queryKey: ["get-leads-connection-status", user.role, user.user_id],
       });
 
-      // Snapshot the previous value
       const previousCampaigns = campaigns;
-
-      // Optimistically update the campaign status
       const newStatus = currentStatus === "ACTIVE" ? "PAUSED" : "ACTIVE";
       setCampaigns(prevCampaigns => 
         prevCampaigns.map(campaign => 
@@ -137,12 +122,10 @@ const LeadsPage = () => {
             : campaign
         )
       );
-
-      // Return a context object with the snapshotted value
       return { previousCampaigns };
     },
     onError: (err, variables, context) => {
-      // If the mutation fails, use the context returned from onMutate to roll back
+      
       if (context?.previousCampaigns) {
         setCampaigns(context.previousCampaigns);
       }
@@ -152,37 +135,29 @@ const LeadsPage = () => {
       toast.success("Campaign status updated successfully!");
     },
     onSettled: () => {
-      // Always refetch after error or success to ensure we have the latest data
       queryClient.invalidateQueries({
         queryKey: ["get-leads-connection-status", user.role, user.user_id],
       });
     },
   });
 
-  // Handle campaign deletion
+
   const handleDeleteCampaign = async (campaignId: string, platform: string) => {
-    if (window.confirm("Are you sure you want to delete this campaign? This action cannot be undone.")) {
       try {
         await deleteCampaignMutation.mutateAsync({ campaignId, platform });
       } catch (error) {
         console.error("Campaign deletion error:", error);
       }
-    }
   };
 
-  // Handle campaign status toggle
   const handleToggleCampaignStatus = async (campaignId: string, platform: string, currentStatus: string) => {
-    const action = currentStatus === "ACTIVE" ? "pause" : "restart";
-    if (window.confirm(`Are you sure you want to ${action} this campaign?`)) {
       try {
         await toggleCampaignStatusMutation.mutateAsync({ campaignId, platform, currentStatus });
       } catch (error) {
         console.error("Campaign status toggle error:", error);
       }
-    }
   };
 
-  // Handle form input changes
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setCampaignFormData(prev => ({
@@ -191,7 +166,6 @@ const LeadsPage = () => {
     }));
   };
 
-  // Handle form submission
   const handleCreateCampaign = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -216,7 +190,7 @@ const LeadsPage = () => {
     }
   };
 
-  // Reset form when modal closes
+  
   const handleModalClose = () => {
     setIsCreateCampaignOpen(false);
     setCampaignFormData({ name: "", objective: "", adAccountId: "" });

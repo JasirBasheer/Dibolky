@@ -89,7 +89,6 @@ export class AdService implements IAdService {
           }
         );
 
-        // Return the created campaign with platform tag
         return {
           ...createdCampaign,
           platform: PLATFORMS.META_ADS,

@@ -48,7 +48,10 @@ const UpgradePlan = () => {
                 if(response.status == 200){
                   dispatch(setUser({planId:plan.id}))
                   dispatch(setAgency({planId:plan.id}))
-                  queryClient.invalidateQueries({ queryKey: ["get-upgradable-plans"] });
+                  await queryClient.invalidateQueries({ queryKey: ["get-upgradable-plans"] });
+                  await queryClient.refetchQueries({
+                    queryKey: ["get-agency-menu"],
+                  });
                   toast.success('plan upgraded successfully.')
                 }else{
                   toast.error("an unexpected error occured during plan upgradation please try again later..")

@@ -17,7 +17,7 @@ export const handleStripePayment = async (
     const response = await axios.post("api/payment/stripe", {
       details,
       success_url: `${import.meta.env.VITE_BACKEND}/agency/login?new=true`,
-      cancel_url: `${import.meta.env.VITE_BACKEND}/payment/failed`,
+      cancel_url: `${import.meta.env.VITE_FRONTEND}/payment/failed`,
     });
     return { url: response.data.url };
   } catch (error) {

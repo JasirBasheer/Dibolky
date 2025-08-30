@@ -92,7 +92,7 @@ export function AnimatedBeamMultipleOutput({
               </Circle>
             </div>
             <div className="flex flex-col justify-center">
-              <Circle ref={div6Ref} className="size-14">
+              <Circle ref={div6Ref} className="size-14 overflow-hidden">
                 <Icons.dibolky />
               </Circle>
             </div>
@@ -199,7 +199,7 @@ const Icons = {
     </svg>
   ),
   dibolky: () => (
-    <img src="https://jmp.sh/s/a4ZQSaB0BLdSTsdxUq1Q" className="w-2 h-2" alt="" />
+    <img src="./public/dibolky-black-logo.png" className=" h-7 rounded-3xl" alt="" />
   ),
   instagram: () => (
     <svg

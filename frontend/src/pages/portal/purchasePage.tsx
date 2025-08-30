@@ -31,6 +31,7 @@ export const PurchasePlan: React.FC = () => {
   const [paymentMethod, setPaymentMethod] = useState<string>("razorpay");
   const [errors, setErrors] = useState<ValidationError>({});
   const [loading, setLoading] = useState(true);
+  const [isSubmiting, setIsSubmiting] = useState(false);
   const [next, setNext] = useState(false);
   const navigate = useNavigate();
 
@@ -114,6 +115,7 @@ export const PurchasePlan: React.FC = () => {
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
+    setIsSubmiting(true);
     if (paymentMethod == "razorpay") {
       await handleRazorpayPayment(formData, plan as Plan, navigate);
     } else if (paymentMethod == "stripe") {
@@ -121,6 +123,7 @@ export const PurchasePlan: React.FC = () => {
       console.log(response);
       if (response.url) window.location.href = response.url;
     }
+    setIsSubmiting(false);
   };
 
   const renderStepIndicator = (): JSX.Element => (
@@ -501,6 +504,7 @@ export const PurchasePlan: React.FC = () => {
                           <ArrowRight className="ml-2 w-4 h-4" />
                         </button>
                       ) : (
+                        isSubmiting?  <Skeleton width={180} height={40} /> :  
                         <button
                           type="submit"
                           className="ml-auto flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"

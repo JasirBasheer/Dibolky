@@ -17,7 +17,7 @@ export function FreeTrialCards() {
     queryFn: () => {
       return fetchTrialPlans()
     },
-    select: (data) => data?.data.plans,
+    select: (data) => data?.data.data,
     staleTime: 1000 * 60 * 60,
   })
   const [selectedTrial, setSelectedTrial] = useState<string | null>(null)

@@ -145,7 +145,7 @@ export function AnimatedBeamDemo() {
               <Circle ref={div2Ref}>
                 <Icons.x />
               </Circle>
-              <Circle ref={div4Ref} className="size-16">
+              <Circle ref={div4Ref} className="size-16 overflow-hidden">
                 <Icons.dibolky />
               </Circle>
               <Circle ref={div6Ref}>
@@ -214,7 +214,7 @@ const Icons = {
     </svg>
   ),
   dibolky: () => (
-    <img src="https://jmp.sh/s/a4ZQSaB0BLdSTsdxUq1Q" className="w-2 h-2" alt="" />
+    <img src="./public/dibolky-black-logo.png" className=" h-9 rounded-3xl" alt="" />
   ),
   instagram: () => (
     <svg

@@ -8,7 +8,10 @@ import {
 import { decryptToken, PLATFORMS, ROLES } from "@/utils";
 import { getAllAds, getMetaCampaigns } from "@/providers/meta";
 import { getAllAdSetsByCampaignId } from "@/providers/meta/ads/adset";
+import { createMetaCampaign } from "@/providers/meta/ads/campaign";
 import { Ad, AdSet, Campaign } from "@/types";
+import { CreateCampaignDto } from "@/dtos/campaign";
+import { deleteMetaCampaign, toggleMetaCampaignStatus } from "@/providers/meta/ads/campaign";
 
 @injectable()
 export class AdService implements IAdService {
@@ -47,6 +50,117 @@ export class AdService implements IAdService {
     }
 
     return campaigns;
+  }
+
+  async createCampaign(
+    orgId: string,
+    role: string,
+    userId: string,
+    adAccountId: string,
+    platform: string,
+    campaignData: CreateCampaignDto
+  ): Promise<Campaign> {
+    const user =
+      role === ROLES.AGENCY
+        ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
+        : await this._clientTenantRepository.getClientById(orgId, userId);
+    
+    if (!user)
+      throw new NotFoundError("user details not found please try again later");
+
+    if (platform === PLATFORMS.META_ADS) {
+      const token = decryptToken(user.social_credentials?.meta_ads?.accessToken);
+      if (!token)
+        throw new NotFoundError("token not found please reconnect meta ad account");
+
+      try {
+        const createdCampaign = await createMetaCampaign(
+          token,
+          adAccountId,
+          campaignData.name,
+          campaignData.objective,
+          {
+            status: campaignData.status,
+            special_ad_categories: campaignData.special_ad_categories,
+            daily_budget: campaignData.daily_budget,
+            lifetime_budget: campaignData.lifetime_budget,
+            start_time: campaignData.start_time,
+            stop_time: campaignData.stop_time,
+          }
+        );
+
+        // Return the created campaign with platform tag
+        return {
+          ...createdCampaign,
+          platform: PLATFORMS.META_ADS,
+        };
+      } catch (error) {
+        throw new Error(`Failed to create Meta campaign: ${error.message}`);
+      }
+    } else {
+      throw new Error(`Unsupported platform: ${platform}`);
+    }
+  }
+
+  async deleteCampaign(
+    orgId: string,
+    role: string,
+    userId: string,
+    campaignId: string,
+    platform: string
+  ): Promise<void> {
+    const user =
+      role === ROLES.AGENCY
+        ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
+        : await this._clientTenantRepository.getClientById(orgId, userId);
+    
+    if (!user)
+      throw new NotFoundError("user details not found please try again later");
+
+    if (platform === PLATFORMS.META_ADS) {
+      const token = decryptToken(user.social_credentials?.meta_ads?.accessToken);
+      if (!token)
+        throw new NotFoundError("token not found please reconnect meta ad account");
+
+      try {
+        await deleteMetaCampaign(token, campaignId);
+      } catch (error) {
+        throw new Error(`Failed to delete Meta campaign: ${error.message}`);
+      }
+    } else {
+      throw new Error(`Unsupported platform: ${platform}`);
+    }
+  }
+
+  async toggleCampaignStatus(
+    orgId: string,
+    role: string,
+    userId: string,
+    campaignId: string,
+    platform: string,
+    currentStatus: string
+  ): Promise<void> {
+    const user =
+      role === ROLES.AGENCY
+        ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
+        : await this._clientTenantRepository.getClientById(orgId, userId);
+    
+    if (!user)
+      throw new NotFoundError("user details not found please try again later");
+
+    if (platform === PLATFORMS.META_ADS) {
+      const token = decryptToken(user.social_credentials?.meta_ads?.accessToken);
+      if (!token)
+        throw new NotFoundError("token not found please reconnect meta ad account");
+
+      try {
+        await toggleMetaCampaignStatus(token, campaignId, currentStatus);
+      } catch (error) {
+        throw new Error(`Failed to toggle Meta campaign status: ${error.message}`);
+      }
+    } else {
+      throw new Error(`Unsupported platform: ${platform}`);
+    }
   }
 
   async getAllAdSets(

@@ -16,7 +16,6 @@ export const createEntityRoutes = (): Router => {
   router.use(TenantMiddleWare);
   router.use(requireRoles(["agency", "client"]));
 
-  // get
   router.get("/owner",asyncHandler(entityController.getOwner));
 
   router
@@ -62,7 +61,6 @@ export const createEntityRoutes = (): Router => {
   .delete(asyncHandler(providerController.deleteComment))
   .patch(asyncHandler(providerController.hideComment))
   
-  // callback
   router.post("/linkedin/callback",asyncHandler(providerController.handleLinkedinCallback))
   router.post("/x/callback",asyncHandler(providerController.handleXCallback))
   router.post("/gmail/callback",asyncHandler(providerController.handleGmailCallback))
@@ -73,7 +71,6 @@ export const createEntityRoutes = (): Router => {
   .patch(asyncHandler(providerController.rescheduleContent))
   router.post("/content/save/:platform/:user_id",asyncHandler(providerController.saveContent));
 
-  // content
   router.post("/approve-content",asyncHandler(providerController.processContentApproval));
   router.post("/reject-content",asyncHandler(providerController.processContentReject));
 
@@ -83,7 +80,6 @@ export const createEntityRoutes = (): Router => {
   
   router.get("/portfolio",asyncHandler(portfolioController.getPortfolios));
 
-  // chat
   router.post("/chats",asyncHandler(entityController.getChat));
   router.post("/get-messages",asyncHandler(entityController.getMessages));
   router.post("/create-group",asyncHandler(entityController.createGroup));
@@ -102,8 +98,8 @@ export const createEntityRoutes = (): Router => {
   route("/campaigns/:role/:userId")
   .get(asyncHandler(adController.getCampaigns))
   .post(asyncHandler(adController.createCampaign))
-  .patch(asyncHandler(adController.createCampaign))
-  .delete(asyncHandler(adController.createCampaign))
+  .patch(asyncHandler(adController.toggleCampaignStatus))
+  .delete(asyncHandler(adController.deleteCampaign))
 
   router.
   route("/adsets/:role/:userId")

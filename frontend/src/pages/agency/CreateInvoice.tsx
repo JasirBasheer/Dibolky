@@ -73,7 +73,7 @@ export default function CreateInvoice() {
       service: {
         serviceName,
         details: {
-          budget:pricing,
+          budget:String(pricing),
           description: serviceDescription,
         },
       },

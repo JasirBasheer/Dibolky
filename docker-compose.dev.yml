@@ -6,8 +6,8 @@ services:
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
     dns:
-      - 8.8.8.8
-      - 1.1.1.1
+    - 8.8.8.8
+    - 8.8.4.4
     restart: unless-stopped
     env_file: ./backend/.env
     volumes:
@@ -20,6 +20,7 @@ services:
       MONGODB_DEBUG: true
       LOGSTASH_HOST: logstash
       HOSTNAME: mern-backend
+      NODE_OPTIONS: --max-old-space-size=4096
     networks:
       dibolky-tool:
         aliases:

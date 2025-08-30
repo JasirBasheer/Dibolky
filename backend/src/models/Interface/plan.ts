@@ -1,9 +1,8 @@
 import { IMenu } from "@/types";
-import { Document } from "mongoose";
 
 export type BillingCycleTypes = "monthly" | "yearly" ;
-
-export interface IPlan extends Document {
+export interface Plan {
+    id?: string;
     name: string;
     description:string;
     price: number;

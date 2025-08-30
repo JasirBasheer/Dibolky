@@ -9,11 +9,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { message } from 'antd';
 import { updatePlanApi } from '@/services/admin/post.services';
-import { IPlan } from '@/types/admin.types';
+import { Plan } from '@/types';
 
 interface EditPlanProps {
   onClose: () => void;
-  plan: IPlan;
+  plan: Plan;
 }
 
 const PRESET_MENUS = ["Dashboard", "Our Work", "Client Management", "Content & Projects",
@@ -67,7 +67,7 @@ const EditPlan = ({ onClose, plan }: EditPlanProps) => {
       };
 
 
-      const res = await updatePlanApi(plan._id as string, updatedPlan);
+      const res = await updatePlanApi(plan.id as string, updatedPlan);
 
       if (res.status === 200) {
         message.success("Plan successfully updated");

@@ -9,7 +9,9 @@ export interface InvoiceType {
   };
   service: {
     serviceName: string;
-    details: any;
+    details: {
+      [key: string]: string;
+    };
   };
   pricing: number;
   dueDate: Date;

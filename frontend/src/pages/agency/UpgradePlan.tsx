@@ -43,10 +43,11 @@ const UpgradePlan = () => {
             order_id: order_id,
             handler: async(response: IRazorpayOrder) => {
                 if (response) {
-                const response =  await axios.post('/api/agency/plans',{planId:plan._id})
+                  console.log(plan,'plan ann callbaliii')
+                const response =  await axios.post('/api/agency/plans',{planId:plan.id})
                 if(response.status == 200){
-                  dispatch(setUser({planId:plan._id}))
-                  dispatch(setAgency({planId:plan._id}))
+                  dispatch(setUser({planId:plan.id}))
+                  dispatch(setAgency({planId:plan.id}))
                   queryClient.invalidateQueries({ queryKey: ["get-upgradable-plans"] });
                   toast.success('plan upgraded successfully.')
                 }else{

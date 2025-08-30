@@ -8,7 +8,7 @@ export async function getLeads(fromId: string, accessToken: string) {
 
     while (nextPageUrl) {
       const response = await axios.get(nextPageUrl);
-      const leads = (response.data?.data || []).map((lead: any) => ({
+      const leads = (response.data?.data || []).map((lead) => ({
         ...lead,
         platform: "meta_ads",
       }));

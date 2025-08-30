@@ -1,5 +1,4 @@
 import axios from "axios";
-import { toast } from "sonner";
 
 const customAxios = axios.create({
   baseURL: import.meta.env.VITE_BACKEND || "http://localhost:5050",

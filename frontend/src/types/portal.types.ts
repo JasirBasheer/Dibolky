@@ -1,17 +1,5 @@
 import { LucideProps } from "lucide-react";
-import { ComponentType, ElementType, ReactNode } from "react";
-import { IPlan } from "./admin.types";
-
-export interface Plan {
-    _id: string;
-    id: number;
-    title: string;
-    description: string;
-    price: number;
-    validity: string;
-    features: string[];
-}
-  
+import { ComponentType, ReactNode } from "react";
 
 export interface FormData {
     firstName: string;
@@ -29,9 +17,8 @@ export interface FormData {
 
 export interface IStripeDetails extends FormData{
     name:string;
-    plan:IPlan;
+    planId:string;
     amount:number;
-    currency:string;
     description:string;
 }
 export interface ValidationError {

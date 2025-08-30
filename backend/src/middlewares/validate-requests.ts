@@ -9,7 +9,8 @@ export const validateRequest = (schema: ZodSchema) => {
 
       if (!result.success) {
         const firstError = result.error.issues[0];
-        return next(new CustomError(firstError.message, 400));
+        const path = firstError.path.join(".");
+        return next(new CustomError(`${path} : ${firstError.message}`, 400));
       }
       req.body = result.data;
 

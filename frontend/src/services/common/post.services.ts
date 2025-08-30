@@ -50,12 +50,12 @@ export const updateProfileApi = async (
   return await api.post(`/api/entities/update-profile`, { role, details });
 };
 
-export const getUploadUrlApi = async (file: object) => {
-  return await api.post(`/api/entities/get-s3Upload-url`, { file });
+export const getUploadUrlApi = async (fileName: string, fileType: string) => {
+  return await api.post(`/api/storage/presign`, { fileName, fileType });
 };
 
 export const getSignedUrlApi = async (key: string) => {
-  return await api.post(`/api/entities/get-signedUrl`, { key });
+  return await api.get(`/api/storage/signed-url?key=${key}`);
 };
 
 export const approveContentApi = async (
@@ -226,5 +226,56 @@ export const deleteCommentApi = async (
 ) => {
   return await api.delete(`/api/entities/media/comment`, {
     data: { platform, commentId, userId, entity, pageId },
+  });
+};
+
+export const createCampaignApi = async (
+  role: string,
+  userId: string,
+  campaignData: {
+    name: string;
+    objective: string;
+    adAccountId: string;
+    platform?: string;
+    status?: string;
+    daily_budget?: number;
+    lifetime_budget?: number;
+    start_time?: string;
+    stop_time?: string;
+    special_ad_categories?: string[];
+  }
+) => {
+  // Set default values if not provided
+  const dataWithDefaults = {
+    ...campaignData,
+    platform: campaignData.platform || "meta_ads",
+    status: campaignData.status || "PAUSED"
+  };
+  
+  return await api.post(`/api/entities/campaigns/${role}/${userId}`, dataWithDefaults);
+};
+
+export const deleteCampaignApi = async (
+  role: string,
+  userId: string,
+  campaignId: string,
+  platform: string
+) => {
+  return await api.delete(`/api/entities/campaigns/${role}/${userId}`, {
+    data: { campaignId, platform }
+  });
+};
+
+export const toggleCampaignStatusApi = async (
+  role: string,
+  userId: string,
+  campaignId: string,
+  platform: string,
+  currentStatus: string
+) => {
+  return await api.patch(`/api/entities/campaigns/${role}/${userId}`, {
+    campaignId,
+    platform,
+    currentStatus
   });
 };

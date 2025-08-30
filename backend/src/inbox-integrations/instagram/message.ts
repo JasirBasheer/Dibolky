@@ -8,11 +8,15 @@ export async function sendIGMessage(
   message: string,
   type: "text" | "image" | "video" = "text",
   media_url?: string
-): Promise<any> {
+): Promise<void> {
   const url = `https://graph.facebook.com/${env.META.API_VERSION}/${conversation_id}/messages`;
 
   try {
-    const payload: any = {
+    const payload: {
+      recipient: { id: string };
+      access_token: string;
+      message?: object;
+    } = {
       recipient: { id: conversation_id },
       access_token,
     };
@@ -35,7 +39,7 @@ export async function sendIGMessage(
 
     const response = await axios.post(url, payload);
 
-    return response.data;
+    // return response.data;
   } catch (error: unknown) {
     const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
     console.error("Error fetching IG messages:", errorMessage);

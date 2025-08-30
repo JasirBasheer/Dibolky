@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { container } from "tsyringe";
-import { activitySchema,  agencyTenantSchema, bucketSchema, chatSchema, clientTenantSchema, invoiceSchema, messageSchema, noteSchema, Plan, portfolioSchema, projectSchema, socialMessageSchema, socialUserSchema, testimonialSchema, TransactionModel, transactionSchema } from "@/models";
+import { activitySchema,  agencyTenantSchema, bucketSchema, chatSchema, clientTenantSchema, invoiceSchema, messageSchema, noteSchema, PlanModel, portfolioSchema, projectSchema, socialMessageSchema, socialUserSchema, testimonialSchema, TransactionModel, transactionSchema } from "@/models";
 import adminSchema from '@/models/Implementation/admin'
 import agencySchema from '@/models/Implementation/agency'
 import clientSchema from '@/models/Implementation/client'
@@ -17,7 +17,7 @@ container.register('review_bucket_model', { useValue: bucketSchema });
 container.register('transaction_model', { useValue: TransactionModel });
 container.register('transaction_tenant_modal', { useValue: transactionSchema });
 container.register('message_model', { useValue: messageSchema });
-container.register('plan_model', { useValue: Plan });
+container.register('plan_model', { useValue: PlanModel });
 container.register('note_model', { useValue: noteSchema });
 container.register('activity_modal', { useValue: activitySchema });
 container.register('social_user_modal', { useValue: socialUserSchema });

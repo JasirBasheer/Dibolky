@@ -70,7 +70,7 @@ const Comments = ({ content }) => {
   }, [content?.comments]);
 
   const normalizeComments = (
-    commentsToNormalize: any[],
+    commentsToNormalize,
     platform: string
   ): NormalizedComment[] => {
     if (!commentsToNormalize) return [];
@@ -131,10 +131,10 @@ const Comments = ({ content }) => {
   };
 
   const addReplyToComments = (
-    commentsList: any[],
+    commentsList: NormalizedComment[],
     commentId: string,
-    newReply: any
-  ): any[] => {
+    newReply: object
+  ) => {
     return commentsList.map((comment) => {
       if (comment.id === commentId) {
         const replies = comment.replies ? [...comment.replies] : [];
@@ -215,7 +215,7 @@ const Comments = ({ content }) => {
     }
   };
 
-  const removeCommentById = (commentsList: any[], commentId: string): any[] => {
+  const removeCommentById = (commentsList, commentId: string) => {
     return commentsList
       .map((comment) => {
         if (comment.id === commentId) return null;

@@ -20,7 +20,7 @@ export interface INote extends Document {
 }
 
 export interface IBucketWithReason {
-  _id: any;
+  _id: string;
   user_id?: string;
   orgId: string;
   files: IFiles[];

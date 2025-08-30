@@ -5,7 +5,7 @@ import AdminDashboard from '@/pages/dashboard/adminDashboard'
 import { AdminLayout, ForgotPassword, Login, ProtectedRoute, ResetPassword, UnProtectedRoute } from '@/pages'
 import Transactions from '@/pages/admin/Transactions'
 
-export default function AdminRoutes() {
+export function AdminRoutes() {
     return (
         <Routes>
             <Route path='/' element={

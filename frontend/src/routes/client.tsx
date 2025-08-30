@@ -23,7 +23,7 @@ import Projects from "@/pages/agency/projects";
 import LeadsPage from "@/pages/leads/LeadsPage";
 import Contents from "@/pages/contents/contentsPage";
 
-export default function ClientRoutes() {
+export function ClientRoutes() {
   return (
     <Routes>
       <Route

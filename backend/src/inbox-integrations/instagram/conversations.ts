@@ -5,7 +5,7 @@ import { isErrorWithMessage } from "@/validators";
 export async function getIGConversations(
   pageId: string,
   access_token: string
-): Promise<any> {
+) {
   const url = `https://graph.facebook.com/${env.META.API_VERSION}/${pageId}/conversations`;
 
  try {
@@ -28,7 +28,7 @@ export async function getIGConversations(
 export async function getIGMessages(
   conversation_id: string,
   access_token: string
-): Promise<any> {
+){
   const url = `https://graph.facebook.com/${env.META.API_VERSION}/${conversation_id}/messages`;
 
   try {
@@ -52,7 +52,7 @@ export async function getIGMessages(
 export async function getIGMessageSenderDetails(
   iGSid: string,
   access_token: string
-): Promise<any> {
+) {
   const url = `https://graph.facebook.com/v20.0/${iGSid}`;
 
   try {

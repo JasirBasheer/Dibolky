@@ -63,7 +63,7 @@ export const getPlanDetailsApi = async (planId: string) => {
 };
 
 export const getAllPortalPlans = async() =>{
-    return await api.get(`/api/public/plans?page=0&limit=0`)
+    return await api.get(`/api/public/plans?page=0&limit=0&sortOrder=asc`)
 }
 
 export const getActivitesApi = async (role: string, user_id: string) => {

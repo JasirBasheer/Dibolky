@@ -32,7 +32,7 @@ const TransactionsPage = () => {
   const [filter, setFilter] = useState({
     query: "",
     sortBy: "createdAt",
-    sortOrder: "asc",
+    sortOrder: "desc",
   });
 
   const { page, limit, nextPage, prevPage, reset } = usePagination(1, 10);

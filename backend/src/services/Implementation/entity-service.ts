@@ -35,7 +35,7 @@ import {
 } from "@/providers/meta";
 import { isXAccessTokenValid } from "@/providers/x";
 import { SaveContentDto } from "@/dtos/content";
-import { IClientTenant } from "@/models";
+import { credentials, IActivity, IClientTenant, IInvoice, TransactionDoc } from "@/models";
 import {
   IActivityRepository,
   IInvoiceRepository,
@@ -217,7 +217,7 @@ export class EntityService implements IEntityService {
     role: string,
     user_id: string,
     query: FilterType
-  ): Promise<any> {
+  ): Promise<{ invoices: IInvoice[]; totalCount: number; totalPages: number }> {
     const { page, limit, sortBy, sortOrder } = query;
     const filter = QueryParser.buildFilter({
       searchText: query.query,
@@ -255,7 +255,7 @@ export class EntityService implements IEntityService {
     role: string,
     user_id: string,
     query: FilterType
-  ): Promise<any> {
+  ): Promise<{ transactions: TransactionDoc[], totalCount: number ,totalPages: number }> {
     const { page, limit, sortBy, sortOrder, type } = query;
     const filter = QueryParser.buildFilter({
       searchText: query.query,
@@ -290,7 +290,7 @@ export class EntityService implements IEntityService {
     orgId: string,
     entity: string,
     user_id: string
-  ): Promise<any> {
+  ): Promise<IActivity[]> {
     let activities;
     if (entity == "agency") {
       activities = await this._activityRepository.getActivities({ orgId });
@@ -308,128 +308,7 @@ export class EntityService implements IEntityService {
     return await this._agencyTenantRepository.getOwners(orgId);
   }
 
-  async saveContent(payload: SaveContentDto): Promise<IBucket> {
-    const {
-      orgId,
-      platform,
-      platforms,
-      user_id,
-      files,
-      metadata,
-      contentType,
-    } = payload;
-    let detials;
-    if (platform == "agency") {
-      const ownerDetials = await this._agencyTenantRepository.getOwners(orgId);
-      detials = {
-        user_id: ownerDetials![0]._id as string,
-        orgId,
-        files,
-        platforms,
-        title: metadata.title,
-        caption: metadata.caption,
-        tags: metadata.tags,
-        metaAccountId: metadata.metaAccountId,
-        contentType,
-      };
-    } else if (platform == "client") {
-      detials = {
-        user_id,
-        orgId,
-        files,
-        platforms,
-        title: metadata.title,
-        caption: metadata.caption,
-        tags: metadata.tags,
-        metaAccountId: metadata.metaAccountId,
-        contentType,
-      };
-    } else {
-      detials = {
-        user_id,
-        orgId,
-        files,
-        platforms,
-        title: metadata.title,
-        caption: metadata.caption,
-        tags: metadata.tags,
-        metaAccountId: metadata.metaAccountId,
-        contentType,
-      };
-    }
-    return this._contentRepository.saveContent(detials);
-  }
 
-  async getS3ViewUrl(key: string): Promise<string> {
-    return await getS3ViewUrl(key);
-  }
-
-  async fetchContents(
-    orgId: string,
-    role: string,
-    userId: string,
-    query: FilterType
-  ): Promise<{
-    contents: IBucketWithReason[];
-    totalCount: number;
-    totalPages: number;
-  }> {
-    const { page, limit, sortBy, sortOrder } = query;
-    const owner = await this._agencyTenantRepository.getOwnerWithOrgId(orgId);
-    const filter = QueryParser.buildFilter({
-      searchText: query.query,
-      searchFields: ["title", "caption", "status"],
-      additionalFilters: {
-        ...(query.status && query.status !== "all"
-          ? { status: query.status }
-          : {}),
-        ...(role == ROLES.AGENCY
-          ? { user_id: owner._id }
-          : { user_id: userId }),
-      },
-    });
-    const options = {
-      page,
-      limit,
-      sort: sortBy
-        ? ({ [sortBy]: sortOrder === "desc" ? -1 : 1 } as Record<
-            string,
-            1 | -1
-          >)
-        : {},
-    };
-
-    const result = await this._contentRepository.getContentsByUserId(
-      orgId,
-      filter,
-      options
-    );
-    const contentIds = result.contents.map((content) => String(content._id));
-    const notes = await this._noteRepository.getContentNotesByEntityIds(
-      orgId,
-      contentIds
-    );
-
-
-    const contentsWithNotes = result.contents.map((contentDoc) => {
-      const content = contentDoc.toObject(); 
-      const matchingNote = notes.find(
-        (note) => note.entityId.toString() === content._id.toString()
-      );
-      return {
-        ...content,
-        _id: content._id.toString(),
-        reason: matchingNote || null,
-      } as IBucketWithReason;
-    }) 
-
-    console.log(contentsWithNotes)
-    
-    return CommonMapper.ContentDetails({
-      ...result,
-      contents: contentsWithNotes,
-    });
-  }
 
   async updateProfile(
     orgId: string,
@@ -462,19 +341,9 @@ export class EntityService implements IEntityService {
     return updatedProfile;
   }
 
-  async getScheduledContent(
-    orgId: string,
-    user_id: string
-  ): Promise<IBucket[]> {
-    return await this._contentRepository.getAllScheduledContents(
-      orgId,
-      user_id
-    );
-  }
-
   private async getValidConnections(
   orgId: string,
-  credentials: any,
+  credentials: Record<string, credentials>,
   connectionType: string
 ): Promise<
   {
@@ -588,82 +457,6 @@ export class EntityService implements IEntityService {
   return validConnections;
 }
 
-async getConnections(
-  orgId: string,
-  entity: string,
-  userId: string,
-  includes: string
-): Promise<{
-  validConnections: { platform: string; is_valid: boolean; connectedAt: string | undefined }[];
-  connectedPages: { name: string; id: string }[];
-  adAccounts: { name: string; id: string; act: string }[];
-}> {
-  const userDetails =
-    entity === "agency"
-      ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
-      : await this._clientTenantRepository.getClientById(orgId, userId);
-
-  if (!userDetails) {
-    throw new NotFoundError("User details not found, please try again later.");
-  }
-
-  let validConnections = [];
-
-  if (includes == "all" || includes == "pages" || includes == "social" || includes == "gmail" || includes == "ads") {
-    validConnections = await this.getValidConnections(orgId, userDetails.social_credentials, includes);
-  }
-
-
-  let connectedPages: { name: string; id: string }[] = [];
-  if (
-    (includes == "pages" || includes == "all") &&
-    validConnections.some(
-      (conn) =>
-        (conn.platform === "facebook" || conn.platform === "instagram") && conn.is_valid
-    )
-  ) {
-    const token =
-      userDetails.social_credentials?.facebook?.accessToken ||
-      userDetails.social_credentials?.instagram?.accessToken;
-
-    const decryptedToken = decryptToken(token)
-
-    if (decryptedToken) {
-      try {
-        const pagesResponse = await getPages(decryptedToken);
-        connectedPages = pagesResponse.data.map((page) => ({
-          name: page.name,
-          id: page.id,
-        }));
-      } catch (error) {
-        console.error("Failed to fetch connected pages:", error);
-      }
-    }
-  }
-
-
-  let adAccounts: { name: string; id: string; act: string }[] = [];
-  if (
-    (includes == "ads" || includes=== "all") &&
-    validConnections.some((conn) => conn.platform == "meta_ads" && conn.is_valid)
-  ) {
-    const adsToken = userDetails.social_credentials?.meta_ads?.accessToken;
-    const decryptedAdsToken = decryptToken(adsToken)
-    if (decryptedAdsToken) {
-      try {
-        adAccounts = await getAdAccounts(decryptedAdsToken);
-      } catch (error) {
-        console.error("Failed to fetch ads accounts:", error);
-      }
-    }
-  }
-
-  return {
-    validConnections,
-    connectedPages,
-    adAccounts,
-  };
-}
 
   async getInbox(
     orgId: string,
@@ -680,7 +473,7 @@ async getConnections(
 
       const users: ISocialUserType[] = [];
       for (const platform of selectedPlatforms) {
-        let platformUsers: ISocialUserType[] = [];
+        let platformUsers = [];
 
         if (platform === "instagram") {
           if (!user?.social_credentials?.instagram?.accessToken) return [];
@@ -864,17 +657,17 @@ async getConnections(
     userId: string,
     selectedPlatforms: string[],
     selectedPages: string[]
-  ): Promise<any[]> {
+  ): Promise<object[]> {
     try {
       const user =
         entity === "agency"
           ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
           : await this._clientTenantRepository.getClientById(orgId, userId);
 
-      const medias: any[] = [];
+      const medias= [];
 
       for (const platform of selectedPlatforms) {
-        let contents: any[] = [];
+        let contents = [];
 
         if (platform === "instagram") {
           if (!user?.social_credentials?.instagram?.accessToken) return [];
@@ -956,244 +749,6 @@ async getConnections(
     }
   }
 
-  async getContentDetails(
-    orgId: string,
-    entity: string,
-    userId: string,
-    platform: string,
-    mediaId: string,
-    mediaType: string,
-    pageId: string
-  ): Promise<any> {
-    try {
-      const user =
-        entity === "agency"
-          ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
-          : await this._clientTenantRepository.getClientById(orgId, userId);
-
-      if (!user) throw new Error("User not found");
-
-      let contentDetails: any = {};
-
-      if (platform === PLATFORMS.INSTAGRAM) {
-        const accessToken = decryptToken(user.social_credentials.instagram?.accessToken)
-        if (!accessToken) throw new Error("Instagram access token missing");
-
-        const pages = await getPages(accessToken);
-        const page = pages.data.find((p) => p.id == pageId);
-        const comments = await getIGComments(mediaId, page.access_token);
-
-        const commentsWithReplies = await Promise.all(
-          comments.map(async (comment) => {
-            const replies = await getIGReplies(comment.id, page.access_token);
-            return { ...comment, replies };
-          })
-        );
-
-        const media = await getIGMedias(mediaId, page.access_token);
-        const metrics = getSupportedMetrics(media.media_type || mediaType);
-        const insights = await getIGInsights(
-          mediaId,
-          page.access_token,
-          metrics
-        );
-
-        contentDetails = {
-          media: { ...media, platform: PLATFORMS.INSTAGRAM, pageId },
-          comments: commentsWithReplies || [],
-          insights,
-        };
-      } else if (platform === PLATFORMS.FACEBOOK) {
-        const accessToken = decryptToken(user.social_credentials.facebook?.accessToken)
-        if (!accessToken) throw new Error("Facebook access token missing");
-
-        const pages = await getPages(accessToken);
-        const page = pages.data.find((p) => p.id == pageId);
-
-        const comments = await getFBComments(mediaId, page.access_token);
-        const commentsWithReplies = await Promise.all(
-          comments.map(async (comment) => {
-            const replies = await getFBReplies(comment.id, page.access_token);
-            return { ...comment, replies };
-          })
-        );
-
-        const content = await getFBMedia(mediaId, page.access_token);
-        const { media_type, media_url } = getFBMediaDetails(content);
-        const insights = await getFBInsights(mediaId, page.access_token);
-
-        contentDetails = {
-          media: {
-            ...content,
-            caption: content.message || content.story || "",
-            media_type: ["video", "reel"].includes(media_type)
-              ? "VIDEO"
-              : "IMAGE",
-            permalink: content.permalink_url,
-            timestamp: content.created_time,
-            media_url,
-            platform: PLATFORMS.FACEBOOK,
-            pageId: page.id,
-            pageName: page.name,
-            username: page.name,
-          },
-          comments: commentsWithReplies || [],
-          insights,
-        };
-      }
-
-      return contentDetails;
-    } catch (error: unknown) {
-      const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
-      console.error("Error fetching content details:", errorMessage);
-      throw new CustomError("Error while fetching content details", 500);
-    }
-  }
-
-  async replayToComments(
-    orgId: string,
-    entity: string,
-    userId: string,
-    platform: string,
-    commentId: string,
-    pageId: string,
-    replyMessage: string
-  ): Promise<any> {
-    try {
-      const user =
-        entity === "agency"
-          ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
-          : await this._clientTenantRepository.getClientById(orgId, userId);
-
-      if (!user) {
-        throw new Error("User not found");
-      }
-
-      if (!replyMessage || replyMessage.trim() === "") {
-        throw new Error("Reply message cannot be empty");
-      }
-
-      if (platform === "instagram") {
-        const instagramAccessToken =
-          decryptToken(user.social_credentials.instagram?.accessToken);
-        if (!instagramAccessToken) {
-          throw new Error("Instagram access token missing");
-        }
-
-        const pages = await getPages(instagramAccessToken);
-        const page = pages.data.find((p) => p.id == pageId);
-
-        const response = await fetch(
-          `https://graph.facebook.com/v19.0/${commentId}/replies?message=${replyMessage}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({
-              access_token: page.access_token,
-            }),
-          }
-        );
-
-        const data = await response.json();
-
-        if (data.error) {
-          throw new Error(`Instagram API error: ${data.error.message}`);
-        }
-
-        return data;
-      } else if (platform === "facebook") {
-        const facebookAccessToken =
-          decryptToken(user.social_credentials.facebook?.accessToken)
-        if (!facebookAccessToken) {
-          throw new Error("Facebook access token missing");
-        }
-
-        const pages = await getPages(facebookAccessToken);
-        const page = pages.data.find((p) => p.id == pageId);
-
-        const response = await fetch(
-          `https://graph.facebook.com/${commentId}/comments?message=${encodeURIComponent(
-            replyMessage
-          )}&access_token=${page.access_token}`,
-          {
-            method: "POST",
-          }
-        );
-
-        const data = await response.json();
-
-        if (data.error) {
-          throw new Error(`Facebook API error: ${data.error.message}`);
-        }
-
-        return data;
-      } else {
-        throw new Error(`Unsupported platform: ${platform}`);
-      }
-    } catch (error: unknown) {
-      const errorMessage = isErrorWithMessage(error) ? error.message : "Unknown error";
-      console.error("Error replying to comment:", error);
-      throw new CustomError("Error while replying to comment", 500);
-    }
-  }
-
-  async deleteComment(
-    orgId: string,
-    user_id: string,
-    entity: string,
-    pageId: string,
-    platform: string,
-    commentId: string
-  ): Promise<{ success: boolean }> {
-    const user =
-      entity === "agency"
-        ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
-        : await this._clientTenantRepository.getClientById(orgId, user_id);
-    const accessToken =
-      platform == "facebook"
-        ? user.social_credentials.facebook.accessToken
-        : user.social_credentials.instagram.accessToken;
-    const decryptedAccessToken = decryptToken(accessToken)
-    const pages = await getPages(decryptedAccessToken);
-    const page = pages.data.find((p) => p.id == pageId);
-
-    const deletedComment =
-      platform == "facebook"
-        ? await deleteFBComment(commentId, page.access_token)
-        : await deleteIGComment(commentId, page.access_token);
-    return deletedComment;
-  }
-
-  async hideComment(
-    orgId: string,
-    user_id: string,
-    entity: string,
-    pageId: string,
-    platform: string,
-    commentId: string
-  ): Promise<{ success: boolean }> {
-    const user =
-      entity === "agency"
-        ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
-        : await this._clientTenantRepository.getClientById(orgId, user_id);
-    const accessToken =
-      platform == "facebook"
-        ? user.social_credentials.facebook.accessToken
-        : user.social_credentials.instagram.accessToken;
-
-    const decryptedAccessToken = decryptToken(accessToken)
-    const pages = await getPages(decryptedAccessToken);
-    const page = pages.data.find((p) => p.id == pageId);
-
-    console.log(platform, "test", entity, "entity");
-    const hiddenComment =
-      platform == "facebook"
-        ? await setFBCommentHidden(commentId, page.access_token)
-        : await setIGCommentHidden(commentId, page.access_token);
-    return hiddenComment;
-  }
-  
-
   async getAgoraTokens(
     userId: string,
     channelName?:string
@@ -1228,76 +783,6 @@ async getConnections(
     }
     return {rtmToken,rtcToken }
   }
-
-  async getAllCampaigns(orgId: string, role: string, userId: string, selectedPlatforms: string[], selectedAdAccounts: string[]): Promise<any>{
-        const user = role === ROLES.AGENCY
-        ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
-        : await this._clientTenantRepository.getClientById(orgId, userId);
-        let campaigns = []
-        if(selectedPlatforms.includes('meta_ads')){
-          const token = decryptToken(user.social_credentials.meta_ads.accessToken)
-          if(!token)return
-          const validCampaigns = []
-        for (const AdAccId of selectedAdAccounts) {
-          const campaign = await getMetaCampaigns(token, AdAccId);
-          const taggedCampaigns = campaign.map(c => ({
-            ...c,
-            platform: PLATFORMS.META_ADS,
-          }));
-          validCampaigns.push(...taggedCampaigns);
-        }
-          console.log(validCampaigns,"campaign ann too")
-          campaigns.push(...validCampaigns)
-        }
-        
-        return campaigns
-      }
-
-      async getAllAdSets(orgId: string, role: string, userId: string, id:string,platform: string): Promise<any>{
-        const user = role === ROLES.AGENCY
-        ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
-        : await this._clientTenantRepository.getClientById(orgId, userId);        
-        if(!user)throw new NotFoundError("user details not found please try again later")
-          let adsets = []
-        if(platform == PLATFORMS.META_ADS){
-            const token = decryptToken(user.social_credentials?.meta_ads?.accessToken)
-            if(!token)throw new NotFoundError("token not found please reconnect meta ad account")
-            const ads = await getAllAdSetsByCampaignId(id,token)
-            adsets = ads.map((adset) => ({
-              ...adset,
-              platform: PLATFORMS.META_ADS,
-            }))
-          }
-        return adsets
-      }
-
-      async getAllAds(orgId: string, role: string, userId: string, adsetId:string,platform: string): Promise<any>{
-      const user = role === ROLES.AGENCY
-        ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
-        : await this._clientTenantRepository.getClientById(orgId, userId);        
-        if(!user)throw new NotFoundError("user details not found please try again later")
-        let ads = []
-        if(platform == PLATFORMS.META_ADS){
-            const token = decryptToken(user.social_credentials?.meta_ads?.accessToken)
-            if(!token)throw new NotFoundError("token not found please reconnect meta ad account")
-            ads = await getAllAds(adsetId,token,platform)
-          }
-          console.log(ads,"adssssss")
-        return ads
-      }
-
-      async createAd(orgId: string, role: string, userId: string, adsetId:string,platform: string): Promise<any>{
-        const user = role === ROLES.AGENCY
-        ? await this._agencyTenantRepository.getOwnerWithOrgId(orgId)
-        : await this._clientTenantRepository.getClientById(orgId, userId);        
-        if(!user)throw new NotFoundError("user details not found please try again later")
-        let createdAd;
-        // if(platform == PLATFORMS.META_ADS){
-        //   const token = user.social_credentials?.meta_ads?.accessToken
-        //   if(!token)throw new NotFoundError("token not found please reconnect meta ad account")
-        //     createdAd = await createMetaAd(adsetId,{ name, adset_id, creative, status },platform)
-        // }
-      }
 
 
       async getCalenderEvents(orgId: string, role: string, userId: string): Promise<{ _id: string; title: string; from: string | Date; to: string | Date; }[]> {
@@ -1360,6 +845,4 @@ async getConnections(
         return events;
       }
       
-
-
 }

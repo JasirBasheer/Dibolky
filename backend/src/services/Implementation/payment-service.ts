@@ -26,7 +26,6 @@ export class PaymentService implements IPaymentService {
     };
     const razorpayInstance = createRazorpayInstance(key_id, key_secret);
     const order = await razorpayInstance.orders.create(options);
-
     return {
       ...order,
       key_id,

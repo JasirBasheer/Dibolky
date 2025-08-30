@@ -28,7 +28,7 @@ import {
 } from "@/pages";
 import Contents from "@/pages/contents/contentsPage";
 
-export default function AgencyRoutes() {
+export  function AgencyRoutes() {
   return (
     <Routes>
       <Route

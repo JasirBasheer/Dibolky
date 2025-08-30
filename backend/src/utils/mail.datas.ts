@@ -38,7 +38,7 @@ export const createForgotPasswordData = (name: string, email: string, resetLink:
 
         <p>If you did not request to reset your password, you can safely ignore this email. Your password will not change unless you access the link above and create a new one.</p>
 
-        <p>For any further assistance, feel free to reach out to our support team.</p>
+        <p>For further assistance, feel free to reach out to our support team.</p>
         
         <p>Warm regards,<br>The Dibolky Team</p>
     `;

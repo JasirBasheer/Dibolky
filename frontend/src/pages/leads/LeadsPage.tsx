@@ -1,17 +1,17 @@
 "use client";
 
-import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, MoreHorizontal, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import CustomBreadCrumbs from "@/components/ui/custom-breadcrumbs";
 import type { RootState } from "@/types/common";
 import { PlatformFilter } from "@/components/common/platfrom-filter";
-import { fetchConnections, getAdSetsApi, getCampaignsApi } from "@/services";
+import { fetchConnections, getAdSetsApi, getCampaignsApi, createCampaignApi, deleteCampaignApi, toggleCampaignStatusApi } from "@/services";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { formatDate, formatTimestamp } from "@/utils/utils";
 import { Adsets } from "./components/adsets";
 import DetailModal from "@/components/modals/details-modal";
+import { toast } from "sonner";
 
 const LeadsPage = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -32,16 +33,168 @@ const LeadsPage = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [campaigns, setCampaigns] = useState([]);
   const [isCampaignsLoading, setIsCampaignsLoading] = useState<boolean>(false);
   const [isSelectedContentLoading, setSelectedContentLoading] =
     useState<boolean>(false);
   const [selectedCampaignAdsets, setSelectedCampaignAdsets] =
-    useState<any>(null);
+    useState(null);
   const [selectedCampaignDetails, setSelectedCampaignDetails] =
-    useState<any>(null);
-  const [filteredCampaigns, setFilteredCampaigns] = useState<any[]>([]);
+    useState(null);
+  const [filteredCampaigns, setFilteredCampaigns] = useState([]);
   const [isCreateCampaignOpen, setIsCreateCampaignOpen] = useState(false);
+  const [campaignFormData, setCampaignFormData] = useState({
+    name: "",
+    objective: "",
+    adAccountId: "",
+  });
+  const [isCreatingCampaign, setIsCreatingCampaign] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  const createCampaignMutation = useMutation({
+    mutationFn: (campaignData: {
+      name: string;
+      objective: string;
+      adAccountId: string;
+      platform?: string;
+      status?: string;
+    }) => createCampaignApi(user.role, user.user_id, campaignData),
+    onSuccess: () => {
+      toast.success("Campaign created successfully!");
+      setIsCreateCampaignOpen(false);
+      setCampaignFormData({ name: "", objective: "", adAccountId: "" });
+      queryClient.invalidateQueries({
+        queryKey: ["get-leads-connection-status", user.role, user.user_id],
+      });
+    },
+    onError: (error: { response?: { data?: { message?: string } } }) => {
+      toast.error(error?.response?.data?.message || "Failed to create campaign");
+    },
+  });
+
+  const deleteCampaignMutation = useMutation({
+    mutationFn: ({ campaignId, platform }: { campaignId: string; platform: string }) =>
+      deleteCampaignApi(user.role, user.user_id, campaignId, platform),
+    onMutate: async ({ campaignId }) => {
+      await queryClient.cancelQueries({
+        queryKey: ["get-leads-connection-status", user.role, user.user_id],
+      });
+
+      const previousCampaigns = campaigns;
+
+      setCampaigns(prevCampaigns => 
+        prevCampaigns.filter(campaign => campaign.id !== campaignId)
+      );
+
+      return { previousCampaigns };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousCampaigns) {
+        setCampaigns(context.previousCampaigns);
+      }
+      toast.error("Failed to delete campaign");
+    },
+    onSuccess: () => {
+      toast.success("Campaign deleted successfully!");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["get-leads-connection-status", user.role, user.user_id],
+      });
+    },
+  });
+
+  const toggleCampaignStatusMutation = useMutation({
+    mutationFn: ({ campaignId, platform, currentStatus }: { campaignId: string; platform: string; currentStatus: string }) =>
+      toggleCampaignStatusApi(user.role, user.user_id, campaignId, platform, currentStatus),
+    onMutate: async ({ campaignId, currentStatus }) => {
+      await queryClient.cancelQueries({
+        queryKey: ["get-leads-connection-status", user.role, user.user_id],
+      });
+
+      const previousCampaigns = campaigns;
+      const newStatus = currentStatus === "ACTIVE" ? "PAUSED" : "ACTIVE";
+      setCampaigns(prevCampaigns => 
+        prevCampaigns.map(campaign => 
+          campaign.id === campaignId 
+            ? { ...campaign, effective_status: newStatus }
+            : campaign
+        )
+      );
+      return { previousCampaigns };
+    },
+    onError: (err, variables, context) => {
+      
+      if (context?.previousCampaigns) {
+        setCampaigns(context.previousCampaigns);
+      }
+      toast.error("Failed to update campaign status");
+    },
+    onSuccess: () => {
+      toast.success("Campaign status updated successfully!");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["get-leads-connection-status", user.role, user.user_id],
+      });
+    },
+  });
+
+
+  const handleDeleteCampaign = async (campaignId: string, platform: string) => {
+      try {
+        await deleteCampaignMutation.mutateAsync({ campaignId, platform });
+      } catch (error) {
+        console.error("Campaign deletion error:", error);
+      }
+  };
+
+  const handleToggleCampaignStatus = async (campaignId: string, platform: string, currentStatus: string) => {
+      try {
+        await toggleCampaignStatusMutation.mutateAsync({ campaignId, platform, currentStatus });
+      } catch (error) {
+        console.error("Campaign status toggle error:", error);
+      }
+  };
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setCampaignFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleCreateCampaign = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!campaignFormData.name || !campaignFormData.objective || !campaignFormData.adAccountId) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    setIsCreatingCampaign(true);
+    try {
+      await createCampaignMutation.mutateAsync({
+        name: campaignFormData.name,
+        objective: campaignFormData.objective,
+        adAccountId: campaignFormData.adAccountId,
+        platform: "meta_ads",
+        status: "PAUSED"
+      });
+    } catch (error) {
+      console.error("Campaign creation error:", error);
+    } finally {
+      setIsCreatingCampaign(false);
+    }
+  };
+
+  
+  const handleModalClose = () => {
+    setIsCreateCampaignOpen(false);
+    setCampaignFormData({ name: "", objective: "", adAccountId: "" });
+  };
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
@@ -280,7 +433,7 @@ const LeadsPage = () => {
                                     <DropdownMenuItem
                                       className="text-xs cursor-pointer"
                                       onClick={() =>
-                                        console.log("Pause clicked")
+                                        handleToggleCampaignStatus(item.id, item.platform, item.effective_status)
                                       }
                                     >
                                       {item.effective_status == "ACTIVE"
@@ -290,7 +443,7 @@ const LeadsPage = () => {
                                     <DropdownMenuItem
                                       className="text-xs cursor-pointer text-destructive"
                                       onClick={() =>
-                                        console.log("Delete clicked")
+                                        handleDeleteCampaign(item.id, item.platform)
                                       }
                                     >
                                       Delete Campaign
@@ -340,9 +493,9 @@ const LeadsPage = () => {
       <DetailModal
         title="Create Campaign"
         open={isCreateCampaignOpen}
-        onOpenChange={setIsCreateCampaignOpen}
+        onOpenChange={handleModalClose}
       >
-        <form className="space-y-4">
+        <form onSubmit={handleCreateCampaign} className="space-y-4">
           <div>
             <label
               htmlFor="campaignName"
@@ -352,8 +505,10 @@ const LeadsPage = () => {
             </label>
             <input
               id="campaignName"
-              name="campaignName"
+              name="name"
               type="text"
+              value={campaignFormData.name}
+              onChange={handleFormChange}
               required
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
             />
@@ -369,52 +524,62 @@ const LeadsPage = () => {
             <select
               id="objective"
               name="objective"
+              value={campaignFormData.objective}
+              onChange={handleFormChange}
               required
               className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
             >
               <option value="">Select objective</option>
-              <option value="LINK_CLICKS">Link Clicks</option>
-              <option value="CONVERSIONS">Conversions</option>
-              <option value="BRAND_AWARENESS">Brand Awareness</option>
+              <option value="OUTCOME_LEADS">Outcome Leads</option>
+              <option value="OUTCOME_SALES">Outcome Sales</option>
+              <option value="OUTCOME_ENGAGEMENT">Outcome Engagement</option>
+              <option value="OUTCOME_AWARENESS">Outcome Awareness</option>
+              <option value="OUTCOME_TRAFFIC">Outcome Traffic</option>
+              <option value="OUTCOME_APP_PROMOTION">Outcome App Promotion</option>
             </select>
           </div>
 
           <div>
             <label
-              htmlFor="objective"
+              htmlFor="adAccountId"
               className="block text-sm font-medium text-gray-700"
             >
               Meta Ad Account
             </label>
             <select
-              id="objective"
-              name="objective"
+              id="adAccountId"
+              name="adAccountId"
+              value={campaignFormData.adAccountId}
+              onChange={handleFormChange}
               required
               className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
             >
               <option value="">Select Ad Account</option>
-              {connections?.adAccounts.flat().map((acc: { account_id: string , name: string  }) => (
+              {connections?.adAccounts?.flat().map((acc: { account_id: string , name: string  }) => (
               <option key={acc.account_id} value={acc.account_id}>{acc.name}</option>
               ))}
   
             </select>
           </div>
-        </form>
 
-        <div className="flex justify-end gap-3 pt-4 border-t">
-          <Button
-            variant="outline"
-            onClick={() => setIsCreateCampaignOpen(false)}
-          >
-            Close
-          </Button>
-          <Button
-            variant="default"
-            onClick={() => setIsCreateCampaignOpen(false)}
-          >
-            Create
-          </Button>
-        </div>
+          <div className="flex justify-end gap-3 pt-4 border-t">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleModalClose}
+              disabled={isCreatingCampaign}
+            >
+              Close
+            </Button>
+            <Button
+              type="submit"
+              variant="default"
+              disabled={isCreatingCampaign}
+            >
+              {isCreatingCampaign ? "Creating..." : "Create"}
+            </Button>
+          </div>
+        </form>
       </DetailModal>
     </>
   );

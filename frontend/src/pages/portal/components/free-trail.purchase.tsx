@@ -92,7 +92,7 @@ const FreeTrialPurchase = ({ planId, onClose }: FreeTrialPurchaseProps) => {
         logo: "",
         validity: 1,
         industry: formData.industry,
-        planId: plan._id,
+        planId: plan.id,
         description: plan.name + " " + "Purchased",
       };
 

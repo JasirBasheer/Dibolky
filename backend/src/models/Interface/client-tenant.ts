@@ -1,7 +1,7 @@
 import { IMenu } from "@/types";
 import { Document } from "mongoose";
 
-interface credentials {
+export interface credentials {
   accessToken?: string;
   refreshToken?: string;
   connectedAt?: string;

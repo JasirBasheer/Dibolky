@@ -31,9 +31,8 @@ import {
 import { IAvailableClients, ServicesData } from "../../types/chat";
 import { IProject } from "../../models/Implementation/project";
 import { createClientMailData } from "../../utils/mail.datas";
-import { AgencyMapper } from "@/mappers/agency/agency-mapper";
 import { IAgency } from "@/models/Interface/agency";
-import { IClientTenant } from "@/models";
+import { IClientTenant, Plan, PlanDoc } from "@/models";
 import { createNewMenuForClient } from "@/utils/menu.utils";
 import {
   IActivityRepository,
@@ -43,13 +42,13 @@ import {
   ITransactionTenantRepository,
 } from "@/repositories";
 import { IInvoiceType } from "@/types/invoice";
-import { IPlan } from "@/models/Interface/plan";
 import { addMonthsToDate } from "@/utils/date-utils";
 import { decryptToken, FilterType, QueryParser } from "@/utils";
 import { sendGMail } from "@/providers/google";
 import mongoose from "mongoose";
 import { AdminAgencyMapper } from "@/mappers/admin/agency-mapper";
 import { IAgencyRegistrationDto } from "@/dtos/agency";
+import { AgencyMapper, PaginatedResponse, QueryDto } from "@/dtos";
 
 @injectable()
 export class AgencyService implements IAgencyService {
@@ -113,27 +112,13 @@ export class AgencyService implements IAgencyService {
   }
 
   async getAllAgencies(
-    query: FilterType
-  ): Promise<{ clients: IAgencyType[]; totalCount: number }> {
-    const { page, limit, sortBy, sortOrder } = query;
-    const filter = QueryParser.buildFilter({
-      searchText: query.query,
-      searchFields: ["name", "email", "organizationName"],
-    });
-    const options = {
-      page,
-      limit,
-      sort: sortBy
-        ? ({ [sortBy]: sortOrder === "desc" ? -1 : 1 } as Record<
-            string,
-            1 | -1
-          >)
-        : {},
+    query: QueryDto
+  ): Promise<PaginatedResponse<IAgencyType>> {
+    const result = await this._agencyRepository.getAllAgencies(query);
+    return { 
+      ...result,
+      data : result.data.map(agency => AgencyMapper.toAgencyResponse(agency))
     };
-
-    const result = await this._agencyRepository.getAllAgencies(filter, options);
-    const clients = AdminAgencyMapper.AgencyMapper(result.data as IAgency[]);
-    return { clients, totalCount: result.totalCount };
   }
 
   async getAgencyById(agencyId: string): Promise<IAgencyType | null> {
@@ -329,7 +314,7 @@ export class AgencyService implements IAgencyService {
     const AgencyDetails = await this._agencyRepository.findAgencyWithId(
       agency_id
     );
-    return AgencyMapper.AgenyDetailsMapper(AgencyDetails as IAgency);
+    return AgencyMapper.AgenyDetailsMapper(AgencyDetails);
   }
 
   async getAgencyOwnerDetails(orgId: string): Promise<IAgencyTenant | null> {
@@ -339,223 +324,8 @@ export class AgencyService implements IAgencyService {
     return AgencyOwners[0];
   }
 
-  async createClient(
-    orgId: string,
-    name: string,
-    email: string,
-    industry: string,
-    services: ServicesData,
-    menu: string[],
-    organizationName: string
-  ): Promise<IClientTenant | null> {
-    const client = await this._clientRepository.findClientWithMail(email);
-    const agencyOwner = await this._agencyTenantRepository.getOwnerWithOrgId(
-      orgId
-    );
-    if (
-      !agencyOwner.paymentCredentials.razorpay.secret_id ||
-      !agencyOwner.paymentCredentials.razorpay.secret_key
-    )
-      throw new NotFoundError(
-        "Payment gateway is not integrated for your agency, inorder to create a new client integrate payment methods in your integration setings."
-      );
 
-    if (client && client.orgId == orgId)
-      throw new ConflictError("Client already exists with this email");
-    const agency = await this._agencyRepository.findAgencyWithOrgId(orgId);
-    if (!agency) throw new NotFoundError("Agency not found , Please try again");
-    if (agency.remainingClients == 0)
-      throw new CustomError(
-        "Client creation limit reached ,Please upgrade for more clients",
-        402
-      );
-    if (Object.keys(services).length > agency.remainingProjects)
-      throw new CustomError(
-        "Project creation limit reached ,Please upgrade for more Projects",
-        402
-      );
 
-    let password = await generatePassword(name);
-    const HashedPassword = await hashPassword(password);
-
-    const clientDetails = {
-      orgId: orgId,
-      name: name,
-      email: email,
-      industry: industry,
-      password: HashedPassword,
-    };
-    let newMenu = createNewMenuForClient(menu);
-
-    const mainDbCreatedClient = await this._clientRepository.createClient(
-      clientDetails as IClientType
-    );
-    if (!mainDbCreatedClient)
-      throw new CustomError(
-        "An unexpected error occured while creating client,Please try again later.",
-        500
-      );
-    const createdClient: IClientTenant =
-      await this._clientTenantRepository.createClient(orgId, {
-        ...clientDetails,
-        menu: newMenu,
-        main_id: String(mainDbCreatedClient._id),
-      });
-
-    for (let item in services) {
-      const { serviceName, serviceDetails } = services[item];
-      const { deadline, ...details } = serviceDetails;
-      await this._projectRepository.createProject(
-        createdClient.orgId as string,
-        createdClient._id as string,
-        createdClient.name as string,
-        serviceName as string,
-        details,
-        item,
-        new Date(deadline)
-      );
-
-      const invoice = {
-        invoiceNumber: `dibolky-${Date.now()}-${Math.floor(
-          Math.random() * 1000
-        )}`,
-        agencyId: agencyOwner._id,
-        client: {
-          clientId: createdClient._id,
-          clientName: createdClient.name,
-          email: createdClient.email,
-        },
-        service: { serviceName, details },
-        pricing: Number(details.budget),
-        dueDate: new Date(deadline),
-        orgId,
-        orgName: agencyOwner.organizationName,
-      };
-
-      await this._invoiceRepository.createInvoice(orgId, invoice);
-    }
-
-    const activity = {
-      user: {
-        userId: createdClient._id.toString(),
-        username: createdClient.name,
-        email: createdClient.email,
-      },
-      activityType: "account_created",
-      activity: `new client ${clientDetails.name} has been created with ${menu.length} services`,
-      entity: {
-        type: "agency",
-        id: agency._id.toString(),
-      },
-      redirectUrl: "clients",
-    };
-
-    await this._activityRepository.createActivity(orgId, activity);
-
-    const data = createClientMailData(
-      email,
-      name.charAt(0).toUpperCase() + name.slice(1).toLowerCase(),
-      organizationName,
-      password
-    );
-    sendMail(
-      email,
-      `Welcome to ${agency.organizationName}! Excited to Partner with You`,
-      data,
-      (error: unknown, info: { response: string }) => {
-        if (error) {
-          console.error("Failed to send email:", error);
-        } else {
-          console.log("Email sent successfully:", info.response);
-        }
-      }
-    );
-    return createdClient;
-  }
-
-  private _buildDbFilter(query: FilterType): Record<string, unknown> {
-    const { query: searchText } = query;
-    const filter: Record<string, unknown> = {};
-
-    if (searchText) {
-      filter.$or = [
-        { name: { $regex: searchText, $options: "i" } },
-        { email: { $regex: searchText, $options: "i" } },
-        { industry: { $regex: searchText, $options: "i" } },
-      ];
-    }
-    return filter;
-  }
-
-  async getAllClients(
-    orgId: string,
-    includeDetails: string,
-    query: FilterType
-  ): Promise<{
-    clients:
-      | IClientTenantType[]
-      | IClientTenantWithProjectDetailsType[]
-      | { count: number; lastWeekCount: number };
-    totalPages?: number;
-    currentPage?: number;
-    totalCount?: number;
-  }> {
-    const clientsFilter = this._buildDbFilter(query);
-    const { page, limit, sortBy, sortOrder } = query;
-    const options = {
-      page,
-      limit,
-      sort: sortBy ? { [sortBy]: sortOrder === "desc" ? -1 : 1 } : {},
-    };
-
-    const result = await this._clientTenantRepository.getAllClients(
-      orgId,
-      clientsFilter,
-      options
-    );
-    const totalPages = limit ? Math.ceil(result.totalCount / limit) : 1;
-    let clients = AgencyMapper.TenantClientMapper(result.data);
-
-    switch (includeDetails) {
-      case "details":
-        const clientsWithProjectDetails = await Promise.all(
-          clients.map(async (client) => {
-            const projects =
-              await this._projectRepository.getProjectsByClientId(
-                orgId,
-                client._id
-              );
-            return { ...client, projects };
-          })
-        );
-        clients = clientsWithProjectDetails;
-        break;
-
-      case "count":
-        const lastWeekClients =
-          clients?.filter(
-            (client) =>
-              new Date(client.createdAt!).getTime() >
-              new Date().getTime() - 7 * 24 * 60 * 60 * 1000
-          ) || [];
-        return {
-          clients: {
-            count: clients?.length || 0,
-            lastWeekCount: lastWeekClients?.length || 0,
-          },
-        };
-
-      default:
-        break;
-    }
-
-    return {
-      clients,
-      totalCount: result.totalCount,
-      totalPages,
-      currentPage: page,
-    };
-  }
 
   async getClient(
     orgId: string,
@@ -672,13 +442,13 @@ export class AgencyService implements IAgencyService {
 
   async getUpgradablePlans(
     orgId: string
-  ): Promise<(IPlan & { proratedPrice: number })[]> {
+  ): Promise<(Plan & { proratedPrice: number })[]> {
     const agency = await this._agencyRepository.findAgencyWithOrgId(orgId);
     const currentPlan = await this._planRepository.getPlan(agency.planId);
 
     if (!currentPlan) return [];
 
-    const allPlans = await this._planRepository.getPlans();
+    const allPlans = await this._planRepository.getPlans({page: 0,limit: 0});
 
     const upgradablePlans = allPlans.data
       .filter(
@@ -699,7 +469,9 @@ export class AgencyService implements IAgencyService {
           );
         }
 
-        return { ...plan.toObject(), proratedPrice };
+        return { ...plan.toObject(),
+          id: plan.toObject()._id.toString(),
+           proratedPrice };
       });
 
     return upgradablePlans;
@@ -749,10 +521,10 @@ export class AgencyService implements IAgencyService {
     );
     await this._agencyRepository.upgradePlanWithOrgId(
       orgId,
-      plan._id as string,
+      plan.id as string,
       validityInDate
     );
-    await this._agencyTenantRepository.upgradePlan(orgId, plan._id as string);
+    await this._agencyTenantRepository.upgradePlan(orgId, plan.id as string);
 
     const transaction = {
       orgId,

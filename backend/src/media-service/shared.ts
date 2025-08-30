@@ -4,7 +4,7 @@ import { SocialMediaResponse } from "../types/common";
 export async function getPages(
     accessToken: string
 ): Promise<SocialMediaResponse> {
-    let allPages: any[] = [];
+    let allPages = [];
     let nextUrl: string | undefined = `https://graph.facebook.com/${env.META.API_VERSION}/me/accounts?access_token=${accessToken}`;
     
     do {

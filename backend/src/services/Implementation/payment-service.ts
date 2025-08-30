@@ -10,7 +10,7 @@ import { IAgencyService, IPlanService } from "../Interface";
 @injectable()
 export class PaymentService implements IPaymentService {
   constructor(
-    @inject("AgencyService")private readonly _agencyService: IAgencyService
+    @inject("AgencyService")private readonly _agencyService: IAgencyService,
     @inject("PlanService")private readonly _planService: IPlanService
   ) {}
    

@@ -24,7 +24,7 @@ const transports: winston.transport[] = [
   }),
 ];
 
-if (environment === 'development') {
+
   transports.push(
     new winston.transports.Console({
       format: winston.format.combine(
@@ -34,7 +34,7 @@ if (environment === 'development') {
       ),
     })
   );
-}
+
 
 const logger = winston.createLogger({
   level: 'info',

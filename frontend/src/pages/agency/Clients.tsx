@@ -295,7 +295,7 @@ const Clients = () => {
               <div className="flex  justify-between items-start">
                 <div>
                   <h3 className="text-lg font-semibold">
-                    {selectedClient.createdAt}
+                    {selectedClient.name}
                   </h3>
                   <p className="text-sm text-gray-500">
                     Joined At:{" "}

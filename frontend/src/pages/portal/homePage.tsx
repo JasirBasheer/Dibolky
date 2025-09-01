@@ -4,7 +4,7 @@ import Hero from "./components//Hero";
 import Plans from "./components//Plans";
 import { AnimatedBeamMultipleOutput } from "./components/dibolky.animation";
 import { AnimatedBeamDemo } from "./components/messages.animation";
-import TestimonialsSection from "./components/feedback";
+// import TestimonialsSection from "./components/feedback";
 import { GridPattern } from "@/pages/portal/components/box.pattern";
 import { FeaturesCard } from "./components/bento.grid";
 import {
@@ -40,7 +40,7 @@ export const Home: React.FC = () => {
         <AnimatedBeamMultipleOutput />
         <AnimatedBeamDemo />
         <Plans />
-        <TestimonialsSection />
+        {/* <TestimonialsSection /> */}
         <div className="md:px-96 px-10 mt-24 max-w-7xl mx-auto">
           <p className="text-2xl text-center mb-6 font-bold font-lazare text-foreground/90">
             FAQ Questions

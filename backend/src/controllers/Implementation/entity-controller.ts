@@ -46,7 +46,6 @@ export class EntityController implements IEntityController {
   };
 
   getAllTransactions = async (req: Request, res: Response): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
     const { user_id, entity } = req.params;
     const query = QueryParser.parseFilterQuery(req.query);
     const result = await this._entityService.getAllTransactions(
@@ -69,7 +68,6 @@ export class EntityController implements IEntityController {
   };
 
   updateProfile = async (req: Request, res: Response): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
     const { role, details } = req.body;
     const updatedProfile = await this._entityService.updateProfile(
       req.details.orgId as string,

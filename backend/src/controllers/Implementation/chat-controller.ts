@@ -16,7 +16,6 @@ export class ChatController implements IChatController {
   ) {}
 
     getChats = async (req: Request, res: Response): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
     const { userId } = req.params;
     const chats = await this._chatService.getChats(
       req.details.orgId as string,
@@ -26,7 +25,6 @@ export class ChatController implements IChatController {
   };
 
     getChat = async (req: Request, res: Response): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
     const { chatId } = req.body;
     const chats = await this._chatService.getChat(
       req.details.orgId as string,

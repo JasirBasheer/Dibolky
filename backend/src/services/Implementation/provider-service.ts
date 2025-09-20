@@ -93,6 +93,7 @@ export class ProviderService implements IProviderService {
     const uploadPromises = content.platforms.map(
       async (platform: IPlatforms) => {
         if (platform.scheduledDate != "" && !isCron) return null;
+        console.log(platform, "platformmmm");
 
         let access_token;
         let response;

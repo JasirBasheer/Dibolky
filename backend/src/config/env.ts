@@ -27,7 +27,7 @@ export const env = {
       REGION: process.env.AWS_REGION as string,
       ACCESS_KEY: process.env.AWS_ACCESS_KEY as string,
       SECRET_KEY: process.env.AWS_SECRET_KEY as string,
-      AWS_FOLDER_URI: process.env.AWS_AWS_FOLDER_URI as string,
+      AWS_FOLDER_URI: process.env.AWS_FOLDER_URI as string,
     },
   },
 

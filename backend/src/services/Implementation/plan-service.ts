@@ -4,21 +4,37 @@ import { IPlanRepository } from "@/repositories/Interface/IPlanRepository";
 import { IMenu } from "@/types";
 import { createMenu } from "@/utils/menu.utils";
 import { CustomError } from "mern.common";
-import { IAgencyRepository } from "@/repositories/Interface/IAgencyRepository";
 import { CreatePlanDto, EditPlanDto, PaginatedResponse, PlanMapper, QueryDto } from "@/dtos";
 import { Plan } from "@/models";
+import { IClientTenantRepository } from "@/repositories";
+import { ROLES } from "@/utils";
 
 @injectable()
 export class PlanService implements IPlanService {
   private _planRepository: IPlanRepository;
-  private _agencyRepository: IAgencyRepository;
+  private _clientTenantRepository: IClientTenantRepository;
 
   constructor(
     @inject("PlanRepository") planRepository: IPlanRepository,
-    @inject("AgencyRepository") agencyRepository: IAgencyRepository
+    @inject("ClientTenantRepository") clientTenantRepository: IClientTenantRepository,
   ) {
     this._planRepository = planRepository;
-    this._agencyRepository = agencyRepository;
+    this._clientTenantRepository = clientTenantRepository;
+  }
+
+  async getMenu(
+    orgId: string,
+    role: string, 
+    planId: string
+  ): Promise<IMenu[]> {
+    if (role === ROLES.AGENCY) {
+      const plan = await this._planRepository.getPlan(planId);
+      if (!plan) throw new CustomError("Plan not found", 404);
+      return plan.menu as unknown as IMenu[];
+    } 
+    const client = await this._clientTenantRepository.getClientById(orgId,planId);
+      if (!client || !client.menu)throw new CustomError("Client menu not found", 500);
+    return client.menu;
   }
 
   async getPlans(
@@ -62,7 +78,6 @@ export class PlanService implements IPlanService {
 
   async changePlanStatus(plan_id: string): Promise<void> {
     let changedStatus = await this._planRepository.changePlanStatus(plan_id);
-    if (!changedStatus)
-      throw new CustomError("Error While changing Plan status", 500);
+    if (!changedStatus)throw new CustomError("Error While changing Plan status", 500);
   }
 }

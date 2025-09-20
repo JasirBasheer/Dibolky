@@ -71,6 +71,7 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
   const handleLogout = async () => {
     try {
       const response = await authLogoutApi()
+      localStorage.removeItem('selectedClient');
       if (response) navigate('/login')
     } catch (error: unknown) {
       if (error instanceof Error) {

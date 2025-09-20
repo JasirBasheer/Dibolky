@@ -93,7 +93,7 @@ export function AnimatedBeamMultipleOutput({
             </div>
             <div className="flex flex-col justify-center">
               <Circle ref={div6Ref} className="size-14 overflow-hidden">
-                <Icons.dibolky />
+                {/* <Icons.dibolky /> */}
               </Circle>
             </div>
             <div className="flex flex-col justify-center gap-2">

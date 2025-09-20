@@ -19,7 +19,7 @@ export const getAllUpgradablePlansApi = async() =>{
 
 
 export const fetchAgencyMenuApi = async(role:string,planId:string) =>{
-    return await api.get(`/api/entities/${role}/${planId}`)
+    return await api.get(`/api/public/${role}/${planId}`)
 }
 
 export const fetchAgencyOwnerDetailsApi = async() =>{

@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import { requestLogger } from "@/middlewares";
 import { limiter } from "mern.common";
-import { createMetaWebHookRoutes, createPaymentWebHookRoutes } from "@/routes";
+import { createPaymentWebHookRoutes } from "@/routes";
 import { env } from "./config";
 
 
@@ -18,7 +18,6 @@ export const createApp = () => {
       credentials: true,
   }))
   app.use('/api/payment/webhook', createPaymentWebHookRoutes()); 
-  app.use('/api/inbox/webhook', createMetaWebHookRoutes()); 
   app.use(helmet());
   // app.use(limiter);
   app.use(compression());

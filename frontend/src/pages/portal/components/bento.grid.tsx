@@ -1,5 +1,5 @@
 import { BentoCard, BentoGrid } from "@/components/magic.ui/bento.grid"
-import { BellIcon, CalendarIcon, FileTextIcon, MessageSquareIcon, SparklesIcon, BarChart3Icon } from "lucide-react"
+import { BellIcon, CalendarIcon, FileTextIcon, MessageSquareIcon, SparklesIcon, BarChart3Icon, UsersIcon, BriefcaseIcon } from "lucide-react"
 import { useEffect, useRef, useState } from "react";
 
 const features = [
@@ -15,36 +15,40 @@ const features = [
   {
     Icon: CalendarIcon,
     name: "Smart Scheduling",
-    description: "Schedule your content for optimal engagement times with AI-powered recommendations.",
+    description: "Schedule your content for optimal engagement times with recommendations.",
     href: "/",
-    cta: "Learn more",
     background: <img className="absolute -right-20 -top-20 opacity-60" />,
     className: "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-3 min-h-[16rem]" ,
   },
   {
     Icon: SparklesIcon,
-    name: "AI Integration",
-    description: "Generate and enhance content with our advanced AI tools and workflows.",
+    name: "Invoice Management",
+    description: "Easily create, track, and manage invoices with automation and accuracy.",
     href: "/",
-    cta: "Learn more",
     background: <img className="absolute -right-20 -top-20 opacity-60" />,
     className: "lg:col-start-1 lg:col-end-2 lg:row-start-3 lg:row-end-4 min-h-[16rem]",
-  },
+  },  
   {
     Icon: MessageSquareIcon,
     name: "Chat Support",
     description: "Engage with your audience through integrated chat functionality.",
     href: "/",
-    cta: "Learn more",
     background: <img className="absolute -right-20 -top-20 opacity-60" />,
     className: "lg:col-start-3 lg:col-end-3 lg:row-start-1 lg:row-end-2 min-h-[16rem]",
   },
   {
-    Icon: BellIcon,
-    name: "Notifications",
-    description: "Get real-time alerts on engagement, performance metrics, and audience interactions.",
+    Icon: UsersIcon,
+    name: "Manage Clients",
+    description: "Easily organize client details, track interactions, and streamline collaboration.",
     href: "/",
-    cta: "Learn more",
+    background: <img className="absolute -right-20 -top-20 opacity-60" />,
+    className: "lg:col-start-3 lg:col-end-3 lg:row-start-2 lg:row-end-4 min-h-[16rem]",
+  },
+  {
+    Icon: BriefcaseIcon,
+    name: "Showcase Works",
+    description: "Present your projects and portfolio in a professional, engaging way.",
+    href: "/",
     background: <img className="absolute -right-20 -top-20 opacity-60" />,
     className: "lg:col-start-3 lg:col-end-3 lg:row-start-2 lg:row-end-4 min-h-[16rem]",
   },
@@ -53,16 +57,6 @@ const features = [
     name: "Notifications",
     description: "Get real-time alerts on engagement, performance metrics, and audience interactions.",
     href: "/",
-    cta: "Learn more",
-    background: <img className="absolute -right-20 -top-20 opacity-60" />,
-    className: "lg:col-start-3 lg:col-end-3 lg:row-start-2 lg:row-end-4 min-h-[16rem]",
-  },
-  {
-    Icon: BellIcon,
-    name: "Notifications",
-    description: "Get real-time alerts on engagement, performance metrics, and audience interactions.",
-    href: "/",
-    cta: "Learn more",
     background: <img className="absolute -right-20 -top-20 opacity-60" />,
     className: "lg:col-start-3 lg:col-end-3 lg:row-start-2 lg:row-end-4 min-h-[16rem]",
   },
@@ -71,7 +65,6 @@ const features = [
     name: "Lead Generation",
     description: "Integrate with Google and Meta ads to capture and convert high-quality leads.",
     href: "/",
-    cta: "Learn more",
     background: <img className="absolute -right-20 -top-20 opacity-60" />,
     className: "lg:col-start-4 lg:col-end-4 lg:row-start-1 lg:row-end-4 min-h-[16rem]",
   },

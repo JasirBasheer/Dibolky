@@ -1,6 +1,4 @@
 import { inject, injectable } from "tsyringe";
-import { IClientRepository } from "../../repositories/Interface/IClientRepository";
-import { IClientService } from "../Interface/IClientService";
 import {
   ConflictError,
   CustomError,
@@ -12,9 +10,6 @@ import {
   sendMail,
 } from "mern.common";
 import { IClientTenantType, IClientTenantWithProjectDetailsType, IClientType } from "../../types/client";
-import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
-import { IContentRepository } from "../../repositories/Interface/IContentRepository";
-import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
 import { IAgencyTenant } from "../../types/agency";
 import { IClient } from "@/models/Interface/client";
 import { ClientMapper } from "@/mappers/client/client-mapper";
@@ -23,11 +18,14 @@ import { IRazorpayOrder } from "@/types/payment";
 import {
   IActivityRepository,
   IAgencyRepository,
+  IAgencyTenantRepository,
+  IClientRepository,
+  IClientTenantRepository,
   IInvoiceRepository,
   IProjectRepository,
   ITransactionTenantRepository,
 } from "@/repositories";
-import { IPaymentService } from "../Interface";
+import { IClientService, IPaymentService } from "../Interface";
 import crypto from "node:crypto";
 import { decryptToken, FilterType } from "@/utils";
 import { ServicesData } from "@/types/chat";
@@ -37,43 +35,19 @@ import { AgencyMapper } from "@/dtos";
 
 @injectable()
 export class ClientService implements IClientService {
-  private _clientRepository: IClientRepository;
-  private _clientTenantRepository: IClientTenantRepository;
-  private _contentRepository: IContentRepository;
-  private _agencyTenantRepository: IAgencyTenantRepository;
-  private _invoiceRepository: IInvoiceRepository;
-  private _transactionTenantRepository: ITransactionTenantRepository;
-  private _paymentService: IPaymentService;
-  private _activityRepository: IActivityRepository;
-  private _agencyRepository: IAgencyRepository;
-  private _projectRepository: IProjectRepository;
+
 
   constructor(
-    @inject("ClientRepository") clientRepository: IClientRepository,
-    @inject("ClientTenantRepository")
-    clientTenantRepository: IClientTenantRepository,
-    @inject("ContentRepository") contentRepository: IContentRepository,
-    @inject("AgencyTenantRepository")
-    agencyTenantRepository: IAgencyTenantRepository,
-    @inject("InvoiceRepository") invoiceRepository: IInvoiceRepository,
-    @inject("PaymentService") paymentService: IPaymentService,
-    @inject("TransactionTenantRepository")
-    transactionTenantRepository: ITransactionTenantRepository,
-    @inject("ActivityRepository") activityRepository: IActivityRepository,
-    @inject("AgencyRepository") agencyRepository: IAgencyRepository,
-    @inject("ProjectRepository") projectRepository: IProjectRepository
-  ) {
-    this._clientRepository = clientRepository;
-    this._clientTenantRepository = clientTenantRepository;
-    this._contentRepository = contentRepository;
-    this._agencyTenantRepository = agencyTenantRepository;
-    this._invoiceRepository = invoiceRepository;
-    this._paymentService = paymentService;
-    this._transactionTenantRepository = transactionTenantRepository;
-    this._activityRepository = activityRepository;
-    this._agencyRepository = agencyRepository;
-    this._projectRepository = projectRepository;
-  }
+    @inject("AgencyTenantRepository")private readonly _agencyTenantRepository: IAgencyTenantRepository,
+    @inject("ClientRepository")private readonly _clientRepository: IClientRepository,
+    @inject("ClientTenantRepository")private readonly _clientTenantRepository: IClientTenantRepository,
+    @inject("InvoiceRepository")private readonly _invoiceRepository: IInvoiceRepository,
+    @inject("PaymentService")private readonly _paymentService: IPaymentService,
+    @inject("TransactionTenantRepository")private readonly _transactionTenantRepository: ITransactionTenantRepository,
+    @inject("ActivityRepository")private readonly _activityRepository: IActivityRepository,
+    @inject("AgencyRepository")private readonly _agencyRepository: IAgencyRepository,
+    @inject("ProjectRepository")private readonly _projectRepository: IProjectRepository,
+    ) {}
 
   async clientLoginHandler(email: string, password: string): Promise<string> {
     const clientDetails = await this._clientRepository.findClientWithMail(
@@ -108,6 +82,7 @@ export class ClientService implements IClientService {
     orgId: string,
     client_id: string
   ): Promise<IClientTenant | null> {
+    console.log(orgId, client_id, "org and client id");
     return await this._clientTenantRepository.getClientById(orgId, client_id);
   }
 

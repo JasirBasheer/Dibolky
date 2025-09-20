@@ -11,6 +11,7 @@ import { PaginatedResponse } from "@/dtos";
 import { IAgency } from "@/models/Interface/agency";
 
 export interface IAgencyService {
+    getOwner(orgId: string): Promise<IAgencyTenant[]>
     verifyOwner(agency_id: string): Promise<Partial<IAgencyType> | null>;
     
     getAllAgencies(query:FilterType) : Promise<PaginatedResponse<IAgencyType>>

@@ -27,7 +27,7 @@ export const SocialIntegrationsContent = ({
         required={required}
         isLoading={isConnectionLoading}
         onConnect={(platform) =>
-          handleConnectSocials(`/api/entities/connect/${platform}`, platform)
+          handleConnectSocials(`/api/provider/connect/${platform}`, platform)
         }
         onDisconnect={()=>{console.log("disconnected")}}
       />
@@ -39,7 +39,7 @@ export const SocialIntegrationsContent = ({
         required={required}
         isLoading={isConnectionLoading}
         onConnect={(platform) =>
-          handleConnectSocials(`/api/entities/connect/${platform}`, platform)
+          handleConnectSocials(`/api/provider/connect/${platform}`, platform)
         }
         onDisconnect={()=>{console.log("disconnected")}}
       />
@@ -52,7 +52,7 @@ export const SocialIntegrationsContent = ({
         required={required}
         isLoading={isConnectionLoading}
         onConnect={(platform) =>
-          handleConnectSocials(`/api/entities/connect/${platform}`, platform)
+          handleConnectSocials(`/api/provider/connect/${platform}`, platform)
         }
         onDisconnect={()=>{console.log("disconnected")}}
       />
@@ -65,7 +65,7 @@ export const SocialIntegrationsContent = ({
         required={required}
         isLoading={isConnectionLoading}
         onConnect={(platform) =>
-          handleConnectSocials(`/api/entities/connect/${platform}`, platform)
+          handleConnectSocials(`/api/provider/connect/${platform}`, platform)
         }
         onDisconnect={()=>{console.log("disconnected")}}
       />

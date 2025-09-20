@@ -1,6 +1,6 @@
 import { Model, Schema } from "mongoose";
 import { inject, injectable } from "tsyringe";
-import { BaseRepository, CustomError, NotFoundError } from "mern.common";
+import { BaseRepository } from "mern.common";
 import { connectTenantDB } from "@/config/db.config";
 import { ITestimonialRepository } from "../Interface/ITestimonialRepository";
 import { ITestimonial } from "@/models";

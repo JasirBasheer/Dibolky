@@ -1,5 +1,4 @@
-import { AdminController, AgencyController, AuthenticationController, ClientController, EntityController, IAdController, IAdminController, IAgencyController, IAuthenticationController, IClientController, IEntityController, IInboxWebHookController, InboxWebhookController, IPaymentController, IPlanController, IPortfolioController, IProviderController, IStorageController, ITransactionController, PaymentController, PlanController, PortfolioController, ProviderController, StorageController, TransactionController } from "@/controllers";
-import { AdController } from "@/controllers/Implementation/ad-controller";
+import { AdController, AdminController, AgencyController, AuthenticationController, ChatController, ClientController, EntityController, IAdController, IAdminController, IAgencyController, IAuthenticationController, IChatController, IClientController, IEntityController, IInboxController, InboxController, IPaymentController, IPlanController, IPortfolioController, IProjectController, IProviderController, IStorageController, ITransactionController, PaymentController, PlanController, PortfolioController, ProjectController, ProviderController, StorageController, TransactionController } from "@/controllers";
 import { container } from "tsyringe";
 
 export const registerControllers = () => {
@@ -11,9 +10,11 @@ container.register<IEntityController>('EntityController', { useClass: EntityCont
 container.register<IPaymentController>('PaymentController', { useClass: PaymentController });
 container.register<IProviderController>('ProviderController', { useClass: ProviderController });
 container.register<IPlanController>('PlanController', { useClass: PlanController });
-container.register<IInboxWebHookController>('InboxWebHookController', { useClass: InboxWebhookController });
+container.register<IInboxController>('InboxController', { useClass: InboxController });
 container.register<IPortfolioController>('PortfolioController', { useClass: PortfolioController });
 container.register<ITransactionController>('TransactionController', { useClass: TransactionController });
 container.register<IStorageController>('StorageController', { useClass: StorageController });
 container.register<IAdController>('AdController', { useClass: AdController });
+container.register<IChatController>('ChatController', { useClass: ChatController });
+container.register<IProjectController>('ProjectController', { useClass: ProjectController });
 };

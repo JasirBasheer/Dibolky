@@ -7,11 +7,10 @@ interface BentoCardProps {
   name: string
   description: string
   href: string
-  cta: string
   className?: string
 }
 
-export function BentoCard({ Icon, name, description, href, cta, className }: BentoCardProps) {
+export function BentoCard({ Icon, name, description, href, className }: BentoCardProps) {
   return (
     <div
       className={cn(
@@ -27,9 +26,6 @@ export function BentoCard({ Icon, name, description, href, cta, className }: Ben
           <h3 className="mb-2 font-semibold tracking-tight">{name}</h3>
           <p className="text-sm text-muted-foreground">{description}</p>
         </div>
-        <a href={href} className="mt-4 inline-block text-sm font-medium text-primary  group-hover:underline">
-          {cta}
-        </a>
       </div>
     </div>
   )

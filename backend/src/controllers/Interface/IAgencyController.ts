@@ -4,17 +4,14 @@ import {
 } from 'express';
 
 export interface IAgencyController {
+    getOwner(req: Request, res: Response): Promise<void>
     isExists(req: Request, res: Response): Promise<void>
     createTrialAgency(req: Request, res: Response): Promise<void>
     createAgency(req: Request, res: Response): Promise<void>
-
     getAllAgencies(req: Request, res: Response): Promise<void>
     getAgencyById(req: Request, res: Response): Promise<void>
-
     getProjects(req: Request, res: Response): Promise<void>
     editProjectStatus(req: Request, res: Response): Promise<void>
-
-
     getAgency(req: Request, res: Response): Promise<void>
     getAgencyOwnerDetails(req: Request, res: Response): Promise<void>
     getAllPlans(req: Request, res: Response): Promise<void>
@@ -28,5 +25,4 @@ export interface IAgencyController {
     createInvoice(req: Request, res: Response): Promise<void>
     upgradePlan(req: Request, res: Response): Promise<void>
     toggleAgencyAccess(req: Request, res: Response): Promise<void>
-
 }

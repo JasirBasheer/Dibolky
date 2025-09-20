@@ -395,7 +395,6 @@ export class ProviderService implements IProviderService {
           ]
         : []),
     ];
-    console.log(platforms, "platformsss");
 
     const validConnections = [];
 

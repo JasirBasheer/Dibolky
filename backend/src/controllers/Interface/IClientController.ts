@@ -10,5 +10,5 @@ export interface IClientController {
     getOwner(req: Request, res: Response): Promise<void>;
     initiateRazorpayPayment(req: Request, res: Response): Promise<void>;
     verifyInvoicePayment(req: Request, res: Response): Promise<void>;
-        getAllClients(req: Request, res: Response): Promise<void>
+    getAllClients(req: Request, res: Response): Promise<void>
 }

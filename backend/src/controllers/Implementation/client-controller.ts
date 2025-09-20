@@ -8,7 +8,7 @@ import {
   ResponseMessage,
   SendResponse,
 } from "mern.common";
-import { QueryParser } from "@/utils";
+import { QueryParser, ROLES } from "@/utils";
 
 @injectable()
 export class ClientController implements IClientController {
@@ -25,7 +25,7 @@ export class ClientController implements IClientController {
     if (!details) throw new NotFoundError("Account Not found");
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {
       details,
-      role: "client",
+      role: ROLES.CLIENT,
     });
   };
 

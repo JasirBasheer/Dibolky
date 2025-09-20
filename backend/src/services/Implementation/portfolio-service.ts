@@ -56,6 +56,4 @@ export class PortfolioService implements IPortfolioService {
     const createdTestimonial = await this._testimonialRepository.createTestimonial(orgId,details)
     if (!createdTestimonial) throw new CustomError("Error while new testimonial", 500);
   }
-
-
 }

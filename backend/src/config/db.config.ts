@@ -1,5 +1,6 @@
 import mongoose, { Connection } from 'mongoose';
 import logger from '../logger';
+import { env } from './env';
 
 interface TenantConnections {
     [key: string]: Connection;
@@ -12,7 +13,7 @@ export const connectTenantDB = async (tenantId: string): Promise<Connection> => 
         return tenantConnections[tenantId];
     }
 
-    const connection = mongoose.createConnection(`mongodb+srv://jasirbinbasheerpp:M7pVC9N7f9QzKkFE@cluster0.uuyi8.mongodb.net/${tenantId}?retryWrites=true&w=majority`)
+    const connection = mongoose.createConnection(`mongodb+srv://${env.CONFIG.DB_USER}:${env.CONFIG.DB_PASSWORD}@cluster0.uuyi8.mongodb.net/${tenantId}?retryWrites=true&w=majority`)
     connection.on('connected', () => {
         logger.info(`Connected to tenant database (${tenantId}) successfully.`);
     });

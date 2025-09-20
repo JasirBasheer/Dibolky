@@ -41,7 +41,5 @@ export const createAdminRoutes = (): Router => {
     validateRequest(PlanSchema),
     asyncHandler(planController.createPlan)
   )
-
-
   return router;
 };

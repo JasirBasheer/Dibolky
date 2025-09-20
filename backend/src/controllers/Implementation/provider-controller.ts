@@ -13,7 +13,7 @@ import { IBucket } from "../../types/common";
 import { gmailAuthCallback } from "@/providers/google";
 import { xAuthCallback } from "@/providers/x";
 import { linkedInAuthCallback } from "@/providers/linkedin";
-import { QueryParser } from "@/utils";
+import { QueryParser, ROLES } from "@/utils";
 import { IClientService } from "@/services";
 
 @injectable()
@@ -36,7 +36,6 @@ export class ProviderController implements IProviderController {
     req: Request,
     res: Response
   ): Promise<void> => {
-    if (!req.details) throw new NotFoundError("Details Not Fount");
     const { content_id, platform } = req.body;
     const content: IBucket | null = await this._providerService.getContentById(
       req.details.orgId as string,
@@ -44,7 +43,7 @@ export class ProviderController implements IProviderController {
     );
     if (!content) throw new Error("content does not exists");
     let user;
-    if (platform == "agency") {
+    if (platform == ROLES.AGENCY) {
       user = await this._agencyService.getAgencyOwnerDetails(
         req.details.orgId as string
       );
@@ -53,7 +52,6 @@ export class ProviderController implements IProviderController {
         req.details.orgId, content?.user_id
       );
     }
-    console.log(user, "user details");
 
     const response = await this._providerService.handleSocialMediaUploads(
       content,
@@ -100,7 +98,6 @@ export class ProviderController implements IProviderController {
     req: Request,
     res: Response
   ): Promise<void> => {
-    if (!req.details) throw new NotFoundError("Details Not Fount");
     const { platform, provider, user_id } = req.params;
     const { accessToken, refreshToken } = req.body;
     await this._providerService.saveSocialMediaToken(
@@ -126,7 +123,6 @@ export class ProviderController implements IProviderController {
   };
 
   processContentReject = async (req: Request, res: Response): Promise<void> => {
-    if (!req.details) throw new NotFoundError("Details Not Fount");
     const { content_id, reason } = req.body;
     await this._providerService.rejectContent(
       req.details.orgId as string,
@@ -229,7 +225,6 @@ export class ProviderController implements IProviderController {
     req: Request,
     res: Response
   ): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
     const { code, state } = req.body;
     console.log(code, state, "test form linkledin");
     const tokens = await linkedInAuthCallback(code as string, state as string);
@@ -237,14 +232,12 @@ export class ProviderController implements IProviderController {
   };
 
   handleXCallback = async (req: Request, res: Response): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
     const { code, state } = req.body;
     const tokens = await xAuthCallback(code as string, state as string);
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { tokens });
   };
 
   handleGmailCallback = async (req: Request, res: Response): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
     const { code } = req.body;
     const tokens = await gmailAuthCallback(code as string);
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { tokens });
@@ -254,7 +247,6 @@ export class ProviderController implements IProviderController {
     req: Request,
     res: Response
   ): Promise<void> => {
-    if (!req.details) throw new NotFoundError("request details not found");
     const { user_id } = req.params;
     const scheduledContents = await this._providerService.getScheduledContent(
       req.details.orgId as string,

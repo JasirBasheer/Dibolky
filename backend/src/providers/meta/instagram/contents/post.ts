@@ -95,7 +95,6 @@ export async function uploadSinglePost(
                 caption:content.caption,
             });   
         }else{
-            console.log('entered to photo ')
 
             params = new URLSearchParams({
                 image_url: contentUrl, 

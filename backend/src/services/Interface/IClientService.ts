@@ -17,5 +17,4 @@ export interface IClientService {
     verifyInvoicePayment(orgId:string,invoice_id:string,response:IRazorpayOrder):Promise<void>;
     createClient(orgId: string, name: string, email: string, industry: string, services: ServicesData, menu: string[], organizationName: string): Promise<IClientTenant | null>;
     getAllClients(orgId: string, includeDetails:string,query:QueryDto): Promise<{  clients: IClientTenantType[] | IClientTenantWithProjectDetailsType[]| { count: number; lastWeekCount: number };totalPages?: number;currentPage?: number;totalCount?: number;}>
-    
 }

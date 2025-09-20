@@ -100,7 +100,7 @@ export function AnimatedBeamDemo() {
             <div className="rounded-full bg-primary/10 p-1">
               <Check className="size-5 text-primary" />
             </div>
-            <p>Respond to messages from WhatsApp, Messenger, and more in one inbox</p>
+            <p>Respond to messages from Instagram, Linkedin, and more in one inbox</p>
           </div>
           
           <div 
@@ -110,7 +110,7 @@ export function AnimatedBeamDemo() {
             <div className="rounded-full bg-primary/10 p-1">
               <Check className="size-5 text-primary" />
             </div>
-            <p>Integrate with Notion, Google Drive, and other productivity tools</p>
+            <p>Streamline workflows with seamless integration across platforms.</p>
           </div>
           
           <div 
@@ -120,7 +120,7 @@ export function AnimatedBeamDemo() {
             <div className="rounded-full bg-primary/10 p-1">
               <Check className="size-5 text-primary" />
             </div>
-            <p>Leverage AI to automate responses and categorize leads</p>
+            <p>Leverage responses and categorize leads</p>
           </div>
         </div>
       </div>
@@ -146,7 +146,7 @@ export function AnimatedBeamDemo() {
                 <Icons.x />
               </Circle>
               <Circle ref={div4Ref} className="size-16 overflow-hidden">
-                <Icons.dibolky />
+                {/* <Icons.dibolky /> */}
               </Circle>
               <Circle ref={div6Ref}>
                 <Icons.linkedin />

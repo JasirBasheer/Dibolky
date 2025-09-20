@@ -23,7 +23,7 @@ export async function getS3ViewUrl(
 export async function getS3PublicUrl(
     key: string
 ): Promise<string> {
-    return `https://dibolky-test-app.s3.amazonaws.com/${encodeURIComponent(key)}`;
+    return `${env.AWS.S3.AWS_FOLDER_URI}/${encodeURIComponent(key)}`;
 }
 
 export async function deleteS3Object(
@@ -43,42 +43,4 @@ export async function deleteS3Object(
         return false;
     }
 }
-
-
-// export const uploadToS3 = async (file: File, key: string, bucketName?: string) => {
-//     if (!bucketName) {
-//         throw new Error("Bucket name is required.");
-//     }
-
-//     console.log("Uploading to:", key, "in bucket:", bucketName);
-
-//     const arrayBuffer = await file.arrayBuffer();
-//     const buffer = Buffer.from(arrayBuffer);
-
-//     const params = {
-//         Bucket: bucketName,
-//         Key: key,
-//         Body: buffer,
-//         ContentType: file.type
-//         };
-
-//     try {
-//         console.log("Upload started...");
-//         const command = new PutObjectCommand(params);
-//         const response = await s3Client.send(command);
-
-//         console.log("Upload response:", response);
-
-//         const region = AWS_REGION; 
-//         const url = `https://${bucketName}.s3.${region}.amazonaws.com/${key}`;
-
-//         console.log("File URL:", url);
-
-//         return url;
-//     } catch (error) {
-//         console.error("S3 Upload Error:", error);
-//         throw error;
-//     }
-// };
-
 

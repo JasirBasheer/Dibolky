@@ -12,4 +12,6 @@ export interface IChatService {
     createCommonMessage(orgId: string, message: object): Promise<IMessage | null>
     findChatByMembers(orgId: string, userId: string, targetUserId: string): Promise<IChat | null>
     setSeenMessage(orgId:string, chatId:string, userId:string, userName:string):Promise<void>
+    getAgoraTokens(userId: string, channelName?: string): Promise<{rtmToken:string, rtcToken:string}>
+
 } 

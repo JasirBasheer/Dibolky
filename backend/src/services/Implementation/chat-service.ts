@@ -6,6 +6,10 @@ import { IMessageRepository } from '../../repositories/Interface/IMessageReposit
 import { IChat, IGroupDetails, IMessage, Participant } from '../../types/chat';
 import { Types } from 'mongoose';
 import { deleteS3Object } from '../../utils/aws.utils';
+import { RtmTokenBuilder } from 'agora-token';
+import { env } from '@/config';
+import { RtcTokenBuilder } from 'agora-token';
+import { RtcRole } from 'agora-token';
 
 @injectable()
 export class ChatService implements IChatService {
@@ -228,6 +232,41 @@ export class ChatService implements IChatService {
             throw new CustomError("Error while setting seen message", 500)
         }
     }
+
+async getAgoraTokens(
+    userId: string,
+    channelName?:string
+  ): Promise<{rtmToken:string, rtcToken:string}> {
+    
+  if (!userId) throw new NotFoundError("user not found")
+
+    const uid = String(userId);
+    const expirationTimeInSeconds = 3600;
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const tokenExpire = currentTimestamp + expirationTimeInSeconds;
+    const privilegeExpire = tokenExpire;
+
+    const rtmToken = RtmTokenBuilder.buildToken(
+      env.AGORA.APP_ID,
+      env.AGORA.APP_CERTIFICATE,
+      uid,
+      tokenExpire
+    );
+
+    let rtcToken: string | null = null;
+    if (channelName) {
+      rtcToken = RtcTokenBuilder.buildTokenWithUid(
+        env.AGORA.APP_ID,
+        env.AGORA.APP_CERTIFICATE,
+        String(channelName),
+        uid,
+        RtcRole.PUBLISHER,
+        tokenExpire,
+        privilegeExpire
+      );
+    }
+    return {rtmToken,rtcToken }
+  }   
 
 }
 

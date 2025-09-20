@@ -14,7 +14,7 @@ export const savePlatformTokenApi = async (
 ) => {
   console.log(tokens, "tokens fomrdlfksjlfslkjfksj");
   return await api.post(
-    `/api/entities/save-platform-token/${platform}/${provider}/${user_id}`,
+    `/api/provider/save-platform-token/${platform}/${provider}/${user_id}`,
     { accessToken: tokens.accessToken, refreshToken: tokens.refreshToken || "" }
   );
 };
@@ -26,7 +26,7 @@ export const checkIsMailExistsApi = async (query : string = "") => {
 export const InitiateS3BatchUpload = async (
   filesMetadata: IFilesMetaData[]
 ) => {
-  return await api.post("/api/entities/initiate-s3-batch-upload", {
+  return await api.post("/api/storage/initiate-batch-upload", {
     files: filesMetadata,
   });
 };
@@ -37,7 +37,7 @@ export const saveContentApi = async (
   contentData: IContentData
 ) => {
   return await api.post(
-    `/api/entities/content/save/${platform}/${user_id}`,
+    `/api/provider/content/save/${platform}/${user_id}`,
     contentData
   );
 };
@@ -63,7 +63,7 @@ export const approveContentApi = async (
   platform: string,
   user_id: string
 ) => {
-  return await api.post(`/api/entities/approve-content`, {
+  return await api.post(`/api/provider/approve-content`, {
     content_id,
     platform,
     user_id,
@@ -76,7 +76,7 @@ export const rescheduleContentApi = async (
   platformId: string,
   date: string
 ) => {
-  return await api.patch(`/api/entities/content/scheduled/${userId}`, {
+  return await api.patch(`/api/provider/content/scheduled/${userId}`, {
     contentId,
     platformId,
     date,
@@ -89,11 +89,11 @@ export const rejectContentApi = async (
   content_id: string,
   reason: Partial<INote>
 ) => {
-  return await api.post(`/api/entities/reject-content`, { content_id, reason });
+  return await api.post(`/api/provider/reject-content`, { content_id, reason });
 };
 
 export const fetchChatsApi = async (chatId: string) => {
-  return await api.post(`/api/entities/chats`, { chatId });
+  return await api.post(`/api/chat/chats`, { chatId });
 };
 
 export const handleLinkedinAndXCallbackApi = async (
@@ -102,7 +102,7 @@ export const handleLinkedinAndXCallbackApi = async (
   state?: string
 ) => {
   console.log("calling api");
-  return await api.post(`/api/entities/${provider}/callback`, { code, state });
+  return await api.post(`/api/provider/${provider}/callback`, { code, state });
 };
 
 export const getInboxConversations = async (
@@ -112,7 +112,7 @@ export const getInboxConversations = async (
   selectedPages: string[]
 ) => {
   console.log(user_id, "dsaf");
-  return await api.post(`/api/entities/inbox/${role}/${user_id}`, {
+  return await api.post(`/api/inbox/inbox/${role}/${user_id}`, {
     selectedPages,
     selectedPlatforms,
   });
@@ -124,7 +124,7 @@ export const getMediaApi = async (
   selectedPlatforms: string[],
   selectedPages: string[]
 ) => {
-  return await api.post(`/api/entities/media/${role}/${user_id}`, {
+  return await api.post(`/api/provider/media/${role}/${user_id}`, {
     selectedPages,
     selectedPlatforms,
   });
@@ -136,7 +136,7 @@ export const getMediaDetailsApi = async (
   media: { platform: string; id: string; type: string; pageId: string }
 ) => {
   return await api.get(
-    `/api/entities/media/${role}/${user_id}/${media.platform}/${media.pageId}/${media.id}/${media.type}`
+    `/api/provider/media/${role}/${user_id}/${media.platform}/${media.pageId}/${media.id}/${media.type}`
   );
 };
 
@@ -152,7 +152,7 @@ export const getCampaignsApi = async (
   selectedPlatforms.forEach(p => params.append('selectedPlatforms', p));
   selectedAdAccounts.forEach(a => params.append('selectedAdAccounts', a));
 
-  return await api.get(`/api/entities/campaigns/${role}/${userId}?${params.toString()}`);
+  return await api.get(`/api/lead/campaigns/${role}/${userId}?${params.toString()}`);
 };
 
 
@@ -164,7 +164,7 @@ export const getAdSetsApi = async (
     const queryString = new URLSearchParams(campaignDetails).toString();
 
   return await api.get(
-    `/api/entities/adsets/${role}/${user_id}?${queryString}`
+    `/api/lead/adsets/${role}/${user_id}?${queryString}`
   );
 };
 
@@ -177,7 +177,7 @@ export const fetchAdsApi = async(
     const queryString = new URLSearchParams({adsetId,platform}).toString();
 
   return await api.get(
-    `/api/entities/ads/${role}/${user_id}?${queryString}`
+    `/api/lead/ads/${role}/${user_id}?${queryString}`
   );
 };
 
@@ -191,7 +191,7 @@ export const replayCommentApi = async (
   replyMessage: string,
   pageId: string
 ) => {
-  return await api.post(`/api/entities/media/comment`, {
+  return await api.post(`/api/provider/media/comment`, {
     entity,
     user_id,
     platform,
@@ -208,7 +208,7 @@ export const hideCommentApi = async (
   entity: string,
   pageId: string
 ) => {
-  return await api.patch(`/api/entities/media/comment`, {
+  return await api.patch(`/api/provider/media/comment`, {
     platform,
     commentId,
     userId,
@@ -224,7 +224,7 @@ export const deleteCommentApi = async (
   entity: string,
   pageId: string
 ) => {
-  return await api.delete(`/api/entities/media/comment`, {
+  return await api.delete(`/api/provider/media/comment`, {
     data: { platform, commentId, userId, entity, pageId },
   });
 };
@@ -252,7 +252,7 @@ export const createCampaignApi = async (
     status: campaignData.status || "PAUSED"
   };
   
-  return await api.post(`/api/entities/campaigns/${role}/${userId}`, dataWithDefaults);
+  return await api.post(`/api/lead/campaigns/${role}/${userId}`, dataWithDefaults);
 };
 
 export const deleteCampaignApi = async (
@@ -261,7 +261,7 @@ export const deleteCampaignApi = async (
   campaignId: string,
   platform: string
 ) => {
-  return await api.delete(`/api/entities/campaigns/${role}/${userId}`, {
+  return await api.delete(`/api/lead/campaigns/${role}/${userId}`, {
     data: { campaignId, platform }
   });
 };
@@ -273,7 +273,7 @@ export const toggleCampaignStatusApi = async (
   platform: string,
   currentStatus: string
 ) => {
-  return await api.patch(`/api/entities/campaigns/${role}/${userId}`, {
+  return await api.patch(`/api/lead/campaigns/${role}/${userId}`, {
     campaignId,
     platform,
     currentStatus

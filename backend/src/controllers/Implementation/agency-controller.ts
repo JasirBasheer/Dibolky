@@ -19,6 +19,15 @@ export class AgencyController implements IAgencyController {
     this._agencyService = agencyService;
   }
 
+  getOwner = async (req: Request, res: Response): Promise<void> => {
+    const details = await this._agencyService.getOwner(
+      req.details.orgId as string
+    );
+    SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, {
+      ownerDetails: details,
+    });
+  };
+
   isExists = async (req: Request, res: Response): Promise<void> => {
     const { mail } = req.query as { mail: string };
     const isExists = await this._agencyService.IsMailExists(mail);
@@ -34,7 +43,12 @@ export class AgencyController implements IAgencyController {
       transactionId: "trial_user",
       paymentGateway: "trial",
     });
-    if (!createdAgency)return SendResponse(res,HTTPStatusCodes.UNAUTHORIZED,ResponseMessage.BAD_REQUEST);
+    if (!createdAgency)
+      return SendResponse(
+        res,
+        HTTPStatusCodes.UNAUTHORIZED,
+        ResponseMessage.BAD_REQUEST
+      );
     SendResponse(res, HTTPStatusCodes.CREATED, ResponseMessage.CREATED);
   };
 
@@ -75,9 +89,6 @@ export class AgencyController implements IAgencyController {
     if (!details) throw new NotFoundError("Account Not found");
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details });
   };
-
-
-
 
   getClient = async (req: Request, res: Response): Promise<void> => {
     const { client_id } = req.params;
@@ -230,5 +241,5 @@ export class AgencyController implements IAgencyController {
     if (!details) throw new NotFoundError("Client Not found");
 
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { details });
-  };  
+  };
 }

@@ -12,6 +12,12 @@ export class PlanController implements IPlanController {
     private readonly _planService: IPlanService
   ) {}
 
+    getMenu = async (req: Request, res: Response): Promise<void> => {
+      const { role, planId } = req.params;
+      const menu = await this._planService.getMenu(req.details.orgId,role, planId);      
+      SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, { menu });
+    };
+
   getPlans = async (req: Request, res: Response): Promise<void> => {
     const query = QueryParser.parseFilterQuery(req.query);
     const result = await this._planService.getPlans(query);
@@ -19,11 +25,7 @@ export class PlanController implements IPlanController {
   };
 
   getAllTrialPlans = async (req: Request, res: Response): Promise<void> => {
-    const result = await this._planService.getPlans({
-      limit: 0,
-      page: 0,
-      type: "trial",
-    });
+    const result = await this._planService.getPlans({ limit: 0, page: 0, type: "trial"});
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS, result);
   };
 
@@ -41,7 +43,6 @@ export class PlanController implements IPlanController {
   editPlan = async (req: Request, res: Response): Promise<void> => {
     const { planId } = req.params;
     await this._planService.editPlan(planId, req.body);
-
     SendResponse(res, HTTPStatusCodes.OK, ResponseMessage.SUCCESS);
   };
 

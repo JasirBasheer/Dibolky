@@ -1,7 +1,7 @@
 import api from "@/utils/axios";
 
 export const getOwnerId = () => {
-  return api.get("/api/entities/owner");
+  return api.get("/api/public/owner");
 };
 
 export const getAllProjects = (
@@ -9,7 +9,7 @@ export const getAllProjects = (
   userId: string,
   query: string = ""
 ) => {
-  return api.get(`/api/entities/projects?role=${role}&userId=${userId}&${query}`);
+  return api.get(`/api/project/projects?role=${role}&userId=${userId}&${query}`);
 };
 
 
@@ -19,27 +19,24 @@ export const getConnectSocailMediaUrlApi = async (endpoint: string) => {
 };
 
 export const getContentsApi = async ( role: string, userId: string, query: string = "" ) => {
-  return await api.get(`/api/entities/contents/${role}/${userId}/${query}`);
+  return await api.get(`/api/provider/contents/${role}/${userId}/${query}`);
 };
 
-export const fetchMessagesApi = async (userId: string) => {
-  return await api.get(`/api/entities/get-messages/${userId}`);
-};
 
 export const fetchAllChatsApi = async (userId: string) => {
-  return await api.get(`/api/entities/get-chats/${userId}`);
+  return await api.get(`/api/chat/get-chats/${userId}`);
 };
 
 export const getMetaPages = async (role: string, userId: string) => {
-  return await api.get(`/api/entities/get-meta-pages/${role}/${userId}`);
+  return await api.get(`/api/provider/get-meta-pages/${role}/${userId}`);
 };
 
 export const fetchAllSchduledContentsApi = async (userId: string) => {
-  return await api.get(`/api/entities/content/scheduled/${userId}`);
+  return await api.get(`/api/provider/content/scheduled/${userId}`);
 };
 
 export const fetchConnections = async (entity: string, user_id: string, query = "") => {
-  return await api.get(`/api/entities/get-connections/${entity}/${user_id}${query}`);
+  return await api.get(`/api/provider/get-connections/${entity}/${user_id}${query}`);
 };
 
 export const getInvoices = async (
@@ -77,16 +74,16 @@ export const getInboxMessagesApi = async (
 ) => {
   console.log(user_id, "dsaf");
   return await api.get(
-    `/api/entities/inboxMessages/${platform}/${user_id}/${conversationId}`
+    `/api/inbox/inboxMessages/${platform}/${user_id}/${conversationId}`
   );
 };
 
 export const getAllPortfoliosApi = async (query: string) => {
-  return await api.get(`/api/entities/portfolio${query}`);
+  return await api.get(`/api/showcase/portfolio${query}`);
 };
 
 export const getAllTestimoinalsApi = async () => {
-  return await api.get(`/api/entities/testimonials`);
+  return await api.get(`/api/showcase/testimonials`);
 };
 
 
@@ -99,7 +96,7 @@ export const getAnalyticsByAdSetId = async(
     const queryString = new URLSearchParams({adsetId,platform}).toString();
 
   return await api.get(
-    `/api/entities/ads/analytics/${role}/${user_id}?${queryString}`
+    `/api/lead/ads/analytics/${role}/${user_id}?${queryString}`
   );
 };
 

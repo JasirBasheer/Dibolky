@@ -1,6 +1,7 @@
 import { container } from "tsyringe";
-import { AdminService, AdService, AgencyService, AuthenticationService, ChatService, ClientService, EntityService, IAdminService, IAdService, IAgencyService, IAuthenticationService, IChatService, IClientService, IEntityService, IPaymentService, IPlanService, IPortfolioService, IProviderService, IStorageService, ITransactionService, PaymentService, PlanService, PortfolioService, ProviderService, StorageService, TransactionService } from "@/services";
+import { AdminService, AdService, AgencyService, AuthenticationService, ChatService, ClientService, EntityService, IAdminService, IAdService, IAgencyService, IAuthenticationService, IChatService, IClientService, IEntityService, IInboxService, IPaymentService, IPlanService, IPortfolioService, IProjectService, IProviderService, IStorageService, ITransactionService, PaymentService, PlanService, PortfolioService, ProjectService, ProviderService, StorageService, TransactionService } from "@/services";
 import { IStorageProvider, S3Provider } from "@/providers/storage";
+import { InboxService } from "@/services/Implementation/inbox-service";
 
 export const registerServices = () => {
 container.register<IAuthenticationService>('AuthenticationService', { useClass: AuthenticationService });
@@ -16,8 +17,9 @@ container.register<IPortfolioService>('PortfolioService', { useClass: PortfolioS
 container.register<ITransactionService>('TransactionService', { useClass: TransactionService });
 container.register<IStorageService>('StorageService', { useClass: StorageService });
 container.register<IAdService>('AdService', { useClass: AdService });
+container.register<IProjectService>('ProjectService', { useClass: ProjectService });
+container.register<IInboxService>('InboxService', { useClass: InboxService });
 
 
-// Provider for external storage (AWS S3)
 container.register<IStorageProvider>('StorageProvider', { useClass: S3Provider });
 };

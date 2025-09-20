@@ -3,7 +3,6 @@ import {
   Response 
 } from 'express';
 
-/** Interface for Authentication Controller */
 export interface IAuthenticationController {
   login(req: Request, res: Response): Promise<void>
   forgotPassword(req: Request, res: Response): Promise<void>

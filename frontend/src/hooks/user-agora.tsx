@@ -8,7 +8,7 @@ export function useAgoraRtmLogin(userId: string | undefined) {
 
     async function login() {
       try {
-        const res = await axios.get(`/api/entities/agora?userId=${userId}`);
+        const res = await axios.get(`/api/chat/agora?userId=${userId}`);
         const { rtmToken } = res.data;
         await loginRtmClient(userId, rtmToken);
         console.log("RTM logged in");

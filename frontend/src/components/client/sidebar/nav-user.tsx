@@ -42,6 +42,7 @@ export function NavUser({
   const handleLogout = async () => {
       try {
         const response = await authLogoutApi()
+        localStorage.removeItem('selectedClient');
         socket.emit(SOCKET_EVENTS.USER.SET_OFFLINE,{ orgId: userData.orgId, userId: userData.role == "client" ? userData.user_id: agency.user_id})
         if (response) navigate('/login')
       } catch (error: unknown) {

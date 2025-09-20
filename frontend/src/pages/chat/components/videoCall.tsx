@@ -293,7 +293,7 @@ const VideoCall: React.FC = () => {
       }
 
       const { data } = await axios.get(
-        `/api/entities/agora?userId=${user.user_id}&channelName=${channelName}`
+        `/api/chat/agora?userId=${user.user_id}&channelName=${channelName}`
       );
       const rtcToken = data.rtcToken;
 

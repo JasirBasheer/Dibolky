@@ -4,6 +4,8 @@ export const env = {
     DB_URI: process.env.DB_URI as string,
     CORS_ORIGINS: process.env.CORS_ORIGINS,
     TOKEN_SECRET: process.env.TOKEN_SECRET,
+    DB_USER: process.env.DB_USER,
+    DB_PASSWORD: process.env.DB_PASSWORD,
   },
 
   BASE_URLS: {
@@ -25,6 +27,7 @@ export const env = {
       REGION: process.env.AWS_REGION as string,
       ACCESS_KEY: process.env.AWS_ACCESS_KEY as string,
       SECRET_KEY: process.env.AWS_SECRET_KEY as string,
+      AWS_FOLDER_URI: process.env.AWS_AWS_FOLDER_URI as string,
     },
   },
 

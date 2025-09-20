@@ -15,11 +15,6 @@ import {
 import { IClientRepository } from "../../repositories/Interface/IClientRepository";
 import { IProjectRepository } from "../../repositories/Interface/IProjectRepository";
 import { IClientTenantRepository } from "../../repositories/Interface/IClientTenantRepository";
-import {
-  IClientTenantType,
-  IClientTenantWithProjectDetailsType,
-  IClientType,
-} from "../../types/client";
 import { IAgencyTenantRepository } from "../../repositories/Interface/IAgencyTenantRepository";
 import { IContentRepository } from "../../repositories/Interface/IContentRepository";
 import {
@@ -30,10 +25,7 @@ import {
 } from "../../types/common";
 import { IAvailableClients, ServicesData } from "../../types/chat";
 import { IProject } from "../../models/Implementation/project";
-import { createClientMailData } from "../../utils/mail.datas";
-import { IAgency } from "@/models/Interface/agency";
 import { IClientTenant, Plan, PlanDoc } from "@/models";
-import { createNewMenuForClient } from "@/utils/menu.utils";
 import {
   IActivityRepository,
   InoviceRepository,
@@ -167,7 +159,7 @@ export class AgencyService implements IAgencyService {
 
       const hashedPassword = await hashPassword(password);
       const orgId =
-        organizationName.replace(/\s+/g, "") +
+        organizationName.replace(/[\s\W]+/g, "") +
         Math.floor(Math.random() * 1000000);
       const validityInDate = addMonthsToDate(plan.billingCycle, validity);
 
@@ -315,6 +307,10 @@ export class AgencyService implements IAgencyService {
       agency_id
     );
     return AgencyMapper.AgenyDetailsMapper(AgencyDetails);
+  }
+
+  async getOwner(orgId: string): Promise<IAgencyTenant[]> {
+    return await this._agencyTenantRepository.getOwners(orgId);
   }
 
   async getAgencyOwnerDetails(orgId: string): Promise<IAgencyTenant | null> {

@@ -21,8 +21,14 @@ export const createStorageRoutes = (): Router => {
   );
 
   router.get("/signed-url", 
-    asyncHandler(storageController.signedS3Url)
+    asyncHandler(storageController.signedUrl)
   );
+
+  router.post(
+    "/initiate-batch-upload",
+    asyncHandler(storageController.initiateBatchUpload)
+  );
+
 
   return router;
 };

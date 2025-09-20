@@ -23,7 +23,7 @@ const VideoCall = ({ userId, userName }) => {
 
         rtmClient.current = AgoraRTM.createInstance(AGORA_APP_ID);
         const response = await axios.get(
-          `/api/entities/agora?userId=${userId}&channelName=${channelName || "default"}`
+          `/api/chat/agora?userId=${userId}&channelName=${channelName || "default"}`
         );
         const { rtmToken } = response.data;
 
@@ -138,7 +138,7 @@ const VideoCall = ({ userId, userName }) => {
   const joinCall = async (channel, callType) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/entities/agora/tokens?userId=${userId}&channelName=${channel}`
+        `http://localhost:4000/api/chat/agora/tokens?userId=${userId}&channelName=${channel}`
       );
       const { rtcToken } = response.data;
 

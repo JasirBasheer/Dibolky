@@ -14,18 +14,22 @@ import { gmailAuthCallback } from "@/providers/google";
 import { xAuthCallback } from "@/providers/x";
 import { linkedInAuthCallback } from "@/providers/linkedin";
 import { QueryParser } from "@/utils";
+import { IClientService } from "@/services";
 
 @injectable()
 export class ProviderController implements IProviderController {
   private _providerService: IProviderService;
   private _agencyService: IAgencyService;
+  private _clientService: IClientService;
 
   constructor(
     @inject("ProviderService") providerService: IProviderService,
-    @inject("AgencyService") agencyService: IAgencyService
+    @inject("AgencyService") agencyService: IAgencyService,
+    @inject("ClientService") clientService: IClientService
   ) {
     this._providerService = providerService;
     this._agencyService = agencyService;
+    this._clientService = clientService;
   }
 
   processContentApproval = async (
@@ -38,17 +42,18 @@ export class ProviderController implements IProviderController {
       req.details.orgId as string,
       content_id
     );
+    if (!content) throw new Error("content does not exists");
     let user;
     if (platform == "agency") {
       user = await this._agencyService.getAgencyOwnerDetails(
         req.details.orgId as string
       );
     } else {
-      user = await this._agencyService.getAgencyOwnerDetails(
-        req.details.orgId as string
+      user = await this._clientService.getClientTenantDetailsById(
+        req.details.orgId, content?.user_id
       );
     }
-    if (!content) throw new Error("content does not exists");
+    console.log(user, "user details");
 
     const response = await this._providerService.handleSocialMediaUploads(
       content,

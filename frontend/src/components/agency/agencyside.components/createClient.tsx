@@ -191,7 +191,8 @@ const CreateClient = () => {
             <Button 
             onClick={handleSubmit}
             className="w-full  text-white py-2 px-4 rounded-md">
-              Create Client</Button> 
+            {isLoading? "Creating....": "Create Client"}
+            </Button> 
           </div>
         </div>
 

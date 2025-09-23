@@ -120,9 +120,9 @@ const Clients = () => {
       setIsEmailModalOpen(false);
       toast.success("Mail has been successfully sended.");
     } catch (error) {
-      console.error("Error sending mails:", error);
+      console.error("Error sending mails:", error.response.data.error);
       toast.error(
-        error.data.message || "Failed to send email. Please try again."
+        error.response.data.error || "Failed to send email. Please try again."
       );
     } finally {
       setMail((prev) => ({ ...prev, isSendingEmails: false }));

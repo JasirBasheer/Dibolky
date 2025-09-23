@@ -567,6 +567,7 @@ export class AgencyService implements IAgencyService {
   ): Promise<void> {
     const agency = await this._agencyTenantRepository.getOwnerWithOrgId(orgId);
     const { accessToken, refreshToken } = agency?.social_credentials?.gmail;
+    if(!accessToken || !refreshToken)throw new NotFoundError("Please intergrate google mail in order to send your mails to the client..")
 
     await sendGMail(
       decryptToken(accessToken),

@@ -4,7 +4,6 @@ import { IEntityService } from "../../services/Interface/IEntityService";
 import { inject, injectable } from "tsyringe";
 import {
   HTTPStatusCodes,
-  NotFoundError,
   ResponseMessage,
   SendResponse,
 } from "mern.common";

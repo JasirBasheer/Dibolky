@@ -3,6 +3,6 @@ server.host: "0.0.0.0"
 elasticsearch.hosts: ["http://elasticsearch:9200"]
 elasticsearch.ssl.verificationMode: "none"
 
-xpack.security.enabled: true
-elasticsearch.username: "jasir"
-elasticsearch.password: "1234567890"
+xpack.security.enabled: false
+monitoring.ui.enabled: true
+

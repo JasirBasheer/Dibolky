@@ -3,6 +3,5 @@ server.host: "0.0.0.0"
 elasticsearch.hosts: ["http://elasticsearch:9200"]
 elasticsearch.ssl.verificationMode: "none"
 
-xpack.security.enabled: false
 monitoring.ui.enabled: true
 

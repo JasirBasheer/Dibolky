@@ -209,7 +209,7 @@ const VideoCall: React.FC = () => {
       });
     } catch (error) {
       console.error("Failed during call setup:", error);
-      toast.error("Could not start call");
+      toast.error("The user is currently offline.");
       await cleanupAfterCallEnd();
     }
   };

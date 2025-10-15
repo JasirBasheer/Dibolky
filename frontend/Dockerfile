@@ -1,4 +1,5 @@
 FROM node:22-alpine AS builder
+LABEL project=Dibolky
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
@@ -6,6 +7,7 @@ COPY . .
 RUN npm run build
 
 FROM nginx:alpine
+LABEL project=Dibolky
 COPY --from=builder /app/build /usr/share/nginx/html
 COPY nginx/conf.d/nginx.conf /etc/nginx/conf.d/default.conf
 RUN adduser -D reactuser && chown -R reactuser:reactuser /usr/share/nginx/html

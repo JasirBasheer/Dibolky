@@ -23,9 +23,12 @@ jobs:
     - name: Deploy on GCE VM
       run: |
         ssh ${{ secrets.GCE_SSH_USER }}@${{ secrets.GCE_INSTANCE_IP }} << 'EOF'
-          cd /opt/Dibolky
+          cd /opt/projects/Dibolky
           sudo git pull origin main
           sudo docker container stop 
-          docker system prune -f -a --volumes
+          docker ps -a --filter "label=project=Dibolky" -q | xargs -r docker rm -f
+          docker images --filter "label=project=Dibolky" -q | xargs -r docker rmi -f
+          docker volume ls --filter "label=project=Dibolky" -q | xargs -r docker volume rm -f
+          docker network ls --filter "label=project=Dibolky" -q | xargs -r docker network rm -f
           sudo docker compose up --build -d 
         EOF

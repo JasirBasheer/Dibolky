@@ -6,7 +6,7 @@ const environment = process.env.NODE_ENV || 'development';
 const transports: winston.transport[] = [
   new GelfTransport({
     gelfPro: {
-      fields: { facility: 'mern-backend', tag: 'backend' },
+      fields: { facility: 'dibolky-backend', tag: 'backend' },
       adapterName: 'udp',
       adapterOptions: {
         host: process.env.LOGSTASH_HOST || '172.19.0.5',

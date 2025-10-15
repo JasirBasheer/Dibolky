@@ -19,7 +19,7 @@ services:
       NODE_ENV: development
       MONGODB_DEBUG: true
       LOGSTASH_HOST: logstash
-      HOSTNAME: mern-backend
+      HOSTNAME: dibolky-backend
       NODE_OPTIONS: --max-old-space-size=4096
     networks:
       dibolky-tool:

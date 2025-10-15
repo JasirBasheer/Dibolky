@@ -19,11 +19,11 @@ services:
       NODE_ENV: development
       MONGODB_DEBUG: true
       LOGSTASH_HOST: logstash
-      HOSTNAME: mern-backend
+      HOSTNAME: dibolky-backend
     networks:
-      dibolky-tool:
+      dibolky_net:   
         aliases:
-          - backend
+          - dibolky
     depends_on:
       redis:
         condition: service_healthy
@@ -40,9 +40,11 @@ services:
     logging:
       driver: "gelf"
       options:
-        gelf-address: "udp://172.19.0.5:12201"  
+        gelf-address: "udp://172.19.0.5:12201"
         tag: "backend"
         gelf-compression-type: "none"
+    labels:
+      project: Dibolky
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
@@ -61,7 +63,7 @@ services:
     ports:
       - "9200:9200"
     networks:
-      dibolky-tool:
+      dibolky_net:
         aliases:
           - elasticsearch
     healthcheck:
@@ -70,6 +72,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
+    labels:
+      project: Dibolky
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.15.1
@@ -85,15 +89,17 @@ services:
       elasticsearch:
         condition: service_healthy
     networks:
-      dibolky-tool:
+      dibolky_net:
         aliases:
           - logstash
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:9600"]
       interval: 30s
-      timeout: 10s
+      timeout: 30s
       retries: 3
       start_period: 60s
+    labels:
+      project: Dibolky
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.15.1
@@ -108,15 +114,17 @@ services:
       elasticsearch:
         condition: service_healthy
     networks:
-      dibolky-tool:
+      dibolky_net:
         aliases:
           - kibana
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:5601/api/status"]
       interval: 30s
-      timeout: 10s
+      timeout: 30s
       retries: 3
       start_period: 60s
+    labels:
+      project: Dibolky
 
   redis:
     image: redis:alpine
@@ -127,7 +135,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      dibolky-tool:
+      dibolky_net:
         aliases:
           - redis
     healthcheck:
@@ -136,52 +144,21 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
-  nginx:
-    build:
-      context: .
-      dockerfile: nginx/Dockerfile
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      backend:
-        condition: service_healthy
-    volumes:
-      - ./nginx/www:/var/www/html
-      - ./nginx/ssl:/etc/letsencrypt
-    networks:
-      dibolky-tool:
-        aliases:
-          - nginx
-    restart: unless-stopped
-
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    env_file: .env
-    depends_on:
-      - nginx
-    environment:
-      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
-      - LETSENCRYPT_DOMAIN=${LETSENCRYPT_DOMAIN}
-    volumes:
-      - ./nginx/ssl:/etc/letsencrypt
-      - ./nginx/www:/var/www/html
-    entrypoint: >
-      sh -c "certbot certonly --webroot --webroot-path=/var/www/html
-      --email $${LETSENCRYPT_EMAIL} --agree-tos --no-eff-email
-      -d $${LETSENCRYPT_DOMAIN}"
-    networks:
-      - dibolky-tool
+    labels:
+      project: Dibolky
 
 networks:
-  dibolky-tool:
-    driver: bridge
-    name: dibolky-tool
+  dibolky_net:
+    external: true
+    labels:
+      project: Dibolky
 
 volumes:
   redis_data:
     driver: local
+    labels:
+      project: Dibolky
   es_data:
     driver: local
+    labels:
+      project: Dibolky

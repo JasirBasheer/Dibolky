@@ -21,7 +21,7 @@ services:
       LOGSTASH_HOST: logstash
       HOSTNAME: dibolky-backend
     networks:
-      dibolky_net:   
+      multi_net:   
         aliases:
           - dibolky
     depends_on:
@@ -63,7 +63,7 @@ services:
     ports:
       - "9200:9200"
     networks:
-      dibolky_net:
+      multi_net:
         aliases:
           - elasticsearch
     healthcheck:
@@ -89,7 +89,7 @@ services:
       elasticsearch:
         condition: service_healthy
     networks:
-      dibolky_net:
+      multi_net:
         aliases:
           - logstash
     healthcheck:
@@ -114,7 +114,7 @@ services:
       elasticsearch:
         condition: service_healthy
     networks:
-      dibolky_net:
+      multi_net:
         aliases:
           - kibana
     healthcheck:
@@ -135,7 +135,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      dibolky_net:
+      multi_net:
         aliases:
           - redis
     healthcheck:
@@ -148,7 +148,7 @@ services:
       project: Dibolky
 
 networks:
-  dibolky_net:
+  multi_net:
     external: true
     labels:
       project: Dibolky

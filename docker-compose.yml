@@ -1,4 +1,17 @@
 services:
+  frontend:
+    build: 
+    context: ./frontend
+    dockerfile: Dockerfile
+    env_file: ./frontend/.env
+    volumes:
+      - /app/node_modules
+      - frontend_builds:/usr/share/nginx/html
+    networks:
+      multi_net:   
+        aliases:
+          - dibolky
+  
   backend:
     build:
       context: ./backend
@@ -159,6 +172,10 @@ volumes:
     labels:
       project: Dibolky
   es_data:
+    driver: local
+    labels:
+      project: Dibolky
+  frontend_builds:
     driver: local
     labels:
       project: Dibolky

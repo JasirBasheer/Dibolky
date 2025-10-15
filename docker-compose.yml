@@ -179,3 +179,4 @@ volumes:
     driver: local
     labels:
       project: Dibolky
+    external: true

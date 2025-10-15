@@ -3,4 +3,5 @@ WORKDIR /app
 COPY . .
 RUN npm install && npm run build
 
-COPY /app/dist /usr/share/nginx/html/dibolky
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html/dibolky

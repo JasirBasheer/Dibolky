@@ -3,4 +3,4 @@ WORKDIR /app
 COPY . .
 RUN npm install && npm run build
 
-COPY /app/build /usr/share/nginx/html/dibolky
+COPY /app/dist /usr/share/nginx/html/dibolky

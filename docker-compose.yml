@@ -1,8 +1,8 @@
 services:
   frontend:
     build: 
-    context: ./frontend
-    dockerfile: Dockerfile
+     context: ./frontend
+     dockerfile: Dockerfile
     env_file: ./frontend/.env
     volumes:
       - /app/node_modules

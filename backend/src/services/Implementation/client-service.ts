@@ -7,7 +7,6 @@ import {
   comparePassword,
   generatePassword,
   hashPassword,
-  sendMail,
 } from "mern.common";
 import { IClientTenantType, IClientTenantWithProjectDetailsType, IClientType } from "../../types/client";
 import { IAgencyTenant } from "../../types/agency";
@@ -27,7 +26,7 @@ import {
 } from "@/repositories";
 import { IClientService, IPaymentService } from "../Interface";
 import crypto from "node:crypto";
-import { decryptToken, FilterType } from "@/utils";
+import { decryptToken, FilterType, sendMail } from "@/utils";
 import { ServicesData } from "@/types/chat";
 import { createNewMenuForClient } from "@/utils/menu.utils";
 import { createClientMailData } from "@/utils/mail.datas";

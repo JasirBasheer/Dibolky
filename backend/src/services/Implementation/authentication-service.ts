@@ -87,7 +87,7 @@ export class AuthenticationService implements IAuthenticationService {
     let data = createForgotPasswordData(
       details.name,
       email,
-      `http://localhost:5173/${role.toLowerCase()}/reset-password/${resetToken}`
+      `${env.BASE_URLS.FRONTEND}/${role.toLowerCase()}/reset-password/${resetToken}`
     );
     sendMail(email, "Forgot Password", data, (err: unknown, info: unknown) => {
       if (err) {

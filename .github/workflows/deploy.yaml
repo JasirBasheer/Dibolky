@@ -1,4 +1,4 @@
-name: Deploy to GCE
+name: Deploy to VM
 
 on:
   push:
@@ -10,25 +10,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.VM_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.VM_INSTANCE_IP }} >> ~/.ssh/known_hosts
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VM_SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-    - name: Deploy on GCE VM
-      run: |
-        ssh ${{ secrets.VM_SSH_USER }}@${{ secrets.VM_INSTANCE_IP }} << 'EOF'
-          cd /opt/projects/Dibolky
-          sudo git pull origin main
-          sudo docker container stop 
-          docker ps -a --filter "label=project=Dibolky" -q | xargs -r docker rm -f
-          docker images --filter "label=project=Dibolky" -q | xargs -r docker rmi -f
-          docker volume ls --filter "label=project=Dibolky" -q | xargs -r docker volume rm -f
-          docker network ls --filter "label=project=Dibolky" -q | xargs -r docker network rm -f
-          sudo docker compose up --build -d 
-        EOF
+      - name: Deploy on VM
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+              ${{ secrets.VM_SSH_USER }}@${{ secrets.VM_INSTANCE_IP }} << 'EOF'
+            set -e
+            cd /opt/projects/Dibolky
+            git pull origin main
+
+            echo "Stopping current Docker Compose services..."
+            sudo docker compose stop
+
+            echo "Cleaning old Docker resources..."
+            sudo docker ps -a --filter "label=project=Dibolky" -q | xargs -r sudo docker rm -f
+            sudo docker images --filter "label=project=Dibolky" -q | xargs -r sudo docker rmi -f
+            sudo docker volume ls --filter "label=project=Dibolky" -q | xargs -r sudo docker volume rm -f
+            sudo docker network ls --filter "label=project=Dibolky" -q | xargs -r sudo docker network rm -f
+
+            echo "Rebuilding and starting containers..."
+            sudo docker compose up --build -d
+
+            echo "Deployment complete!"
+          EOF

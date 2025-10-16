@@ -73,4 +73,9 @@ export const env = {
     SECRET_ID: process.env.RAZORPAY_SECRET_ID as string,
     SECRET_KEY: process.env.RAZORPAY_SECRET_KEY as string,
   },
+
+  NODE_MAILER:{
+    MAIL: process.env.NODE_MAILER_MAIL,
+    PASSWORD: process.env.NODE_MAILER_PASS
+  }
 };

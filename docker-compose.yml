@@ -176,7 +176,4 @@ volumes:
     labels:
       project: Dibolky
   frontend_builds:
-    driver: local
-    labels:
-      project: Dibolky
     external: true

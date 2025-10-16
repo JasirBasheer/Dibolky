@@ -16,13 +16,13 @@ jobs:
     - name: Set up SSH key
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.GCE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        echo "${{ secrets.VM_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.GCE_INSTANCE_IP }} >> ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ secrets.VM_INSTANCE_IP }} >> ~/.ssh/known_hosts
 
     - name: Deploy on GCE VM
       run: |
-        ssh ${{ secrets.GCE_SSH_USER }}@${{ secrets.GCE_INSTANCE_IP }} << 'EOF'
+        ssh ${{ secrets.VM_SSH_USER }}@${{ secrets.VM_INSTANCE_IP }} << 'EOF'
           cd /opt/projects/Dibolky
           sudo git pull origin main
           sudo docker container stop 

@@ -8,6 +8,7 @@ import {
   ResponseMessage,
   SendResponse,
 } from "mern.common";
+import { resetPasswordParamsSchema } from "@/validators";
 
 @injectable()
 export class AuthenticationController implements IAuthenticationController {
@@ -50,7 +51,7 @@ export class AuthenticationController implements IAuthenticationController {
   };
 
   resetPassword = async (req: Request, res: Response): Promise<void> => {
-    const { token } = req.params;
+    const { token } = resetPasswordParamsSchema.parse(req.params);
     const { newPassword } = req.body;
 
     await this._authenticationService.changePassword(token, newPassword);

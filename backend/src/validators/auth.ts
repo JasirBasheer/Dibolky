@@ -11,15 +11,15 @@ export const forgotPasswordSchema = z.object({
   role: z.enum(["admin", "agency", "client"]), 
 });
 
-export const resetPasswordSchema = z.object({
-  params: z.object({
-    token: z.string().min(1, "Token is required"),
-  }),
-  body: z.object({
-    newPassword: z.string().min(6, "Password must be at least 6 characters long"),
-  }),
+export const resetPasswordParamsSchema = z.object({
+  token: z.string().min(1, "Token is required"),
 });
 
+export const resetPasswordSchema = z.object({
+  newPassword: z
+    .string()
+    .min(6, "Password must be at least 6 characters long"),
+});
 
 
 export type LoginDto = z.infer<typeof loginSchema>;

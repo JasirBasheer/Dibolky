@@ -27,6 +27,15 @@ jobs:
             cd /opt/projects/Dibolky
             git pull origin main
 
+            echo "Installing dependencies and building client..."
+            cd client
+            npm install
+            npm run build
+
+            echo "Moving build to shared volume (frontend_builds)..."
+            mkdir -p /var/lib/docker/volumes/frontend_builds/_data/dibolky
+            cp -r dist/* /var/lib/docker/volumes/frontend_builds/_data/dibolky/
+
             echo "Stopping current Docker Compose services..."
             sudo docker compose stop
 

@@ -75,7 +75,7 @@ export const env = {
   },
 
   NODE_MAILER:{
-    MAIL: process.env.NODE_MAILER_MAIL,
-    PASSWORD: process.env.NODE_MAILER_PASS
+    MAIL: process.env.NODE_MAILER_MAIL as string,
+    PASSWORD: process.env.NODE_MAILER_PASS as string
   }
 };

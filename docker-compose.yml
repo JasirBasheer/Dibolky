@@ -1,17 +1,4 @@
-services:
-  frontend:
-    build: 
-     context: ./frontend
-     dockerfile: Dockerfile
-    env_file: ./frontend/.env
-    volumes:
-      - /app/node_modules
-      - frontend_builds:/usr/share/nginx/html
-    networks:
-      multi_net:   
-        aliases:
-          - dibolky
-  
+services:  
   backend:
     build:
       context: ./backend

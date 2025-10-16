@@ -8,7 +8,6 @@ import {
   generateToken,
   hashPassword,
   NotFoundError,
-  sendMail,
   verifyToken,
 } from "mern.common";
 import { IAdminType } from "../../types/admin";
@@ -20,6 +19,7 @@ import { UserMapper } from "@/mappers/shared/shared-mapper";
 import { IClientType } from "@/types/client";
 import { env } from "@/config";
 import { IAdminService, IAgencyService, IClientService } from "../Interface";
+import { sendMail } from "@/utils";
 
 @injectable()
 export class AuthenticationService implements IAuthenticationService {

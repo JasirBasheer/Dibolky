@@ -38,7 +38,7 @@ import {
 } from "../../utils/constants";
 import { IBucketWithReason, INote } from "../../types/note";
 import { INoteRepository } from "../../repositories/Interface/INoteRepository";
-import { CustomError, NotFoundError, sendMail } from "mern.common";
+import { CustomError, NotFoundError } from "mern.common";
 import { handleLinkedinUpload } from "@/providers/linkedin/handler";
 import { createXAuthURL, handleXUpload, isXAccessTokenValid } from "@/providers/x";
 import {
@@ -54,7 +54,7 @@ import {
 import { credentials, IClientTenant } from "@/models";
 import { createLinkedInOAuthURL, getLinkedInTokenStatus } from "@/providers/linkedin";
 import { createGoogleOAuthURL, isGmailAccessTokenValid, refreshGmailAccessToken } from "@/providers/google";
-import { decryptToken, encryptToken, FilterType, QueryParser } from "@/utils";
+import { decryptToken, encryptToken, FilterType, QueryParser, sendMail } from "@/utils";
 import { getPages } from "@/media-service/shared";
 import { getSupportedMetrics } from "@/providers/utils";
 import { getFBMediaDetails } from "@/providers/utils/facebook";

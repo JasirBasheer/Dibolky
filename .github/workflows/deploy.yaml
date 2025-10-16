@@ -31,8 +31,8 @@ jobs:
             cd /opt/projects/Dibolky
             git pull origin main
 
-            echo "Installing dependencies and building client..."
-            cd client
+            echo "Installing dependencies and building frontend..."
+            cd frontend
             npm install
             npm run build
 

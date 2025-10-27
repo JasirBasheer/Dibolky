@@ -20,6 +20,8 @@ services:
       MONGODB_DEBUG: true
       LOGSTASH_HOST: logstash
       HOSTNAME: dibolky-backend
+      NODE_OPTIONS: "--max-old-space-size=4096"
+
     networks:
       multi_net:   
         aliases:
